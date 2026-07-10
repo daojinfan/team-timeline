@@ -17,6 +17,7 @@ let db;
 
 const jsonHeaders = { "content-type": "application/json; charset=utf-8" };
 const taskStatuses = new Set(["planned", "active", "paused", "completed", "cancelled", "archived"]);
+const manualTaskStatuses = new Set(["paused", "completed", "cancelled", "archived"]);
 const memberStatuses = new Set(["active", "inactive"]);
 const mimeTypes = {
   ".html": "text/html; charset=utf-8",
@@ -123,6 +124,33 @@ function normalizeTaskStatus(status, fallback = "active") {
   const next = status || fallback;
   if (!taskStatuses.has(next)) throw new Error(`无效任务状态：${next}`);
   return next;
+}
+
+function deriveAutoTaskStatus(startDate, today = todayIsoDate()) {
+  return startDate > today ? "planned" : "active";
+}
+
+function resolveTaskStatus(status, startDate, fallback = "auto") {
+  if (status === "archived") throw new Error("请使用归档操作归档任务");
+  if (manualTaskStatuses.has(status)) return status;
+  if (manualTaskStatuses.has(fallback)) return fallback;
+  if (status && status !== "auto") normalizeTaskStatus(status);
+  return deriveAutoTaskStatus(startDate);
+}
+
+function syncAutoTaskStatuses(database = db) {
+  const today = todayIsoDate();
+  const rows = database.prepare(`
+    SELECT id, default_start_date, status
+    FROM tasks
+    WHERE deleted_at IS NULL AND status IN ('planned', 'active')
+  `).all();
+  const update = database.prepare("UPDATE tasks SET status = ?, updated_at = ? WHERE id = ?");
+  const timestamp = nowIso();
+  for (const row of rows) {
+    const next = deriveAutoTaskStatus(row.default_start_date, today);
+    if (next !== row.status) update.run(next, timestamp, row.id);
+  }
 }
 
 function normalizeMemberStatus(status, fallback = "active") {
@@ -507,6 +535,7 @@ function assignmentRowsForTask(taskId) {
 }
 
 function listTasks(includeArchived = false) {
+  syncAutoTaskStatuses();
   const tasks = db.prepare(`
     SELECT id, title, description, default_start_date, default_end_date, color, status, created_at, updated_at
     FROM tasks
@@ -553,7 +582,7 @@ function createTask(payload) {
       payload.default_start_date,
       payload.default_end_date,
       payload.color,
-      normalizeTaskStatus(payload.status),
+      resolveTaskStatus(payload.status, payload.default_start_date),
       timestamp,
       timestamp
     );
@@ -582,7 +611,7 @@ function updateTask(taskId, payload) {
     default_start_date: payload.default_start_date || existing.default_start_date,
     default_end_date: payload.default_end_date || existing.default_end_date,
     color: payload.color || existing.color,
-    status: normalizeTaskStatus(payload.status, existing.status)
+    status: resolveTaskStatus(payload.status, payload.default_start_date || existing.default_start_date, existing.status)
   };
   assertDateRange(next.default_start_date, next.default_end_date, "任务");
   const timestamp = nowIso();
@@ -616,8 +645,9 @@ function restoreTask(taskId) {
   if (!existing) throw new Error("Task not found");
   const timestamp = nowIso();
   runTransaction(db, () => {
-    db.prepare("UPDATE tasks SET status = CASE WHEN status = 'archived' THEN 'planned' ELSE status END, deleted_at = NULL, updated_at = ? WHERE id = ?")
-      .run(timestamp, taskId);
+    const restoredStatus = existing.status === "archived" ? deriveAutoTaskStatus(existing.default_start_date) : resolveTaskStatus(existing.status, existing.default_start_date, existing.status);
+    db.prepare("UPDATE tasks SET status = ?, deleted_at = NULL, updated_at = ? WHERE id = ?")
+      .run(restoredStatus, timestamp, taskId);
     db.prepare("UPDATE task_assignments SET deleted_at = NULL, updated_at = ? WHERE task_id = ?").run(timestamp, taskId);
     db.prepare("UPDATE task_checklist_items SET deleted_at = NULL, updated_at = ? WHERE task_id = ?").run(timestamp, taskId);
     logChange("restore_task", { task_id: taskId, old_value: existing });
@@ -744,7 +774,9 @@ function batchUpdate(payload) {
     for (const taskId of ids) {
       const task = getTask(taskId);
       if (!task) continue;
-      const nextStatus = payload.status ? normalizeTaskStatus(payload.status, task.status) : task.status;
+      const nextStatus = payload.archive_completed === true || payload.status === "archived"
+        ? "archived"
+        : payload.status ? resolveTaskStatus(payload.status, task.default_start_date, task.status) : resolveTaskStatus(task.status, task.default_start_date, task.status);
       const nextEnd = payload.default_end_date || task.default_end_date;
       assertDateRange(task.default_start_date, nextEnd, "任务");
       db.prepare("UPDATE tasks SET status = ?, default_end_date = ?, updated_at = ? WHERE id = ?").run(nextStatus, nextEnd, timestamp, taskId);
@@ -952,7 +984,7 @@ function importTasksCsv(csvText) {
         default_start_date: row.default_start_date,
         default_end_date: row.default_end_date,
         color: row.color || "#2563eb",
-        status: row.status || "active",
+        status: row.status || "auto",
         member_ids,
         checklist
       });

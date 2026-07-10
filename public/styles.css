@@ -387,6 +387,28 @@ legend {
   justify-content: start;
 }
 
+.task-viewbar {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 12px;
+  margin-bottom: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+
+.task-viewbar label {
+  min-width: 160px;
+}
+
+.compact-segmented button {
+  min-height: 34px;
+}
+
 .batchbar select,
 .batchbar input[type="date"] {
   width: auto;
@@ -632,6 +654,76 @@ legend {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 12px;
+}
+
+.task-list-view {
+  display: grid;
+  gap: 8px;
+  overflow: auto;
+}
+
+.task-list-header,
+.task-list-row {
+  display: grid;
+  grid-template-columns: minmax(260px, 1.4fr) 140px minmax(160px, 0.9fr) 92px minmax(220px, auto);
+  align-items: center;
+  gap: 12px;
+  min-width: 920px;
+}
+
+.task-list-header {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--soft);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.task-list-row {
+  padding: 11px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  font-size: 13px;
+}
+
+.task-list-row.selected {
+  border-color: var(--accent);
+}
+
+.task-list-title {
+  display: grid;
+  grid-template-columns: 18px 14px minmax(0, 1fr);
+  align-items: start;
+  gap: 8px;
+}
+
+.task-list-title strong,
+.task-list-title small {
+  display: block;
+}
+
+.task-list-title small,
+.task-list-row > div:nth-child(2) span {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.task-list-actions {
+  display: flex;
+  justify-content: end;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.task-list-actions button {
+  min-height: 30px;
+  padding: 0 9px;
+  font-size: 12px;
 }
 
 .task-card {

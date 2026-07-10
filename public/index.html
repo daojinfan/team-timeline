@@ -56,12 +56,9 @@
                 <label>颜色<input name="color" type="color" value="#2563eb"></label>
                 <label>状态
                   <select name="status">
-                    <option value="planned">未开始</option>
-                    <option value="active" selected>进行中</option>
+                    <option value="auto" selected>自动判断</option>
                     <option value="paused">暂停</option>
-                    <option value="completed">已完成</option>
                     <option value="cancelled">取消</option>
-                    <option value="archived">已归档</option>
                   </select>
                 </label>
               </div>
@@ -103,7 +100,7 @@
             </label>
             <button id="importMembersBtn" type="button">导入成员</button>
             <label>任务 CSV
-              <textarea id="tasksCsv" rows="5" placeholder="title,description,default_start_date,default_end_date,color,status,member_names,checklist&#10;新任务,说明,2026-07-01,2026-07-10,#2563eb,active,张三;李四,准备;复核"></textarea>
+              <textarea id="tasksCsv" rows="5" placeholder="title,description,default_start_date,default_end_date,color,status,member_names,checklist&#10;新任务,说明,2026-07-01,2026-07-10,#2563eb,auto,张三;李四,准备;复核"></textarea>
             </label>
             <button id="importTasksBtn" type="button">导入任务</button>
             <div id="importErrors" class="notice"></div>
@@ -159,23 +156,34 @@
             <span id="selectionInfo">未选择任务</span>
             <select id="batchStatus">
               <option value="">状态不变</option>
-              <option value="planned">未开始</option>
-              <option value="active">进行中</option>
+              <option value="auto">自动判断</option>
               <option value="paused">暂停</option>
-              <option value="completed">已完成</option>
               <option value="cancelled">取消</option>
-              <option value="archived">归档</option>
             </select>
             <input id="batchEndDate" type="date" title="批量结束日期">
             <label class="inline"><input id="batchSync" type="checkbox" checked> 同步个人时间</label>
             <button id="batchApplyBtn" type="button" disabled>批量应用</button>
-            <button id="archiveDoneBtn" type="button">归档已完成</button>
+            <button id="archiveSelectedBtn" type="button">归档所选</button>
           </section>
 
           <section id="ganttView" class="view active">
             <div class="gantt-shell"><div id="gantt" class="gantt"></div></div>
           </section>
           <section id="tasksView" class="view">
+            <div class="task-viewbar">
+              <div class="segmented compact-segmented" role="tablist" aria-label="任务查看方式">
+                <button class="active" data-task-view-mode="cards" type="button">卡片</button>
+                <button data-task-view-mode="list" type="button">列表</button>
+              </div>
+              <label>排序
+                <select id="taskSort">
+                  <option value="time_asc">时间从早到晚</option>
+                  <option value="time_desc">时间从晚到早</option>
+                  <option value="name_asc">任务名 A-Z</option>
+                  <option value="name_desc">任务名 Z-A</option>
+                </select>
+              </label>
+            </div>
             <div id="taskCards" class="task-grid"></div>
           </section>
           <section id="loadView" class="view">

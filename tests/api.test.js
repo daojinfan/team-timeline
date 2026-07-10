@@ -36,6 +36,12 @@ async function fixture() {
   };
 }
 
+function addDays(date, amount) {
+  const next = new Date(`${date}T00:00:00`);
+  next.setDate(next.getDate() + amount);
+  return next.toISOString().slice(0, 10);
+}
+
 test("dashboard exposes seeded data, templates, checklist, and stats", async () => {
   const app = await fixture();
   try {
@@ -54,10 +60,50 @@ test("dashboard exposes seeded data, templates, checklist, and stats", async () 
 test("structured filters return matching task ids", async () => {
   const app = await fixture();
   try {
-    const dashboard = await app.request("/api/dashboard?status=completed");
+    const task = (await app.request("/api/tasks"))[0];
+    await app.request(`/api/tasks/${task.id}`, {
+      method: "PUT",
+      body: JSON.stringify({ status: "cancelled" })
+    });
+    const dashboard = await app.request("/api/dashboard?status=cancelled");
     const ids = new Set(dashboard.filtered_task_ids);
     assert.ok(ids.size > 0);
-    assert.ok(dashboard.tasks.filter((task) => ids.has(task.id)).every((task) => task.status === "completed"));
+    assert.ok(dashboard.tasks.filter((item) => ids.has(item.id)).every((item) => item.status === "cancelled"));
+  } finally {
+    await app.close();
+  }
+});
+
+test("planned and active task statuses are derived from dates", async () => {
+  const app = await fixture();
+  try {
+    const dashboard = await app.request("/api/dashboard");
+    const members = await app.request("/api/members");
+    const futureStart = addDays(dashboard.today, 5);
+    const futureEnd = addDays(dashboard.today, 8);
+
+    const futureTask = await app.request("/api/tasks", {
+      method: "POST",
+      body: JSON.stringify({
+        title: "Auto future task",
+        default_start_date: futureStart,
+        default_end_date: futureEnd,
+        color: "#2563eb",
+        status: "active",
+        member_ids: [members[0].id]
+      })
+    });
+    assert.equal(futureTask.status, "planned");
+
+    const activeTask = await app.request(`/api/tasks/${futureTask.id}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        default_start_date: addDays(dashboard.today, -1),
+        default_end_date: futureEnd,
+        status: "auto"
+      })
+    });
+    assert.equal(activeTask.status, "active");
   } finally {
     await app.close();
   }

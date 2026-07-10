@@ -10,6 +10,8 @@
   stats: null,
   today: "",
   search: "",
+  taskSort: "time_asc",
+  taskViewMode: "cards",
   scale: "day",
   zoom: 60,
   rangeMode: "30",
@@ -18,7 +20,7 @@
   stackMemberList: true,
   filters: {
     member_id: "",
-    status: "active",
+    status: "",
     start_date: "",
     end_date: "",
     overdue: false,
@@ -38,6 +40,11 @@ const statusLabels = {
   completed: "已完成",
   cancelled: "取消",
   archived: "归档"
+};
+
+const manualStatusLabels = {
+  paused: "暂停",
+  cancelled: "取消"
 };
 
 const $ = (selector) => document.querySelector(selector);
@@ -159,6 +166,16 @@ function visibleTasks() {
   return state.tasks.filter((task) => state.filteredTaskIds.has(task.id) && taskPassesSearch(task));
 }
 
+function sortedVisibleTasks() {
+  const tasks = [...visibleTasks()];
+  const byName = (a, b) => a.title.localeCompare(b.title, "zh-CN", { numeric: true, sensitivity: "base" }) || a.default_start_date.localeCompare(b.default_start_date);
+  const byTime = (a, b) => a.default_start_date.localeCompare(b.default_start_date) || a.default_end_date.localeCompare(b.default_end_date) || byName(a, b);
+  if (state.taskSort === "time_desc") return tasks.sort((a, b) => byTime(b, a));
+  if (state.taskSort === "name_asc") return tasks.sort(byName);
+  if (state.taskSort === "name_desc") return tasks.sort((a, b) => byName(b, a));
+  return tasks.sort(byTime);
+}
+
 function visibleAssignments() {
   const visibleIds = new Set(visibleTasks().map((task) => task.id));
   return state.assignments.filter((item) => visibleIds.has(item.task_id));
@@ -188,6 +205,7 @@ function renderFilters() {
   $("#filterStatus").innerHTML = `<option value="">全部状态</option>${Object.entries(statusLabels).map(([value, label]) => `<option value="${value}" ${state.filters.status === value ? "selected" : ""}>${label}</option>`).join("")}`;
   $("#filterStart").value = state.filters.start_date;
   $("#filterEnd").value = state.filters.end_date;
+  $("#taskSort").value = state.taskSort;
   $("#filterOverdue").checked = state.filters.overdue;
   $("#filterOverlap").checked = state.filters.overlap;
 }
@@ -396,13 +414,58 @@ function checklistSummary(task) {
   return `${done}/${total} 已完成`;
 }
 
+function taskPrimaryAction(task) {
+  if (task.status === "archived") return "";
+  return `<button type="button" data-archive-task="${task.id}">归档</button>`;
+}
+
 function renderTasks() {
-  const tasks = visibleTasks();
-  $("#taskCards").innerHTML = tasks.map((task) => `
+  const tasks = sortedVisibleTasks();
+  const container = $("#taskCards");
+  $("#taskSort").value = state.taskSort;
+  $$("[data-task-view-mode]").forEach((button) => {
+    button.classList.toggle("active", button.dataset.taskViewMode === state.taskViewMode);
+  });
+  container.className = state.taskViewMode === "list" ? "task-list-view" : "task-grid";
+  if (state.taskViewMode === "list") {
+    container.innerHTML = `
+      <div class="task-list-header">
+        <span>任务</span>
+        <span>时间</span>
+        <span>成员</span>
+        <span>状态</span>
+        <span>操作</span>
+      </div>
+      ${tasks.map((task) => `
+        <article class="task-list-row ${state.selectedTaskIds.has(task.id) ? "selected" : ""}">
+          <div class="task-list-title">
+            <label class="select-task"><input type="checkbox" data-task-check="${task.id}" ${state.selectedTaskIds.has(task.id) ? "checked" : ""}></label>
+            <span class="swatch" style="background:${task.color}"></span>
+            <div>
+              <strong>${escapeHtml(task.title)}</strong>
+              <small>${escapeHtml(task.description || "无描述")} · 清单 ${checklistSummary(task)}</small>
+            </div>
+          </div>
+          <div>${task.default_start_date}<br><span>${task.default_end_date}</span></div>
+          <div>${task.assignments.map((assignment) => escapeHtml(assignment.member_name)).join("、") || "未分配"}</div>
+          <div><span class="status ${task.status}">${statusLabels[task.status] || task.status}</span></div>
+          <div class="task-list-actions">
+            <button type="button" data-select-task="${task.id}">详情</button>
+            <button type="button" data-edit-task="${task.id}">编辑</button>
+            ${taskPrimaryAction(task)}
+            <button class="danger" type="button" data-delete-task="${task.id}">删除</button>
+          </div>
+        </article>
+      `).join("") || `<div class="empty">没有匹配的任务。可以清空筛选，或在左侧新增任务。</div>`}
+    `;
+    return;
+  }
+
+  container.innerHTML = tasks.map((task) => `
     <article class="task-card ${state.selectedTaskIds.has(task.id) ? "selected" : ""}">
       <div class="task-title-line">
         <label class="select-task"><input type="checkbox" data-task-check="${task.id}" ${state.selectedTaskIds.has(task.id) ? "checked" : ""}></label>
-        <h3><span class="swatch" style="background:${task.status === "completed" ? "#8d96a3" : task.color}"></span>${escapeHtml(task.title)}</h3>
+        <h3><span class="swatch" style="background:${task.color}"></span>${escapeHtml(task.title)}</h3>
       </div>
       <p class="meta">${escapeHtml(task.description || "无描述")}</p>
       <p class="meta">${task.default_start_date} 至 ${task.default_end_date} <span class="status ${task.status}">${statusLabels[task.status] || task.status}</span></p>
@@ -418,7 +481,7 @@ function renderTasks() {
       <div class="card-actions">
         <button type="button" data-select-task="${task.id}">任务详情</button>
         <button type="button" data-edit-task="${task.id}">编辑</button>
-        <button type="button" data-archive-task="${task.id}">归档</button>
+        ${taskPrimaryAction(task)}
         <button class="danger" type="button" data-delete-task="${task.id}">删除</button>
       </div>
     </article>
@@ -429,7 +492,7 @@ function renderLoad() {
   const rows = state.stats?.member_load || [];
   $("#loadTable").innerHTML = `
     <table>
-      <thead><tr><th>成员</th><th>当前</th><th>7 天</th><th>30 天</th><th>逾期</th><th>完成</th><th>重叠</th></tr></thead>
+      <thead><tr><th>成员</th><th>当前</th><th>7 天</th><th>30 天</th><th>逾期</th><th>结束</th><th>重叠</th></tr></thead>
       <tbody>
         ${rows.map((row) => `
           <tr class="${row.overlap_count > 0 || row.overdue_count > 0 ? "warn-row" : ""}">
@@ -564,7 +627,7 @@ function renderDetail() {
         </dl>
         <div class="detail-actions">
           <button type="button" data-edit-task="${task.id}">编辑任务</button>
-          <button type="button" data-archive-task="${task.id}">归档</button>
+          ${taskPrimaryAction(task)}
           <button type="button" data-delete-task="${task.id}">删除任务</button>
         </div>
         ${memberAssignmentBlock(task)}
@@ -671,7 +734,8 @@ function openTaskEditor(id) {
       <label>颜色<input name="color" type="color" value="${task.color}"></label>
       <label>状态
         <select name="status">
-          ${Object.entries(statusLabels).map(([value, label]) => `<option value="${value}" ${task.status === value ? "selected" : ""}>${label}</option>`).join("")}
+          <option value="auto" ${["planned", "active"].includes(task.status) ? "selected" : ""}>自动判断</option>
+          ${Object.entries(manualStatusLabels).map(([value, label]) => `<option value="${value}" ${task.status === value ? "selected" : ""}>${label}</option>`).join("")}
         </select>
       </label>
     </div>
@@ -1032,14 +1096,24 @@ function bindEvents() {
       await loadData();
     });
   });
+  $("#taskSort").addEventListener("change", (event) => {
+    state.taskSort = event.target.value;
+    renderTasks();
+  });
+  $$("[data-task-view-mode]").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.taskViewMode = button.dataset.taskViewMode;
+      renderTasks();
+    });
+  });
   $("#clearFiltersBtn").addEventListener("click", async () => {
-    state.filters = { member_id: "", status: "active", start_date: "", end_date: "", overdue: false, overlap: false };
+    state.filters = { member_id: "", status: "", start_date: "", end_date: "", overdue: false, overlap: false };
     await loadData();
   });
 
-  $$(".segmented button").forEach((button) => {
+  $$("[data-view]").forEach((button) => {
     button.addEventListener("click", () => {
-      $$(".segmented button").forEach((item) => item.classList.remove("active"));
+      $$("[data-view]").forEach((item) => item.classList.remove("active"));
       $$(".view").forEach((item) => item.classList.remove("active"));
       button.classList.add("active");
       $(`#${button.dataset.view}View`).classList.add("active");
@@ -1058,6 +1132,7 @@ function bindEvents() {
     await api("/api/tasks", { method: "POST", body: JSON.stringify(payload) });
     event.currentTarget.reset();
     event.currentTarget.color.value = "#2563eb";
+    event.currentTarget.status.value = "auto";
     setDefaultDates();
     showToast("任务已创建");
     await loadData();
@@ -1101,9 +1176,12 @@ function bindEvents() {
   });
 
   $("#batchApplyBtn").addEventListener("click", applyBatch);
-  $("#archiveDoneBtn").addEventListener("click", async () => {
-    await api("/api/batch/tasks", { method: "POST", body: JSON.stringify({ archive_completed: true, status: "archived" }) });
-    showToast("已归档完成任务");
+  $("#archiveSelectedBtn").addEventListener("click", async () => {
+    if (!state.selectedTaskIds.size) return showToast("请先选择任务");
+    if (!window.confirm(`确认归档选中的 ${state.selectedTaskIds.size} 个任务？归档后会从日常视图移到维护页归档区。`)) return;
+    await api("/api/batch/tasks", { method: "POST", body: JSON.stringify({ task_ids: [...state.selectedTaskIds], status: "archived" }) });
+    state.selectedTaskIds.clear();
+    showToast("已归档所选任务");
     await loadData();
   });
 
@@ -1224,6 +1302,10 @@ function bindEvents() {
       return;
     }
     if (action("[data-archive-task]")) {
+      const taskId = Number(action("[data-archive-task]").dataset.archiveTask);
+      const task = state.tasks.find((item) => item.id === taskId);
+      const name = task?.title || `ID ${taskId}`;
+      if (!window.confirm(`确认归档任务「${name}」？归档后会从日常视图移到维护页归档区。`)) return;
       await api(`/api/tasks/${action("[data-archive-task]").dataset.archiveTask}/archive`, { method: "POST" });
       showToast("任务已归档");
       await loadData();
