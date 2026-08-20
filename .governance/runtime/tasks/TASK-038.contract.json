@@ -1,0 +1,74 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-038",
+  "work_package": "WP-006",
+  "title": "Review repaired V2 server integration",
+  "goal": "Independently review the complete integrated V2 server and the TASK-037 repair for two consecutive Release passes",
+  "baseline": "BL-003",
+  "profile": "Release",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-038"
+  ],
+  "read_paths": [
+    "src",
+    "tests"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-038"
+  ],
+  "out_of_scope": [
+    "implementation changes",
+    "delegation"
+  ],
+  "authoritative_documents": [
+    "REQ-V2-001",
+    "ARC-COMP-004",
+    "CR-002",
+    "ARC-OVERALL-002",
+    "DEC-002"
+  ],
+  "dependencies": [
+    "TASK-037"
+  ],
+  "acceptance_criteria": [
+    "Review complete server tests and exact repair diff",
+    "Independently prove same-plan other-plan archived-plan conflict semantics",
+    "Recheck migration API lineage acceptance and V1 regressions for two passes"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-ProjectPath",
+        ".",
+        "-Level",
+        "Release"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface",
+    "data_model_or_migration",
+    "production_release"
+  ],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-20T20:09:28.3058437Z",
+  "release_controls": {
+    "target_environment": "local dev branch",
+    "execution_window": "current approved V2 repair session",
+    "rollback_plan": "reviewer writes evidence only",
+    "observation_metrics": "independent conflict scenarios, full contract checks, exact diff, two-pass fingerprint",
+    "stop_conditions": "scope drift, failing scenario, or unresolved finding",
+    "post_release_owner": "PROJECT_MANAGER 01a01ef6-d413-7660-bdc5-62bd5873cbf4"
+  }
+}

@@ -25,7 +25,7 @@ last_reviewed: 2026-08-20
 | WP-004 | accepted | 2026-08-21 | IMPLEMENTER | docs/05-quality/evidence/TASK-019/20260820T145548610Z-62ae2b79-required-validation.evidence.json, docs/05-quality/evidence/TASK-020/20260820T150828635Z-b4b12354-required-validation.evidence.json | 客户端任务交互（按已集成代码顺序复核） |
 | WP-005 | accepted | 2026-08-21 | TESTER | docs/05-quality/evidence/TASK-021/20260820T151111401Z-718ca4be-required-validation.evidence.json, docs/05-quality/evidence/TASK-022/20260820T152538216Z-378b1612-required-validation.evidence.json | 服务端示例数据与回归测试（按已集成代码顺序复核） |
 | WP-006 | implemented | 2026-08-21 | IMPLEMENTER | docs/05-quality/evidence/TASK-031/20260820T195335245Z-2a5deb8c-required-validation.evidence.json, docs/05-quality/evidence/TASK-032/20260820T200133459Z-9a6ded35-required-validation.evidence.json | V2 服务端、schema 迁移、API 与自动化回归 |
-| WP-007 | implemented | 2026-08-21 | IMPLEMENTER | docs/05-quality/evidence/TASK-033/20260820T195308804Z-02c3a24b-required-validation.evidence.json, docs/05-quality/evidence/TASK-034/20260820T200322203Z-ce37024f-required-validation.evidence.json | V2 六区桌面外壳、样式与双尺寸验收 |
+| WP-007 | needs-decision | 2026-08-21 | IMPLEMENTER | docs/05-quality/evidence/TASK-033/20260820T195308804Z-02c3a24b-required-validation.evidence.json, docs/05-quality/evidence/TASK-034/20260820T200322203Z-ce37024f-required-validation.evidence.json | V2 六区桌面外壳、样式与双尺寸验收 |
 | WP-008 | planned | 2026-08-21 | INTEGRATOR | 待生成 | V2 客户端交互与人工执行闭环；等待 WP-006/WP-007 |
 
 允许的状态值：planned、in-progress、blocked、needs-decision、implemented、verified、accepted、superseded。

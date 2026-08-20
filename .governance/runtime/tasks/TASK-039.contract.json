@@ -1,0 +1,65 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-039",
+  "work_package": "WP-007",
+  "title": "Apply reviewed V2 shell focus repair",
+  "goal": "Sequentially re-audit the integrated V2 desktop shell and apply the approved task-button visibility and plan-name autofocus repair after shared-tree integration",
+  "baseline": "BL-003",
+  "profile": "Release",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/index.html",
+    "public/styles.css"
+  ],
+  "read_paths": [
+    "public"
+  ],
+  "write_paths": [
+    "public/index.html",
+    "public/styles.css"
+  ],
+  "out_of_scope": [
+    "public/app.js",
+    "server",
+    "database",
+    "mobile"
+  ],
+  "authoritative_documents": [
+    "REQ-V2-001",
+    "ARC-COMP-004",
+    "ARC-OVERALL-002",
+    "DEC-002"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "newTaskBtn is initially hidden outside execution or assignment while its V1 ID remains",
+    "planDialog has exactly one autofocus target and it is planName",
+    "Complete integrated shell preserves all V1 and V2 IDs and desktop layout contracts",
+    "All syntax tests desktop metrics and Release checks pass"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "npm.cmd",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-20T20:09:48.0879198Z",
+  "release_controls": {
+    "target_environment": "local dev branch",
+    "execution_window": "current approved V2 repair session",
+    "rollback_plan": "revert the small index.html repair commit",
+    "observation_metrics": "DOM assertions, 26+ tests, desktop viewport metrics, reviewer evidence",
+    "stop_conditions": "scope drift, V1 ID loss, focus or visibility regression, failing tests, or unresolved finding",
+    "post_release_owner": "PROJECT_MANAGER 01a01ef6-d413-7660-bdc5-62bd5873cbf4"
+  }
+}

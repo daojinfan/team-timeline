@@ -1,0 +1,71 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-040",
+  "work_package": "WP-007",
+  "title": "Review repaired V2 desktop shell",
+  "goal": "Independently review the complete integrated V2 shell and TASK-039 focus visibility repair for two consecutive Release passes",
+  "baseline": "BL-003",
+  "profile": "Release",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-040"
+  ],
+  "read_paths": [
+    "public"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-040"
+  ],
+  "out_of_scope": [
+    "implementation changes",
+    "delegation"
+  ],
+  "authoritative_documents": [
+    "REQ-V2-001",
+    "ARC-COMP-004",
+    "ARC-OVERALL-002",
+    "DEC-002"
+  ],
+  "dependencies": [
+    "TASK-039"
+  ],
+  "acceptance_criteria": [
+    "Review complete HTML CSS and exact repair diff",
+    "Prove button visibility autofocus IDs ARIA and desktop layout contracts",
+    "Record two consecutive unchanged-content Release passes"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-ProjectPath",
+        ".",
+        "-Level",
+        "Release"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface",
+    "production_release"
+  ],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-20T20:09:48.2739680Z",
+  "release_controls": {
+    "target_environment": "local dev branch",
+    "execution_window": "current approved V2 repair session",
+    "rollback_plan": "reviewer writes evidence only",
+    "observation_metrics": "DOM and viewport checks, exact diff, two-pass fingerprint",
+    "stop_conditions": "scope drift, layout regression, failing assertion, or unresolved finding",
+    "post_release_owner": "PROJECT_MANAGER 01a01ef6-d413-7660-bdc5-62bd5873cbf4"
+  }
+}

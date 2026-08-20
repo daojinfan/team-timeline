@@ -36,10 +36,14 @@ review_policy: independent-required
 
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| WP-007 | TASK-040 | pending | REVIEWER | Review repaired V2 desktop shell | BL-003 | pending | TASK-039 | pending | docs/05-quality/evidence/TASK-040 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-007 | TASK-039 | pending | IMPLEMENTER | Apply reviewed V2 shell focus repair | BL-003 | pending | n/a | pending | public/index.html, public/styles.css | required-validation | TASK-040 | pending | pending | Plan 自动登记，等待调度 |
+| WP-006 | TASK-038 | pending | REVIEWER | Review repaired V2 server integration | BL-003 | pending | TASK-037 | pending | docs/05-quality/evidence/TASK-038 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-006 | TASK-037 | pending | IMPLEMENTER | Apply reviewed V2 server conflict repair | BL-003 | pending | TASK-031 | pending | src/server.js, tests | required-validation | TASK-038 | pending | pending | Plan 自动登记，等待调度 |
 | WP-008 | TASK-036 | pending | REVIEWER | Review V2 client interactions | BL-003 | pending | TASK-035 | pending | docs/05-quality/evidence/TASK-036 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-008 | TASK-035 | pending | INTEGRATOR | Integrate V2 client interactions | BL-003 | pending | TASK-031, TASK-033 | pending | public/app.js | required-validation | TASK-036 | pending | pending | Plan 自动登记，等待调度 |
 | WP-007 | TASK-034 | pending | REVIEWER | Review V2 six-zone desktop shell | BL-003 | pending | TASK-033 | completed | docs/05-quality/evidence/TASK-034 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
-| WP-007 | TASK-033 | pending | IMPLEMENTER | Implement V2 six-zone desktop shell | BL-003 | pending | n/a | running | public/index.html, public/styles.css | required-validation | TASK-034 | changes-required | docs/05-quality/evidence/TASK-034/review-round-1.json | Plan 自动登记，等待调度 |
+| WP-007 | TASK-033 | pending | IMPLEMENTER | Implement V2 six-zone desktop shell | BL-003 | pending | n/a | needs-attention | public/index.html, public/styles.css | required-validation | TASK-034 | changes-required | docs/05-quality/evidence/TASK-034/review-round-1.json | Plan 自动登记，等待调度 |
 | WP-006 | TASK-032 | pending | REVIEWER | Review V2 server migration and APIs | BL-003 | pending | TASK-031 | completed | docs/05-quality/evidence/TASK-032 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-006 | TASK-031 | pending | IMPLEMENTER | Implement V2 server migration and APIs | BL-003 | pending | n/a | running | src/server.js, tests | required-validation | TASK-032 | changes-required | docs/05-quality/evidence/TASK-032/review-round-1.json | Plan 自动登记，等待调度 |
 | WP-002 | TASK-030 | pending | REVIEWER | Review formal V2 authority documents | BL-002 | pending | TASK-029 | completed | docs/05-quality/evidence/TASK-030 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
