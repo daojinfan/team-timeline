@@ -1,0 +1,51 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-020",
+  "reviewed_task_ids": [
+    "TASK-019"
+  ],
+  "work_package": "WP-004",
+  "baseline": "BL-002",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-019",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "新增详情触发器与稳定 selector 的焦点返回记录、统一 closeDetail 关闭路径、详情关闭按钮复用该路径，并增加仅在无 dialog[open] 且抽屉实际打开时响应 Escape 的键盘关闭逻辑；未新增、删除或重命名产品文件。"
+    }
+  ],
+  "change_summary": "已对 TASK-019 启动提交 5a1b0d9bc198b7fe0a55b456f0e5c5c07c774846 到交付提交 9109aacf80cc85f3fc54ca9f14d1b7cc3271fcbf 执行完整 Git 差异核对。提交区间包含 TASK-019 的三项治理运行记录更新，交付写范围内的实质产品差异精确为 modified public/app.js（56 行增加、6 行删除）；当前 public/app.js 与交付提交一致。除逐行审核新增 Escape/焦点逻辑外，已重新完整审核当前 1937 行客户端行为及其 index DOM 契约，未发现阻塞性功能、兼容性或范围漂移问题。",
+  "scope_checked": [
+    "TASK-019 与 TASK-020 的 Release 契约、运行状态、WP-004 context、BL-002、依赖、路径边界、Reviewer 绑定及 TASK-019 验证证据",
+    "REQ-001 至 REQ-007、ARC-COMP-002、ARC-OVERALL-001 与 DEC-001 的任务流程、兼容性、桌面端和原生技术栈边界",
+    "TASK-019 启动提交 5a1b0d9bc198b7fe0a55b456f0e5c5c07c774846 到交付提交 9109aacf80cc85f3fc54ca9f14d1b7cc3271fcbf 的完整新增、修改、删除和重命名清单，以及治理记录与产品交付差异的分离",
+    "public/app.js 当前 1937 行全文和 public/index.html DOM 契约；95 个 HTML ID 无重复、78 个 app.js 直接 ID 引用均存在，五个 data-toolbar-view 值完整且唯一",
+    "activeView 的五视图导航、唯一专属工具栏、唯一活动 view、页面标题、ARIA 选中态与任务视图条件式批量栏",
+    "teamTaskGantt.desktopPrefs.v1 的 activeView、scale、zoom、rangeMode、taskViewMode、taskSort、sidebarCollapsed 七项白名单校验、损坏 JSON/存储异常回退与各交互保存路径",
+    "新建任务模态一次点击打开、名称聚焦、取消焦点返回、提交中防重复和相关按钮禁用、成功重置/单次加载、失败保留字段/表内错误/错误 Toast 四态",
+    "360px 固定覆盖详情抽屉的按需 hidden/is-open 状态、任务与个人分配渲染、关闭后清理 activeTaskId/activeAssignmentId 且不占工作区列宽",
+    "单项和批量 completed、编辑 completed 默认保持、通过 auto/paused/cancelled 重新打开、完成请求不写个人 progress、低进度非阻塞提示和完成 Toast",
+    "smart 甘特范围的当前任务优先、最近任务距离排序、未来并列优先和稳定排序，以及真空库新建 CTA 与筛选/范围空结果的查看全部/查看逾期 CTA",
+    "逾期/重叠统计按钮筛选、结构化筛选和本地关键词组合、筛选标签逐项移除、结果数量反馈与清空条件同步",
+    "单项/批量归档和任务软删除的 Toast 撤销、归档区/回收站恢复、维护强确认、RESET 提示和操作前备份流程",
+    "负载周期与成员过滤、日志关键词/类型/日期过滤、维护目标导航、模板/导入/备份/归档/回收站集中性",
+    "runBusyAction 对创建、编辑、完成、批量、导入、清单、恢复和维护写操作的去重、禁用、恢复与错误保留路径",
+    "Escape 新增路径：任意 dialog[open] 时立即避让；仅 detailPane 非 hidden 且 is-open 时处理；复用 closeDetail 清理活动 ID；焦点按仍连接原触发器、活动视图稳定 selector、活动视图首个控件、当前 tab、新建任务按钮顺序回退",
+    "关闭按钮与 Escape 共用 closeDetail，甘特重渲染后原节点断开时通过 data-select-assignment/data-select-task 稳定 selector 找回可见新节点，且候选必须 isConnected、可 focus、具有布局矩形",
+    "公共 API 路径保持现有 PUT /api/tasks/:id、POST /api/batch/tasks 与恢复接口；未引入框架、运行依赖、数据库、移动端、认证、部署或 native confirm 测试范围"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "docs/05-quality/evidence/TASK-019/20260820T145548610Z-62ae2b79-required-validation.evidence.json（git_commit=9109aacf80cc85f3fc54ca9f14d1b7cc3271fcbf，node --check public/app.js，exit_code=0）",
+    "git diff --name-status --find-renames 5a1b0d9bc198b7fe0a55b456f0e5c5c07c774846 9109aacf80cc85f3fc54ca9f14d1b7cc3271fcbf：产品交付范围仅 M public/app.js；完整 diff 已逐行核对，当前 public/app.js 相对交付提交无差异",
+    "审核者独立运行 node --check public/app.js：exit 0；npm test：16/16 通过；指定提交区间 public/app.js 的 git diff --check：exit 0",
+    "审核者独立运行 Release 治理校验：扫描 27 份文档，0 错误、0 警告",
+    "静态 DOM 契约核验：public/index.html 共 95 个 ID 且无重复，app.js 78 个直接 #id 引用无缺失，五个工具栏值恰为 gantt/tasks/load/logs/maintenance，taskDialog、editDialog、detailPane、closeDetailBtn 均存在",
+    "docs/05-quality/evidence/TASK-018/review-round-1.json 的既有独立桌面浏览器证据：1280×720 与 1366×768 无页面水平溢出，五视图/工具栏唯一，taskDialog 为 720px，detailPane 为 360px 固定覆盖且关闭后 hidden；TASK-019 未修改 index.html 或 styles.css",
+    "新增 Escape/焦点行为完成独立全路径控制流复核：dialog 优先级、活动 ID 清理、甘特重渲染后 selector 回退、可见性筛选和关闭按钮复用均闭合。内置浏览器连接诊断返回无可用实例，因此本轮未伪造现场键盘实测，也未替换为其他浏览器或触发 native confirm 场景"
+  ],
+  "created_at": "2026-08-20T15:01:44.9531605Z"
+}
