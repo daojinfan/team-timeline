@@ -1,0 +1,69 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-012",
+  "work_package": "WP-003",
+  "title": "Review desktop page shell and styles",
+  "goal": "Independently review TASK-011 desktop layout changes and record structured evidence",
+  "baseline": "BL-002",
+  "profile": "Release",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-012"
+  ],
+  "read_paths": [
+    "public"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-012"
+  ],
+  "out_of_scope": [
+    "implementation changes",
+    "delegation"
+  ],
+  "authoritative_documents": [
+    "ARC-COMP-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEC-001"
+  ],
+  "dependencies": [
+    "TASK-011"
+  ],
+  "acceptance_criteria": [
+    "Review checks actual HTML and CSS diff against desktop layout requirements",
+    "Evidence records all changed paths and browser acceptance results"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-ProjectPath",
+        ".",
+        "-Level",
+        "Release"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "production_release"
+  ],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-20T13:12:10.3641225Z",
+  "release_controls": {
+    "target_environment": "local dev branch",
+    "execution_window": "current approved development session",
+    "rollback_plan": "revert the local task commit before integration",
+    "observation_metrics": "validation results, changed paths, browser evidence, and governance review",
+    "stop_conditions": "scope drift, baseline mismatch, failing validation, or unresolved reviewer finding",
+    "post_release_owner": "PROJECT_MANAGER 01a01ef6-d413-7660-bdc5-62bd5873cbf4"
+  }
+}

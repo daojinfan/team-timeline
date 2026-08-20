@@ -36,6 +36,14 @@ review_policy: independent-required
 
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| WP-005 | TASK-016 | pending | REVIEWER | Review dynamic sample data and regression tests | BL-002 | pending | TASK-015 | pending | docs/05-quality/evidence/TASK-016 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-005 | TASK-015 | pending | TESTER | Implement dynamic sample data and regression tests | BL-002 | pending | TASK-009 | pending | src/server.js, tests | required-validation | TASK-016 | pending | pending | Plan 自动登记，等待调度 |
+| WP-004 | TASK-014 | pending | REVIEWER | Review client task interactions | BL-002 | pending | TASK-013 | pending | docs/05-quality/evidence/TASK-014 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-004 | TASK-013 | pending | IMPLEMENTER | Implement client task interactions | BL-002 | pending | TASK-009 | pending | public/app.js | required-validation | TASK-014 | pending | pending | Plan 自动登记，等待调度 |
+| WP-003 | TASK-012 | pending | REVIEWER | Review desktop page shell and styles | BL-002 | pending | TASK-011 | pending | docs/05-quality/evidence/TASK-012 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-003 | TASK-011 | pending | IMPLEMENTER | Implement desktop page shell and styles | BL-002 | pending | TASK-009 | pending | public/index.html, public/styles.css | required-validation | TASK-012 | pending | pending | Plan 自动登记，等待调度 |
+| WP-002 | TASK-010 | pending | REVIEWER | Review registered desktop UX implementation brief | BL-002 | pending | TASK-009 | pending | docs/05-quality/evidence/TASK-010 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-002 | TASK-009 | pending | ARCHITECT | Finalize registered desktop UX implementation brief | BL-002 | pending | n/a | pending | docs/09-reports/WP-002-implementation-brief.md, docs/00-index/DOC-REGISTRY.md | required-validation | TASK-010 | pending | pending | Plan 自动登记，等待调度 |
 | WP-005 | TASK-008 | pending | REVIEWER | Review dynamic sample data and regression tests | BL-002 | pending | TASK-007 | replaced | docs/05-quality/evidence/TASK-008 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-005 | TASK-007 | pending | TESTER | Implement dynamic sample data and regression tests | BL-002 | pending | TASK-001 | replaced | src/server.js, tests | required-validation | TASK-008 | pending | pending | Plan 自动登记，等待调度 |
 | WP-004 | TASK-006 | pending | REVIEWER | Review client task interactions | BL-002 | pending | TASK-005 | replaced | docs/05-quality/evidence/TASK-006 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
