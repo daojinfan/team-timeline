@@ -1,0 +1,65 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-005",
+  "work_package": "WP-004",
+  "title": "Implement client task interactions",
+  "goal": "Implement contextual toolbars, task creation modal, completion workflow, smart Gantt range, filters, preferences, and feedback in the client",
+  "baseline": "BL-002",
+  "profile": "Release",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/app.js"
+  ],
+  "read_paths": [
+    "public"
+  ],
+  "write_paths": [
+    "public/app.js"
+  ],
+  "out_of_scope": [
+    "HTML and CSS changes",
+    "server changes",
+    "database",
+    "mobile UX"
+  ],
+  "authoritative_documents": [
+    "ARC-COMP-002",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEC-001"
+  ],
+  "dependencies": [
+    "TASK-001"
+  ],
+  "acceptance_criteria": [
+    "Completed status is available and preserved when editing",
+    "View controls, batch bar, smart range, filters, preferences, and feedback follow ARC-COMP-002",
+    "No API or mobile scope drift"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "node.exe",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-20T12:57:37.8245817Z",
+  "release_controls": {
+    "target_environment": "local dev branch",
+    "execution_window": "current approved development session",
+    "rollback_plan": "revert the local task commit before integration",
+    "observation_metrics": "validation results, changed paths, browser evidence, and governance review",
+    "stop_conditions": "scope drift, baseline mismatch, failing validation, or unresolved reviewer finding",
+    "post_release_owner": "PROJECT_MANAGER 01a01ef6-d413-7660-bdc5-62bd5873cbf4"
+  }
+}

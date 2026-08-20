@@ -1,0 +1,66 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-003",
+  "work_package": "WP-003",
+  "title": "Implement desktop page shell and styles",
+  "goal": "Restructure desktop HTML and CSS so the active view is visible in the first viewport and the detail pane is on demand",
+  "baseline": "BL-002",
+  "profile": "Release",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/index.html",
+    "public/styles.css"
+  ],
+  "read_paths": [
+    "public"
+  ],
+  "write_paths": [
+    "public/index.html",
+    "public/styles.css"
+  ],
+  "out_of_scope": [
+    "public/app.js",
+    "server code",
+    "mobile UX",
+    "database"
+  ],
+  "authoritative_documents": [
+    "ARC-COMP-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEC-001"
+  ],
+  "dependencies": [
+    "TASK-001"
+  ],
+  "acceptance_criteria": [
+    "Desktop page shell matches ARC-COMP-001",
+    "1280x720 and 1366x768 show the active view without permanent empty detail column",
+    "No mobile-specific implementation is added"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "npm.cmd",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-20T12:57:37.5417547Z",
+  "release_controls": {
+    "target_environment": "local dev branch",
+    "execution_window": "current approved development session",
+    "rollback_plan": "revert the local task commit before integration",
+    "observation_metrics": "validation results, changed paths, browser evidence, and governance review",
+    "stop_conditions": "scope drift, baseline mismatch, failing validation, or unresolved reviewer finding",
+    "post_release_owner": "PROJECT_MANAGER 01a01ef6-d413-7660-bdc5-62bd5873cbf4"
+  }
+}

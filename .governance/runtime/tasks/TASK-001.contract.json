@@ -1,0 +1,77 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-001",
+  "work_package": "WP-002",
+  "title": "Prepare desktop UX implementation brief",
+  "goal": "Convert approved desktop UX design into an implementation checklist without changing the active baseline",
+  "baseline": "BL-002",
+  "profile": "Release",
+  "role": "ARCHITECT",
+  "allowed_paths": [
+    "docs/09-reports/WP-002-implementation-brief.md"
+  ],
+  "read_paths": [
+    "docs/01-governance/charter.md",
+    "docs/02-product/requirements.md",
+    "docs/03-architecture/overall-design.md",
+    "docs/03-architecture/components",
+    "docs/07-decisions/DEC-001.md"
+  ],
+  "write_paths": [
+    "docs/09-reports/WP-002-implementation-brief.md"
+  ],
+  "out_of_scope": [
+    "product code",
+    "mobile UX",
+    "public API",
+    "database"
+  ],
+  "authoritative_documents": [
+    "PROJ-CHARTER-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "ARC-COMP-001",
+    "ARC-COMP-002",
+    "ARC-COMP-003",
+    "PROJ-INDEX-001",
+    "DEC-001"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "Brief maps REQ-001 through REQ-007 to concrete UI states and file owners",
+    "Brief contains desktop browser acceptance checklist and no mobile scope"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-ProjectPath",
+        ".",
+        "-Level",
+        "Release"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "production_release"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-20T12:57:01.0511731Z",
+  "release_controls": {
+    "target_environment": "local dev branch",
+    "execution_window": "current approved development session",
+    "rollback_plan": "revert the local task commit before integration",
+    "observation_metrics": "validation results, changed paths, and governance evidence",
+    "stop_conditions": "scope drift, baseline mismatch, failing validation, or unresolved reviewer finding",
+    "post_release_owner": "PROJECT_MANAGER 01a01ef6-d413-7660-bdc5-62bd5873cbf4"
+  }
+}

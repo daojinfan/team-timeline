@@ -1,0 +1,46 @@
+{
+    "$schema":  "schemas/governed-work-state.schema.json",
+    "schema_version":  2,
+    "task_id":  "TASK-006",
+    "work_package":  "WP-004",
+    "contract_sha256":  "36fb20b23bf1540da857dc2a96d4ac17585fe1cb539d0491f3d0acea3086318f",
+    "baseline":  "BL-002",
+    "state":  "superseded",
+    "approval_id":  "",
+    "acceptance_subject_sha256":  "",
+    "acceptance_evidence_sha256":  "",
+    "acceptance_git_commit":  "",
+    "start_git_commit":  "",
+    "execution_lease":  "",
+    "execution_lease_owner":  "",
+    "execution_lease_expires_at":  "",
+    "preexisting_changes":  [
+
+                            ],
+    "plan_checkpoint_git_commit":  "57eaa61457fc519141f549cded1b2af9a3d12054",
+    "plan_rebase_history":  [
+
+                            ],
+    "evidence":  [
+
+                 ],
+    "evidence_history":  [
+
+                         ],
+    "review_history":  [
+
+                       ],
+    "review":  {
+                   "required":  false,
+                   "reviewer_task_id":  "",
+                   "status":  "not-applicable",
+                   "evidence":  [
+
+                                ],
+                   "pass_streak":  0,
+                   "subject_sha256":  ""
+               },
+    "last_error":  "Replaced after Release validation exposed missing document-registry scope in the shared WP-002 dependency contract.",
+    "created_at":  "2026-08-20T12:57:37.9221471Z",
+    "updated_at":  "2026-08-20T13:09:42.6486560Z"
+}
