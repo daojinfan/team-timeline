@@ -75,4 +75,3 @@ APPROVAL REQUIRED: yes
 - 本任务实际文档：仅三个 `docs/09-reports/*.proposal` 文件；不修改注册表、CURRENT-STATE、governance.json、活动基线或代码。
 - 详细设计：blocked pending explicit human overall-design approval。
 - 变更后基线：待总体设计和详细设计均批准后确定（预计 BL-003，但当前不作承诺）。
-

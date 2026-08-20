@@ -5,7 +5,7 @@
   "work_package": "WP-002",
   "contract_sha256": "f08d73cd3dcbed976230b41c5615fdc8d974aa4a7541a80a5c7786796a284e34",
   "baseline": "BL-002",
-  "state": "implemented",
+  "state": "verified",
   "approval_id": "APR-028",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -18,23 +18,22 @@
   "plan_checkpoint_git_commit": "7d64810631176cb7906bea80132e13b3ae3fb6e3",
   "plan_rebase_history": [],
   "evidence": [
-    "docs/05-quality/evidence/TASK-025/20260820T164819454Z-e73c7782-required-validation.evidence.json"
+    "docs/05-quality/evidence/TASK-025/20260820T165518873Z-8b8e7000-required-validation.evidence.json"
   ],
   "evidence_history": [
-    "docs/05-quality/evidence/TASK-025/20260820T164819454Z-e73c7782-required-validation.evidence.json"
+    "docs/05-quality/evidence/TASK-025/20260820T164819454Z-e73c7782-required-validation.evidence.json",
+    "docs/05-quality/evidence/TASK-025/20260820T165518873Z-8b8e7000-required-validation.evidence.json"
   ],
   "review_history": [],
   "review": {
     "required": true,
     "reviewer_task_id": "TASK-026",
-    "status": "changes-required",
-    "evidence": [
-      "docs/05-quality/evidence/TASK-026/review-round-1.json"
-    ],
+    "status": "pending",
+    "evidence": [],
     "pass_streak": 0,
     "subject_sha256": ""
   },
-  "last_error": "Independent review requires changes; consecutive pass count reset.",
+  "last_error": "",
   "created_at": "2026-08-20T16:43:19.1846455Z",
-  "updated_at": "2026-08-20T16:53:45.2552983Z"
+  "updated_at": "2026-08-20T16:55:24.9904375Z"
 }
