@@ -1,0 +1,81 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-025",
+  "work_package": "WP-002",
+  "title": "Prepare V2 requirements and overall design proposal",
+  "goal": "Prepare nonnormative V2 requirements, change proposal, and overall architecture for human approval without finalizing detailed design",
+  "baseline": "BL-002",
+  "profile": "Release",
+  "role": "ARCHITECT",
+  "allowed_paths": [
+    "docs/09-reports/V2-requirements.proposal",
+    "docs/09-reports/V2-overall-design.proposal",
+    "docs/09-reports/V2-change.proposal"
+  ],
+  "read_paths": [
+    "docs"
+  ],
+  "write_paths": [
+    "docs/09-reports/V2-requirements.proposal",
+    "docs/09-reports/V2-overall-design.proposal",
+    "docs/09-reports/V2-change.proposal"
+  ],
+  "out_of_scope": [
+    "Detailed design finalization before human overall-design approval",
+    "Product code, database migration implementation, AI, mobile, authentication, deployment",
+    "Active baseline and normative document registry changes"
+  ],
+  "authoritative_documents": [
+    "PROJ-CHARTER-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "ARC-COMP-001",
+    "ARC-COMP-002",
+    "ARC-COMP-003",
+    "PROJ-INDEX-001",
+    "DEC-001"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "Candidate requirements capture source groups, lightweight control plans, human assignment, configurable arrival-window overview, equipment changes, deliverable submission, and manual acceptance",
+    "Overall design preserves V1 operation and defines proposed additive data, desktop information architecture, migration safety, and explicit approval gates",
+    "All proposal files are visibly nonnormative and detailed design remains blocked pending explicit human overall-design approval"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-ProjectPath",
+        ".",
+        "-Level",
+        "Release"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "scope",
+    "success_criteria",
+    "overall_architecture",
+    "data_model_or_migration",
+    "production_release"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-20T16:43:19.1846455Z",
+  "release_controls": {
+    "target_environment": "local dev branch documentation workspace",
+    "execution_window": "current V2 overall-design proposal session",
+    "rollback_plan": "remove the local nonnormative proposal files",
+    "observation_metrics": "scenario traceability, design completeness, reviewer findings, proposal fingerprint, and Release governance results",
+    "stop_conditions": "scope ambiguity, detailed-design gate violation, active baseline mutation, or unresolved reviewer finding",
+    "post_release_owner": "PROJECT_MANAGER 01a01ef6-d413-7660-bdc5-62bd5873cbf4"
+  }
+}
