@@ -23,7 +23,7 @@ last_reviewed: 2026-08-20
 
 | 基线 | 状态 | 清单 | Git 提交 | 批准记录 | 创建日期 | 说明 |
 | --- | --- | --- | --- | --- | --- | --- |
-| BL-001 | active | baselines/BL-001/manifest.json | 0e33df4bf03bcfabc812eda9e1d549e621feb98f | APR-002 | 2026-08-20 | Approved desktop UX TEAM_PROJECT baseline |
+| BL-001 | superseded | baselines/BL-001/manifest.json | 0e33df4bf03bcfabc812eda9e1d549e621feb98f | APR-002 | 2026-08-20 | Approved desktop UX TEAM_PROJECT baseline |
 
 允许的状态：`draft`、`approved`、`active`、`superseded`、`archived`。同一时刻只能有一个 `active` 基线。
 
@@ -38,3 +38,4 @@ last_reviewed: 2026-08-20
 - 受影响工作包已经重新评估。
 
 状态必须按 `draft -> approved -> active -> superseded -> archived` 转换。`approved` 只表示内容已获批准；激活时必须先将原 `active` 基线转为 `superseded`，再把新基线转为唯一 `active`，最后同步更新 `governance.json.current_baseline` 和 `CURRENT-STATE.md`。不得跳过激活步骤。
+| BL-002 | active | baselines/BL-002/manifest.json | 8bd1a4ac80fcc71327a554b3bd4e2cc65268733d | APR-003 | 2026-08-20 | Corrected governed work package path scopes |

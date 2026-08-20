@@ -1,0 +1,131 @@
+{
+  "schema_version": 2,
+  "scope_version": 1,
+  "baseline": "BL-002",
+  "status_at_creation": "approved",
+  "created_at": "2026-08-20T12:56:14.3076520Z",
+  "approval_id": "APR-003",
+  "git_commit": "8bd1a4ac80fcc71327a554b3bd4e2cc65268733d",
+  "documents": [
+    {
+      "doc_id": "PROJ-CHARTER-001",
+      "path": "docs/01-governance/charter.md",
+      "version": "1.0",
+      "status": "active",
+      "sha256": "3bdffc1866936b2e8acbdc37b8c4e0f85d6fc651d3092f80fb1201595a66238b"
+    },
+    {
+      "doc_id": "REQ-BASE-001",
+      "path": "docs/02-product/requirements.md",
+      "version": "1.0",
+      "status": "active",
+      "sha256": "fefbb591e285db23aaf408275207651de7ce16d2c96284f2a68c0cd23c926ca7"
+    },
+    {
+      "doc_id": "ARC-OVERALL-001",
+      "path": "docs/03-architecture/overall-design.md",
+      "version": "1.0",
+      "status": "active",
+      "sha256": "983307c43bcc34e3ff6d76060529049f0cc61aa78b06c5ecdd771c7c4a49eda4"
+    },
+    {
+      "doc_id": "ARC-COMP-001",
+      "path": "docs/03-architecture/components/desktop-workspace.md",
+      "version": "1.0",
+      "status": "active",
+      "sha256": "fa1a92170e0ef7886db11f939a14cba0c63c6af7a9b43d9f8b9502bee2619102"
+    },
+    {
+      "doc_id": "ARC-COMP-002",
+      "path": "docs/03-architecture/components/task-workflow.md",
+      "version": "1.0",
+      "status": "active",
+      "sha256": "48736b512f44f8b3005bddb269bcc82c24791d7390d52bdc91fbc64fd4a8f508"
+    },
+    {
+      "doc_id": "ARC-COMP-003",
+      "path": "docs/03-architecture/components/verification.md",
+      "version": "1.0",
+      "status": "active",
+      "sha256": "087f4a33189a8d33eb95f041290da0dd431761d65e3c5ced2ba1cd31e8d9bec0"
+    },
+    {
+      "doc_id": "DEL-WORK-001",
+      "path": "docs/04-delivery/WORK-PACKAGES.md",
+      "version": "1.1",
+      "status": "active",
+      "sha256": "eeabeb954f2e629cbf11ad65b52730bef6f5b41fb7ae36a6b51514b203378701"
+    },
+    {
+      "doc_id": "DEC-001",
+      "path": "docs/07-decisions/DEC-001.md",
+      "version": "1.0",
+      "status": "active",
+      "sha256": "08edf10d8f137529243c842c977f86a5d47992e5897656155fbaca76580bf15b"
+    }
+  ],
+  "operational_documents": [
+    {
+      "path": "docs/00-index/APPROVAL-LOG.md"
+    },
+    {
+      "path": "docs/00-index/BASELINE-REGISTRY.md"
+    },
+    {
+      "path": "docs/00-index/CURRENT-STATE.md"
+    },
+    {
+      "path": "docs/00-index/DECISION-QUEUE.md"
+    },
+    {
+      "path": "docs/00-index/DOC-REGISTRY.md"
+    },
+    {
+      "path": "docs/00-index/PROJECT.md"
+    },
+    {
+      "path": "docs/04-delivery/TASK-LEDGER.md"
+    },
+    {
+      "path": "docs/04-delivery/WORK-STATUS.md"
+    },
+    {
+      "path": "docs/05-quality/traceability.md"
+    },
+    {
+      "path": "docs/08-changes/CR-001.md"
+    }
+  ],
+  "context_routes": [
+    {
+      "work_package": "WP-001",
+      "baseline": "BL-002",
+      "path": "docs/04-delivery/context/WP-001.context.json",
+      "sha256": "16240bf793a73428c553aedcf8b2b055c40940b34b66690a2de26ef68139d87d"
+    },
+    {
+      "work_package": "WP-002",
+      "baseline": "BL-002",
+      "path": "docs/04-delivery/context/WP-002.context.json",
+      "sha256": "35ac2f9df5c46575768fd3dad799e6de7cc7e9656bc8207e7ab4f319c0e9cca8"
+    },
+    {
+      "work_package": "WP-003",
+      "baseline": "BL-002",
+      "path": "docs/04-delivery/context/WP-003.context.json",
+      "sha256": "99a6115a54c4ef04ed6a1cc2d6232010fded7e54ae2e64eaea9d0c4c584e19aa"
+    },
+    {
+      "work_package": "WP-004",
+      "baseline": "BL-002",
+      "path": "docs/04-delivery/context/WP-004.context.json",
+      "sha256": "5321a834faf3a0ae257803b0051babc666e6a914c00e17168bf4d8052e87fac1"
+    },
+    {
+      "work_package": "WP-005",
+      "baseline": "BL-002",
+      "path": "docs/04-delivery/context/WP-005.context.json",
+      "sha256": "412a19e21619680a35f76ffc0cba30589dbef302683ea9d43197585c68a0afb4"
+    }
+  ]
+}

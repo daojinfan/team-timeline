@@ -22,7 +22,7 @@ last_reviewed: 2026-08-20
 - 运行模式：TEAM_PROJECT
 - 默认任务档位：Release
 - 当前目标：完成桌面端任务优先 UX 改造，降低核心任务操作路径并保持现有数据和接口兼容。
-- 当前基线：BL-001
+- 当前基线：BL-002
 - 当前总体设计：ARC-OVERALL-001 v1.0（active）
 - 治理检查级别：Release
 - 下一阶段门：建立执行任务、绑定独立审核并进入 TEAM_EXECUTION
