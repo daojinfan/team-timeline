@@ -1,0 +1,83 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-027",
+  "work_package": "WP-002",
+  "title": "Create V2 detailed design and development plan",
+  "goal": "Translate the accepted V2 overall-design proposal into an implementation-ready detailed design and bounded development plan",
+  "baseline": "BL-002",
+  "profile": "Release",
+  "role": "ARCHITECT",
+  "allowed_paths": [
+    "docs/09-reports/V2-detailed-design.proposal",
+    "docs/09-reports/V2-development-plan.proposal"
+  ],
+  "read_paths": [
+    "docs"
+  ],
+  "write_paths": [
+    "docs/09-reports/V2-detailed-design.proposal",
+    "docs/09-reports/V2-development-plan.proposal"
+  ],
+  "out_of_scope": [
+    "Product code changes",
+    "Database migration execution",
+    "Mobile, AI, authentication, cloud deployment",
+    "Changes to V1 normative documents or BL-002"
+  ],
+  "authoritative_documents": [
+    "PROJ-CHARTER-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "ARC-COMP-001",
+    "ARC-COMP-002",
+    "ARC-COMP-003",
+    "PROJ-INDEX-001",
+    "DEC-001"
+  ],
+  "dependencies": [
+    "TASK-025"
+  ],
+  "acceptance_criteria": [
+    "Detailed design resolves entities, SQLite DDL and transactional migration, API contracts, desktop DOM/view contracts, state machines, conflict algorithms, validation, security, rollback, and V1 compatibility",
+    "Every V2-REQ-001 through V2-REQ-016 maps to components, APIs/data, UI, and tests without AI or automatic assignment",
+    "Development plan defines sequential or non-overlapping implementation packages, file ownership, dependencies, acceptance criteria, and independent review gates"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-ProjectPath",
+        ".",
+        "-Level",
+        "Release"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "scope",
+    "success_criteria",
+    "public_interface",
+    "data_model_or_migration",
+    "security_privacy_compliance",
+    "production_release"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-20T17:07:20.2151195Z",
+  "release_controls": {
+    "target_environment": "local dev branch detailed-design workspace",
+    "execution_window": "current V2 detailed-design and approval session",
+    "rollback_plan": "remove unapproved detailed-design proposal files and retain accepted overall proposal",
+    "observation_metrics": "requirement traceability, contract completeness, migration safety, implementation package isolation, reviewer findings, and Release governance results",
+    "stop_conditions": "overall-design drift, ambiguous destructive migration, automatic assignment semantics, V1 incompatibility, or unresolved reviewer finding",
+    "post_release_owner": "PROJECT_MANAGER 01a01ef6-d413-7660-bdc5-62bd5873cbf4"
+  }
+}
