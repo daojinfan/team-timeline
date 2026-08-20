@@ -1,0 +1,45 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-010",
+  "reviewed_task_ids": [
+    "TASK-009"
+  ],
+  "work_package": "WP-002",
+  "baseline": "BL-002",
+  "result": "changes-required",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-009",
+      "path": "docs/09-reports/WP-002-implementation-brief.md",
+      "change_type": "modified",
+      "summary": "将简报引言改为明确声明该文档已登记于 DOC-REGISTRY.md，并作为 BL-002 实施输入；TASK-009 启动提交之后没有其他交付范围文件变化。"
+    }
+  ],
+  "change_summary": "已对 TASK-009 启动提交 eebc47a3342b9c3812576958b4968d6a3743ceb8 之后的完整交付差异执行核对；实际差异仅为 WP-002 实施简报的一行引言修改，DOC-REGISTRY.md 在该提交之后未变化。当前完整简报的注册信息一致，但动态示例日期范围存在一项阻塞性设计漂移。",
+  "scope_checked": [
+    "TASK-009 与 TASK-010 的 Release 契约、运行状态、依赖、路径范围和 Reviewer 绑定",
+    "TASK-009 验证证据及 Release 治理校验输出",
+    "REQ-001 至 REQ-007 的逐项实现追踪与验收映射",
+    "ARC-OVERALL-001 与 ARC-COMP-001 至 ARC-COMP-003 的桌面工作区、任务工作流和验证约束",
+    "DEC-001 的原生技术栈、桌面端范围、公共 API、SQLite、CSV 与 JSON 兼容边界",
+    "跨 public/index.html、public/styles.css、public/app.js、src/server.js 与 tests/api.test.js 的 DOM、状态、文件责任和验证契约",
+    "1280×720 与 1366×768 两种正式桌面分辨率验收清单",
+    "手机端、触摸专用交互、认证、云部署、框架重写和数据迁移排除项",
+    "RPT-WP-002-IMPLEMENTATION-BRIEF-001 的文档头与 DOC-REGISTRY.md 登记项一致性",
+    "TASK-009 启动提交后的实际 Git 新增、修改、删除和重命名清单"
+  ],
+  "findings": [
+    "[阻塞/设计漂移] docs/09-reports/WP-002-implementation-brief.md:31、111、113、120、132 将相对当天的动态示例日期扩展到用户执行‘重置示例数据’的路径，并要求首次建库与重置遵守同一动态日期契约；批准的 docs/03-architecture/components/verification.md:30 明确限定‘动态示例日期只作用于首次创建的新数据库’，总体设计也只批准新数据库示例日期动态化。请删除重置路径的动态日期要求及对应测试/REQ-006 映射，只保留首次创建新数据库的动态日期；或者先按变更控制重新批准该范围后再提交审核。"
+  ],
+  "validation_evidence": [
+    "docs/05-quality/evidence/TASK-009/20260820T131412850Z-c301a446-required-validation.evidence.json（exit_code=0）",
+    "docs/05-quality/evidence/TASK-009/20260820T131412850Z-c301a446-required-validation.output.txt（Release 治理校验：0 错误、0 警告）",
+    "git diff --name-status eebc47a3342b9c3812576958b4968d6a3743ceb8 -- docs/09-reports/WP-002-implementation-brief.md docs/00-index/DOC-REGISTRY.md（仅 implementation brief 为 modified）",
+    "git diff --find-renames --find-copies eebc47a3342b9c3812576958b4968d6a3743ceb8 -- TASK-009 写范围（完整差异为引言一行替换）",
+    "DOC-REGISTRY.md 登记项与实施简报 front matter 的 doc_id、路径、类型、状态、版本、基线和负责人逐字段一致",
+    "REQ/ARC/DEC 与完整当前实施简报逐节人工全量复核；除 findings 所列动态重置范围外，桌面分辨率、手机端排除、DOM/状态契约及 API/SQLite/CSV/JSON 兼容边界一致"
+  ],
+  "created_at": "2026-08-20T13:18:56.5443275Z"
+}
