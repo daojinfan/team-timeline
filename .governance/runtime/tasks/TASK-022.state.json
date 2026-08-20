@@ -5,7 +5,7 @@
   "work_package": "WP-005",
   "contract_sha256": "445d646e8351a654c1fc512540a406dce66a0f1309a15f35fae81f16bb301f2d",
   "baseline": "BL-002",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "APR-025",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -50,7 +50,7 @@
     "pass_streak": 0,
     "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "Independent review completed; reviewer runtime retired after BL-003 activation",
   "created_at": "2026-08-20T14:15:53.7417337Z",
-  "updated_at": "2026-08-20T15:25:43.8682123Z"
+  "updated_at": "2026-08-20T19:19:20.4499132Z"
 }

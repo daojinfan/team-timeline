@@ -15,9 +15,9 @@
     "name": "小组任务管理与甘特图系统",
     "owner": "human",
     "mode": "TEAM_PROJECT",
-    "phase": "EXECUTION_PLANNING"
+    "phase": "TEAM_EXECUTION"
   },
-  "current_baseline": "BL-002",
+  "current_baseline": "BL-003",
   "task_profile": "Release",
   "validation_level": "Release",
   "context_policy": {
