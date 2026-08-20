@@ -439,6 +439,114 @@ test("manual task preview and confirm preserve progress while ETA and cryostat c
   }
 });
 
+test("manual task cryostat conflicts only include other active plans", async () => {
+  const app = await fixture();
+  try {
+    const state = await createPlanFixture(app);
+    const firstTask = await createPlanTask(app, state, {
+      collaborator_member_ids: [],
+      start_date: addDays(state.today, 11),
+      end_date: addDays(state.today, 13)
+    });
+    const samePlanInput = {
+      test_item_id: state.plan.test_items[0].id,
+      title: "同计划重叠任务",
+      description: "不同成员，不应产生制冷机冲突",
+      primary_member_id: state.members[2].id,
+      collaborator_member_ids: [],
+      start_date: firstTask.task.default_start_date,
+      end_date: firstTask.task.default_end_date,
+      estimated_hours: 4,
+      after_arrival: true,
+      expected_version: state.plan.version
+    };
+    const samePlanPreview = (await app.request(`/api/v2/plans/${state.plan.id}/tasks/preview`, {
+      method: "POST",
+      body: samePlanInput
+    })).payload.data;
+    assert.equal(samePlanPreview.conflicts.some((conflict) => conflict.code === "CRYOSTAT_DATE_OVERLAP"), false);
+    const samePlanTask = (await app.request(`/api/v2/plans/${state.plan.id}/tasks`, {
+      method: "POST",
+      expected: [201],
+      body: { ...samePlanInput, preview_token: samePlanPreview.preview_token, acknowledged_conflict_codes: [], actor_label: "本地用户" }
+    })).payload.data;
+    assert.equal(samePlanTask.task.default_start_date, firstTask.task.default_start_date);
+    state.plan = (await app.request(`/api/v2/plans/${state.plan.id}`)).payload.data;
+
+    const otherPlan = (await app.request("/api/v2/plans", {
+      method: "POST",
+      expected: [201],
+      body: {
+        source_group_id: state.group.id,
+        counterpart_contact_id: state.contact.id,
+        local_liaison_name: "本地用户",
+        name: "QPU-B 测控计划",
+        purpose: "验证跨计划制冷机冲突",
+        sample_model: "QPU-B",
+        sample_identifier: null,
+        identifier_kind: null,
+        current_eta_date: addDays(state.today, 10),
+        eta_pending: false,
+        cryostat_id: state.cryostat.id,
+        cryostat_pending: false,
+        project_tag: null,
+        topic_tag: null,
+        test_items: [{ title: "交叉验证", description: "", acceptance_criteria: "结果可复核", is_required: true, position: 0 }],
+        acceptance_template: { name: "计划验收清单", items: [{ label: "结果链接可访问", position: 0 }] },
+        actor_label: "本地用户"
+      }
+    })).payload.data;
+    const otherPlanInput = {
+      test_item_id: otherPlan.test_items[0].id,
+      title: "跨计划重叠任务",
+      description: "应产生制冷机冲突",
+      primary_member_id: state.members[3].id,
+      collaborator_member_ids: [],
+      start_date: firstTask.task.default_start_date,
+      end_date: firstTask.task.default_end_date,
+      estimated_hours: 4,
+      after_arrival: true,
+      expected_version: otherPlan.version
+    };
+    const otherPlanPreview = (await app.request(`/api/v2/plans/${otherPlan.id}/tasks/preview`, {
+      method: "POST",
+      body: otherPlanInput
+    })).payload.data;
+    const activePlanConflicts = otherPlanPreview.conflicts.filter((conflict) => conflict.code === "CRYOSTAT_DATE_OVERLAP");
+    assert.equal(activePlanConflicts.length, 2);
+    for (const conflict of activePlanConflicts) {
+      assert.deepEqual(conflict.plan_ids, [state.plan.id, otherPlan.id].sort((a, b) => a - b));
+      assert.deepEqual(conflict.member_ids, []);
+      assert.deepEqual(conflict.date_range, { start_date: firstTask.task.default_start_date, end_date: firstTask.task.default_end_date });
+    }
+    const otherPlanTask = (await app.request(`/api/v2/plans/${otherPlan.id}/tasks`, {
+      method: "POST",
+      expected: [201],
+      body: { ...otherPlanInput, preview_token: otherPlanPreview.preview_token, acknowledged_conflict_codes: ["CRYOSTAT_DATE_OVERLAP"], actor_label: "本地用户" }
+    })).payload.data;
+    assert.equal(otherPlanTask.task.default_start_date, firstTask.task.default_start_date);
+
+    const archivedPlan = (await app.request(`/api/v2/plans/${state.plan.id}/archive`, {
+      method: "POST",
+      body: { actor_label: "本地用户", expected_version: state.plan.version }
+    })).payload.data.plan;
+    assert.equal(archivedPlan.archived, true);
+    const refreshedOtherPlan = (await app.request(`/api/v2/plans/${otherPlan.id}`)).payload.data;
+    const archivedPlanPreview = (await app.request(`/api/v2/plans/${otherPlan.id}/tasks/preview`, {
+      method: "POST",
+      body: {
+        ...otherPlanInput,
+        title: "归档计划不参与冲突",
+        primary_member_id: state.members[2].id,
+        expected_version: refreshedOtherPlan.version
+      }
+    })).payload.data;
+    assert.equal(archivedPlanPreview.conflicts.some((conflict) => conflict.code === "CRYOSTAT_DATE_OVERLAP"), false);
+  } finally {
+    await app.close();
+  }
+});
+
 test("V2 plan-task text boundaries are enforced without changing the V1 task endpoint", async () => {
   const app = await fixture();
   try {

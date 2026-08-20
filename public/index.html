@@ -14,7 +14,7 @@
       </div>
       <div class="topbar-actions" aria-label="全局操作">
         <button id="newPlanBtn" class="primary-action" type="button" data-open-plan-dialog>＋ 新建计划</button>
-        <button id="newTaskBtn" class="primary-action" type="button">＋ 新建任务</button>
+        <button id="newTaskBtn" class="primary-action" type="button" hidden>＋ 新建任务</button>
         <button id="dataMenuBtn" class="ghost-button" type="button" aria-controls="maintenanceView">数据与维护</button>
         <button id="refreshBtn" class="icon-button" type="button" title="刷新" aria-label="刷新">↻</button>
       </div>
@@ -247,8 +247,8 @@
         <div id="planFormError" class="form-error" role="alert" hidden></div>
         <div class="v2-dialog-body">
           <fieldset class="dialog-section"><legend>基本信息</legend>
-            <label>来源小组<select id="planSourceGroup" name="source_group_id" required autofocus><option value="">请选择来源小组</option></select></label>
-            <label>计划名称<input id="planName" name="name" maxlength="200" required autocomplete="off" placeholder="例如：QPU-A 测控计划"></label>
+            <label>来源小组<select id="planSourceGroup" name="source_group_id" required><option value="">请选择来源小组</option></select></label>
+            <label>计划名称<input id="planName" name="name" maxlength="200" required autocomplete="off" autofocus placeholder="例如：QPU-A 测控计划"></label>
             <label>目的<textarea id="planPurpose" name="purpose" rows="3" maxlength="4000" required placeholder="说明测试目的与预期结果"></textarea></label>
             <label>样品型号<input id="planSampleModel" name="sample_model" maxlength="200" required placeholder="编号未知时只填型号即可"></label>
           </fieldset>

@@ -2524,8 +2524,9 @@ function scheduleHours(tasks, memberId, weekStart) {
   }, 0);
 }
 
-function scheduleConflicts(candidates, excludedTaskIds = []) {
+function scheduleConflicts(candidates, excludedTaskIds = [], { excludedCryostatPlanIds = [] } = {}) {
   const excluded = new Set(excludedTaskIds);
+  const excludedCryostatPlans = new Set(excludedCryostatPlanIds);
   const before = scheduleTasks();
   const after = [...before.filter((task) => !excluded.has(task.task_id)), ...candidates];
   const conflicts = [];
@@ -2542,7 +2543,7 @@ function scheduleConflicts(candidates, excludedTaskIds = []) {
         const end = intersections.map((item) => item.end_date).sort().at(-1);
         conflicts.push(conflictRecord("MEMBER_DATE_OVERLAP", [candidate.task_id, other.task_id], overlappingMembers, [candidate.plan_id, other.plan_id], { start_date: start, end_date: end }));
       }
-      if (candidate.cryostat_id !== null && candidate.cryostat_id === other.cryostat_id) {
+      if (!excludedCryostatPlans.has(other.plan_id) && candidate.cryostat_id !== null && candidate.cryostat_id === other.cryostat_id) {
         const overlap = dateRangeIntersection(candidate, other);
         if (overlap) conflicts.push(conflictRecord("CRYOSTAT_DATE_OVERLAP", [candidate.task_id, other.task_id], [], [candidate.plan_id, other.plan_id], overlap));
       }
@@ -2819,7 +2820,7 @@ function planTaskPreviewData(planId, payload, taskId = null) {
     member_ranges: members.map((memberId) => ({ member_id: memberId, start_date: input.start_date, end_date: input.end_date }))
   };
   const excluded = taskId === null ? [] : [taskId];
-  const conflicts = scheduleConflicts([candidate], excluded);
+  const conflicts = scheduleConflicts([candidate], excluded, { excludedCryostatPlanIds: [planId] });
   const relatedLoad = relatedLoadForCandidate(candidate, excluded);
   const token = previewHash({ operation: taskId === null ? "create_plan_task" : "update_plan_task", plan_id: planId, task_id: taskId, normalized_input: input, plan, existing_facts: existingFacts, schedule: scheduleTasks(), conflicts, related_load: relatedLoad });
   return { preview_token: token, normalized_input: input, conflicts, related_load: relatedLoad };
