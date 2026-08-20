@@ -1,0 +1,52 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-032",
+  "reviewed_task_ids": [
+    "TASK-031"
+  ],
+  "work_package": "WP-006",
+  "baseline": "BL-003",
+  "result": "changes-required",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-031",
+      "path": "src/server.js",
+      "change_type": "modified",
+      "summary": "新增 V2 schema、迁移保护、34 个追加 API、人工任务冲突、lineage、成果验收及 V1 关联写入兼容逻辑。"
+    },
+    {
+      "task_id": "TASK-031",
+      "path": "tests/v2-api.test.js",
+      "change_type": "added",
+      "summary": "新增 V2 schema、迁移、API、预览确认、成果验收、lineage/reset 与 V1 兼容回归测试。"
+    }
+  ],
+  "change_summary": "从 TASK-031 启动提交 723dbe6b5a645b5ca014b06d994f3c227d750506 到当前交付提交 a107fbd70b697e10daed9229e3f440ef36f70881 的任务写入范围实际差异精确为 src/server.js modified 和 tests/v2-api.test.js added（2657 insertions、12 deletions）；Governance review subject SHA-256 为 9f9861693ba9d178aa4c316bb121f094950b0edec000013bbe4ab17f8bc12207。",
+  "scope_checked": [
+    "完整读取 BL-003 manifest、WP-006 context、TASK-031/TASK-032 Release 契约与状态、CR-002、REQ-V2-001、ARC-OVERALL-002、ARC-COMP-004、DEC-002 和 TASK-031 验证证据",
+    "完整读取当前 src/server.js、tests/api.test.js、tests/v2-api.test.js，并核对 TASK-031 start commit 到当前内容的完整实际差异与精确 change manifest",
+    "独立核对 V2 DDL、schema version/checksum、12 张表、10 个索引、外键/quick_check、真实 V1 备份迁移、事务失败停止与幂等重开",
+    "独立核对正式详设与 V2_ENDPOINTS 的 34 个 method-path exact set、canonical 请求响应、错误、query/pagination、preview_token/version/ack 约束",
+    "完整审查来源/联系人/制冷机/计划/测试项/模板/事件/归档/到样/备份 CRUD 与实际到样未测试空白状态、7 日闭区间和 active-only stats",
+    "完整审查 ETA 两阶段 selection-bound 重算、空选择、批量排除旧贡献后加入、stale/ack/事务回滚、任务及 assignment 等量平移与 progress/note 保持",
+    "完整审查人工任务创建/更新、UUID v4 lineage、自排除、成员日期/ISO 周负载/制冷机三类冲突、成员集合、主负责人保护和个人进度独立",
+    "完整审查成果 checklist 服务端快照、exact-set、URL/本地路径、同 lineage supersession、returned/accepted 状态机、计划完成计算及 reset 后 ID 复用隔离",
+    "完整审查 V1 task/member/assignment soft-delete、restore、reset/purge、历史 SET NULL 保留、固定示例日期、API/CSV/JSON/SQLite schema 和成功对象形状兼容"
+  ],
+  "findings": [
+    "[阻塞] src/server.js 的 scheduleConflicts 在生成 CRYOSTAT_DATE_OVERLAP 时只比较 cryostat_id 和日期，未排除 candidate.plan_id === other.plan_id；这违反 ARC-COMP-004 §9.2 的‘其他未归档计划同资源’契约。独立 API 诊断在同一 plan、同一 cryostat 下创建两项日期重叠但成员不同的任务，第二项 preview 错误返回 CRYOSTAT_DATE_OVERLAP（plan_ids 仅 [1]、task_ids 仅已有任务 [5]），迫使用户确认不存在的跨计划制冷机冲突。最小修复是在该冲突分支要求 plan_id 不同，并新增同计划不报、另一未归档计划同冷机且日期重叠才报且 IDs/排序正确的回归断言。"
+  ],
+  "validation_evidence": [
+    "npm test 独立重跑：25 tests、25 pass、0 fail，覆盖 16 个 V1 回归与 9 个 V2 场景；该套件未覆盖 finding 所述同计划冷机负例。",
+    "node --check src/server.js、tests/api.test.js、tests/v2-api.test.js：全部 exit 0；git diff --check 723dbe6b... -- src/server.js tests：exit 0。",
+    "独立临时库 schema 诊断：首次和重开均为 12 tables/10 indexes、version=2、name=v2-control-plan、checksum=e87fc318d929c1f71cee72bd207c57a63b1a7f5d98bf673656c158bc040be4c4、quick_check=ok、foreign_key_violations=0。",
+    "独立正式接口 exact-set：ARC-COMP-004 抽取 34 个唯一 method-path，V2_ENDPOINTS 为 34 个唯一项，missing=0、extra=0。",
+    "独立真实 V1-shaped 库诊断：迁移前 4 个 V1 tasks；raw SQLite backup quick_check=ok、4 tasks、0 个 v2_* tables；迁移后 checksum 匹配且 FK=0；重开前后 backup 数均为 1；篡改 checksum 后启动拒绝并保持损坏值不改写。",
+    "独立冲突诊断：同一 plan_id=1、同一 cryostat、不同成员、相同 2026-09-07..08 日期的第二任务 preview 返回唯一 CRYOSTAT_DATE_OVERLAP，plan_ids=[1]、task_ids=[5]，确认实现与‘其他计划’冻结语义不符。",
+    "内容指纹：src/server.js blob=16c91a30d6ca7f2f36e2cd2694c3a51e53084308 SHA-256=5c9b1c5820ddf39f2cd8dde566c643ee5c6572d6a36c18ff923c16c79e559cde 3202 lines；tests/api.test.js blob=61e34a0e879b84afd7328364ae11f4641368bc87 SHA-256=9740c9db7e7b7e48b282c09a1ff8e4e855c9f09771529a785aaab68a83b0492a 492 lines；tests/v2-api.test.js blob=9c8d345a525202a27db3c4de5a78eb287c08d842 SHA-256=b78703a4be428fb869c9dd9c4a8aeac7fdc6a16080bc6a548564f9198fc5823d 599 lines。",
+    "当前交付 commit=a107fbd70b697e10daed9229e3f440ef36f70881、tree=e642364e76edcf8a190f267acb0c48fcf371b49f、subject='Implement V2 server and desktop shell'；TASK-031 scoped review subject=9f9861693ba9d178aa4c316bb121f094950b0edec000013bbe4ab17f8bc12207。"
+  ],
+  "created_at": "2026-08-20T19:59:57.9219470Z"
+}

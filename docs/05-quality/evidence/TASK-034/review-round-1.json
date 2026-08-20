@@ -1,0 +1,55 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-034",
+  "reviewed_task_ids": [
+    "TASK-033"
+  ],
+  "work_package": "WP-007",
+  "baseline": "BL-003",
+  "result": "changes-required",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-033",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "将原 V1 工作区重排为六区桌面 IA，新增工作台/计划/人工分配/执行/验收/管理视图、六套工具栏、七个 V2 对话框、420px 计划抽屉、空态与资源维护表面，同时保留 95 个 V1 ID；本轮发现全局新建任务按钮初始可见和计划对话框首焦点两处与冻结 DOM 契约不符。"
+    },
+    {
+      "task_id": "TASK-033",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "新增六状态颜色变量及六区桌面壳层、统计卡、空态、冲突提示、固定 420px 抽屉、最大 720px 对话框和双桌面尺寸适配样式；未新增移动断点。"
+    }
+  ],
+  "change_summary": "已从 TASK-033 启动提交 723dbe6b5a645b5ca014b06d994f3c227d750506 到交付提交 a107fbd70b697e10daed9229e3f440ef36f70881 完整核对实际差异。产品交付精确为 public/index.html modified（246 行新增、165 行删除）和 public/styles.css modified（549 行新增），合计 795 行新增、165 行删除；没有产品文件新增、删除或重命名，public/app.js 未改动。当前交付 blob 分别为 index 2c22606a4853eca2d95ead67e8b6b761d66a0f4d、styles 549c34411af50a13ee3ec94a689d3afb01c1635f、app.js c37d4168684240307bd17bdec143d1e8ac07faf5。整体六区壳层、尺寸、ID、V1 兼容和无移动边界成立，但一个 grouped 阻塞 finding 要求修正两个同属 ARC-COMP-004 §11 的静态 DOM 状态。",
+  "scope_checked": [
+    "从头读取 TASK-033/TASK-034 Release 契约与状态、WP-007 generated context、活动 BL-003 清单/注册表、TASK-033 启动提交和最新验证证据，并确认 Reviewer 独立性及审核唯一写入边界",
+    "完整读取 REQ-V2-001、ARC-OVERALL-002、ARC-COMP-004、DEC-002、CR-002，以及 BL-003 继续引用的 V1 REQ-001..007、ARC-OVERALL-001、ARC-COMP-001..003 和 DEC-001",
+    "完整逐行读取当前 public/index.html 452 行、public/styles.css 2211 行和 public/app.js 1937 行，并逐段核对 723dbe6b..a107fbd7 的实际 index/styles diff",
+    "独立统计当前 HTML 共 261 个 ID 且全部唯一；启动提交的 95 个 V1 ID 在当前 DOM 中各恰好出现一次；ARC-COMP-004 §11 明列的 63 个固定 ID 均恰好出现一次",
+    "核对六个 data-v2-view 顶层 tab、六个 data-v2-toolbar-view 工具栏、六个 data-v2-panel 主视图和初始唯一 workbench toolbar/view；execution 与 management 子导航保留原 V1 task/gantt/load/logs/maintenance 节点",
+    "核对七个 V2 dialog/form、aria-labelledby 可访问名称、各表单 role=alert、关闭控件、busy 文案和 autofocus 目标；六个对话框首焦点正确，planDialog 首焦点发现契约偏差",
+    "核对 planDetailPane 默认 hidden、position:fixed、420px 宽和不占第三列；V2 dialog 最大 720px、视口高度受限并由内部 body 纵向滚动",
+    "核对六张统计卡、真实空态/筛选空态、分配与验收空态、六个冻结状态色变量、unclassified 彩色 chip 视觉隐藏及屏幕阅读器文本",
+    "核对现有 app.js 78 个直接字面 ID selector 在重排后的 DOM 中全部存在、node 语法通过，且 TASK-033 未修改 app.js、服务端、数据库或 API",
+    "独立查看 1280x720 与 1366x768 两张无状态 headless Chrome 截图，确认六 tab 单行、统计卡首屏、工作台唯一 toolbar/view、页面无水平溢出；截图同时清楚显示 workbench 顶栏不应出现的新建任务按钮",
+    "核对 CSS 无 @media 规则、无底部导航、无移动/触摸专用新增交互；既有 V1 甘特 touch-action 不属于 TASK-033 新增且未扩展手机端范围"
+  ],
+  "findings": [
+    "[P1] ARC-COMP-004 §11 的两个静态壳层契约在同一交付中未满足：其一，§11.1 明确 `#newTaskBtn` 只在 execution/assignment 合适上下文出现，但 public/index.html:17 的按钮没有 `hidden` 或其他初始约束，1280x720 与 1366x768 工作台截图均显示它与 `#newPlanBtn` 并列；这使默认 workbench 暴露不适用操作。其二，§11.3 冻结 `#planDialog` 首焦点为计划 `name`，但 public/index.html:250 把 `autofocus` 放在 `#planSourceGroup`，而 `#planName` 没有首焦点标记。最小修复是让静态默认 workbench 隐藏 `#newTaskBtn`，仅由后续视图逻辑在 execution/assignment 合适上下文显示，并把 planDialog 的 autofocus 从 `#planSourceGroup` 移到 `#planName`；不得改变其余 DOM ID、V1 节点或桌面布局。修复后需重跑 TASK-033 Verify，并因 Release finding 重新开始所需连续审核。"
+  ],
+  "validation_evidence": [
+    "TASK-033 最新验证 docs/05-quality/evidence/TASK-033/20260820T195308804Z-02c3a24b-required-validation.evidence.json 已完整读取：contract/WP/BL-003 匹配，npm.cmd test exit_code=0，output SHA-256=091fbf07326c4a486d7fd8cc5fbedd0f446ef67f34727fbc215c928674e06dbf",
+    "审核者独立运行 npm.cmd test：25/25 通过，0 失败、0 跳过；node --check public/app.js：exit 0",
+    "审核者独立运行 git diff --name-status/--stat/--numstat 与完整 diff：723dbe6b..a107fbd7 的产品交付精确为 M public/index.html、M public/styles.css；git diff --check 对两文件退出码 0",
+    "当前文件指纹：public/index.html blob=2c22606a4853eca2d95ead67e8b6b761d66a0f4d、SHA-256=75a3593a177e4691e343a427d0fbfe591c9c9fde8916d34ed007289d9d8d680f；public/styles.css blob=549c34411af50a13ee3ec94a689d3afb01c1635f、SHA-256=bd5ffa691fb2ea18ab9018315369706eb466b9a835f7315fa0adb6eb07354e75；public/app.js blob=c37d4168684240307bd17bdec143d1e8ac07faf5、SHA-256=3e78254b07dd9af296cbff0304e835dd48d0d1999e8ed12c647a2af8402008a8",
+    "静态 DOM exact-set：261 IDs/261 unique，95/95 V1 ID 各恰好一次，63/63 ARC §11 明列 ID 各恰好一次，6 tabs、6 toolbars、6 panels、7 V2 dialogs，所有 dialog aria-labelledby 均解析到现有 ID，78 个 app.js 字面 ID selector 无缺失",
+    "样式/初始状态静态检查：六个状态色精确匹配；0 个 @media；planDetailPane hidden+fixed+420px；V2 dialog max-width 720px；初始唯一 workbenchToolbar/workbenchView；真实空态与筛选空态 CTA 均存在",
+    "截图 v2-1280x720.png SHA-256=5b6c299cd37a6758dd3547be719a3dda9524dd2d990b1512b0fc117461c89434：docScrollWidth 1265<=1280、nav 1235=1235、六 tab top/bottom 均 87/121、六统计卡同 top=223、唯一 workbench toolbar/view、planDialog 720x651 top=34 bottom=686、drawer hidden/fixed/420px；审核者已独立目视检查",
+    "截图 v2-1366x768.png SHA-256=0c13d377ffb719b573d8c17fe313334fcdcdd04c7b6ca1fffa99f93d646c8bb：docScrollWidth 1351<=1366、唯一 workbench toolbar/view；审核者已独立目视确认六 tab、统计卡、空态和无水平溢出",
+    "审核者独立运行 Release 治理校验：扫描 33 份文档，0 错误、0 警告"
+  ],
+  "created_at": "2026-08-20T20:04:00.0000000Z"
+}
