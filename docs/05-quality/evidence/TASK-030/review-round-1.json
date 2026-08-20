@@ -1,0 +1,93 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-030",
+  "reviewed_task_ids": [
+    "TASK-029"
+  ],
+  "work_package": "WP-002",
+  "baseline": "BL-002",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-029",
+      "path": "docs/00-index/DOC-REGISTRY.md",
+      "change_type": "modified",
+      "summary": "登记 REQ-V2-001、ARC-OVERALL-002、ARC-COMP-004、DEC-002、CR-002 与 QUAL-TRACE-V2-001 六份 BL-003 正式 V2 权威文档，并保持当前活动基线仍为 BL-002。"
+    },
+    {
+      "task_id": "TASK-029",
+      "path": "docs/02-product/requirements-v2.md",
+      "change_type": "added",
+      "summary": "新增正式 V2 产品需求，冻结超导量子计算测控组场景、V2-REQ-001..016、状态优先级、人工决策、桌面边界、V1 兼容及 BL-003 启动门。"
+    },
+    {
+      "task_id": "TASK-029",
+      "path": "docs/03-architecture/overall-design-v2.md",
+      "change_type": "added",
+      "summary": "新增正式 V2 总体架构，冻结轻量测控计划领域、六区桌面 IA、人工执行与验收闭环、增量迁移、回滚、安全和兼容原则。"
+    },
+    {
+      "task_id": "TASK-029",
+      "path": "docs/03-architecture/components/v2-detailed-design.md",
+      "change_type": "added",
+      "summary": "新增正式 V2 组件详设；canonical design body 与已接受最终候选逐字节一致，冻结 12 表、10 索引、34 个 /api/v2 端点、状态/冲突/lineage/验收、六区 DOM 与验证契约。"
+    },
+    {
+      "task_id": "TASK-029",
+      "path": "docs/05-quality/traceability-v2.md",
+      "change_type": "added",
+      "summary": "新增 V2 追踪矩阵，把 V2-REQ-001..016 全量映射到 ARC-COMP-004 的 API、DDL、DOM、验证和 DEV-A/B/C 文件所有权。"
+    },
+    {
+      "task_id": "TASK-029",
+      "path": "docs/07-decisions/DEC-002.md",
+      "change_type": "added",
+      "summary": "新增已批准的 V2 测控计划与人工执行闭环决策，并明确 decision active 不等于 BL-003 已激活，不能据此提前开发或迁移。"
+    },
+    {
+      "task_id": "TASK-029",
+      "path": "docs/08-changes/CR-002.md",
+      "change_type": "added",
+      "summary": "新增已批准的 V2 变更包，记录范围、影响、迁移兼容回滚和 BL-003 激活前不授权 schema/API 产品实现的基线门。"
+    }
+  ],
+  "change_summary": "从 TASK-029 启动提交 4c5bd043bed23597856eadefd594f58642c00358 到交付提交 40b160898e2b78e0052cf9c88cb374f8bb26c56b 的完整实际差异共 15 项。TASK-029 契约内正式交付精确为上述 7 项：DOC-REGISTRY modified 及六份正式文档 added，共新增 1121 行并修改注册表 6 行；其余 8 项是 TASK-009/TASK-010/TASK-029 运行状态、台账/工作状态、TASK-010 cancelled review 和 TASK-029 验证证据，已逐项审阅并与 TASK-029 正式产品交付分离。七项交付在当前工作区与 40b1608 完全一致，Governance subject SHA-256 为 f8c9935db9d3844f845bbc1b6bb491143be23699a21e8110c331f104640f4ed1。",
+  "scope_checked": [
+    "从头读取 governance.json、PROJECT/CURRENT-STATE、WP-002 generated context、TASK-029/TASK-030 Release 契约与状态、任务启动提交、lease、路径边界、依赖、审批和最新 TASK-029 验证证据",
+    "重新核对 PROJ-CHARTER-001、REQ-001..007、ARC-OVERALL-001、ARC-COMP-001..003、DEC-001 的 V1 本地原生技术栈、SQLite/API/CSV/JSON、个人 progress、软删/reset 与桌面兼容边界",
+    "逐行读取六份正式 V2 文档全文及 DOC-REGISTRY 全文，确认 doc_id、type、status、version、owner、baseline、depends_on、affects、路径和注册表条目一致且每个 V2 doc_id 只登记一次",
+    "逐行读取 TASK-025 三份最终总体 proposal、TASK-027 详设及开发计划 proposal，并重读 TASK-026 round-2/round-3 与 TASK-028 round-3/round-4 两组连续通过证据",
+    "确认 TASK-025 和 TASK-027 状态均为 accepted，审批 APR-030/APR-033 与 acceptance subject 4a148b7a53b5b7112e71ca2c2f871654d8870267127ac2c27a40a0d700ed0dd0、177bb592755ffcc1dfb2d07a5e3930bd6df517f512a9c8a3692852474ef65140 和正式文档记录一致",
+    "确认正式 ARC-COMP-004 从 `## 1. 冻结边界` 到文件末尾、统一 LF 且保留末行 LF 的 canonical body，与详设候选从同一标题到第 16 节标题前一内容行完全相等，没有在权威化时改变 DDL/API/DOM/迁移/状态语义",
+    "逐项复核 V2-REQ-001..016 在正式需求和追踪矩阵中连续完整、各有可验收标准并映射 UI/API/DDL/验证/DEV-A-B-C；未遗漏来源小组/联系人、型号先规划后补编号、轻量计划、人工任务/分配/验收或成果引用",
+    "复核无 AI、无自动创建/分配/验收、无手机端、无登录/云端/二进制附件托管；本地路径只作文本，URL 仅 http/https，操作者字段只是未经认证的业务声明",
+    "复核 12 张追加表、10 个索引及跨表不变量、UUID lineage 与 reset ID 复用隔离、迁移前备份/事务/幂等/失败停止/恢复回滚和 V1 mutator/schema/API/CSV/JSON 兼容",
+    "复核 34 个唯一 /api/v2 method+path 的 request/query、canonical data/meta、preview_token、version/ack、稳定错误 details、排序/分页、V2 普通 JSON backup 及 V1 接口不变",
+    "复核 ETA 两阶段完整 selection/token、批量先排除全部 selected 旧贡献再一次加入新贡献、selected-selected/未选/外部任务三类冲突、人工 acknowledge 和进行中/完成/未选任务保护",
+    "复核七级状态优先级、服务端本地日历 today、默认 7 日闭区间、实际到样未测试主状态空白且排除窗口、归档仅扩展 data/total/groups 而 stats 始终 active-only",
+    "复核人工任务主负责人/协作者/0.5h 工时、更新排除自身旧贡献、submission/review exact-set、同 lineage supersession、accepted/returned 事务和个人 progress/note 独立",
+    "复核工作台、测控计划、人工分配、执行、验收、管理六区桌面 IA，execution/management 保留 V1 五视图，七个 dialogs、420px fixed drawer、双桌面尺寸、无手机布局",
+    "确认当前活动基线仍为 BL-002，BL-003 尚未登记/激活；正式文档明确要求建立并激活 BL-003、生成新 WP/context/DEV+Reviewer 契约并达到 Release 0/0 后才可 Plan/Start 开发，没有提前授权",
+    "完整核对 4c5bd043..40b16089 的 name-status、numstat、stat、diff-check 与补充运行记录 patch；TASK-029 正式产品 manifest 精确为 7 项，无 src/public/tests/package、governance.json、CURRENT-STATE、BASELINE-REGISTRY 或 V1 权威文档漂移"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "TASK-029 最新验证 docs/05-quality/evidence/TASK-029/20260820T184408669Z-7b34490f-required-validation.evidence.json 及 output 已完整读取：task/WP/BL-002/contract_sha256 匹配，Release exit_code=0、扫描 33 文档、0 error、0 warning；本审核另以交付提交和独立指纹绑定最终内容",
+    "TASK-029 start=4c5bd043bed23597856eadefd594f58642c00358、delivery=40b160898e2b78e0052cf9c88cb374f8bb26c56b、delivery tree=395c8c0c8ac5dc3f1cfaab1a93ce23857f1bf868、subject=`Formalize V2 design candidate`",
+    "完整 Git 差异 4c5bd043..40b16089 为 15 项；TASK-029 scoped entries 精确为 M DOC-REGISTRY、A requirements-v2、A overall-design-v2、A v2-detailed-design、A traceability-v2、A DEC-002、A CR-002，Governance subject=f8c9935db9d3844f845bbc1b6bb491143be23699a21e8110c331f104640f4ed1",
+    "DOC-REGISTRY.md：blob=fdf246d90f937dba3116d04fa03b0984e183de38，SHA-256=c9d5dc62dd4d6029865125e72b51a77400e2d8f3c9b7fc99b76c85bb275f33bc；六个 V2 注册行各 1 次",
+    "requirements-v2.md：blob=5b32b68ccdc72142798d3bd28ab9a9cffa205932，SHA-256=6b7ee7437bf35099f0706bd87f31294ee7c389c989cbfeffe8e7e41017317b24，96 行",
+    "overall-design-v2.md：blob=e44c6fc6290744e45ee8df8581a8c26a88bfb9dc，SHA-256=c916c554c045522ccc9f3bf9b23caaa4240db45ebd66b6f296450ba2d3c1e2c4，150 行",
+    "v2-detailed-design.md：blob=bfb19ebf5a77c261481a5765901a552b31ecd62b，SHA-256=61608be7e4da8e4aa653e47e0792fbf4cae744d02b2c8d21a350b443031766af，665 行",
+    "traceability-v2.md：blob=de6f7f68222d0b61c217959740f51fb7c7a60076，SHA-256=bd464639a528212517ef970e2b5ef148b429fddd82858938e7ed8370c71587e0，61 行",
+    "DEC-002.md：blob=885857f3847f52204d7a77d8b48b036711589cb4，SHA-256=7e3f689bc8d291453e72586630a2bdb9971c53db9951ab9098cc98ad4f2335f8，70 行",
+    "CR-002.md：blob=adc4796f2b3666b1f7ce3cdb9cfbe9a38b96d729，SHA-256=f66628b38407704dcc7ed2a5a858bc8af8f61a5edd75d590d540fb4df2c184ea，73 行",
+    "canonical body 独立字节比较：候选与正式均为 49680 个字符且逐字节相等，统一 LF/UTF-8/单个末行 LF 后 SHA-256=f683c2e0ea6211ace89f4623890232cf7160637eecc1760f7f9500d4b216924d，与正式文档记录一致",
+    "独立静态计数：CREATE TABLE=12、显式 CREATE INDEX=10、唯一 /api/v2 method+path=34、V2-REQ 正式需求行=16、追踪行=16、dialog/form=7；与冻结契约一致",
+    "git diff --exit-code 40b16089 -- 七项 TASK-029 正式交付：exit 0；当前工作区与交付提交内容完全一致",
+    "git diff --check 4c5bd043bed23597856eadefd594f58642c00358 40b160898e2b78e0052cf9c88cb374f8bb26c56b：exit 0"
+  ],
+  "created_at": "2026-08-20T18:49:30.3503278Z"
+}

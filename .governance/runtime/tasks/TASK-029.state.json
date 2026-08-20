@@ -1,38 +1,46 @@
 {
-  "$schema": "schemas/governed-work-state.schema.json",
-  "schema_version": 2,
-  "task_id": "TASK-029",
-  "work_package": "WP-002",
-  "contract_sha256": "1ea2008307758623fb2b4ecf159ef83d552966f4315930b097a589b8ba2debf9",
-  "baseline": "BL-002",
-  "state": "verified",
-  "approval_id": "APR-034",
-  "acceptance_subject_sha256": "",
-  "acceptance_evidence_sha256": "",
-  "acceptance_git_commit": "",
-  "start_git_commit": "4c5bd043bed23597856eadefd594f58642c00358",
-  "execution_lease": "",
-  "execution_lease_owner": "",
-  "execution_lease_expires_at": "",
-  "preexisting_changes": [],
-  "plan_checkpoint_git_commit": "2824ccaecd475955ab72b5033f9556e168354914",
-  "plan_rebase_history": [],
-  "evidence": [
-    "docs/05-quality/evidence/TASK-029/20260820T184408669Z-7b34490f-required-validation.evidence.json"
-  ],
-  "evidence_history": [
-    "docs/05-quality/evidence/TASK-029/20260820T184408669Z-7b34490f-required-validation.evidence.json"
-  ],
-  "review_history": [],
-  "review": {
-    "required": true,
-    "reviewer_task_id": "TASK-030",
-    "status": "pending",
-    "evidence": [],
-    "pass_streak": 0,
-    "subject_sha256": ""
-  },
-  "last_error": "",
-  "created_at": "2026-08-20T18:27:36.7500256Z",
-  "updated_at": "2026-08-20T18:44:12.1301892Z"
+    "$schema":  "schemas/governed-work-state.schema.json",
+    "schema_version":  2,
+    "task_id":  "TASK-029",
+    "work_package":  "WP-002",
+    "contract_sha256":  "1ea2008307758623fb2b4ecf159ef83d552966f4315930b097a589b8ba2debf9",
+    "baseline":  "BL-002",
+    "state":  "verified",
+    "approval_id":  "APR-034",
+    "acceptance_subject_sha256":  "",
+    "acceptance_evidence_sha256":  "",
+    "acceptance_git_commit":  "",
+    "start_git_commit":  "4c5bd043bed23597856eadefd594f58642c00358",
+    "execution_lease":  "",
+    "execution_lease_owner":  "",
+    "execution_lease_expires_at":  "",
+    "preexisting_changes":  [
+
+                            ],
+    "plan_checkpoint_git_commit":  "2824ccaecd475955ab72b5033f9556e168354914",
+    "plan_rebase_history":  [
+
+                            ],
+    "evidence":  [
+                     "docs/05-quality/evidence/TASK-029/20260820T184408669Z-7b34490f-required-validation.evidence.json"
+                 ],
+    "evidence_history":  [
+                             "docs/05-quality/evidence/TASK-029/20260820T184408669Z-7b34490f-required-validation.evidence.json"
+                         ],
+    "review_history":  [
+
+                       ],
+    "review":  {
+                   "required":  true,
+                   "reviewer_task_id":  "TASK-030",
+                   "status":  "provisional-passed",
+                   "evidence":  [
+                                    "docs/05-quality/evidence/TASK-030/review-round-1.json"
+                                ],
+                   "pass_streak":  1,
+                   "subject_sha256":  "f8c9935db9d3844f845bbc1b6bb491143be23699a21e8110c331f104640f4ed1"
+               },
+    "last_error":  "",
+    "created_at":  "2026-08-20T18:27:36.7500256Z",
+    "updated_at":  "2026-08-20T18:51:30.8106176Z"
 }
