@@ -7,6 +7,8 @@ owner: human
 baseline: BL-002
 depends_on:
   - ARC-OVERALL-001
+  - ARC-OVERALL-002
+  - ARC-COMP-004
 affects:
   - QUA-TRACE-001
 supersedes: null
@@ -22,6 +24,9 @@ last_reviewed: 2026-08-20
 | WP-003 | 实现桌面页面外壳和样式 | BL-002 | WP-002 | 语法与桌面浏览器验收 | IMPLEMENTER |
 | WP-004 | 实现客户端任务交互和状态反馈 | BL-002 | WP-002 | 客户端语法与桌面浏览器验收 | IMPLEMENTER |
 | WP-005 | 实现动态示例数据和状态回归测试 | BL-002 | WP-002 | npm test | TESTER |
+| WP-006 | 实现 V2 服务端、增量迁移与 API 回归 | BL-003 | WP-002 | schema/迁移/API/V1 回归与 Release 双轮审核 | IMPLEMENTER |
+| WP-007 | 实现 V2 六区桌面外壳与样式 | BL-003 | WP-002 | DOM 契约、无溢出和双分辨率浏览器双轮审核 | IMPLEMENTER |
+| WP-008 | 集成 V2 客户端交互与完整人工闭环 | BL-003 | WP-006、WP-007 | 关键交互、错误路径、焦点、V1 回归与双轮审核 | INTEGRATOR |
 
 执行状态统一记录在 `WORK-STATUS.md`，避免日常状态变化改写已经批准的工作包契约。
 每个活动工作包还必须有 `context/WP-NNN.context.json`，声明所需权威文档、读取模式、适用基线和验证。上下文路由随基线锁定；已经 `accepted` 或 `superseded` 的历史工作包可以保留旧路由。生成的 `.governance/context/*.generated.md` 只是临时输入，不是项目事实。
@@ -72,4 +77,34 @@ last_reviewed: 2026-08-20
 - 允许修改：`src/server.js`、`tests/`。
 - 范围外：数据库表结构、现有数据库迁移、前端和导入导出格式。
 - 验收：满足 ARC-COMP-003，全部 `npm test` 通过。
+- 任务档位：Release。
+
+## WP-006 契约
+
+- 目标：实现 V2 schema、迁移前备份、34 个 `/api/v2` 端点、人工任务/冲突/成果/验收事务及自动化回归。
+- 允许修改：`src/server.js`、`tests/`。
+- 范围外：`public/`、规范文档、AI 自动建任务、认证、云同步和手机端。
+- 依赖：BL-003 已激活，REQ-V2-001、ARC-OVERALL-002、ARC-COMP-004、DEC-002、CR-002 均已冻结。
+- 验收：12 表、10 索引、迁移/重开/回滚、34 端点、V1 API/CSV/JSON/reset 兼容和 `npm test` 全部通过；独立 Reviewer 对同一指纹连续两轮通过。
+- 回滚：停止服务，保留失败库，使用迁移前 SQLite 备份原子恢复，再回退代码。
+- 任务档位：Release。
+
+## WP-007 契约
+
+- 目标：实现 V2 六区桌面导航、计划总览、计划/分配/验收表单、420px 详情抽屉及资源维护外壳。
+- 允许修改：`public/index.html`、`public/styles.css`。
+- 范围外：`public/app.js`、服务端、数据库、手机端和触摸专用交互。
+- 依赖：BL-003 已激活，固定 DOM/颜色/桌面边界以 ARC-COMP-004 为唯一契约。
+- 验收：保留全部 V1 ID，V2 固定 ID 无重复；1280×720 与 1366×768 下六区单行、主体首屏、页面无水平溢出、720px dialog/420px drawer 合规；独立 Reviewer 连续两轮通过。
+- 回滚：回退 `index.html`/`styles.css` 的独立交付提交。
+- 任务档位：Release。
+
+## WP-008 契约
+
+- 目标：在 WP-006/WP-007 已集成契约上实现计划总览、人工分配、预览确认、成果提交与人工验收的完整客户端闭环。
+- 允许修改：`public/app.js`。
+- 范围外：HTML/CSS、服务端、数据库、AI 自动建任务、认证、云同步和手机端。
+- 依赖：WP-006 与 WP-007 已验证并由 PM 完成中间集成门。
+- 验收：六区切换、状态/颜色、窗口筛选、ETA/制冷机两阶段确认、冲突确认、人工成果/验收、错误保留、键盘焦点及 V1 五视图均通过；独立 Reviewer 对同一指纹连续两轮通过。
+- 回滚：回退 `app.js` 独立交付提交；若服务端已迁移真实库，同时按 WP-006 回滚数据库。
 - 任务档位：Release。

@@ -24,5 +24,8 @@ last_reviewed: 2026-08-20
 | WP-003 | accepted | 2026-08-21 | IMPLEMENTER | docs/05-quality/evidence/TASK-017/20260820T142449673Z-d94d40a3-required-validation.evidence.json, docs/05-quality/evidence/TASK-018/20260820T144831224Z-b7946bbf-required-validation.evidence.json | 页面外壳与样式（按已集成代码顺序复核） |
 | WP-004 | accepted | 2026-08-21 | IMPLEMENTER | docs/05-quality/evidence/TASK-019/20260820T145548610Z-62ae2b79-required-validation.evidence.json, docs/05-quality/evidence/TASK-020/20260820T150828635Z-b4b12354-required-validation.evidence.json | 客户端任务交互（按已集成代码顺序复核） |
 | WP-005 | accepted | 2026-08-21 | TESTER | docs/05-quality/evidence/TASK-021/20260820T151111401Z-718ca4be-required-validation.evidence.json, docs/05-quality/evidence/TASK-022/20260820T152538216Z-378b1612-required-validation.evidence.json | 服务端示例数据与回归测试（按已集成代码顺序复核） |
+| WP-006 | planned | 2026-08-21 | IMPLEMENTER | pending | V2 服务端、schema 迁移、API 与自动化回归 |
+| WP-007 | planned | 2026-08-21 | IMPLEMENTER | pending | V2 六区桌面外壳、样式与双尺寸验收 |
+| WP-008 | planned | 2026-08-21 | INTEGRATOR | pending | V2 客户端交互与人工执行闭环；等待 WP-006/WP-007 |
 
 允许的状态值：planned、in-progress、blocked、needs-decision、implemented、verified、accepted、superseded。

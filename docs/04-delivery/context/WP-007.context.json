@@ -1,0 +1,31 @@
+{
+  "$schema": "schemas/work-package-context.schema.json",
+  "schema_version": 1,
+  "work_package": "WP-007",
+  "baseline": "BL-003",
+  "scope": [
+    "public"
+  ],
+  "required_documents": [
+    {
+      "doc_id": "REQ-V2-001",
+      "mode": "full"
+    },
+    {
+      "doc_id": "ARC-COMP-004",
+      "mode": "full"
+    },
+    {
+      "doc_id": "ARC-OVERALL-002",
+      "mode": "summary"
+    }
+  ],
+  "decisions": [
+    "DEC-002"
+  ],
+  "validation": [
+    "HTML/CSS 静态契约与 ID 唯一性检查",
+    "1280x720 与 1366x768 桌面浏览器验收",
+    "Release 独立审核连续两轮通过"
+  ]
+}

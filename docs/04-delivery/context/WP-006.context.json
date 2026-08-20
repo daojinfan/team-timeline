@@ -1,0 +1,37 @@
+{
+  "$schema": "schemas/work-package-context.schema.json",
+  "schema_version": 1,
+  "work_package": "WP-006",
+  "baseline": "BL-003",
+  "scope": [
+    "src",
+    "tests"
+  ],
+  "required_documents": [
+    {
+      "doc_id": "REQ-V2-001",
+      "mode": "full"
+    },
+    {
+      "doc_id": "ARC-COMP-004",
+      "mode": "full"
+    },
+    {
+      "doc_id": "CR-002",
+      "mode": "full"
+    },
+    {
+      "doc_id": "ARC-OVERALL-002",
+      "mode": "summary"
+    }
+  ],
+  "decisions": [
+    "DEC-002"
+  ],
+  "validation": [
+    "node --check src/server.js",
+    "npm test",
+    "真实 V1 库迁移/重开/回滚与 34 个 API 契约回归",
+    "Release 独立审核连续两轮通过"
+  ]
+}

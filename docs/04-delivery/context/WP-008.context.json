@@ -1,0 +1,36 @@
+{
+  "$schema": "schemas/work-package-context.schema.json",
+  "schema_version": 1,
+  "work_package": "WP-008",
+  "baseline": "BL-003",
+  "scope": [
+    "public"
+  ],
+  "required_documents": [
+    {
+      "doc_id": "REQ-V2-001",
+      "mode": "full"
+    },
+    {
+      "doc_id": "ARC-COMP-004",
+      "mode": "full"
+    },
+    {
+      "doc_id": "QUAL-TRACE-V2-001",
+      "mode": "full"
+    },
+    {
+      "doc_id": "ARC-OVERALL-002",
+      "mode": "summary"
+    }
+  ],
+  "decisions": [
+    "DEC-002"
+  ],
+  "validation": [
+    "node --check public/app.js",
+    "npm test",
+    "关键 V2 人工闭环与 V1 五视图浏览器回归",
+    "Release 独立审核连续两轮通过"
+  ]
+}
