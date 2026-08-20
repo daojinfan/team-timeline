@@ -37,8 +37,9 @@ async function fixture() {
 }
 
 function addDays(date, amount) {
-  const next = new Date(`${date}T00:00:00`);
-  next.setDate(next.getDate() + amount);
+  const [year, month, day] = date.split("-").map(Number);
+  const next = new Date(Date.UTC(year, month - 1, day));
+  next.setUTCDate(next.getUTCDate() + amount);
   return next.toISOString().slice(0, 10);
 }
 
@@ -54,6 +55,72 @@ test("dashboard exposes seeded data, templates, checklist, and stats", async () 
     assert.ok(templates.length >= 4);
   } finally {
     await app.close();
+  }
+});
+
+test("fresh database sample dates are relative to server-local today", async () => {
+  const app = await fixture();
+  try {
+    const dashboard = await app.request("/api/dashboard");
+    const expectedTasks = [
+      ["相稳定性实验", -6, 8, "active"],
+      ["XY 相图整理", 5, 19, "planned"],
+      ["文献精读汇总", -20, -8, "completed"],
+      ["模型参数扫描", -2, 15, "active"]
+    ];
+    for (const [title, startOffset, endOffset, status] of expectedTasks) {
+      const task = dashboard.tasks.find((item) => item.title === title);
+      assert.ok(task, `missing sample task: ${title}`);
+      assert.equal(task.default_start_date, addDays(dashboard.today, startOffset));
+      assert.equal(task.default_end_date, addDays(dashboard.today, endOffset));
+      assert.equal(task.status, status);
+    }
+
+    const expectedAssignments = [
+      ["相稳定性实验", "张三", -6, 8],
+      ["相稳定性实验", "李四", -4, 8],
+      ["XY 相图整理", "李四", 5, 19],
+      ["XY 相图整理", "王五", 5, 19],
+      ["文献精读汇总", "赵六", -20, -8],
+      ["模型参数扫描", "张三", -2, 11],
+      ["模型参数扫描", "王五", -2, 15]
+    ];
+    for (const [taskTitle, memberName, startOffset, endOffset] of expectedAssignments) {
+      const assignment = dashboard.assignments.find((item) => item.task_title === taskTitle && item.member_name === memberName);
+      assert.ok(assignment, `missing sample assignment: ${taskTitle}/${memberName}`);
+      assert.equal(assignment.start_date, addDays(dashboard.today, startOffset));
+      assert.equal(assignment.end_date, addDays(dashboard.today, endOffset));
+    }
+    assert.ok(dashboard.stats.overlapping_members >= 1);
+  } finally {
+    await app.close();
+  }
+});
+
+test("reopening an existing database does not rewrite stored dates", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "team-task-gantt-existing-"));
+  const databasePath = path.join(dir, "existing.sqlite");
+  let database;
+  try {
+    database = await initDatabase(databasePath);
+    const task = database.prepare("SELECT id FROM tasks WHERE title = ?").get("相稳定性实验");
+    database.prepare("UPDATE tasks SET default_start_date = ?, default_end_date = ? WHERE id = ?")
+      .run("2031-04-03", "2031-04-09", task.id);
+    database.prepare("UPDATE task_assignments SET start_date = ?, end_date = ? WHERE task_id = ?")
+      .run("2031-04-04", "2031-04-08", task.id);
+    database.close();
+    database = null;
+
+    database = await initDatabase(databasePath);
+    const reopenedTask = database.prepare("SELECT default_start_date, default_end_date FROM tasks WHERE id = ?").get(task.id);
+    assert.equal(reopenedTask.default_start_date, "2031-04-03");
+    assert.equal(reopenedTask.default_end_date, "2031-04-09");
+    const reopenedAssignments = database.prepare("SELECT start_date, end_date FROM task_assignments WHERE task_id = ? ORDER BY id").all(task.id);
+    assert.ok(reopenedAssignments.length > 0);
+    assert.ok(reopenedAssignments.every((assignment) => assignment.start_date === "2031-04-04" && assignment.end_date === "2031-04-08"));
+  } finally {
+    database?.close();
+    await rm(dir, { recursive: true, force: true });
   }
 });
 
@@ -104,6 +171,55 @@ test("planned and active task statuses are derived from dates", async () => {
       })
     });
     assert.equal(activeTask.status, "active");
+  } finally {
+    await app.close();
+  }
+});
+
+test("completed task status survives title and description edits", async () => {
+  const app = await fixture();
+  try {
+    const task = (await app.request("/api/tasks")).find((item) => item.status === "active" && item.assignments.some((assignment) => assignment.progress < 100));
+    const originalProgress = task.assignments.map((assignment) => [assignment.id, assignment.progress]);
+
+    const completed = await app.request(`/api/tasks/${task.id}`, {
+      method: "PUT",
+      body: JSON.stringify({ status: "completed" })
+    });
+    assert.equal(completed.status, "completed");
+
+    const edited = await app.request(`/api/tasks/${task.id}`, {
+      method: "PUT",
+      body: JSON.stringify({ title: `${task.title}（已编辑）`, description: "仅更新文案" })
+    });
+    assert.equal(edited.status, "completed");
+    assert.deepEqual(edited.assignments.map((assignment) => [assignment.id, assignment.progress]), originalProgress);
+  } finally {
+    await app.close();
+  }
+});
+
+test("batch completion preserves every personal assignment progress value", async () => {
+  const app = await fixture();
+  try {
+    const targets = (await app.request("/api/tasks")).filter((task) => task.status !== "completed" && task.assignments.length).slice(0, 2);
+    const originalProgress = new Map(targets.flatMap((task) => task.assignments.map((assignment) => [assignment.id, assignment.progress])));
+    assert.ok([...originalProgress.values()].some((progress) => progress < 100));
+
+    const result = await app.request("/api/batch/tasks", {
+      method: "POST",
+      body: JSON.stringify({ task_ids: targets.map((task) => task.id), status: "completed" })
+    });
+    assert.deepEqual(new Set(result.updated), new Set(targets.map((task) => task.id)));
+
+    const after = await app.request("/api/tasks");
+    for (const target of targets) {
+      const updated = after.find((task) => task.id === target.id);
+      assert.equal(updated.status, "completed");
+      for (const assignment of updated.assignments) {
+        assert.equal(assignment.progress, originalProgress.get(assignment.id));
+      }
+    }
   } finally {
     await app.close();
   }
@@ -269,6 +385,38 @@ test("maintenance preview and safer maintenance backups work", async () => {
     const dashboard = await app.request("/api/dashboard");
     assert.equal(dashboard.members.length, 4);
     assert.equal(dashboard.tasks.length, 4);
+    const resetTask = dashboard.tasks.find((item) => item.title === "相稳定性实验");
+    assert.equal(resetTask.default_start_date, "2026-06-24");
+    assert.equal(resetTask.default_end_date, "2026-07-12");
+  } finally {
+    await app.close();
+  }
+});
+
+test("SQLite schema and CSV and JSON export formats remain compatible", async () => {
+  const app = await fixture();
+  try {
+    assert.deepEqual(
+      app.database.prepare("PRAGMA table_info(tasks)").all().map((column) => column.name),
+      ["id", "title", "description", "default_start_date", "default_end_date", "color", "status", "created_at", "updated_at", "deleted_at"]
+    );
+
+    const backup = await app.request("/api/backup");
+    assert.deepEqual(
+      Object.keys(backup).sort(),
+      ["exported_at", "members", "task_assignments", "task_change_logs", "task_checklist_items", "task_templates", "tasks"].sort()
+    );
+
+    const tasksCsv = await app.request("/api/export/tasks.csv");
+    assert.equal(
+      tasksCsv.replace(/^\uFEFF/, "").split(/\r?\n/, 1)[0],
+      "task_id,task_title,task_status,member_id,member_name,start_date,end_date,progress,overdue"
+    );
+    const loadCsv = await app.request("/api/export/member-load.csv");
+    assert.equal(
+      loadCsv.replace(/^\uFEFF/, "").split(/\r?\n/, 1)[0],
+      "member_id,member_name,role,current_count,next7_count,next30_count,overdue_count,completed_count,overlap_count"
+    );
   } finally {
     await app.close();
   }

@@ -62,8 +62,15 @@ function nowIso() {
   return new Date().toISOString();
 }
 
+function formatLocalIsoDate(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 function todayIsoDate() {
-  return new Date().toISOString().slice(0, 10);
+  return formatLocalIsoDate(new Date());
 }
 
 function sendJson(res, status, payload) {
@@ -115,9 +122,10 @@ function assertDateRange(start, end, prefix = "日期") {
 }
 
 function addDays(date, amount) {
-  const next = new Date(`${date}T00:00:00`);
+  const [year, month, day] = date.split("-").map(Number);
+  const next = new Date(year, month - 1, day);
   next.setDate(next.getDate() + amount);
-  return next.toISOString().slice(0, 10);
+  return formatLocalIsoDate(next);
 }
 
 function normalizeTaskStatus(status, fallback = "active") {
@@ -344,7 +352,7 @@ function seedTemplates(database) {
   }
 }
 
-function insertSampleMembersAndTasks(database) {
+function insertSampleMembersAndTasks(database, dateAnchor = null) {
   const timestamp = nowIso();
   const insertMember = database.prepare(`
     INSERT INTO members (name, role, email, status, created_at, updated_at)
@@ -371,45 +379,59 @@ function insertSampleMembersAndTasks(database) {
   ];
   const memberIds = members.map((member) => insertMember.run(...member, timestamp, timestamp).lastInsertRowid);
 
+  const dates = dateAnchor
+    ? [
+        [addDays(dateAnchor, -6), addDays(dateAnchor, 8)],
+        [addDays(dateAnchor, 5), addDays(dateAnchor, 19)],
+        [addDays(dateAnchor, -20), addDays(dateAnchor, -8)],
+        [addDays(dateAnchor, -2), addDays(dateAnchor, 15)]
+      ]
+    : [
+        ["2026-06-24", "2026-07-12"],
+        ["2026-07-02", "2026-07-24"],
+        ["2026-06-10", "2026-06-26"],
+        ["2026-07-08", "2026-08-06"]
+      ];
   const tasks = [
-    ["相稳定性实验", "完成第一批样品测试和数据记录。", "2026-06-24", "2026-07-12", "#2563eb", "active", ["样品准备", "实验记录", "数据备份"]],
-    ["XY 相图整理", "整理已有结果并绘制阶段性相图。", "2026-07-02", "2026-07-24", "#16a34a", "planned", ["收集结果", "绘制相图", "复核标注"]],
-    ["文献精读汇总", "整理近期论文并形成组会材料。", "2026-06-10", "2026-06-26", "#9333ea", "completed", ["阅读论文", "整理笔记", "完成汇报"]],
-    ["模型参数扫描", "执行多组参数扫描并记录异常点。", "2026-07-08", "2026-08-06", "#ea580c", "active", ["参数表", "运行扫描", "异常点记录"]]
+    ["相稳定性实验", "完成第一批样品测试和数据记录。", ...dates[0], "#2563eb", "active", ["样品准备", "实验记录", "数据备份"]],
+    ["XY 相图整理", "整理已有结果并绘制阶段性相图。", ...dates[1], "#16a34a", "planned", ["收集结果", "绘制相图", "复核标注"]],
+    ["文献精读汇总", "整理近期论文并形成组会材料。", ...dates[2], "#9333ea", "completed", ["阅读论文", "整理笔记", "完成汇报"]],
+    ["模型参数扫描", "执行多组参数扫描并记录异常点。", ...dates[3], "#ea580c", "active", ["参数表", "运行扫描", "异常点记录"]]
   ];
   const taskIds = tasks.map((task) => insertTask.run(...task.slice(0, 6), timestamp, timestamp).lastInsertRowid);
   tasks.forEach((task, taskIndex) => {
     task[6].forEach((item, index) => insertChecklist.run(taskIds[taskIndex], item, task[5] === "completed" ? 1 : 0, index, timestamp, timestamp));
   });
 
-  insertAssignment.run(taskIds[0], memberIds[0], "2026-06-24", "2026-07-12", 45, "负责样品 A/B。", timestamp, timestamp);
-  insertAssignment.run(taskIds[0], memberIds[1], "2026-06-26", "2026-07-12", 35, "同步整理原始数据。", timestamp, timestamp);
-  insertAssignment.run(taskIds[1], memberIds[1], "2026-07-02", "2026-07-24", 10, "", timestamp, timestamp);
-  insertAssignment.run(taskIds[1], memberIds[2], "2026-07-02", "2026-07-24", 15, "", timestamp, timestamp);
-  insertAssignment.run(taskIds[2], memberIds[3], "2026-06-10", "2026-06-26", 100, "已完成组会版本。", timestamp, timestamp);
-  insertAssignment.run(taskIds[3], memberIds[0], "2026-07-08", "2026-08-02", 5, "", timestamp, timestamp);
-  insertAssignment.run(taskIds[3], memberIds[2], "2026-07-08", "2026-08-06", 5, "负责高温区间。", timestamp, timestamp);
+  insertAssignment.run(taskIds[0], memberIds[0], tasks[0][2], tasks[0][3], 45, "负责样品 A/B。", timestamp, timestamp);
+  insertAssignment.run(taskIds[0], memberIds[1], addDays(tasks[0][2], 2), tasks[0][3], 35, "同步整理原始数据。", timestamp, timestamp);
+  insertAssignment.run(taskIds[1], memberIds[1], tasks[1][2], tasks[1][3], 10, "", timestamp, timestamp);
+  insertAssignment.run(taskIds[1], memberIds[2], tasks[1][2], tasks[1][3], 15, "", timestamp, timestamp);
+  insertAssignment.run(taskIds[2], memberIds[3], tasks[2][2], tasks[2][3], 100, "已完成组会版本。", timestamp, timestamp);
+  insertAssignment.run(taskIds[3], memberIds[0], tasks[3][2], addDays(tasks[3][3], -4), 5, "", timestamp, timestamp);
+  insertAssignment.run(taskIds[3], memberIds[2], tasks[3][2], tasks[3][3], 5, "负责高温区间。", timestamp, timestamp);
 }
 
-function seedMembersAndTasks(database) {
+function seedMembersAndTasks(database, dateAnchor = null) {
   const row = database.prepare("SELECT COUNT(*) AS count FROM members WHERE deleted_at IS NULL").get();
   if (row.count > 0) return;
 
   runTransaction(database, () => {
-    insertSampleMembersAndTasks(database);
+    insertSampleMembersAndTasks(database, dateAnchor);
   });
 }
 
-function seedIfEmpty(database) {
+function seedIfEmpty(database, dateAnchor = null) {
   seedTemplates(database);
-  seedMembersAndTasks(database);
+  seedMembersAndTasks(database, dateAnchor);
 }
 
 export async function initDatabase(customPath = dbPath) {
+  const isNewDatabase = !existsSync(customPath);
   await mkdir(path.dirname(customPath), { recursive: true });
   const database = new DatabaseSync(customPath);
   createSchema(database);
-  seedIfEmpty(database);
+  seedIfEmpty(database, isNewDatabase ? todayIsoDate() : null);
   return database;
 }
 

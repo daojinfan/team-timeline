@@ -9,15 +9,23 @@
   maintenancePreview: { archived_tasks: 0, deleted_tasks: 0, deleted_members: 0, logs: 0 },
   stats: null,
   today: "",
+  activeView: "gantt",
   search: "",
   taskSort: "time_asc",
   taskViewMode: "cards",
   scale: "day",
   zoom: 60,
-  rangeMode: "30",
+  rangeMode: "smart",
+  sidebarCollapsed: false,
   onlyBusyMembers: false,
   stackTasks: true,
   stackMemberList: true,
+  loadPeriod: "current",
+  loadMemberId: "",
+  logSearch: "",
+  logType: "",
+  logDate: "",
+  memberSearch: "",
   filters: {
     member_id: "",
     status: "",
@@ -30,8 +38,40 @@
   selectedTaskIds: new Set(),
   activeAssignmentId: null,
   activeTaskId: null,
-  drag: null
+  drag: null,
+  busyActions: new Set()
 };
+
+const DESKTOP_PREFS_KEY = "teamTaskGantt.desktopPrefs.v1";
+const desktopPreferenceDefaults = {
+  activeView: "gantt",
+  scale: "day",
+  zoom: 60,
+  rangeMode: "smart",
+  taskViewMode: "cards",
+  taskSort: "time_asc",
+  sidebarCollapsed: false
+};
+
+function readDesktopPreferences() {
+  try {
+    const value = JSON.parse(window.localStorage.getItem(DESKTOP_PREFS_KEY) || "null");
+    if (!value || typeof value !== "object") return { ...desktopPreferenceDefaults };
+    const result = { ...desktopPreferenceDefaults };
+    if (["gantt", "tasks", "load", "logs", "maintenance"].includes(value.activeView)) result.activeView = value.activeView;
+    if (["day", "week", "month"].includes(value.scale)) result.scale = value.scale;
+    if (Number.isFinite(Number(value.zoom)) && Number(value.zoom) >= 8 && Number(value.zoom) <= 60) result.zoom = Number(value.zoom);
+    if (["smart", "all", "week", "month", "30", "90"].includes(value.rangeMode)) result.rangeMode = value.rangeMode;
+    if (["cards", "list"].includes(value.taskViewMode)) result.taskViewMode = value.taskViewMode;
+    if (["time_asc", "time_desc", "name_asc", "name_desc"].includes(value.taskSort)) result.taskSort = value.taskSort;
+    if (typeof value.sidebarCollapsed === "boolean") result.sidebarCollapsed = value.sidebarCollapsed;
+    return result;
+  } catch {
+    return { ...desktopPreferenceDefaults };
+  }
+}
+
+Object.assign(state, readDesktopPreferences());
 
 const statusLabels = {
   planned: "未开始",
@@ -44,6 +84,7 @@ const statusLabels = {
 
 const manualStatusLabels = {
   paused: "暂停",
+  completed: "已完成",
   cancelled: "取消"
 };
 
@@ -104,11 +145,91 @@ function monthChanged(previous, current) {
   return previous && previous.slice(0, 7) !== current.slice(0, 7);
 }
 
-function showToast(message) {
+let toastTimer = null;
+
+function showToast(message, options = {}) {
   const toast = $("#toast");
-  toast.textContent = message;
+  if (!toast) return;
+  const { type = "status", actionLabel = "", onAction = null } = options;
+  if (toastTimer) window.clearTimeout(toastTimer);
+  toast.replaceChildren();
+  const text = document.createElement("span");
+  text.textContent = message;
+  toast.appendChild(text);
+  toast.setAttribute("role", type === "error" ? "alert" : "status");
+  toast.classList.toggle("error", type === "error");
+  if (actionLabel && typeof onAction === "function") {
+    const action = document.createElement("button");
+    action.type = "button";
+    action.textContent = actionLabel;
+    action.addEventListener("click", async () => {
+      if (action.disabled) return;
+      action.disabled = true;
+      try {
+        await onAction();
+      } catch (error) {
+        showToast(`撤销失败：${error.message}`, { type: "error" });
+      }
+    }, { once: true });
+    toast.appendChild(action);
+  }
   toast.classList.add("show");
-  window.setTimeout(() => toast.classList.remove("show"), 2600);
+  toastTimer = window.setTimeout(() => toast.classList.remove("show"), actionLabel ? 7000 : 3000);
+}
+
+function safeColor(value, fallback = "#2563eb") {
+  return /^#[0-9a-f]{6}$/i.test(String(value || "")) ? String(value) : fallback;
+}
+
+function saveDesktopPreferences() {
+  const preferences = {
+    activeView: state.activeView,
+    scale: state.scale,
+    zoom: state.zoom,
+    rangeMode: state.rangeMode,
+    taskViewMode: state.taskViewMode,
+    taskSort: state.taskSort,
+    sidebarCollapsed: state.sidebarCollapsed
+  };
+  try {
+    window.localStorage.setItem(DESKTOP_PREFS_KEY, JSON.stringify(preferences));
+  } catch {
+    // Preferences are optional and must never block task work.
+  }
+}
+
+function isBusy(key) {
+  return state.busyActions.has(key);
+}
+
+async function runBusyAction(key, action, options = {}) {
+  if (isBusy(key)) return false;
+  const { control = null, relatedControls = [], busyText = "处理中…", onError = null, renderBusy = null } = options;
+  const button = control?.closest?.("button") || control;
+  const originalText = button?.textContent;
+  state.busyActions.add(key);
+  if (button) {
+    button.disabled = true;
+    if (busyText) button.textContent = busyText;
+  }
+  relatedControls.filter(Boolean).forEach((item) => { item.disabled = true; });
+  renderBusy?.();
+  try {
+    await action();
+    return true;
+  } catch (error) {
+    onError?.(error);
+    showToast(error.message || "操作失败", { type: "error" });
+    return false;
+  } finally {
+    state.busyActions.delete(key);
+    if (button?.isConnected) {
+      button.disabled = false;
+      if (originalText !== undefined) button.textContent = originalText;
+    }
+    relatedControls.filter((item) => item?.isConnected).forEach((item) => { item.disabled = false; });
+    renderBusy?.();
+  }
 }
 
 async function api(path, options = {}) {
@@ -151,7 +272,18 @@ async function loadData() {
     maintenancePreview,
     filteredTaskIds: new Set(dashboard.filtered_task_ids || dashboard.tasks.map((task) => task.id))
   });
+  const returnedFilters = dashboard.filters || {};
+  state.filters = {
+    member_id: returnedFilters.member_id || "",
+    status: returnedFilters.status || "",
+    start_date: returnedFilters.start_date || "",
+    end_date: returnedFilters.end_date || "",
+    overdue: returnedFilters.overdue === "1" || returnedFilters.overdue === true,
+    overlap: returnedFilters.overlap === "1" || returnedFilters.overlap === true
+  };
   state.selectedTaskIds = new Set([...state.selectedTaskIds].filter((id) => state.tasks.some((task) => task.id === id)));
+  if (state.activeTaskId && !state.tasks.some((task) => task.id === state.activeTaskId)) state.activeTaskId = null;
+  if (state.activeAssignmentId && !state.assignments.some((item) => item.id === state.activeAssignmentId)) state.activeAssignmentId = null;
   render();
 }
 
@@ -190,14 +322,39 @@ function renderStats() {
     ["逾期", stats.overdue_assignments ?? 0, "需要处理"],
     ["重叠", stats.overlapping_members ?? 0, "存在并行任务的成员"]
   ];
-  $("#stats").innerHTML = cards.map(([label, value, hint]) => `
-    <article class="stat-card">
+  $("#stats").innerHTML = cards.map(([label, value, hint], index) => `
+    ${index >= 3 ? `<button type="button" class="stat-card" data-stat-filter="${index === 3 ? "overdue" : "overlap"}" aria-pressed="${index === 3 ? state.filters.overdue : state.filters.overlap}">` : `<article class="stat-card">`}
       <span>${label}</span>
       <strong>${value}</strong>
       <small>${hint}</small>
-    </article>
+    ${index >= 3 ? "</button>" : "</article>"}
   `).join("");
   $("#summary").textContent = `${stats.total_members ?? 0} 名成员，${stats.total_tasks ?? 0} 个任务，${stats.overdue_assignments ?? 0} 条逾期提醒`;
+}
+
+function activeFilterEntries() {
+  const member = state.members.find((item) => String(item.id) === state.filters.member_id);
+  return [
+    state.search && ["search", `关键词：${state.search}`],
+    member && ["member_id", `成员：${member.name}`],
+    state.filters.status && ["status", `状态：${statusLabels[state.filters.status] || state.filters.status}`],
+    state.filters.start_date && ["start_date", `开始后：${state.filters.start_date}`],
+    state.filters.end_date && ["end_date", `结束前：${state.filters.end_date}`],
+    state.filters.overdue && ["overdue", "逾期"],
+    state.filters.overlap && ["overlap", "重叠"]
+  ].filter(Boolean);
+}
+
+function renderFilterFeedback() {
+  const filters = $("#activeFilters");
+  if (filters) {
+    const entries = activeFilterEntries();
+    filters.innerHTML = entries.map(([key, label]) => `
+      <button type="button" class="filter-chip" data-remove-filter="${key}" aria-label="移除${escapeHtml(label)}">${escapeHtml(label)} <span aria-hidden="true">×</span></button>
+    `).join("") || `<span class="meta">未启用筛选</span>`;
+  }
+  const count = $("#filterResultCount");
+  if (count) count.textContent = `匹配 ${visibleTasks().length} / ${state.tasks.length} 个任务`;
 }
 
 function renderFilters() {
@@ -208,11 +365,16 @@ function renderFilters() {
   $("#taskSort").value = state.taskSort;
   $("#filterOverdue").checked = state.filters.overdue;
   $("#filterOverlap").checked = state.filters.overlap;
+  const search = $("#searchInput");
+  if (search && search.value !== state.search) search.value = state.search;
+  renderFilterFeedback();
 }
 
 function renderMembers() {
   $("#memberList").classList.toggle("stacked", state.stackMemberList);
-  $("#memberList").innerHTML = state.members.map((member) => `
+  const query = state.memberSearch.trim().toLowerCase();
+  const visibleMembers = state.members.filter((member) => !query || `${member.name} ${member.role || ""}`.toLowerCase().includes(query));
+  $("#memberList").innerHTML = visibleMembers.map((member) => `
     <div class="member-item">
       <div>
         <strong>${escapeHtml(member.name)}</strong>
@@ -220,7 +382,7 @@ function renderMembers() {
       </div>
       <button type="button" data-edit-member="${member.id}">编辑</button>
     </div>
-  `).join("") || `<div class="empty small">还没有成员，先点“新增”添加第一个成员。</div>`;
+  `).join("") || `<div class="empty small">${state.members.length ? "没有匹配的成员。" : "还没有成员，先点“新增成员”添加第一个成员。"}</div>`;
 
   const activeMembers = state.members.filter((item) => item.status === "active");
   $("#memberChoices").innerHTML = activeMembers.map((member) => `
@@ -239,7 +401,7 @@ function renderTemplates() {
   $("#templateSelect").innerHTML = `<option value="">不用模板</option>${state.templates.map((template) => `<option value="${template.id}">${escapeHtml(template.name)}</option>`).join("")}`;
   $("#templateList").innerHTML = state.templates.map((template) => `
     <div class="template-item">
-      <span class="swatch" style="background:${template.color}"></span>
+      <span class="swatch" style="background:${safeColor(template.color, "#0f766e")}"></span>
       <div>
         <strong>${escapeHtml(template.name)}</strong>
         <small>${template.duration_days} 天 · ${template.checklist.length} 个检查项</small>
@@ -254,6 +416,27 @@ function renderTemplates() {
 
 function getRange(assignments) {
   const today = state.today || todayLocalDate();
+  if (state.rangeMode === "smart") {
+    if (!assignments.length) return { start: today, end: addDays(today, 30), days: 31 };
+    const current = assignments.filter((item) => item.start_date <= today && item.end_date >= today);
+    let focus = current;
+    if (!focus.length) {
+      const ranked = [...assignments].sort((a, b) => {
+        const distanceA = a.end_date < today ? daysBetween(a.end_date, today) : daysBetween(today, a.start_date);
+        const distanceB = b.end_date < today ? daysBetween(b.end_date, today) : daysBetween(today, b.start_date);
+        if (distanceA !== distanceB) return distanceA - distanceB;
+        const futureA = a.start_date > today ? 0 : 1;
+        const futureB = b.start_date > today ? 0 : 1;
+        return futureA - futureB || a.start_date.localeCompare(b.start_date) || a.id - b.id;
+      });
+      focus = ranked.slice(0, 1);
+    }
+    const starts = focus.map((item) => item.start_date).sort();
+    const ends = focus.map((item) => item.end_date).sort();
+    const start = addDays(starts[0], -2);
+    const end = addDays(ends.at(-1), 3);
+    return { start, end, days: Math.max(1, daysBetween(start, end) + 1) };
+  }
   if (state.rangeMode !== "all") {
     if (state.rangeMode === "week") {
       const day = new Date(`${today}T00:00:00`).getDay();
@@ -283,6 +466,13 @@ function getRange(assignments) {
   const start = addDays(starts[0], -2);
   const end = addDays(ends.at(-1), 3);
   return { start, end, days: Math.max(1, daysBetween(start, end) + 1) };
+}
+
+function ganttEmptyState(kind) {
+  if (kind === "empty") {
+    return `<div class="empty empty-action"><strong>还没有任务</strong><p>新建第一个任务后，将在这里显示排期。</p><button type="button" data-open-task-dialog>新建任务</button></div>`;
+  }
+  return `<div class="empty empty-action"><strong>当前范围/筛选无数据</strong><p>可以清空条件回到智能范围，或直接查看逾期任务。</p><div class="empty-actions"><button type="button" data-empty-show-all>查看全部任务</button><button type="button" data-empty-show-overdue>查看逾期任务</button></div></div>`;
 }
 
 function unitWidth() {
@@ -327,6 +517,15 @@ function renderGantt() {
   const todayOffset = state.today >= range.start && state.today <= range.end ? daysBetween(range.start, state.today) * colWidth : null;
   $("#rangeLabel").textContent = `${range.start} 至 ${range.end}`;
 
+  if (!state.tasks.length) {
+    $("#gantt").innerHTML = ganttEmptyState("empty");
+    return;
+  }
+  if (!assignments.length || !rangeAssignments.length) {
+    $("#gantt").innerHTML = ganttEmptyState("filtered");
+    return;
+  }
+
   const header = `
     <div class="gantt-header">
       <div class="member-heading">成员</div>
@@ -364,7 +563,7 @@ function renderGantt() {
       return `
         <button
           class="${classes}"
-          style="left:${barLeft}px; top:${14 + item.lane * 31}px; width:${barWidth}px; background:${item.color}"
+          style="left:${barLeft}px; top:${14 + item.lane * 31}px; width:${barWidth}px; background:${safeColor(item.color)}"
           title="${escapeHtml(item.task_title)}：${item.start_date} 至 ${item.end_date}，${statusLabels[item.task_status]}"
           data-tooltip="${escapeHtml(`${item.task_title}\n${item.member_name}\n${item.start_date} 至 ${item.end_date}\n状态：${statusLabels[item.task_status]}\n进度：${item.progress}%`)}"
           data-select-assignment="${item.id}"
@@ -404,7 +603,7 @@ function renderGantt() {
     `;
   }).join("");
 
-  $("#gantt").innerHTML = header + (rows || `<div class="empty">当前筛选下没有成员任务。可以清空筛选或关闭“只看有任务成员”。</div>`);
+  $("#gantt").innerHTML = header + (rows || ganttEmptyState("filtered"));
 }
 
 function checklistSummary(task) {
@@ -417,6 +616,28 @@ function checklistSummary(task) {
 function taskPrimaryAction(task) {
   if (task.status === "archived") return "";
   return `<button type="button" data-archive-task="${task.id}">归档</button>`;
+}
+
+function taskHasIncompleteProgress(task) {
+  return task.assignments.some((assignment) => Number(assignment.progress) < 100);
+}
+
+function taskCompletionAction(task) {
+  if (["completed", "archived"].includes(task.status)) return "";
+  const busy = isBusy(`complete-task-${task.id}`);
+  return `<button type="button" data-complete-task="${task.id}" ${busy ? "disabled aria-busy=\"true\"" : ""}>${busy ? "完成中…" : "标记完成"}</button>`;
+}
+
+function taskCompletionHint(task) {
+  return task.status !== "completed" && taskHasIncompleteProgress(task)
+    ? `<p class="notice completion-hint">部分成员进度低于 100%；标记完成不会改动个人进度。</p>`
+    : "";
+}
+
+function taskListEmptyState() {
+  return state.tasks.length
+    ? `<div class="empty empty-action"><strong>没有匹配的任务</strong><button type="button" data-empty-show-all>查看全部任务</button></div>`
+    : `<div class="empty empty-action"><strong>还没有任务</strong><button type="button" data-open-task-dialog>新建任务</button></div>`;
 }
 
 function renderTasks() {
@@ -440,10 +661,10 @@ function renderTasks() {
         <article class="task-list-row ${state.selectedTaskIds.has(task.id) ? "selected" : ""}">
           <div class="task-list-title">
             <label class="select-task"><input type="checkbox" data-task-check="${task.id}" ${state.selectedTaskIds.has(task.id) ? "checked" : ""}></label>
-            <span class="swatch" style="background:${task.color}"></span>
+            <span class="swatch" style="background:${safeColor(task.color)}"></span>
             <div>
               <strong>${escapeHtml(task.title)}</strong>
-              <small>${escapeHtml(task.description || "无描述")} · 清单 ${checklistSummary(task)}</small>
+              <small>${escapeHtml(task.description || "无描述")} · 清单 ${checklistSummary(task)}${task.status !== "completed" && taskHasIncompleteProgress(task) ? " · 完成时个人进度保持不变" : ""}</small>
             </div>
           </div>
           <div>${task.default_start_date}<br><span>${task.default_end_date}</span></div>
@@ -451,12 +672,13 @@ function renderTasks() {
           <div><span class="status ${task.status}">${statusLabels[task.status] || task.status}</span></div>
           <div class="task-list-actions">
             <button type="button" data-select-task="${task.id}">详情</button>
+            ${taskCompletionAction(task)}
             <button type="button" data-edit-task="${task.id}">编辑</button>
             ${taskPrimaryAction(task)}
             <button class="danger" type="button" data-delete-task="${task.id}">删除</button>
           </div>
         </article>
-      `).join("") || `<div class="empty">没有匹配的任务。可以清空筛选，或在左侧新增任务。</div>`}
+      `).join("") || taskListEmptyState()}
     `;
     return;
   }
@@ -465,11 +687,12 @@ function renderTasks() {
     <article class="task-card ${state.selectedTaskIds.has(task.id) ? "selected" : ""}">
       <div class="task-title-line">
         <label class="select-task"><input type="checkbox" data-task-check="${task.id}" ${state.selectedTaskIds.has(task.id) ? "checked" : ""}></label>
-        <h3><span class="swatch" style="background:${task.color}"></span>${escapeHtml(task.title)}</h3>
+        <h3><span class="swatch" style="background:${safeColor(task.color)}"></span>${escapeHtml(task.title)}</h3>
       </div>
       <p class="meta">${escapeHtml(task.description || "无描述")}</p>
       <p class="meta">${task.default_start_date} 至 ${task.default_end_date} <span class="status ${task.status}">${statusLabels[task.status] || task.status}</span></p>
       <p class="meta">检查清单：${checklistSummary(task)}</p>
+      ${taskCompletionHint(task)}
       <div class="assignment-list">
         ${task.assignments.map((assignment) => `
           <div class="assignment">
@@ -480,38 +703,64 @@ function renderTasks() {
       </div>
       <div class="card-actions">
         <button type="button" data-select-task="${task.id}">任务详情</button>
+        ${taskCompletionAction(task)}
         <button type="button" data-edit-task="${task.id}">编辑</button>
         ${taskPrimaryAction(task)}
         <button class="danger" type="button" data-delete-task="${task.id}">删除</button>
       </div>
     </article>
-  `).join("") || `<div class="empty">没有匹配的任务。可以清空筛选，或在左侧新增任务。</div>`;
+  `).join("") || taskListEmptyState();
 }
 
 function renderLoad() {
-  const rows = state.stats?.member_load || [];
+  const allRows = state.stats?.member_load || [];
+  const memberFilter = $("#loadMemberFilter");
+  if (memberFilter) {
+    memberFilter.innerHTML = `<option value="">全部成员</option>${state.members.map((member) => `<option value="${member.id}" ${state.loadMemberId === String(member.id) ? "selected" : ""}>${escapeHtml(member.name)}</option>`).join("")}`;
+  }
+  const period = $("#loadPeriod");
+  if (period) period.value = state.loadPeriod;
+  const rows = allRows.filter((row) => !state.loadMemberId || String(row.member_id) === state.loadMemberId);
+  const periodColumns = {
+    current: ["当前", "current_count"],
+    7: ["未来 7 天", "next7_count"],
+    30: ["未来 30 天", "next30_count"]
+  };
+  const [periodLabel, periodField] = periodColumns[state.loadPeriod] || periodColumns.current;
   $("#loadTable").innerHTML = `
     <table>
-      <thead><tr><th>成员</th><th>当前</th><th>7 天</th><th>30 天</th><th>逾期</th><th>结束</th><th>重叠</th></tr></thead>
+      <thead><tr><th>成员</th><th>${periodLabel}</th><th>逾期</th><th>已完成</th><th>重叠</th></tr></thead>
       <tbody>
         ${rows.map((row) => `
           <tr class="${row.overlap_count > 0 || row.overdue_count > 0 ? "warn-row" : ""}">
             <td><strong>${escapeHtml(row.member_name)}</strong><br><span>${escapeHtml(row.role || "")}</span></td>
-            <td>${row.current_count}</td>
-            <td>${row.next7_count}</td>
-            <td>${row.next30_count}</td>
+            <td>${row[periodField]}</td>
             <td>${row.overdue_count}</td>
             <td>${row.completed_count}</td>
             <td>${row.overlap_count}</td>
           </tr>
-        `).join("")}
+        `).join("") || `<tr><td colspan="5" class="empty">没有匹配的成员负载。</td></tr>`}
       </tbody>
     </table>
   `;
 }
 
 function renderLogs() {
-  $("#logs").innerHTML = state.logs.map((log) => `
+  const types = [...new Set(state.logs.map((log) => log.change_type))].sort();
+  const typeFilter = $("#logTypeFilter");
+  if (typeFilter) {
+    typeFilter.innerHTML = `<option value="">全部类型</option>${types.map((type) => `<option value="${escapeHtml(type)}" ${state.logType === type ? "selected" : ""}>${escapeHtml(type)}</option>`).join("")}`;
+  }
+  if ($("#logSearchInput") && $("#logSearchInput").value !== state.logSearch) $("#logSearchInput").value = state.logSearch;
+  if ($("#logDateFilter")) $("#logDateFilter").value = state.logDate;
+  const query = state.logSearch.trim().toLowerCase();
+  const logs = state.logs.filter((log) => {
+    if (state.logType && log.change_type !== state.logType) return false;
+    if (state.logDate && String(log.created_at).slice(0, 10) !== state.logDate) return false;
+    if (!query) return true;
+    return `${log.change_type} ${log.task_id ?? ""} ${log.assignment_id ?? ""} ${log.member_id ?? ""}`.toLowerCase().includes(query);
+  });
+  $("#logs").innerHTML = logs.map((log) => `
     <div class="log-item">
       <time>${new Date(log.created_at).toLocaleString()}</time>
       <div>
@@ -519,7 +768,7 @@ function renderLogs() {
         <div class="meta">任务 ID：${log.task_id ?? "-"}；分配 ID：${log.assignment_id ?? "-"}；成员 ID：${log.member_id ?? "-"}</div>
       </div>
     </div>
-  `).join("") || `<div class="empty">暂无修改日志。</div>`;
+  `).join("") || `<div class="empty">没有匹配的修改日志。</div>`;
 }
 
 function renderMaintenance() {
@@ -560,11 +809,63 @@ function renderMaintenance() {
 }
 
 function renderSelection() {
-  $("#selectionInfo").textContent = state.selectedTaskIds.size ? `已选择 ${state.selectedTaskIds.size} 个任务` : "未选择任务";
+  const batchCompletes = $("#batchStatus")?.value === "completed";
+  const hasIncompleteProgress = batchCompletes && [...state.selectedTaskIds].some((id) => {
+    const task = state.tasks.find((item) => item.id === id);
+    return task && taskHasIncompleteProgress(task);
+  });
+  $("#selectionInfo").textContent = state.selectedTaskIds.size
+    ? `已选择 ${state.selectedTaskIds.size} 个任务${hasIncompleteProgress ? "；完成不会覆盖个人进度" : ""}`
+    : "未选择任务";
   $("#batchApplyBtn").disabled = state.selectedTaskIds.size === 0;
+  const batchbar = $(".batchbar");
+  if (batchbar) batchbar.hidden = state.activeView !== "tasks" || state.selectedTaskIds.size === 0;
   $$("[data-task-check]").forEach((input) => {
     input.checked = state.selectedTaskIds.has(Number(input.dataset.taskCheck));
   });
+}
+
+const viewLabels = {
+  gantt: "甘特图",
+  tasks: "任务",
+  load: "负载",
+  logs: "日志",
+  maintenance: "维护"
+};
+
+function renderViewState() {
+  $$('[data-view]').forEach((button) => {
+    const active = button.dataset.view === state.activeView;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-selected", String(active));
+    button.tabIndex = active ? 0 : -1;
+  });
+  $$('[data-toolbar-view]').forEach((toolbar) => {
+    toolbar.hidden = toolbar.dataset.toolbarView !== state.activeView;
+  });
+  $$(".view").forEach((view) => {
+    const active = view.id === `${state.activeView}View`;
+    view.classList.toggle("active", active);
+    view.hidden = !active;
+  });
+  const viewTitle = $("#viewTitle");
+  if (viewTitle) viewTitle.textContent = viewLabels[state.activeView];
+  document.title = `${viewLabels[state.activeView]} · 小组任务管理与甘特图系统`;
+  const sidebar = $("#memberSidebar");
+  if (sidebar) sidebar.classList.toggle("is-collapsed", state.sidebarCollapsed);
+  const workspace = $(".workspace");
+  if (workspace) workspace.classList.toggle("sidebar-collapsed", state.sidebarCollapsed);
+  const sidebarToggle = $("#toggleMemberSidebar") || $("[data-toggle-sidebar]");
+  if (sidebarToggle) {
+    sidebarToggle.setAttribute("aria-expanded", String(!state.sidebarCollapsed));
+    sidebarToggle.setAttribute("aria-label", state.sidebarCollapsed ? "展开成员栏" : "收起成员栏");
+  }
+  const scale = $("#scaleSelect");
+  if (scale) scale.value = state.scale;
+  const zoom = $("#zoomRange");
+  if (zoom) zoom.value = String(state.zoom);
+  const range = $("#rangeSelect");
+  if (range) range.value = state.rangeMode;
 }
 
 function renderChecklist(task) {
@@ -588,10 +889,13 @@ function renderChecklist(task) {
 
 function renderDetail() {
   const pane = $("#detailPane");
+  const content = $("#detailContent") || pane;
   const assignment = state.assignments.find((item) => item.id === state.activeAssignmentId);
   if (assignment) {
     const task = state.tasks.find((item) => item.id === assignment.task_id);
-    pane.innerHTML = `
+    pane.hidden = false;
+    pane.classList.add("is-open");
+    content.innerHTML = `
       <section class="detail-card">
         <h2>${escapeHtml(assignment.task_title)}</h2>
         <p class="meta">${escapeHtml(assignment.task_description || "无描述")}</p>
@@ -603,6 +907,7 @@ function renderDetail() {
           <dt>备注</dt><dd>${escapeHtml(assignment.note || "无")}</dd>
         </dl>
         <div class="detail-actions">
+          ${task ? taskCompletionAction(task) : ""}
           <button type="button" data-edit-assignment="${assignment.id}">编辑个人分配</button>
           <button type="button" data-edit-task="${assignment.task_id}">编辑任务整体</button>
           <button type="button" data-remove-assignment="${assignment.id}">移除该成员</button>
@@ -615,7 +920,9 @@ function renderDetail() {
 
   const task = state.tasks.find((item) => item.id === state.activeTaskId);
   if (task) {
-    pane.innerHTML = `
+    pane.hidden = false;
+    pane.classList.add("is-open");
+    content.innerHTML = `
       <section class="detail-card">
         <h2>${escapeHtml(task.title)}</h2>
         <p class="meta">${escapeHtml(task.description || "无描述")}</p>
@@ -625,7 +932,9 @@ function renderDetail() {
           <dt>参与人数</dt><dd>${task.assignments.length}</dd>
           <dt>清单</dt><dd>${checklistSummary(task)}</dd>
         </dl>
+        ${taskCompletionHint(task)}
         <div class="detail-actions">
+          ${taskCompletionAction(task)}
           <button type="button" data-edit-task="${task.id}">编辑任务</button>
           ${taskPrimaryAction(task)}
           <button type="button" data-delete-task="${task.id}">删除任务</button>
@@ -638,7 +947,9 @@ function renderDetail() {
     return;
   }
 
-  pane.innerHTML = `<div class="detail-empty">点击甘特图任务条或任务卡片查看详情</div>`;
+  pane.classList.remove("is-open");
+  pane.hidden = true;
+  content.innerHTML = "";
 }
 
 function memberAssignmentBlock(task) {
@@ -686,6 +997,7 @@ function memberAddBlock(task) {
 }
 
 function render() {
+  renderViewState();
   renderStats();
   renderFilters();
   renderMembers();
@@ -697,6 +1009,7 @@ function render() {
   renderMaintenance();
   renderSelection();
   renderDetail();
+  renderFilterFeedback();
 }
 
 function openMemberEditor(id) {
@@ -731,7 +1044,7 @@ function openTaskEditor(id) {
       <label>默认结束<input name="default_end_date" type="date" value="${task.default_end_date}" required></label>
     </div>
     <div class="two-cols">
-      <label>颜色<input name="color" type="color" value="${task.color}"></label>
+      <label>颜色<input name="color" type="color" value="${safeColor(task.color)}"></label>
       <label>状态
         <select name="status">
           <option value="auto" ${["planned", "active"].includes(task.status) ? "selected" : ""}>自动判断</option>
@@ -766,66 +1079,94 @@ function openAssignmentEditor(id) {
 
 async function submitEdit(event) {
   event.preventDefault();
-  const form = new FormData(event.currentTarget);
-  const type = form.get("type");
-  const id = form.get("id");
-  const payload = Object.fromEntries(form);
-  delete payload.type;
-  delete payload.id;
-  payload.sync_assignments = form.get("sync_assignments") === "on";
+  const formElement = event.currentTarget;
+  const submitButton = formElement.querySelector('[type="submit"]');
+  await runBusyAction("edit-form", async () => {
+    const form = new FormData(formElement);
+    const type = form.get("type");
+    const id = form.get("id");
+    const payload = Object.fromEntries(form);
+    delete payload.type;
+    delete payload.id;
+    payload.sync_assignments = form.get("sync_assignments") === "on";
 
-  if (type === "member") {
-    if (id) await api(`/api/members/${id}`, { method: "PUT", body: JSON.stringify(payload) });
-    else await api("/api/members", { method: "POST", body: JSON.stringify(payload) });
-    showToast(id ? "成员已更新" : "成员已新增");
-  } else if (type === "task") {
-    await api(`/api/tasks/${id}`, { method: "PUT", body: JSON.stringify(payload) });
-    showToast(payload.sync_assignments ? "任务和个人时间已同步" : "任务已更新");
-  } else if (type === "assignment") {
-    payload.progress = Number(payload.progress || 0);
-    await api(`/api/assignments/${id}`, { method: "PUT", body: JSON.stringify(payload) });
-    showToast("个人分配已更新");
-  }
-  $("#editDialog").close();
-  await loadData();
+    if (type === "member") {
+      if (id) await api(`/api/members/${id}`, { method: "PUT", body: JSON.stringify(payload) });
+      else await api("/api/members", { method: "POST", body: JSON.stringify(payload) });
+      showToast(id ? "成员已更新" : "成员已新增");
+    } else if (type === "task") {
+      await api(`/api/tasks/${id}`, { method: "PUT", body: JSON.stringify(payload) });
+      showToast(payload.sync_assignments ? "任务和个人时间已同步" : "任务已更新");
+    } else if (type === "assignment") {
+      payload.progress = Number(payload.progress || 0);
+      await api(`/api/assignments/${id}`, { method: "PUT", body: JSON.stringify(payload) });
+      showToast("个人分配已更新");
+    }
+    $("#editDialog").close();
+    await loadData();
+  }, { control: submitButton, busyText: "保存中…" });
 }
 
 function setDefaultDates() {
   const today = todayLocalDate();
-  $("#taskForm").default_start_date.value = today;
-  $("#taskForm").default_end_date.value = addDays(today, 13);
+  $("#taskForm").elements.default_start_date.value = today;
+  $("#taskForm").elements.default_end_date.value = addDays(today, 13);
+}
+
+function setTaskFormError(message = "") {
+  const error = $("#taskFormError");
+  if (!error) return;
+  error.textContent = message;
+  error.hidden = !message;
+}
+
+function openTaskDialog() {
+  if (isBusy("create-task")) return;
+  const dialog = $("#taskDialog");
+  const form = $("#taskForm");
+  if (!dialog || !form) return;
+  setTaskFormError();
+  if (!dialog.open) dialog.showModal();
+  window.setTimeout(() => form.elements.title?.focus(), 0);
+}
+
+function closeTaskDialog() {
+  if (isBusy("create-task")) return;
+  const dialog = $("#taskDialog");
+  if (dialog?.open) dialog.close();
+  $("#newTaskBtn")?.focus();
 }
 
 function applyTemplate(templateId) {
   const template = state.templates.find((item) => item.id === Number(templateId));
   if (!template) return;
   const form = $("#taskForm");
-  form.title.value = template.name;
-  form.description.value = template.description || "";
-  form.color.value = template.color;
-  form.default_end_date.value = addDays(form.default_start_date.value || todayLocalDate(), template.duration_days - 1);
-  form.checklist.value = template.checklist.join("\n");
+  form.elements.title.value = template.name;
+  form.elements.description.value = template.description || "";
+  form.elements.color.value = safeColor(template.color, "#0f766e");
+  form.elements.default_end_date.value = addDays(form.elements.default_start_date.value || todayLocalDate(), template.duration_days - 1);
+  form.elements.checklist.value = template.checklist.join("\n");
 }
 
 function editTemplate(templateId) {
   const template = state.templates.find((item) => item.id === Number(templateId));
   if (!template) return;
   const form = $("#templateForm");
-  form.id.value = template.id;
-  form.name.value = template.name;
-  form.description.value = template.description || "";
-  form.color.value = template.color;
-  form.duration_days.value = template.duration_days;
-  form.checklist.value = template.checklist.join("\n");
+  form.elements.id.value = template.id;
+  form.elements.name.value = template.name;
+  form.elements.description.value = template.description || "";
+  form.elements.color.value = safeColor(template.color, "#0f766e");
+  form.elements.duration_days.value = template.duration_days;
+  form.elements.checklist.value = template.checklist.join("\n");
   showToast("模板已载入，可修改后保存");
 }
 
 function resetTemplateForm() {
   const form = $("#templateForm");
   form.reset();
-  form.id.value = "";
-  form.color.value = "#0f766e";
-  form.duration_days.value = 7;
+  form.elements.id.value = "";
+  form.elements.color.value = "#0f766e";
+  form.elements.duration_days.value = 7;
 }
 
 function updateFilterFromControls() {
@@ -973,50 +1314,91 @@ async function finishGanttDrag(event) {
     renderGantt();
     return;
   }
-  await api(`/api/assignments/${drag.assignmentId}`, {
-    method: "PUT",
-    body: JSON.stringify({
-      start_date: drag.previewStart,
-      end_date: drag.previewEnd
-    })
-  });
-  showToast("个人任务时间已更新");
-  await loadData();
+  await runBusyAction(`drag-assignment-${drag.assignmentId}`, async () => {
+    await api(`/api/assignments/${drag.assignmentId}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        start_date: drag.previewStart,
+        end_date: drag.previewEnd
+      })
+    });
+    showToast("个人任务时间已更新");
+    await loadData();
+  }, { onError: renderGantt });
 }
 
-async function addMembersToTask(taskId) {
+async function addMembersToTask(taskId, control = null) {
   const ids = $$("[data-add-member]:checked").map((input) => Number(input.dataset.addMember));
-  if (!ids.length) return showToast("请选择要追加的成员");
-  await api(`/api/tasks/${taskId}/members`, { method: "POST", body: JSON.stringify({ member_ids: ids }) });
-  showToast("成员已追加");
-  await loadData();
+  if (!ids.length) return showToast("请选择要追加的成员", { type: "error" });
+  await runBusyAction(`add-members-${taskId}`, async () => {
+    await api(`/api/tasks/${taskId}/members`, { method: "POST", body: JSON.stringify({ member_ids: ids }) });
+    showToast("成员已追加");
+    await loadData();
+  }, { control, busyText: "追加中…" });
+}
+
+async function completeTask(taskId, control = null) {
+  const numericTaskId = Number(taskId);
+  const task = state.tasks.find((item) => item.id === numericTaskId);
+  if (!task || task.status === "completed") return;
+  const incompleteProgress = taskHasIncompleteProgress(task);
+  await runBusyAction(`complete-task-${numericTaskId}`, async () => {
+    await api(`/api/tasks/${numericTaskId}`, { method: "PUT", body: JSON.stringify({ status: "completed" }) });
+    showToast(incompleteProgress ? "任务已完成，个人进度保持不变" : "任务已完成");
+    await loadData();
+  }, {
+    control,
+    busyText: "完成中…",
+    renderBusy: () => {
+      renderTasks();
+      renderDetail();
+    }
+  });
 }
 
 async function applyBatch() {
-  const payload = {
-    task_ids: [...state.selectedTaskIds],
-    status: $("#batchStatus").value || undefined,
-    default_end_date: $("#batchEndDate").value || undefined,
-    sync_assignments: $("#batchSync").checked
-  };
-  if (!payload.task_ids.length) return showToast("请先选择任务");
-  await api("/api/batch/tasks", { method: "POST", body: JSON.stringify(payload) });
-  state.selectedTaskIds.clear();
-  showToast("批量操作已完成");
-  await loadData();
+  const taskIds = [...state.selectedTaskIds];
+  if (!taskIds.length) return showToast("请先选择任务", { type: "error" });
+  const status = $("#batchStatus").value || undefined;
+  const endDate = $("#batchEndDate").value || undefined;
+  const incompleteProgress = status === "completed" && taskIds.some((id) => {
+    const task = state.tasks.find((item) => item.id === id);
+    return task && taskHasIncompleteProgress(task);
+  });
+  await runBusyAction("batch-apply", async () => {
+    const payload = { task_ids: taskIds };
+    if (status) payload.status = status;
+    if (endDate) {
+      payload.default_end_date = endDate;
+      payload.sync_assignments = $("#batchSync").checked;
+    }
+    await api("/api/batch/tasks", { method: "POST", body: JSON.stringify(payload) });
+    state.selectedTaskIds.clear();
+    showToast(incompleteProgress ? "任务已批量完成，个人进度保持不变" : "批量操作已完成");
+    await loadData();
+  }, { control: $("#batchApplyBtn"), busyText: "应用中…" });
 }
 
-async function deleteTaskById(taskId) {
+async function deleteTaskById(taskId, control = null) {
   const numericTaskId = Number(taskId);
   const task = state.tasks.find((item) => item.id === numericTaskId);
   const name = task?.title || `ID ${taskId}`;
   if (!window.confirm(`确认删除任务「${name}」？删除后可在回收站恢复。`)) return;
-  await api(`/api/tasks/${taskId}`, { method: "DELETE" });
-  if (state.activeTaskId === numericTaskId) state.activeTaskId = null;
-  if (task?.assignments.some((item) => item.id === state.activeAssignmentId)) state.activeAssignmentId = null;
-  state.selectedTaskIds.delete(numericTaskId);
-  showToast("任务已删除，可在回收站恢复");
-  await loadData();
+  await runBusyAction(`delete-task-${numericTaskId}`, async () => {
+    await api(`/api/tasks/${taskId}`, { method: "DELETE" });
+    if (state.activeTaskId === numericTaskId) state.activeTaskId = null;
+    if (task?.assignments.some((item) => item.id === state.activeAssignmentId)) state.activeAssignmentId = null;
+    state.selectedTaskIds.delete(numericTaskId);
+    showToast("任务已删除", {
+      actionLabel: "撤销",
+      onAction: async () => {
+        await api(`/api/tasks/${numericTaskId}/restore`, { method: "POST", body: "{}" });
+        showToast("删除已撤销");
+        await loadData();
+      }
+    });
+    await loadData();
+  }, { control, busyText: "删除中…" });
 }
 
 function filterAddMemberOptions(input) {
@@ -1051,7 +1433,29 @@ function filterMemberChoiceOptions() {
 }
 
 function bindEvents() {
-  $("#refreshBtn").addEventListener("click", loadData);
+  $("#refreshBtn").addEventListener("click", (event) => runBusyAction("refresh", loadData, { control: event.currentTarget, busyText: "刷新中…" }));
+  $("#newTaskBtn").addEventListener("click", openTaskDialog);
+  $("#cancelTaskCreate").addEventListener("click", closeTaskDialog);
+  $("#cancelTaskCreateTop")?.addEventListener("click", closeTaskDialog);
+  $("#taskDialog")?.addEventListener("cancel", (event) => {
+    event.preventDefault();
+    closeTaskDialog();
+  });
+  $("#dataMenuBtn").addEventListener("click", () => {
+    state.activeView = "maintenance";
+    saveDesktopPreferences();
+    renderViewState();
+    renderSelection();
+  });
+  $("#toggleMemberSidebar").addEventListener("click", () => {
+    state.sidebarCollapsed = !state.sidebarCollapsed;
+    saveDesktopPreferences();
+    renderViewState();
+  });
+  $("#memberSearchInput").addEventListener("input", (event) => {
+    state.memberSearch = event.target.value;
+    renderMembers();
+  });
   $("#newMemberBtn").addEventListener("click", () => openMemberEditor());
   $("#stackMemberList").addEventListener("change", (event) => {
     state.stackMemberList = event.target.checked;
@@ -1067,17 +1471,21 @@ function bindEvents() {
     state.search = event.target.value;
     renderGantt();
     renderTasks();
+    renderFilterFeedback();
   });
   $("#scaleSelect").addEventListener("change", (event) => {
     state.scale = event.target.value;
+    saveDesktopPreferences();
     renderGantt();
   });
   $("#zoomRange").addEventListener("input", (event) => {
     state.zoom = Number(event.target.value);
+    saveDesktopPreferences();
     renderGantt();
   });
   $("#rangeSelect").addEventListener("change", (event) => {
     state.rangeMode = event.target.value;
+    saveDesktopPreferences();
     renderGantt();
   });
   $("#onlyBusyMembers").addEventListener("change", (event) => {
@@ -1093,50 +1501,92 @@ function bindEvents() {
   ["filterMember", "filterStatus", "filterStart", "filterEnd", "filterOverdue", "filterOverlap"].forEach((id) => {
     $(`#${id}`).addEventListener("change", async () => {
       updateFilterFromControls();
-      await loadData();
+      try {
+        await loadData();
+      } catch (error) {
+        showToast(error.message, { type: "error" });
+      }
     });
+  });
+  $("#loadPeriod").addEventListener("change", (event) => {
+    state.loadPeriod = event.target.value;
+    renderLoad();
+  });
+  $("#loadMemberFilter").addEventListener("change", (event) => {
+    state.loadMemberId = event.target.value;
+    renderLoad();
+  });
+  $("#logSearchInput").addEventListener("input", (event) => {
+    state.logSearch = event.target.value;
+    renderLogs();
+  });
+  $("#logTypeFilter").addEventListener("change", (event) => {
+    state.logType = event.target.value;
+    renderLogs();
+  });
+  $("#logDateFilter").addEventListener("change", (event) => {
+    state.logDate = event.target.value;
+    renderLogs();
   });
   $("#taskSort").addEventListener("change", (event) => {
     state.taskSort = event.target.value;
+    saveDesktopPreferences();
     renderTasks();
   });
   $$("[data-task-view-mode]").forEach((button) => {
     button.addEventListener("click", () => {
       state.taskViewMode = button.dataset.taskViewMode;
+      saveDesktopPreferences();
       renderTasks();
     });
   });
   $("#clearFiltersBtn").addEventListener("click", async () => {
     state.filters = { member_id: "", status: "", start_date: "", end_date: "", overdue: false, overlap: false };
-    await loadData();
+    state.search = "";
+    try {
+      await loadData();
+    } catch (error) {
+      showToast(error.message, { type: "error" });
+    }
   });
 
   $$("[data-view]").forEach((button) => {
     button.addEventListener("click", () => {
-      $$("[data-view]").forEach((item) => item.classList.remove("active"));
-      $$(".view").forEach((item) => item.classList.remove("active"));
-      button.classList.add("active");
-      $(`#${button.dataset.view}View`).classList.add("active");
+      state.activeView = button.dataset.view;
+      saveDesktopPreferences();
+      renderViewState();
+      renderSelection();
     });
   });
 
   $("#taskForm").addEventListener("submit", async (event) => {
     event.preventDefault();
-    const form = new FormData(event.currentTarget);
-    const payload = Object.fromEntries(form);
-    payload.member_ids = form.getAll("member_ids").map(Number);
-    payload.checklist = String(payload.checklist || "").split(/\r?\n/).map((item) => item.trim()).filter(Boolean);
-    const memberCount = payload.member_ids.length;
-    const checklistCount = payload.checklist.length;
-    if (!window.confirm(`确认创建任务「${payload.title}」？\n参与成员：${memberCount} 人\n检查项：${checklistCount} 项`)) return;
-    await api("/api/tasks", { method: "POST", body: JSON.stringify(payload) });
-    event.currentTarget.reset();
-    event.currentTarget.color.value = "#2563eb";
-    event.currentTarget.status.value = "auto";
-    setDefaultDates();
-    showToast("任务已创建");
-    await loadData();
-    await loadData();
+    const formElement = event.currentTarget;
+    setTaskFormError();
+    await runBusyAction("create-task", async () => {
+      const form = new FormData(formElement);
+      const payload = Object.fromEntries(form);
+      payload.member_ids = form.getAll("member_ids").map(Number);
+      payload.checklist = String(payload.checklist || "").split(/\r?\n/).map((item) => item.trim()).filter(Boolean);
+      await api("/api/tasks", { method: "POST", body: JSON.stringify(payload) });
+      formElement.reset();
+      formElement.elements.color.value = "#2563eb";
+      formElement.elements.status.value = "auto";
+      setDefaultDates();
+      $("#memberChoiceSearch").value = "";
+      if ($("#taskDialog")?.open) $("#taskDialog").close();
+      showToast("任务已创建");
+      await loadData();
+      $("#newTaskBtn")?.focus();
+    }, {
+      control: $("#createTaskSubmit"),
+      relatedControls: [$("#cancelTaskCreate"), $("#cancelTaskCreateTop"), $("#newTaskBtn")],
+      busyText: "创建中…",
+      onError: (error) => {
+        setTaskFormError(error.message);
+        formElement.elements.title?.focus();
+      }
+    });
   });
 
   $("#templateForm").addEventListener("submit", async (event) => {
@@ -1145,68 +1595,90 @@ function bindEvents() {
     const payload = Object.fromEntries(form);
     const templateId = payload.id;
     delete payload.id;
-    if (!payload.name) return showToast("模板名不能为空");
+    if (!payload.name) return showToast("模板名不能为空", { type: "error" });
     payload.duration_days = Number(payload.duration_days || 7);
     payload.checklist = String(payload.checklist || "").split(/\r?\n/).map((item) => item.trim()).filter(Boolean);
-    const verb = templateId ? "更新" : "保存";
-    if (!window.confirm(`确认${verb}模板「${payload.name}」？\n默认周期：${payload.duration_days} 天\n检查项：${payload.checklist.length} 项`)) return;
-    if (templateId) {
-      await api(`/api/templates/${templateId}`, { method: "PUT", body: JSON.stringify(payload) });
-    } else {
-      await api("/api/templates", { method: "POST", body: JSON.stringify(payload) });
-    }
-    resetTemplateForm();
-    showToast(templateId ? "模板已更新" : "模板已保存");
-    await loadData();
-    await loadData();
+    await runBusyAction("save-template", async () => {
+      if (templateId) {
+        await api(`/api/templates/${templateId}`, { method: "PUT", body: JSON.stringify(payload) });
+      } else {
+        await api("/api/templates", { method: "POST", body: JSON.stringify(payload) });
+      }
+      resetTemplateForm();
+      showToast(templateId ? "模板已更新" : "模板已保存");
+      await loadData();
+    }, { control: event.currentTarget.querySelector('[type="submit"]'), busyText: "保存中…" });
   });
 
   $("#importMembersBtn").addEventListener("click", async () => {
-    const result = await api("/api/import/members", { method: "POST", body: JSON.stringify({ csv: $("#membersCsv").value }) });
-    showImportErrors(result);
-    showToast(`已导入 ${result.created} 名成员${result.errors?.length ? "，部分行失败" : ""}`);
-    await loadData();
+    await runBusyAction("import-members", async () => {
+      const result = await api("/api/import/members", { method: "POST", body: JSON.stringify({ csv: $("#membersCsv").value }) });
+      showImportErrors(result);
+      showToast(`已导入 ${result.created} 名成员${result.errors?.length ? "，部分行失败" : ""}`);
+      await loadData();
+    }, { control: $("#importMembersBtn"), busyText: "导入中…" });
   });
 
   $("#importTasksBtn").addEventListener("click", async () => {
-    const result = await api("/api/import/tasks", { method: "POST", body: JSON.stringify({ csv: $("#tasksCsv").value }) });
-    showImportErrors(result);
-    showToast(`已导入 ${result.created} 个任务${result.errors?.length ? "，部分行失败" : ""}`);
-    await loadData();
+    await runBusyAction("import-tasks", async () => {
+      const result = await api("/api/import/tasks", { method: "POST", body: JSON.stringify({ csv: $("#tasksCsv").value }) });
+      showImportErrors(result);
+      showToast(`已导入 ${result.created} 个任务${result.errors?.length ? "，部分行失败" : ""}`);
+      await loadData();
+    }, { control: $("#importTasksBtn"), busyText: "导入中…" });
   });
 
   $("#batchApplyBtn").addEventListener("click", applyBatch);
+  $("#batchStatus").addEventListener("change", renderSelection);
   $("#archiveSelectedBtn").addEventListener("click", async () => {
     if (!state.selectedTaskIds.size) return showToast("请先选择任务");
     if (!window.confirm(`确认归档选中的 ${state.selectedTaskIds.size} 个任务？归档后会从日常视图移到维护页归档区。`)) return;
-    await api("/api/batch/tasks", { method: "POST", body: JSON.stringify({ task_ids: [...state.selectedTaskIds], status: "archived" }) });
-    state.selectedTaskIds.clear();
-    showToast("已归档所选任务");
-    await loadData();
+    const taskIds = [...state.selectedTaskIds];
+    await runBusyAction("archive-selected", async () => {
+      await api("/api/batch/tasks", { method: "POST", body: JSON.stringify({ task_ids: taskIds, status: "archived" }) });
+      state.selectedTaskIds.clear();
+      showToast("已归档所选任务", {
+        actionLabel: "撤销",
+        onAction: async () => {
+          await Promise.all(taskIds.map((id) => api(`/api/tasks/${id}/restore`, { method: "POST", body: "{}" })));
+          showToast("归档已撤销");
+          await loadData();
+        }
+      });
+      await loadData();
+    }, { control: $("#archiveSelectedBtn"), busyText: "归档中…" });
   });
 
   $("#clearLogsBtn").addEventListener("click", async () => {
-    const result = await api("/api/maintenance/clear-logs", { method: "POST", body: "{}" });
-    downloadBackup(result.backup, "before-clear-logs");
-    showToast(`已清空 ${result.deleted} 条日志`);
-    await loadData();
+    if (!window.confirm("确认清空全部操作日志？操作前会自动下载备份。")) return;
+    await runBusyAction("clear-logs", async () => {
+      const result = await api("/api/maintenance/clear-logs", { method: "POST", body: "{}" });
+      downloadBackup(result.backup, "before-clear-logs");
+      showToast(`已清空 ${result.deleted} 条日志`);
+      await loadData();
+    }, { control: $("#clearLogsBtn"), busyText: "清理中…" });
   });
   $("#purgeArchivedBtn").addEventListener("click", async () => {
-    const result = await api("/api/maintenance/purge-archived", { method: "POST", body: "{}" });
-    downloadBackup(result.backup, "before-purge-archived");
-    showToast(`已将 ${result.deleted} 个归档任务移入回收站`);
-    await loadData();
+    if (!window.confirm("确认把所有归档任务移入回收站？操作前会自动下载备份。")) return;
+    await runBusyAction("purge-archived", async () => {
+      const result = await api("/api/maintenance/purge-archived", { method: "POST", body: "{}" });
+      downloadBackup(result.backup, "before-purge-archived");
+      showToast(`已将 ${result.deleted} 个归档任务移入回收站`);
+      await loadData();
+    }, { control: $("#purgeArchivedBtn"), busyText: "移动中…" });
   });
   $("#resetSampleBtn").addEventListener("click", async () => {
     const text = window.prompt("输入 RESET 确认重置示例数据");
     if (text !== "RESET") return showToast("已取消重置");
-    const result = await api("/api/maintenance/reset-sample", { method: "POST", body: "{}" });
-    downloadBackup(result.backup, "before-reset-sample");
-    state.selectedTaskIds.clear();
-    state.activeAssignmentId = null;
-    state.activeTaskId = null;
-    showToast("示例数据已重置");
-    await loadData();
+    await runBusyAction("reset-sample", async () => {
+      const result = await api("/api/maintenance/reset-sample", { method: "POST", body: "{}" });
+      downloadBackup(result.backup, "before-reset-sample");
+      state.selectedTaskIds.clear();
+      state.activeAssignmentId = null;
+      state.activeTaskId = null;
+      showToast("示例数据已重置");
+      await loadData();
+    }, { control: $("#resetSampleBtn"), busyText: "重置中…" });
   });
 
   document.body.addEventListener("change", async (event) => {
@@ -1220,8 +1692,11 @@ function bindEvents() {
     }
     const checkItem = event.target.closest("[data-check-item]");
     if (checkItem) {
-      await api(`/api/checklist/${checkItem.dataset.checkItem}`, { method: "PUT", body: JSON.stringify({ is_done: checkItem.checked }) });
-      await loadData();
+      const previous = !checkItem.checked;
+      await runBusyAction(`check-item-${checkItem.dataset.checkItem}`, async () => {
+        await api(`/api/checklist/${checkItem.dataset.checkItem}`, { method: "PUT", body: JSON.stringify({ is_done: checkItem.checked }) });
+        await loadData();
+      }, { onError: () => { checkItem.checked = previous; } });
     }
   });
 
@@ -1238,6 +1713,57 @@ function bindEvents() {
   document.body.addEventListener("click", async (event) => {
     const target = event.target;
     const action = (selector) => target.closest(selector);
+
+    if (action("#closeDetailBtn")) {
+      state.activeAssignmentId = null;
+      state.activeTaskId = null;
+      renderGantt();
+      renderDetail();
+      return;
+    }
+    if (action("[data-open-task-dialog]")) return openTaskDialog();
+    if (action("[data-complete-task]")) return completeTask(action("[data-complete-task]").dataset.completeTask, action("[data-complete-task]"));
+    if (action("[data-stat-filter]")) {
+      const type = action("[data-stat-filter]").dataset.statFilter;
+      state.filters[type] = true;
+      if (!["gantt", "tasks"].includes(state.activeView)) state.activeView = "tasks";
+      saveDesktopPreferences();
+      await runBusyAction(`stat-filter-${type}`, loadData, { control: action("[data-stat-filter]"), busyText: "筛选中…" });
+      return;
+    }
+    if (action("[data-remove-filter]")) {
+      const key = action("[data-remove-filter]").dataset.removeFilter;
+      if (key === "search") {
+        state.search = "";
+        renderGantt();
+        renderTasks();
+        renderFilters();
+      } else {
+        state.filters[key] = ["overdue", "overlap"].includes(key) ? false : "";
+        await runBusyAction(`remove-filter-${key}`, loadData, { control: action("[data-remove-filter]"), busyText: "移除中…" });
+      }
+      return;
+    }
+    if (action("[data-empty-show-all]")) {
+      state.filters = { member_id: "", status: "", start_date: "", end_date: "", overdue: false, overlap: false };
+      state.search = "";
+      state.rangeMode = "smart";
+      saveDesktopPreferences();
+      await runBusyAction("empty-show-all", loadData, { control: action("[data-empty-show-all]"), busyText: "加载中…" });
+      return;
+    }
+    if (action("[data-empty-show-overdue]")) {
+      state.filters.overdue = true;
+      state.rangeMode = "smart";
+      saveDesktopPreferences();
+      await runBusyAction("empty-show-overdue", loadData, { control: action("[data-empty-show-overdue]"), busyText: "加载中…" });
+      return;
+    }
+    if (action("[data-maintenance-target]")) {
+      const id = action("[data-maintenance-target]").dataset.maintenanceTarget;
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
 
     if (action("[data-edit-member]")) return openMemberEditor(action("[data-edit-member]").dataset.editMember);
     if (action("[data-edit-task]")) return openTaskEditor(action("[data-edit-task]").dataset.editTask);
@@ -1256,26 +1782,34 @@ function bindEvents() {
       renderDetail();
       return;
     }
-    if (action("[data-add-members-to-task]")) return addMembersToTask(action("[data-add-members-to-task]").dataset.addMembersToTask);
+    if (action("[data-add-members-to-task]")) return addMembersToTask(action("[data-add-members-to-task]").dataset.addMembersToTask, action("[data-add-members-to-task]"));
     if (action("[data-add-check-item]")) {
       const taskId = action("[data-add-check-item]").dataset.addCheckItem;
       const input = $(`[data-new-check-title="${taskId}"]`);
-      if (!input.value.trim()) return showToast("检查项不能为空");
-      await api(`/api/tasks/${taskId}/checklist`, { method: "POST", body: JSON.stringify({ title: input.value.trim() }) });
-      showToast("检查项已添加");
-      await loadData();
+      if (!input.value.trim()) return showToast("检查项不能为空", { type: "error" });
+      await runBusyAction(`add-check-${taskId}`, async () => {
+        await api(`/api/tasks/${taskId}/checklist`, { method: "POST", body: JSON.stringify({ title: input.value.trim() }) });
+        showToast("检查项已添加");
+        await loadData();
+      }, { control: action("[data-add-check-item]"), busyText: "添加中…" });
       return;
     }
     if (action("[data-delete-check-item]")) {
-      await api(`/api/checklist/${action("[data-delete-check-item]").dataset.deleteCheckItem}`, { method: "DELETE" });
-      showToast("检查项已删除");
-      await loadData();
+      const id = action("[data-delete-check-item]").dataset.deleteCheckItem;
+      await runBusyAction(`delete-check-${id}`, async () => {
+        await api(`/api/checklist/${id}`, { method: "DELETE" });
+        showToast("检查项已删除");
+        await loadData();
+      }, { control: action("[data-delete-check-item]"), busyText: "删除中…" });
       return;
     }
     if (action("[data-delete-template]")) {
-      await api(`/api/templates/${action("[data-delete-template]").dataset.deleteTemplate}`, { method: "DELETE" });
-      showToast("模板已删除");
-      await loadData();
+      const id = action("[data-delete-template]").dataset.deleteTemplate;
+      await runBusyAction(`delete-template-${id}`, async () => {
+        await api(`/api/templates/${id}`, { method: "DELETE" });
+        showToast("模板已删除");
+        await loadData();
+      }, { control: action("[data-delete-template]"), busyText: "删除中…" });
       return;
     }
     if (action("[data-edit-template]")) {
@@ -1283,22 +1817,31 @@ function bindEvents() {
       return;
     }
     if (action("[data-restore-task]")) {
-      await api(`/api/tasks/${action("[data-restore-task]").dataset.restoreTask}/restore`, { method: "POST", body: "{}" });
-      showToast("任务已恢复");
-      await loadData();
+      const id = action("[data-restore-task]").dataset.restoreTask;
+      await runBusyAction(`restore-task-${id}`, async () => {
+        await api(`/api/tasks/${id}/restore`, { method: "POST", body: "{}" });
+        showToast("任务已恢复");
+        await loadData();
+      }, { control: action("[data-restore-task]"), busyText: "恢复中…" });
       return;
     }
     if (action("[data-restore-member]")) {
-      await api(`/api/members/${action("[data-restore-member]").dataset.restoreMember}/restore`, { method: "POST", body: "{}" });
-      showToast("成员已恢复");
-      await loadData();
+      const id = action("[data-restore-member]").dataset.restoreMember;
+      await runBusyAction(`restore-member-${id}`, async () => {
+        await api(`/api/members/${id}/restore`, { method: "POST", body: "{}" });
+        showToast("成员已恢复");
+        await loadData();
+      }, { control: action("[data-restore-member]"), busyText: "恢复中…" });
       return;
     }
     if (action("[data-remove-assignment]")) {
-      await api(`/api/assignments/${action("[data-remove-assignment]").dataset.removeAssignment}`, { method: "DELETE" });
-      state.activeAssignmentId = null;
-      showToast("已移除该成员分配");
-      await loadData();
+      const id = action("[data-remove-assignment]").dataset.removeAssignment;
+      await runBusyAction(`remove-assignment-${id}`, async () => {
+        await api(`/api/assignments/${id}`, { method: "DELETE" });
+        state.activeAssignmentId = null;
+        showToast("已移除该成员分配");
+        await loadData();
+      }, { control: action("[data-remove-assignment]"), busyText: "移除中…" });
       return;
     }
     if (action("[data-archive-task]")) {
@@ -1306,25 +1849,39 @@ function bindEvents() {
       const task = state.tasks.find((item) => item.id === taskId);
       const name = task?.title || `ID ${taskId}`;
       if (!window.confirm(`确认归档任务「${name}」？归档后会从日常视图移到维护页归档区。`)) return;
-      await api(`/api/tasks/${action("[data-archive-task]").dataset.archiveTask}/archive`, { method: "POST" });
-      showToast("任务已归档");
-      await loadData();
+      await runBusyAction(`archive-task-${taskId}`, async () => {
+        await api(`/api/tasks/${taskId}/archive`, { method: "POST" });
+        showToast("任务已归档", {
+          actionLabel: "撤销",
+          onAction: async () => {
+            await api(`/api/tasks/${taskId}/restore`, { method: "POST", body: "{}" });
+            showToast("归档已撤销");
+            await loadData();
+          }
+        });
+        await loadData();
+      }, { control: action("[data-archive-task]"), busyText: "归档中…" });
       return;
     }
     if (action("[data-delete-task]")) {
-      return deleteTaskById(action("[data-delete-task]").dataset.deleteTask);
+      return deleteTaskById(action("[data-delete-task]").dataset.deleteTask, action("[data-delete-task]"));
     }
     if (action("[data-delete-member]")) {
-      await api(`/api/members/${action("[data-delete-member]").dataset.deleteMember}`, { method: "DELETE" });
-      $("#editDialog").close();
-      showToast("成员已删除");
-      await loadData();
+      const id = action("[data-delete-member]").dataset.deleteMember;
+      await runBusyAction(`delete-member-${id}`, async () => {
+        await api(`/api/members/${id}`, { method: "DELETE" });
+        $("#editDialog").close();
+        showToast("成员已删除");
+        await loadData();
+      }, { control: action("[data-delete-member]"), busyText: "删除中…" });
     }
   });
 }
 
 bindEvents();
 setDefaultDates();
-loadData().catch((error) => showToast(error.message));
+renderViewState();
+renderSelection();
+loadData().catch((error) => showToast(error.message, { type: "error" }));
 
 

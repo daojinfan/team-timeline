@@ -8,115 +8,56 @@
   </head>
   <body>
     <header class="topbar">
-      <div>
+      <div class="brand-block">
         <h1>小组任务管理与甘特图系统</h1>
         <p id="summary">正在载入数据...</p>
       </div>
-      <div class="topbar-actions">
-        <a class="ghost-link" href="/api/export/tasks.csv">导出任务</a>
-        <a class="ghost-link" href="/api/export/member-load.csv">导出负载</a>
-        <a class="ghost-link" href="/api/backup">备份 JSON</a>
-        <button id="refreshBtn" class="icon-button" title="刷新" aria-label="刷新">↻</button>
+      <div class="topbar-actions" aria-label="全局操作">
+        <button id="newTaskBtn" class="primary-action" type="button">＋ 新建任务</button>
+        <button id="dataMenuBtn" class="ghost-button" type="button" aria-haspopup="true">数据与维护</button>
+        <button id="refreshBtn" class="icon-button" type="button" title="刷新" aria-label="刷新">↻</button>
       </div>
     </header>
 
     <main class="page">
-      <section id="stats" class="stats"></section>
+      <section id="stats" class="stats" aria-label="项目统计"></section>
 
-      <section class="workspace">
-        <aside class="sidebar">
-          <section class="panel">
-            <div class="panel-title">
+      <nav class="view-navigation" aria-label="主视图">
+        <div class="segmented" role="tablist" aria-label="工作视图">
+          <button class="active" data-view="gantt" type="button" role="tab" aria-selected="true" aria-controls="ganttView">甘特图</button>
+          <button data-view="tasks" type="button" role="tab" aria-selected="false" aria-controls="tasksView">任务</button>
+          <button data-view="load" type="button" role="tab" aria-selected="false" aria-controls="loadView">负载</button>
+          <button data-view="logs" type="button" role="tab" aria-selected="false" aria-controls="logsView">日志</button>
+          <button data-view="maintenance" type="button" role="tab" aria-selected="false" aria-controls="maintenanceView">维护</button>
+        </div>
+      </nav>
+
+      <section id="workspace" class="workspace">
+        <aside id="memberSidebar" class="member-sidebar" aria-label="成员浏览">
+          <div class="member-sidebar-heading">
+            <div class="member-sidebar-title">
+              <span class="eyebrow">团队</span>
               <h2>成员</h2>
-              <div class="panel-actions">
-                <label class="inline mini"><input id="stackMemberList" type="checkbox" checked> 堆叠</label>
-                <button id="newMemberBtn" type="button">新增</button>
-              </div>
+            </div>
+            <button id="toggleMemberSidebar" class="icon-button sidebar-toggle" type="button" title="折叠成员栏" aria-label="折叠成员栏" aria-expanded="true">‹</button>
+          </div>
+          <div class="member-sidebar-content">
+            <label class="search-field" for="memberSearchInput">
+              <span>搜索成员</span>
+              <input id="memberSearchInput" type="search" placeholder="姓名或角色">
+            </label>
+            <div class="member-sidebar-actions">
+              <label class="inline mini"><input id="stackMemberList" type="checkbox" checked> 紧凑排列</label>
+              <button id="newMemberBtn" class="small-button" type="button">新增成员</button>
             </div>
             <div id="memberList" class="member-list"></div>
-          </section>
-
-          <section class="panel">
-            <div class="panel-title">
-              <h2>新增任务</h2>
-            </div>
-            <form id="taskForm" class="form-grid">
-              <label>任务模板
-                <select id="templateSelect">
-                  <option value="">不用模板</option>
-                </select>
-              </label>
-              <label>任务名称<input name="title" required placeholder="例如：补充实验"></label>
-              <label>描述<textarea name="description" rows="3" placeholder="任务目标、注意事项"></textarea></label>
-              <div class="two-cols">
-                <label>开始<input name="default_start_date" type="date" required></label>
-                <label>结束<input name="default_end_date" type="date" required></label>
-              </div>
-              <div class="two-cols">
-                <label>颜色<input name="color" type="color" value="#2563eb"></label>
-                <label>状态
-                  <select name="status">
-                    <option value="auto" selected>自动判断</option>
-                    <option value="paused">暂停</option>
-                    <option value="cancelled">取消</option>
-                  </select>
-                </label>
-              </div>
-              <label>检查清单
-                <textarea name="checklist" rows="4" placeholder="每行一个检查项"></textarea>
-              </label>
-              <fieldset>
-                <legend>参与成员</legend>
-                <input id="memberChoiceSearch" class="member-search-input" placeholder="搜索成员姓名或角色">
-                <div id="memberChoices" class="check-list"></div>
-              </fieldset>
-              <button type="submit">创建任务</button>
-            </form>
-          </section>
-
-          <section class="panel">
-            <h2>模板</h2>
-            <form id="templateForm" class="form-grid compact-form">
-              <input type="hidden" name="id">
-              <label>模板名<input name="name" placeholder="例如：复现实验"></label>
-              <div class="two-cols">
-                <label>颜色<input name="color" type="color" value="#0f766e"></label>
-                <label>周期<input name="duration_days" type="number" min="1" value="7"></label>
-              </div>
-              <label>默认描述<textarea name="description" rows="2"></textarea></label>
-              <label>默认检查项<textarea name="checklist" rows="3" placeholder="每行一个检查项"></textarea></label>
-              <div class="form-actions">
-                <button type="submit">保存模板</button>
-                <button id="cancelTemplateEditBtn" type="button">取消编辑</button>
-              </div>
-            </form>
-            <div id="templateList" class="template-list"></div>
-          </section>
-
-          <section class="panel">
-            <h2>导入</h2>
-            <label>成员 CSV
-              <textarea id="membersCsv" rows="4" placeholder="name,role,email&#10;陈七,实验,chenqi@example.com"></textarea>
-            </label>
-            <button id="importMembersBtn" type="button">导入成员</button>
-            <label>任务 CSV
-              <textarea id="tasksCsv" rows="5" placeholder="title,description,default_start_date,default_end_date,color,status,member_names,checklist&#10;新任务,说明,2026-07-01,2026-07-10,#2563eb,auto,张三;李四,准备;复核"></textarea>
-            </label>
-            <button id="importTasksBtn" type="button">导入任务</button>
-            <div id="importErrors" class="notice"></div>
-          </section>
+          </div>
         </aside>
 
-        <section class="mainarea">
-          <section class="toolbar">
-            <div class="segmented" role="tablist" aria-label="视图">
-              <button class="active" data-view="gantt" type="button">甘特图</button>
-              <button data-view="tasks" type="button">任务</button>
-              <button data-view="load" type="button">负载</button>
-              <button data-view="logs" type="button">日志</button>
-              <button data-view="maintenance" type="button">维护</button>
-            </div>
-            <div class="toolbar-controls">
+        <section id="workspaceMain" class="workspace-main" aria-live="polite">
+          <h2 id="viewTitle" class="visually-hidden">甘特图</h2>
+          <div class="view-toolbar" data-toolbar-view="gantt">
+            <div class="toolbar-group">
               <label>粒度
                 <select id="scaleSelect">
                   <option value="day">日</option>
@@ -124,57 +65,40 @@
                   <option value="month">月</option>
                 </select>
               </label>
-              <label>缩放<input id="zoomRange" type="range" min="8" max="60" value="60"></label>
+              <label class="zoom-control">缩放
+                <input id="zoomRange" type="range" min="8" max="60" value="60">
+              </label>
               <label>范围
                 <select id="rangeSelect">
+                  <option value="smart" selected>智能</option>
                   <option value="all">全部</option>
                   <option value="week">本周</option>
                   <option value="month">本月</option>
-                  <option value="30" selected>未来 30 天</option>
+                  <option value="30">未来 30 天</option>
                   <option value="90">未来 90 天</option>
                 </select>
               </label>
-              <span id="rangeLabel" class="range-label">全部时间</span>
+              <span id="rangeLabel" class="range-label">正在计算范围...</span>
+            </div>
+            <div class="toolbar-group toolbar-options">
               <label class="inline"><input id="onlyBusyMembers" type="checkbox"> 只看有任务成员</label>
               <label class="inline"><input id="stackTasks" type="checkbox" checked> 任务堆叠</label>
-              <button id="todayBtn" type="button">今天</button>
-              <label>关键词<input id="searchInput" placeholder="成员、任务、状态"></label>
+              <button id="todayBtn" class="ghost-button" type="button">今天</button>
             </div>
-          </section>
+          </div>
 
-          <section class="filterbar">
-            <label>成员<select id="filterMember"><option value="">全部成员</option></select></label>
-            <label>状态<select id="filterStatus"><option value="">全部状态</option></select></label>
-            <label>开始后<input id="filterStart" type="date"></label>
-            <label>结束前<input id="filterEnd" type="date"></label>
-            <label class="inline"><input id="filterOverdue" type="checkbox"> 只看逾期</label>
-            <label class="inline"><input id="filterOverlap" type="checkbox"> 只看重叠</label>
-            <button id="clearFiltersBtn" type="button">清空筛选</button>
-          </section>
-
-          <section class="batchbar">
-            <span id="selectionInfo">未选择任务</span>
-            <select id="batchStatus">
-              <option value="">状态不变</option>
-              <option value="auto">自动判断</option>
-              <option value="paused">暂停</option>
-              <option value="cancelled">取消</option>
-            </select>
-            <input id="batchEndDate" type="date" title="批量结束日期">
-            <label class="inline"><input id="batchSync" type="checkbox" checked> 同步个人时间</label>
-            <button id="batchApplyBtn" type="button" disabled>批量应用</button>
-            <button id="archiveSelectedBtn" type="button">归档所选</button>
-          </section>
-
-          <section id="ganttView" class="view active">
-            <div class="gantt-shell"><div id="gantt" class="gantt"></div></div>
-          </section>
-          <section id="tasksView" class="view">
-            <div class="task-viewbar">
-              <div class="segmented compact-segmented" role="tablist" aria-label="任务查看方式">
-                <button class="active" data-task-view-mode="cards" type="button">卡片</button>
-                <button data-task-view-mode="list" type="button">列表</button>
-              </div>
+          <div class="view-toolbar task-toolbar" data-toolbar-view="tasks" hidden>
+            <div class="task-filter-grid">
+              <label class="wide-control">关键词<input id="searchInput" type="search" placeholder="任务、成员或状态"></label>
+              <label>成员<select id="filterMember"><option value="">全部成员</option></select></label>
+              <label>状态<select id="filterStatus"><option value="">全部状态</option></select></label>
+              <label>开始后<input id="filterStart" type="date"></label>
+              <label>结束前<input id="filterEnd" type="date"></label>
+              <label class="inline checkbox-control"><input id="filterOverdue" type="checkbox"> 逾期</label>
+              <label class="inline checkbox-control"><input id="filterOverlap" type="checkbox"> 重叠</label>
+              <button id="clearFiltersBtn" class="ghost-button" type="button">清空</button>
+            </div>
+            <div class="task-view-controls">
               <label>排序
                 <select id="taskSort">
                   <option value="time_asc">时间从早到晚</option>
@@ -183,17 +107,150 @@
                   <option value="name_desc">任务名 Z-A</option>
                 </select>
               </label>
+              <div class="segmented compact-segmented" role="tablist" aria-label="任务查看方式">
+                <button class="active" data-task-view-mode="cards" type="button">卡片</button>
+                <button data-task-view-mode="list" type="button">列表</button>
+              </div>
             </div>
+            <div class="filter-feedback">
+              <div id="activeFilters" class="active-filters" aria-label="已启用筛选"></div>
+              <span id="filterResultCount" class="filter-result-count">正在统计...</span>
+            </div>
+          </div>
+
+          <div class="view-toolbar" data-toolbar-view="load" hidden>
+            <div class="toolbar-group">
+              <label>统计周期
+                <select id="loadPeriod">
+                  <option value="current">当前</option>
+                  <option value="7">未来 7 天</option>
+                  <option value="30" selected>未来 30 天</option>
+                </select>
+              </label>
+              <label>成员
+                <select id="loadMemberFilter"><option value="">全部成员</option></select>
+              </label>
+            </div>
+          </div>
+
+          <div class="view-toolbar" data-toolbar-view="logs" hidden>
+            <div class="toolbar-group">
+              <label class="wide-control">关键词<input id="logSearchInput" type="search" placeholder="操作类型或对象"></label>
+              <label>日志类型
+                <select id="logTypeFilter"><option value="">全部类型</option></select>
+              </label>
+              <label>日期<input id="logDateFilter" type="date"></label>
+            </div>
+          </div>
+
+          <div class="view-toolbar" data-toolbar-view="maintenance" hidden>
+            <div class="toolbar-summary">
+              <strong>数据与维护</strong>
+              <span>备份、模板、导入、归档和回收操作集中在此处。</span>
+            </div>
+            <div class="toolbar-group">
+              <button class="ghost-button" type="button" data-maintenance-target="dataExports">备份与导出</button>
+              <button class="ghost-button" type="button" data-maintenance-target="templatesPanel">模板</button>
+              <button class="ghost-button" type="button" data-maintenance-target="importsPanel">导入</button>
+            </div>
+          </div>
+
+          <div class="batchbar" hidden>
+            <span id="selectionInfo">未选择任务</span>
+            <label>批量状态
+              <select id="batchStatus">
+                <option value="">状态不变</option>
+                <option value="auto">自动判断</option>
+                <option value="paused">暂停</option>
+                <option value="completed">已完成</option>
+                <option value="cancelled">取消</option>
+              </select>
+            </label>
+            <label>结束日期<input id="batchEndDate" type="date" title="批量结束日期"></label>
+            <label class="inline"><input id="batchSync" type="checkbox" checked> 同步个人时间</label>
+            <button id="batchApplyBtn" type="button" disabled>批量应用</button>
+            <button id="archiveSelectedBtn" class="ghost-button" type="button">归档所选</button>
+          </div>
+
+          <section id="ganttView" class="view active" aria-labelledby="ganttViewTitle">
+            <div class="view-heading visually-hidden">
+              <h2 id="ganttViewTitle">甘特图</h2>
+            </div>
+            <div class="gantt-shell"><div id="gantt" class="gantt"></div></div>
+          </section>
+
+          <section id="tasksView" class="view" aria-labelledby="tasksViewTitle">
+            <div class="view-heading visually-hidden"><h2 id="tasksViewTitle">任务</h2></div>
             <div id="taskCards" class="task-grid"></div>
           </section>
-          <section id="loadView" class="view">
+
+          <section id="loadView" class="view" aria-labelledby="loadViewTitle">
+            <div class="view-heading"><h2 id="loadViewTitle">成员负载</h2><p>按所选周期查看每位成员的任务压力。</p></div>
             <div id="loadTable" class="table-wrap"></div>
           </section>
-          <section id="logsView" class="view">
+
+          <section id="logsView" class="view" aria-labelledby="logsViewTitle">
+            <div class="view-heading"><h2 id="logsViewTitle">操作日志</h2><p>筛选并核对任务与成员的变更记录。</p></div>
             <div id="logs" class="logs"></div>
           </section>
-          <section id="maintenanceView" class="view">
-            <div class="maintenance-grid">
+
+          <section id="maintenanceView" class="view" aria-labelledby="maintenanceViewTitle">
+            <div class="view-heading"><h2 id="maintenanceViewTitle">数据与维护</h2><p>集中处理备份、导出、模板、导入和恢复操作。</p></div>
+
+            <div class="maintenance-grid maintenance-data-grid">
+              <article id="dataExports" class="maintenance-card">
+                <span class="eyebrow">数据安全</span>
+                <h2>备份与导出</h2>
+                <p>下载当前完整备份，或导出任务与成员负载 CSV。</p>
+                <div class="maintenance-actions">
+                  <a class="ghost-link" href="/api/backup">备份 JSON</a>
+                  <a class="ghost-link" href="/api/export/tasks.csv">任务 CSV</a>
+                  <a class="ghost-link" href="/api/export/member-load.csv">负载 CSV</a>
+                </div>
+              </article>
+
+              <article id="templatesPanel" class="maintenance-card maintenance-card-wide">
+                <span class="eyebrow">复用</span>
+                <h2>任务模板</h2>
+                <form id="templateForm" class="form-grid compact-form">
+                  <input type="hidden" name="id">
+                  <label>模板名<input name="name" placeholder="例如：复现实验"></label>
+                  <div class="two-cols">
+                    <label>颜色<input name="color" type="color" value="#0f766e"></label>
+                    <label>周期<input name="duration_days" type="number" min="1" value="7"></label>
+                  </div>
+                  <label>默认描述<textarea name="description" rows="2"></textarea></label>
+                  <label>默认检查项<textarea name="checklist" rows="3" placeholder="每行一个检查项"></textarea></label>
+                  <div class="form-actions">
+                    <button type="submit">保存模板</button>
+                    <button id="cancelTemplateEditBtn" class="ghost-button" type="button">取消编辑</button>
+                  </div>
+                </form>
+                <div id="templateList" class="template-list"></div>
+              </article>
+
+              <article id="importsPanel" class="maintenance-card maintenance-card-wide">
+                <span class="eyebrow">批量录入</span>
+                <h2>CSV 导入</h2>
+                <div class="import-grid">
+                  <div class="form-grid">
+                    <label>成员 CSV
+                      <textarea id="membersCsv" rows="5" placeholder="name,role,email&#10;陈七,实验,chenqi@example.com"></textarea>
+                    </label>
+                    <button id="importMembersBtn" type="button">导入成员</button>
+                  </div>
+                  <div class="form-grid">
+                    <label>任务 CSV
+                      <textarea id="tasksCsv" rows="5" placeholder="title,description,default_start_date,default_end_date,color,status,member_names,checklist"></textarea>
+                    </label>
+                    <button id="importTasksBtn" type="button">导入任务</button>
+                  </div>
+                </div>
+                <div id="importErrors" class="notice" role="alert"></div>
+              </article>
+            </div>
+
+            <div class="maintenance-grid maintenance-operations-grid">
               <article class="maintenance-card">
                 <h2>清空日志</h2>
                 <p id="clearLogsHint">仅清理操作日志，不影响成员、任务和分配。</p>
@@ -206,16 +263,14 @@
               </article>
               <article class="maintenance-card danger-zone">
                 <h2>重置示例数据</h2>
-                <p>清空当前数据并恢复示例成员、任务和模板。</p>
+                <p>先生成操作前备份，再清空当前数据并恢复示例内容。</p>
                 <button id="resetSampleBtn" type="button">重置示例数据</button>
               </article>
-            </div>
-            <div class="maintenance-grid lower">
-              <article class="maintenance-card">
+              <article class="maintenance-card maintenance-card-wide">
                 <h2>归档区</h2>
                 <div id="archiveList" class="recovery-list"></div>
               </article>
-              <article class="maintenance-card">
+              <article class="maintenance-card maintenance-card-wide">
                 <h2>回收站</h2>
                 <p id="trashHint">可恢复软删除的任务和成员。</p>
                 <div id="trashList" class="recovery-list"></div>
@@ -223,27 +278,94 @@
             </div>
           </section>
         </section>
-
-        <aside id="detailPane" class="detail-pane">
-          <div class="detail-empty">点击甘特图任务条或任务卡片查看详情</div>
-        </aside>
       </section>
     </main>
 
-    <dialog id="editDialog">
+    <dialog id="taskDialog" class="task-dialog" aria-labelledby="taskDialogTitle">
+      <form id="taskForm" class="task-dialog-form">
+        <header class="dialog-header">
+          <div>
+            <span class="eyebrow">快速创建</span>
+            <h2 id="taskDialogTitle">新建任务</h2>
+            <p>填写基本信息、排期与成员，创建后可继续在详情中调整。</p>
+          </div>
+          <button id="cancelTaskCreateTop" class="icon-button dialog-close" type="button" aria-label="关闭新建任务">×</button>
+        </header>
+        <div id="taskFormError" class="form-error" role="alert" hidden></div>
+        <div class="task-dialog-body">
+          <fieldset class="dialog-section">
+            <legend>基本信息</legend>
+            <label>任务模板
+              <select id="templateSelect">
+                <option value="">不用模板</option>
+              </select>
+            </label>
+            <label>任务名称<input name="title" required placeholder="例如：补充实验" autocomplete="off"></label>
+            <label>描述<textarea name="description" rows="3" placeholder="任务目标、交付物与注意事项"></textarea></label>
+          </fieldset>
+
+          <fieldset class="dialog-section">
+            <legend>排期</legend>
+            <div class="two-cols">
+              <label>开始<input name="default_start_date" type="date" required></label>
+              <label>结束<input name="default_end_date" type="date" required></label>
+            </div>
+            <div class="two-cols">
+              <label>颜色<input name="color" type="color" value="#2563eb"></label>
+              <label>状态
+                <select name="status">
+                  <option value="auto" selected>自动判断</option>
+                  <option value="paused">暂停</option>
+                  <option value="cancelled">取消</option>
+                </select>
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset class="dialog-section dialog-section-wide">
+            <legend>成员与检查项</legend>
+            <div class="dialog-members-grid">
+              <div class="form-grid">
+                <label>搜索成员<input id="memberChoiceSearch" class="member-search-input" type="search" placeholder="姓名或角色"></label>
+                <div id="memberChoices" class="check-list member-choice-list"></div>
+              </div>
+              <label>检查清单
+                <textarea name="checklist" rows="7" placeholder="每行一个检查项"></textarea>
+              </label>
+            </div>
+          </fieldset>
+        </div>
+        <footer class="dialog-actions">
+          <button id="cancelTaskCreate" class="ghost-button" type="button">取消</button>
+          <button id="createTaskSubmit" type="submit">创建任务</button>
+        </footer>
+      </form>
+    </dialog>
+
+    <aside id="detailPane" class="detail-pane" aria-label="任务详情" hidden>
+      <header class="detail-pane-header">
+        <div><span class="eyebrow">详情</span><strong>任务与个人分配</strong></div>
+        <button id="closeDetailBtn" class="icon-button" type="button" aria-label="关闭详情">×</button>
+      </header>
+      <div id="detailContent" class="detail-content">
+        <div class="detail-empty">选择甘特条、任务卡片或列表项目查看详情。</div>
+      </div>
+    </aside>
+
+    <dialog id="editDialog" class="edit-dialog">
       <form method="dialog" id="editForm" class="modal-form">
         <h2 id="editTitle">编辑</h2>
         <input type="hidden" name="type">
         <input type="hidden" name="id">
         <div id="editFields"></div>
         <menu>
-          <button value="cancel" type="button" id="cancelEdit">取消</button>
+          <button value="cancel" type="button" id="cancelEdit" class="ghost-button">取消</button>
           <button value="default" type="submit">保存</button>
         </menu>
       </form>
     </dialog>
 
-    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
     <script src="/app.js" type="module"></script>
   </body>
 </html>
