@@ -2,7 +2,7 @@
 doc_id: PROJ-INDEX-001
 type: governance.project-index
 status: active
-version: 1.0
+version: 1.1
 owner: human
 baseline: BL-001
 depends_on: []
@@ -13,7 +13,7 @@ last_reviewed: 2026-08-20
 
 # 项目入口
 
-- 项目名称：人员管理系统
+- 项目名称：小组任务管理与甘特图系统
 - 项目标识：PRJ-PROJECT-A0C26D10
 - 项目负责人：human
 - 项目路径：D:\Codex\人员管理系统
@@ -21,9 +21,9 @@ last_reviewed: 2026-08-20
 - 治理框架源提交：216b1871d0f3bb152197710d69a428d54dc321c6
 - 治理框架源工作树为脏状态：true
 - 治理框架源树哈希：c7761d457726ed6174afd2229e9e111fa7db6c72a7d191d39bcbd06a22d0620e
-- 运行模式：SINGLE_TASK
+- 运行模式：TEAM_PROJECT
 - 默认任务档位：Release
-- 团队模式：未启用
+- 团队模式：已启用（当前任务为 PROJECT_MANAGER）
 
 ## 当前控制面板
 
@@ -43,4 +43,4 @@ last_reviewed: 2026-08-20
 
 ## 运行模式说明
 
-默认使用 `SINGLE_TASK` 和 Release 任务档位。AI 只有在满足较低档位全部条件时，才可为具体任务显式指定 Standard 或 Lite；发布、迁移、安全或不可逆操作不得降级。只有项目明确启用 `TEAM_PROJECT` 后，才创建项目经理任务和独立执行任务，并维护团队任务台账。
+当前使用 `TEAM_PROJECT` 和 Release 任务档位。项目经理是人类负责人的唯一项目管理接口，独立交付任务必须绑定独立 Reviewer；只有文件范围互不重叠且依赖满足的任务才允许并行。

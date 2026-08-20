@@ -1,0 +1,31 @@
+{
+  "$schema": "schemas/work-package-context.schema.json",
+  "schema_version": 1,
+  "work_package": "WP-005",
+  "baseline": "BL-001",
+  "scope": [
+    "src/server.js",
+    "tests"
+  ],
+  "required_documents": [
+    {
+      "doc_id": "ARC-COMP-003",
+      "mode": "full"
+    },
+    {
+      "doc_id": "REQ-BASE-001",
+      "mode": "full"
+    },
+    {
+      "doc_id": "ARC-OVERALL-001",
+      "mode": "summary"
+    }
+  ],
+  "decisions": [
+    "DEC-001"
+  ],
+  "validation": [
+    "npm test",
+    "数据兼容性回归"
+  ]
+}

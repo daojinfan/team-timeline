@@ -11,10 +11,10 @@ affects:
   - PROJ-STATE-001
 supersedes: null
 last_reviewed: 2026-08-20
-project_mode: SINGLE_TASK
-ledger_status: inactive
-project_manager_task_id: none
-project_manager_host_id: none
+project_mode: TEAM_PROJECT
+ledger_status: active
+project_manager_task_id: 01a01ef6-d413-7660-bdc5-62bd5873cbf4
+project_manager_host_id: 01a01ef6-d413-7660-bdc5-62bd5873cbf4
 review_policy: independent-required
 ---
 
@@ -26,10 +26,10 @@ review_policy: independent-required
 
 ## 项目经理
 
-- 项目经理任务：未启用
-- 项目经理任务标识：none
-- 项目经理宿主标识：none
-- 当前阶段：DISCOVERY
+- 项目经理任务：小组任务管理与甘特图系统桌面 UX 改造
+- 项目经理任务标识：01a01ef6-d413-7660-bdc5-62bd5873cbf4
+- 项目经理宿主标识：01a01ef6-d413-7660-bdc5-62bd5873cbf4
+- 当前阶段：EXECUTION_PLANNING
 - 当前基线：BL-001
 
 ## 任务列表

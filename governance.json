@@ -12,10 +12,10 @@
   },
   "project": {
     "id": "PRJ-PROJECT-A0C26D10",
-    "name": "人员管理系统",
+    "name": "小组任务管理与甘特图系统",
     "owner": "human",
-    "mode": "SINGLE_TASK",
-    "phase": "DISCOVERY"
+    "mode": "TEAM_PROJECT",
+    "phase": "EXECUTION_PLANNING"
   },
   "current_baseline": "BL-001",
   "task_profile": "Release",

@@ -16,7 +16,63 @@ last_reviewed: 2026-08-20
 
 本日志保存人类批准的可审计记录。对话中的同意只有在批准对象、范围和原始文本被记录后才生效。不得补写不存在的批准，也不得覆盖、删除或改写历史记录；撤销或替代时追加新记录。
 
-当前批准记录：暂无。
+当前批准记录：APR-001、APR-002。
+
+## APR-001
+
+approval_id: APR-001
+status: approved
+approval_type: stage_gate
+approved_items:
+  - ARC-OVERALL-001
+scope:
+  - 桌面端总体设计；排除手机端、认证、云部署和数据迁移
+plan_sha256: null
+approver: human
+confirmation_id: CONF-01a01f24-f369-73b1-b0fe-4bc69e626a60
+approved_at: 2026-08-20T20:40:00+08:00
+expires_at: null
+baseline: BL-001
+related_change: null
+related_work_packages:
+  - WP-001
+approval_text: 确认总体设计
+evidence: codex-thread:01a01ef6-d413-7660-bdc5-62bd5873cbf4
+notes: 用户随后明确排除手机端，总体设计已按该范围修订。
+
+## APR-002
+
+approval_id: APR-002
+status: approved
+approval_type: baseline
+approved_items:
+  - BL-001
+  - PROJ-CHARTER-001
+  - REQ-BASE-001
+  - ARC-OVERALL-001
+  - ARC-COMP-001
+  - ARC-COMP-002
+  - ARC-COMP-003
+  - DEC-001
+  - DEL-WORK-001
+scope:
+  - 小组任务管理与甘特图系统桌面端 UX 改造详细设计与执行工作包
+plan_sha256: null
+approver: human
+confirmation_id: CONF-01a01f2f-d9fd-7e71-ad73-db7940e88029
+approved_at: 2026-08-20T20:44:47+08:00
+expires_at: null
+baseline: BL-001
+related_change: null
+related_work_packages:
+  - WP-001
+  - WP-002
+  - WP-003
+  - WP-004
+  - WP-005
+approval_text: 确认详细设计
+evidence: codex-thread:01a01ef6-d413-7660-bdc5-62bd5873cbf4
+notes: 同时批准 TEAM_PROJECT、桌面端范围、文件所有权、验证计划和首个基线内容。
 
 ## 记录格式
 

@@ -1,0 +1,31 @@
+{
+  "$schema": "schemas/work-package-context.schema.json",
+  "schema_version": 1,
+  "work_package": "WP-003",
+  "baseline": "BL-001",
+  "scope": [
+    "public/index.html",
+    "public/styles.css"
+  ],
+  "required_documents": [
+    {
+      "doc_id": "ARC-COMP-001",
+      "mode": "full"
+    },
+    {
+      "doc_id": "REQ-BASE-001",
+      "mode": "full"
+    },
+    {
+      "doc_id": "ARC-OVERALL-001",
+      "mode": "summary"
+    }
+  ],
+  "decisions": [
+    "DEC-001"
+  ],
+  "validation": [
+    "客户端语法检查",
+    "1280x720 与 1366x768 桌面浏览器验收"
+  ]
+}

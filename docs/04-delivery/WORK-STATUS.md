@@ -20,5 +20,9 @@ last_reviewed: 2026-08-20
 | 编号 | 状态 | 最近更新 | 负责人 | 验证证据 | 说明 |
 | --- | --- | --- | --- | --- | --- |
 | WP-001 | planned | 2026-08-20 | human | 待生成 | 建立已批准的项目基线 |
+| WP-002 | planned | 2026-08-20 | ARCHITECT | 待生成 | 桌面 UX 规范 |
+| WP-003 | planned | 2026-08-20 | IMPLEMENTER | 待生成 | 页面外壳与样式 |
+| WP-004 | planned | 2026-08-20 | IMPLEMENTER | 待生成 | 客户端任务交互 |
+| WP-005 | planned | 2026-08-20 | TESTER | 待生成 | 服务端示例数据与回归测试 |
 
 允许的状态值：planned、in-progress、blocked、needs-decision、implemented、verified、accepted、superseded。

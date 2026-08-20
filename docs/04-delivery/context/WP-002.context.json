@@ -1,0 +1,45 @@
+{
+  "$schema": "schemas/work-package-context.schema.json",
+  "schema_version": 1,
+  "work_package": "WP-002",
+  "baseline": "BL-001",
+  "scope": [
+    "desktop-ux-specification"
+  ],
+  "required_documents": [
+    {
+      "doc_id": "PROJ-CHARTER-001",
+      "mode": "full"
+    },
+    {
+      "doc_id": "REQ-BASE-001",
+      "mode": "full"
+    },
+    {
+      "doc_id": "ARC-OVERALL-001",
+      "mode": "full"
+    },
+    {
+      "doc_id": "ARC-COMP-001",
+      "mode": "full"
+    },
+    {
+      "doc_id": "ARC-COMP-002",
+      "mode": "full"
+    },
+    {
+      "doc_id": "ARC-COMP-003",
+      "mode": "full"
+    },
+    {
+      "doc_id": "PROJ-INDEX-001",
+      "mode": "summary"
+    }
+  ],
+  "decisions": [
+    "DEC-001"
+  ],
+  "validation": [
+    "文档与契约检查"
+  ]
+}
