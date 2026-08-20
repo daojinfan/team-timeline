@@ -5,15 +5,15 @@
   "work_package": "WP-003",
   "contract_sha256": "49c9384d2dede38f26853645e7b9e7a640e335df63c47b21da9ef8f2db054015",
   "baseline": "BL-002",
-  "state": "in-progress",
+  "state": "superseded",
   "approval_id": "APR-014",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
   "acceptance_git_commit": "",
   "start_git_commit": "2ef0a882664130b3b72529b136644ad973b2da0a",
-  "execution_lease": "d76b3764a966454190b06ab61dd06d05",
-  "execution_lease_owner": "01a01ef6-d413-7660-bdc5-62bd5873cbf4",
-  "execution_lease_expires_at": "2026-08-20T15:30:28.9739231Z",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
   "preexisting_changes": [],
   "plan_checkpoint_git_commit": "fc5128976cfc4205651809718f5047194f16d8c8",
   "plan_rebase_history": [],
@@ -28,7 +28,7 @@
     "pass_streak": 0,
     "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "Replaced because a shared-worktree integration commit contained parallel work-package changes outside the individual task scope; product implementation remains committed and will be revalidated sequentially.",
   "created_at": "2026-08-20T13:12:10.2609672Z",
-  "updated_at": "2026-08-20T13:30:28.9792062Z"
+  "updated_at": "2026-08-20T14:14:34.3695488Z"
 }

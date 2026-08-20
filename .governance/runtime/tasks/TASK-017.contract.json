@@ -1,0 +1,66 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-017",
+  "work_package": "WP-003",
+  "title": "Sequentially validate integrated desktop shell",
+  "goal": "Re-audit and finalize the already integrated desktop HTML and CSS in an isolated sequential checkpoint",
+  "baseline": "BL-002",
+  "profile": "Release",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/index.html",
+    "public/styles.css"
+  ],
+  "read_paths": [
+    "public"
+  ],
+  "write_paths": [
+    "public/index.html",
+    "public/styles.css"
+  ],
+  "out_of_scope": [
+    "public/app.js",
+    "server code",
+    "mobile UX",
+    "database"
+  ],
+  "authoritative_documents": [
+    "ARC-COMP-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEC-001"
+  ],
+  "dependencies": [
+    "TASK-009"
+  ],
+  "acceptance_criteria": [
+    "Complete integrated shell is re-audited against ARC-COMP-001",
+    "1280x720 and 1366x768 browser evidence passes",
+    "No mobile implementation or permanent detail column"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "npm.cmd",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-20T14:15:53.0569499Z",
+  "release_controls": {
+    "target_environment": "local dev branch",
+    "execution_window": "current approved development session",
+    "rollback_plan": "revert the local task commit before integration",
+    "observation_metrics": "validation results, changed paths, browser evidence, and governance review",
+    "stop_conditions": "scope drift, baseline mismatch, failing validation, or unresolved reviewer finding",
+    "post_release_owner": "PROJECT_MANAGER 01a01ef6-d413-7660-bdc5-62bd5873cbf4"
+  }
+}

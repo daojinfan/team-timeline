@@ -5,7 +5,7 @@
   "work_package": "WP-003",
   "contract_sha256": "2120dab83f3c9e4df69df903a22023ea4f96f8fd31a1eead588afab5110698f3",
   "baseline": "BL-002",
-  "state": "planned",
+  "state": "superseded",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -28,7 +28,7 @@
     "pass_streak": 0,
     "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "Replaced because a shared-worktree integration commit contained parallel work-package changes outside the individual task scope; product implementation remains committed and will be revalidated sequentially.",
   "created_at": "2026-08-20T13:12:10.3641225Z",
-  "updated_at": "2026-08-20T13:12:10.3641225Z"
+  "updated_at": "2026-08-20T14:14:34.5007798Z"
 }
