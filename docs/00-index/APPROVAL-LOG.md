@@ -1012,6 +1012,38 @@ related_work_packages:
 approval_text: 可以先commit
 evidence: current-user-instruction
 notes: WP-005 accepted/接受；TASK-021 已完成独立审核并提交。
+
+## APR-044
+
+approval_id: APR-044
+status: approved
+approval_type: baseline
+approved_items:
+  - BL-003
+  - CR-002
+  - REQ-V2-001
+  - ARC-OVERALL-002
+  - ARC-COMP-004
+  - DEC-002
+  - WP-006
+  - WP-007
+  - WP-008
+scope:
+  - 将已通过连续两轮审核的 V2 权威文档、追踪矩阵和三个开发工作包冻结为 BL-003，并直接授权在该基线上进入开发
+plan_sha256: null
+approver: human
+confirmation_id: CONF-01a01ef6-d413-7660-bdc5-62bd5873cbf4:BL-003
+approved_at: 2026-08-21T03:24:00+08:00
+expires_at: null
+baseline: BL-003
+related_change: CR-002
+related_work_packages:
+  - WP-006
+  - WP-007
+  - WP-008
+approval_text: 生成完详设后,直接批准进入开发
+evidence: current-user-instruction
+notes: V2 总体设计和详细设计均已确认；正式化修复后连续两轮独立审核通过。
 ## APR-038
 
 approval_id: APR-038
