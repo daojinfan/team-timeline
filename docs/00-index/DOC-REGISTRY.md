@@ -36,3 +36,9 @@ last_reviewed: 2026-08-20
 | DEL-TASK-LEDGER-001 | docs/04-delivery/TASK-LEDGER.md | delivery.task-ledger | active | 1.0 | BL-001 | human |
 | CR-001 | docs/08-changes/CR-001.md | change-package | approved | 1.0 | BL-002 | human |
 | RPT-WP-002-IMPLEMENTATION-BRIEF-001 | docs/09-reports/WP-002-implementation-brief.md | report.implementation-brief | active | 1.0 | BL-002 | ux-architect |
+| REQ-V2-001 | docs/02-product/requirements-v2.md | product.requirements | proposed | 1.0 | BL-003 | human |
+| ARC-OVERALL-002 | docs/03-architecture/overall-design-v2.md | architecture.overall | proposed | 1.0 | BL-003 | human |
+| ARC-COMP-004 | docs/03-architecture/components/v2-detailed-design.md | architecture.component.v2-detailed-design | proposed | 1.0 | BL-003 | human |
+| DEC-002 | docs/07-decisions/DEC-002.md | architecture.decision.v2-control-plan | active | 1.0 | BL-003 | human |
+| CR-002 | docs/08-changes/CR-002.md | change-package | approved | 1.0 | BL-003 | human |
+| QUAL-TRACE-V2-001 | docs/05-quality/traceability-v2.md | quality.traceability.v2 | active | 1.0 | BL-003 | human |

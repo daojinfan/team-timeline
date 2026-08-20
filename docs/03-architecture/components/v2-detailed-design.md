@@ -1,0 +1,665 @@
+---
+doc_id: ARC-COMP-004
+type: architecture.component.v2-detailed-design
+status: proposed
+version: 1.0
+owner: human
+baseline: BL-003
+depends_on:
+  - REQ-V2-001
+  - ARC-OVERALL-002
+  - DEC-002
+affects:
+  - QUAL-TRACE-V2-001
+supersedes: null
+last_reviewed: 2026-08-21
+---
+
+# V2 详细设计：测控计划与人工执行闭环
+
+## 批准说明与来源指纹
+
+本文是 BL-003 的已批准详细设计输入，不声明 BL-003 已经激活。其设计正文逐字取自已接受来源文件的 canonical body；除本 frontmatter、批准说明和标题包装外未作改写。PM 必须先完成新基线门，激活前不得开始开发或数据库迁移。
+
+- TASK-025 来源审批：`APR-030`；subject SHA-256：`4a148b7a53b5b7112e71ca2c2f871654d8870267127ac2c27a40a0d700ed0dd0`。
+- TASK-027 详设审批：`APR-033`；subject SHA-256：`177bb592755ffcc1dfb2d07a5e3930bd6df517f512a9c8a3692852474ef65140`。
+- 四份已接受 proposal SHA-256（requirements / overall design / change / detailed design，依次）：`008b54c8ce2d03b12bb60ff96dc0637d31f30a6cfa621a1da9218e177b8dae24`、`7c4a27350621777704c5671eca66d2cf227f8177bfb966b5bca50d8310122481`、`9a737dc6d7350df0c007674b34b074dd12ffb5a3d9a7ade1a0309353a11bb465`、`867b2f24808eddf7a2936e749e93d6f6ac241e54d5ca9871ff7092bbc8cee695`。
+- 本文下方 canonical body SHA-256（统一 LF）：`f683c2e0ea6211ace89f4623890232cf7160637eecc1760f7f9500d4b216924d`。
+
+## 1. 冻结边界
+
+- 技术栈继续为 Node.js 原生 HTTP、`node:sqlite`、原生 HTML/CSS/JavaScript；数据库路径和监听范围不变。
+- 无 AI、无自动创建或分配任务、无手机端、无身份认证、无云端、无二进制附件托管。
+- V1 的成员、任务、分配、清单、模板、日志、甘特图、负载、软删除、CSV、JSON 和现有 API 路径/字段保持兼容。
+- V2 只追加表、索引、API 和 UI；现有任务通过 `v2_plan_tasks` 可选关联，未关联任务行为不变。
+- 本设计冻结 schema、API、DOM、状态机、迁移和验收契约。实现不得自行改名、合并语义或扩大范围；必要变更须停止并回到 PM。
+
+## 2. 已消解的设计项
+
+| 项目 | 冻结决定 |
+| --- | --- |
+| 来源联系人去重 | 应用层把姓名做 Unicode NFKC、首尾去空白、连续空白折叠为一个空格、区域无关小写，写入 `normalized_name`；唯一键为 `(source_group_id, normalized_name)` |
+| 制冷机资源 | 独立维护；只允许 `active/inactive`，停用后不出现在新选择器中，但历史计划、事件和详情继续显示；不提供硬删除 API |
+| 操作者说明 | `actor_label` 缺省或仅空白时写入“本地用户”；每次确认可覆盖，属于业务声明，不代表认证身份 |
+| 预计工时 | API 使用小时数，必须大于 0、最多 10000，并满足 `hours * 2` 为整数；数据库存为 `estimated_half_hours` 整数，即 0.5 小时步进的任务总工时 |
+| 验收清单 | 每个计划有一个活动模板；编辑模板创建新版本，旧版本保留；成果提交时把模板项目及提交勾选值复制为 JSON 快照，后续模板变化不改历史提交 |
+
+## 3. SQLite 增量 schema
+
+### 3.1 schema 版本
+
+目标 schema 版本为 `2`，迁移标识为 `v2-control-plan`。所有时间戳为 UTC ISO-8601 字符串，所有业务日期为服务端本地日历的 `YYYY-MM-DD`。应用层必须做真实日历校验，DDL 的长度检查不能替代日期校验。
+
+```sql
+CREATE TABLE IF NOT EXISTS app_schema_versions (
+  version INTEGER PRIMARY KEY,
+  name TEXT NOT NULL UNIQUE,
+  checksum TEXT NOT NULL CHECK (length(checksum) = 64),
+  applied_at TEXT NOT NULL
+);
+
+CREATE TABLE v2_source_groups (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL CHECK (length(trim(name)) BETWEEN 1 AND 100),
+  normalized_name TEXT NOT NULL UNIQUE CHECK (length(normalized_name) BETWEEN 1 AND 100),
+  note TEXT NOT NULL DEFAULT '' CHECK (length(note) <= 1000),
+  is_active INTEGER NOT NULL DEFAULT 1 CHECK (is_active IN (0, 1)),
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+
+CREATE TABLE v2_source_contacts (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  source_group_id INTEGER NOT NULL REFERENCES v2_source_groups(id) ON DELETE RESTRICT,
+  name TEXT NOT NULL CHECK (length(trim(name)) BETWEEN 1 AND 100),
+  normalized_name TEXT NOT NULL CHECK (length(normalized_name) BETWEEN 1 AND 100),
+  title TEXT NOT NULL DEFAULT '' CHECK (length(title) <= 100),
+  contact_text TEXT NOT NULL DEFAULT '' CHECK (length(contact_text) <= 300),
+  is_active INTEGER NOT NULL DEFAULT 1 CHECK (is_active IN (0, 1)),
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL,
+  UNIQUE (source_group_id, normalized_name)
+);
+
+CREATE TABLE v2_cryostats (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL CHECK (length(trim(name)) BETWEEN 1 AND 100),
+  normalized_name TEXT NOT NULL UNIQUE CHECK (length(normalized_name) BETWEEN 1 AND 100),
+  note TEXT NOT NULL DEFAULT '' CHECK (length(note) <= 1000),
+  status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'inactive')),
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+
+CREATE TABLE v2_control_plans (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  source_group_id INTEGER NOT NULL REFERENCES v2_source_groups(id) ON DELETE RESTRICT,
+  counterpart_contact_id INTEGER REFERENCES v2_source_contacts(id) ON DELETE SET NULL,
+  local_liaison_name TEXT NOT NULL DEFAULT '' CHECK (length(local_liaison_name) <= 100),
+  name TEXT NOT NULL CHECK (length(trim(name)) BETWEEN 1 AND 200),
+  purpose TEXT NOT NULL CHECK (length(trim(purpose)) BETWEEN 1 AND 4000),
+  sample_model TEXT NOT NULL CHECK (length(trim(sample_model)) BETWEEN 1 AND 200),
+  sample_identifier TEXT CHECK (sample_identifier IS NULL OR length(sample_identifier) BETWEEN 1 AND 200),
+  identifier_kind TEXT CHECK (identifier_kind IS NULL OR identifier_kind IN ('temporary', 'formal')),
+  initial_eta_date TEXT CHECK (initial_eta_date IS NULL OR length(initial_eta_date) = 10),
+  current_eta_date TEXT CHECK (current_eta_date IS NULL OR length(current_eta_date) = 10),
+  eta_pending INTEGER NOT NULL DEFAULT 0 CHECK (eta_pending IN (0, 1)),
+  cryostat_id INTEGER REFERENCES v2_cryostats(id) ON DELETE SET NULL,
+  cryostat_pending INTEGER NOT NULL DEFAULT 0 CHECK (cryostat_pending IN (0, 1)),
+  actual_arrival_date TEXT CHECK (actual_arrival_date IS NULL OR length(actual_arrival_date) = 10),
+  project_tag TEXT CHECK (project_tag IS NULL OR length(project_tag) <= 100),
+  topic_tag TEXT CHECK (topic_tag IS NULL OR length(topic_tag) <= 100),
+  version INTEGER NOT NULL DEFAULT 1 CHECK (version >= 1),
+  archived_at TEXT,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL,
+  CHECK ((eta_pending = 1 AND current_eta_date IS NULL) OR (eta_pending = 0 AND current_eta_date IS NOT NULL)),
+  CHECK ((cryostat_pending = 1 AND cryostat_id IS NULL) OR (cryostat_pending = 0 AND cryostat_id IS NOT NULL)),
+  CHECK ((sample_identifier IS NULL AND identifier_kind IS NULL) OR (sample_identifier IS NOT NULL AND identifier_kind IS NOT NULL))
+);
+
+CREATE TABLE v2_test_items (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  plan_id INTEGER NOT NULL REFERENCES v2_control_plans(id) ON DELETE CASCADE,
+  title TEXT NOT NULL CHECK (length(trim(title)) BETWEEN 1 AND 200),
+  description TEXT NOT NULL DEFAULT '' CHECK (length(description) <= 4000),
+  acceptance_criteria TEXT NOT NULL DEFAULT '' CHECK (length(acceptance_criteria) <= 4000),
+  is_required INTEGER NOT NULL DEFAULT 1 CHECK (is_required IN (0, 1)),
+  position INTEGER NOT NULL DEFAULT 0 CHECK (position >= 0),
+  archived_at TEXT,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+
+CREATE TABLE v2_acceptance_templates (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  plan_id INTEGER NOT NULL REFERENCES v2_control_plans(id) ON DELETE CASCADE,
+  version INTEGER NOT NULL CHECK (version >= 1),
+  name TEXT NOT NULL DEFAULT '计划验收清单' CHECK (length(name) BETWEEN 1 AND 200),
+  is_active INTEGER NOT NULL DEFAULT 1 CHECK (is_active IN (0, 1)),
+  created_at TEXT NOT NULL,
+  UNIQUE (plan_id, version)
+);
+
+CREATE TABLE v2_acceptance_template_items (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  template_id INTEGER NOT NULL REFERENCES v2_acceptance_templates(id) ON DELETE CASCADE,
+  label TEXT NOT NULL CHECK (length(trim(label)) BETWEEN 1 AND 300),
+  position INTEGER NOT NULL DEFAULT 0 CHECK (position >= 0),
+  UNIQUE (template_id, position)
+);
+
+CREATE TABLE v2_plan_tasks (
+  task_id INTEGER PRIMARY KEY REFERENCES tasks(id) ON DELETE CASCADE,
+  task_lineage_key TEXT NOT NULL UNIQUE CHECK (length(task_lineage_key) = 36),
+  plan_id INTEGER NOT NULL REFERENCES v2_control_plans(id) ON DELETE CASCADE,
+  test_item_id INTEGER REFERENCES v2_test_items(id) ON DELETE SET NULL,
+  primary_member_id INTEGER NOT NULL REFERENCES members(id) ON DELETE RESTRICT,
+  estimated_half_hours INTEGER NOT NULL CHECK (estimated_half_hours BETWEEN 1 AND 20000),
+  after_arrival INTEGER NOT NULL DEFAULT 0 CHECK (after_arrival IN (0, 1)),
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+
+CREATE TABLE v2_plan_events (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  plan_id INTEGER NOT NULL REFERENCES v2_control_plans(id) ON DELETE CASCADE,
+  event_type TEXT NOT NULL CHECK (event_type IN (
+    'create_plan', 'update_plan', 'eta_confirm', 'cryostat_confirm',
+    'arrival_confirm', 'sample_identifier', 'create_test_item', 'update_test_item',
+    'acceptance_template', 'create_task', 'update_assignment', 'task_soft_delete',
+    'task_restore', 'task_hard_delete', 'submission', 'accept', 'return', 'archive', 'restore'
+  )),
+  actor_label TEXT NOT NULL DEFAULT '本地用户' CHECK (length(actor_label) BETWEEN 1 AND 100),
+  old_value_json TEXT,
+  new_value_json TEXT,
+  impact_json TEXT,
+  created_at TEXT NOT NULL,
+  CHECK (old_value_json IS NULL OR json_valid(old_value_json)),
+  CHECK (new_value_json IS NULL OR json_valid(new_value_json)),
+  CHECK (impact_json IS NULL OR json_valid(impact_json))
+);
+
+CREATE TABLE v2_deliverable_submissions (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  plan_id INTEGER NOT NULL REFERENCES v2_control_plans(id) ON DELETE CASCADE,
+  task_id INTEGER REFERENCES tasks(id) ON DELETE SET NULL,
+  task_lineage_key TEXT NOT NULL CHECK (length(task_lineage_key) = 36),
+  original_task_id INTEGER NOT NULL CHECK (original_task_id > 0),
+  task_title_snapshot TEXT NOT NULL CHECK (length(trim(task_title_snapshot)) BETWEEN 1 AND 200),
+  test_item_id INTEGER REFERENCES v2_test_items(id) ON DELETE SET NULL,
+  sequence INTEGER NOT NULL CHECK (sequence >= 1),
+  supersedes_submission_id INTEGER REFERENCES v2_deliverable_submissions(id) ON DELETE SET NULL,
+  description TEXT NOT NULL CHECK (length(trim(description)) BETWEEN 1 AND 4000),
+  submitter_label TEXT NOT NULL CHECK (length(trim(submitter_label)) BETWEEN 1 AND 100),
+  submitted_at TEXT NOT NULL,
+  resource_kind TEXT NOT NULL CHECK (resource_kind IN ('url', 'local_path')),
+  resource_value TEXT NOT NULL CHECK (length(trim(resource_value)) BETWEEN 1 AND 2000),
+  checklist_snapshot_json TEXT NOT NULL CHECK (json_valid(checklist_snapshot_json)),
+  status TEXT NOT NULL DEFAULT 'submitted' CHECK (status IN ('submitted', 'accepted', 'returned')),
+  version INTEGER NOT NULL DEFAULT 1 CHECK (version >= 1),
+  updated_at TEXT NOT NULL,
+  UNIQUE (plan_id, task_lineage_key, sequence),
+  UNIQUE (supersedes_submission_id)
+);
+
+CREATE TABLE v2_acceptance_reviews (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  submission_id INTEGER NOT NULL UNIQUE REFERENCES v2_deliverable_submissions(id) ON DELETE CASCADE,
+  decision TEXT NOT NULL CHECK (decision IN ('accepted', 'returned')),
+  reviewer_label TEXT NOT NULL CHECK (length(trim(reviewer_label)) BETWEEN 1 AND 100),
+  comment TEXT NOT NULL DEFAULT '' CHECK (length(comment) <= 4000),
+  checklist_result_json TEXT NOT NULL CHECK (json_valid(checklist_result_json)),
+  reviewed_at TEXT NOT NULL
+);
+
+CREATE INDEX idx_v2_contacts_group ON v2_source_contacts(source_group_id, is_active);
+CREATE INDEX idx_v2_plans_source ON v2_control_plans(source_group_id, archived_at);
+CREATE INDEX idx_v2_plans_eta ON v2_control_plans(current_eta_date, actual_arrival_date, archived_at);
+CREATE INDEX idx_v2_plans_cryostat ON v2_control_plans(cryostat_id, archived_at);
+CREATE INDEX idx_v2_test_items_plan ON v2_test_items(plan_id, archived_at, position);
+CREATE UNIQUE INDEX idx_v2_one_active_template ON v2_acceptance_templates(plan_id) WHERE is_active = 1;
+CREATE INDEX idx_v2_plan_tasks_plan ON v2_plan_tasks(plan_id, test_item_id);
+CREATE INDEX idx_v2_plan_tasks_primary ON v2_plan_tasks(primary_member_id);
+CREATE INDEX idx_v2_events_plan ON v2_plan_events(plan_id, id DESC);
+CREATE INDEX idx_v2_submissions_plan ON v2_deliverable_submissions(plan_id, task_lineage_key, sequence DESC);
+```
+
+### 3.2 跨表不变量
+
+- 创建计划的同一事务必须至少插入一个未归档测试项，且至少一个 `is_required=1`。
+- `counterpart_contact_id` 必须属于同一 `source_group_id`；应用层在事务内校验。
+- 对未软删的 V2 task，`v2_plan_tasks.primary_member_id` 必须同时存在于该任务未软删的 `task_assignments`；软删 task 允许保留 tombstone 关联。协作者是其余未软删分配成员。
+- `v2_plan_tasks.test_item_id` 如非空，必须属于同一计划。
+- 创建每个 V2 task 时，服务端必须调用 `crypto.randomUUID()` 生成新的小写 canonical UUID v4 `task_lineage_key`，并以 `^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$` 校验后插入；不得从 task id、时间或标题派生，也不得复用已删除任务的 lineage。更新 task 的 API 不接受 lineage 字段，唯一键冲突时重新生成，连续三次冲突才返回 `500 LINEAGE_GENERATION_FAILED`。
+- 创建成果时，其 `plan_id/task_id/test_item_id/task_lineage_key` 必须与活动 `v2_plan_tasks` 一致；同事务把 lineage、task id 和当时标题分别固化到不可变 `task_lineage_key/original_task_id/task_title_snapshot`。没有更新 submission 的 API，应用层任何 SQL update 白名单都不得包含这三个字段。任务后来物理删除只把 `task_id` 置空，不改变 lineage、原始 ID、标题快照、序号、清单、验收或事件。
+- submission 的身份、sequence、latest、pending/accepted、supersession 和计划 completed 判断只能使用 `(plan_id,task_lineage_key)`；`original_task_id/task_title_snapshot` 仅供展示与审计，绝不参与关联、唯一性或业务判定。
+- 停用来源小组、联系人或制冷机不改历史引用；已有计划仍可显示，只有新建/改选时禁止选择 inactive 资源。
+- 不对 V1 表增加列。本设计仍为 12 张新增表（1 张版本表 + 11 张 V2 业务表）和 10 个索引；lineage 只增加列并改写既有唯一键/索引，不改变表或索引数量。
+
+### 3.3 V1 soft-delete、purge 与 reset 兼容
+
+- 未关联 `v2_plan_tasks` 的 V1 task、assignment、member 的现有 mutator 路径和返回契约完全不变。
+- 关联 V2 task 的普通 `DELETE /api/tasks/:id` 可保留 `v2_plan_tasks` tombstone并追加 `task_soft_delete` 事件；第 3.2 节主负责人不变量只约束未软删 task。单独 `DELETE /api/assignments/:id` 若命中主负责人返回 `409 PRIMARY_ASSIGNMENT_REQUIRED`，`details={task_id,member_id}`；单独 `DELETE /api/members/:id` 若仍被未软删 V2 task 引用为主负责人返回 `409 PRIMARY_MEMBER_IN_USE`，`details={member_id,task_ids}`。操作者必须先在 V2 人工分配流明确换主负责人，系统绝不自动替换。协作者 assignment/member 在不违反其他 V1 规则时可按原路径软删，并对关联计划追加 `update_assignment` 事件。
+- `POST /api/tasks/:id/restore` 恢复 V2 task 时必须检查原主负责人 member 未软删且 active、主 assignment 行存在：若该 assignment 仅软删则与 task 同事务恢复并追加 `task_restore` 事件；member 不可用返回 `409 PRIMARY_MEMBER_UNAVAILABLE`，缺少主 assignment 行返回 `409 PRIMARY_ASSIGNMENT_MISSING`，不做部分恢复。仍可用的协作者 assignment 按 V1 恢复，member 已删除/停用的协作者 assignment 保持软删并写入事件 impact。
+- V1 `/api/maintenance/purge-archived` 和 `/api/maintenance/reset-sample` 都必须在任何变更前完成既有备份，备份失败则不写；purge 继续沿用现有 soft-delete 语义。reset 或未来获批 purge 发生 task 物理删除时，`v2_plan_tasks` 级联删除、成果 `task_id` 变 null，但成果/验收/事件以及 `task_lineage_key/original_task_id/task_title_snapshot` 全部保留；关联 required 测试项随即重新显示为未完成。reset 可继续清除 V1 `sqlite_sequence` 并复用 task id，但新建 V2 task 必须生成新 lineage，因此不得串接旧成果。reset 继续使用既有固定示例日期语义，不删除 V2 计划历史，也不得因外键而失败。
+- 上述关联 V2 的 soft-delete、restore、协作者变更和 hard-delete 都与 V1 写入在同一事务内把受影响计划 `version+1`；一次 reset 对每个受影响计划只递增一次，并在删 task 前追加带 `task_lineage_key/task_id/title/plan_id` 快照的 `task_hard_delete` 事件。没有 submission 的 plan-task 被 reset 后 link 消失即可，lineage 仍只在删除事件中保留；之后即使同一计划创建取得相同 V1 task id，也生成全新 lineage、sequence 从 1 开始且 completed/pending/accepted 不继承。V1 mutator 的既有成功对象形状不增加字段，V2 客户端随后重读 plan。
+
+## 4. 迁移、幂等和回滚
+
+### 4.1 迁移步骤
+
+1. 在 HTTP `listen` 前打开数据库，设置 `PRAGMA foreign_keys=ON`，运行 `PRAGMA quick_check`；非 `ok` 立即失败停止。
+2. 缺少 `app_schema_versions` 视为 schema 版本 1。若数据库文件在启动前已存在且版本小于 2，先使用 SQLite `VACUUM INTO`/等价在线备份生成 `data/backups/team_tasks.pre-v2-<UTC timestamp>.sqlite`，再对备份执行 `quick_check`；备份失败不得迁移。
+3. 执行 `BEGIN IMMEDIATE`，按 3.1 顺序创建表和索引，插入 `(2,'v2-control-plan',<固定迁移脚本 SHA-256>,<UTC>)`，然后 `COMMIT`。
+4. 提交后运行 `PRAGMA foreign_key_check` 和 `quick_check`，验证所有必需表、索引和版本 checksum。验证失败时关闭数据库并拒绝监听；保留原备份供人工恢复。
+5. 全新数据库先创建 V1 schema，再在同一初始化阶段创建 V2 schema；没有旧数据时不生成 pre-v2 备份。首次示例数据语义保持 V1，不生成任何 V2 计划或自动任务。
+
+### 4.2 幂等和重开
+
+- 已存在版本 2 且 checksum 相同：只验证对象，不执行 DDL、不更新业务行、不重写 applied_at。
+- 版本 2 checksum 不同、版本大于 2、对象缺失或部分迁移：失败停止，不猜测修复。
+- 已有数据库不回填 V2 行；所有 V1 任务自然保持“未关联计划”。重开不得改 V1/V2 日期、状态、版本或历史。
+
+### 4.3 回滚
+
+- 迁移事务内失败：`ROLLBACK`，原库不应有 V2 对象，服务不监听。
+- 迁移已提交但上线验证失败：停止服务，保留失败库作诊断，把迁移前 SQLite 备份原子替换回原路径，再回退应用版本；替换前后都执行 `quick_check`。
+- 不提供破坏性 down migration，不用 `/api/maintenance/reset-sample` 或删除 V2 表回滚。
+
+## 5. 通用 API 契约
+
+- 所有新路径以 `/api/v2` 开头；V1 路径和响应完全不变。
+- JSON 成功响应使用 `{ "data": ... }`；列表另含 `{ "meta": { ... } }`。错误固定为 `{ "error": "人可读消息", "code": "STABLE_CODE", "details": {} }`，保留字符串 `error` 兼容现有客户端错误处理。
+- 状态码：读取/更新 `200`，创建 `201`，校验 `400`，不存在 `404`，版本/预览冲突 `409`，未知服务错误 `500`。不使用 `204`。
+- 所有写请求 `Content-Type: application/json`；未知字段返回 `400 UNKNOWN_FIELD`，不静默忽略。
+- 日期必须通过真实本地日历校验；ID 为正整数；字符串先 trim 再检查长度；颜色不是 V2 业务字段。
+- 计划写入携带 `expected_version`。服务在 `BEGIN IMMEDIATE` 中以 `UPDATE ... WHERE id=? AND version=?` 实现乐观锁；失败返回 `409 VERSION_CONFLICT` 和当前版本，不做部分写入。
+- 预览不写数据库。`preview_token` 为规范化 JSON（操作、完整输入、plan_id、plan version、当前关联事实、候选任务、冲突）的 SHA-256；确认请求必须回传与预览完全相同的完整业务输入。确认在 `BEGIN IMMEDIATE` 内重读事实、规范化完整输入并重算 token，版本或事实变化返回 `409 STALE_PREVIEW`。
+- 冲突是提示而非禁止；conflicts 先按 code/related_ids 排序，确认请求的 `acknowledged_conflict_codes` 必须是无重复字符串数组。出现预览未返回的 code 为 `400 VALIDATION_ERROR {field:'acknowledged_conflict_codes',reason:'unknown_code'}`，遗漏任一当前冲突 code 则 `409 CONFLICTS_NOT_ACKNOWLEDGED`。
+- 多表变更、任务创建、平移、成果审核都在单个 `BEGIN IMMEDIATE` 事务完成，并追加 `v2_plan_events`；事务失败不留半成品。
+- query 未声明字段返回 `400 UNKNOWN_QUERY`、`details={fields}`；路径/查询 ID 非正整数返回 `400 INVALID_ID`、`details={parameter,value}`；字段校验返回 `400 VALIDATION_ERROR`、`details={field,reason}`。列表默认 `limit=50,offset=0`，`limit` 范围 1..200，`offset` 范围 0..1000000；`search` trim 后空串视为未传、最长 200。响应 meta 固定含 `{limit,offset,total,sort}`，再追加该路由声明的字段。数组永远为 `[]`，可空对象/日期/字符串输出 JSON `null`，布尔值输出 true/false。
+- 所有列表必须使用声明的稳定排序并以 `id` 作最终 tie-breaker；资源名排序使用规范化名称升序。服务不得返回 `normalized_name`、原始 JSON 字符串或内部 token 输入。
+
+## 6. 资源、计划与测试项 API
+
+### 6.1 canonical 字段字典
+
+- `sourceGroup={id,name,note,is_active,created_at,updated_at}`。
+- `sourceContact={id,source_group_id,name,title,contact_text,is_active,created_at,updated_at}`。
+- `cryostat={id,name,note,status,created_at,updated_at}`。
+- `testItem={id,plan_id,title,description,acceptance_criteria,is_required,position,archived,created_at,updated_at}`。
+- `template={id,plan_id,version,name,is_active,created_at,items:[{id,label,position}]}`，items 按 `position,id` 升序。
+- `event={id,plan_id,event_type,actor_label,old_value,new_value,impact,created_at}`；三个 JSON 字段解析为对象或 null。
+- `planTaskMeta={task_id,task_lineage_key,plan_id,test_item_id|null,primary_member,collaborators,estimated_hours,after_arrival,created_at,updated_at}`；lineage 是 canonical UUID 且不可修改。
+- `submission={id,plan_id,task_id|null,task_lineage_key,original_task_id,task_title_snapshot,test_item_id|null,sequence,supersedes_submission_id|null,description,submitter_label,submitted_at,resource_kind,resource_value,checklist_snapshot,status,version,updated_at}`；`task_lineage_key` 是不可变业务身份，原 ID/标题仅审计；`checklist_snapshot` 是按 position 的对象数组。
+- `review={id,submission_id,decision,reviewer_label,comment,checklist_result,reviewed_at}`；`checklist_result` 是按 position 的对象数组。
+- `migrationStatus={schema_version,migration_name,checksum,applied_at,quick_check,foreign_key_violations}`。不返回数据库路径。
+
+### 6.2 资源与状态端点
+
+| 方法与路径 | query / request（完整字段） | canonical success | 稳定 4xx |
+| --- | --- | --- | --- |
+| `GET /api/v2/status` | 无 | `200 {data:migrationStatus}`，`quick_check='ok'`、violations 为非负整数 | 无业务 4xx；schema 未就绪为 `500 SCHEMA_NOT_READY` |
+| `GET /api/v2/source-groups` | `include_inactive=0|1,search?,limit?,offset?,sort=name_asc|updated_desc`；默认 `0,name_asc` | `200 {data:[sourceGroup],meta:{limit,offset,total,sort}}` | `INVALID_QUERY` |
+| `POST /api/v2/source-groups` | `{name,note?}` | `201 {data:sourceGroup}` | `UNKNOWN_FIELD`,`VALIDATION_ERROR`,`409 SOURCE_GROUP_EXISTS {normalized_name}` |
+| `PUT /api/v2/source-groups/:id` | `{name,note,is_active,expected_updated_at}` | `200 {data:sourceGroup}` | `INVALID_ID`,`UNKNOWN_FIELD`,`VALIDATION_ERROR`,`SOURCE_GROUP_NOT_FOUND`,`409 SOURCE_GROUP_EXISTS`,`409 RESOURCE_CONFLICT {expected_updated_at,current_updated_at}` |
+| `GET /api/v2/source-groups/:id/contacts` | `include_inactive=0|1,search?,limit?,offset?,sort=name_asc|updated_desc`；默认 `0,name_asc` | `200 {data:[sourceContact],meta:{limit,offset,total,sort}}` | `INVALID_ID`,`INVALID_QUERY`,`SOURCE_GROUP_NOT_FOUND` |
+| `POST /api/v2/source-groups/:id/contacts` | `{name,title?,contact_text?}` | `201 {data:sourceContact}` | `INVALID_ID`,`UNKNOWN_FIELD`,`VALIDATION_ERROR`,`SOURCE_GROUP_NOT_FOUND`,`409 CONTACT_EXISTS {source_group_id,normalized_name}` |
+| `PUT /api/v2/source-contacts/:id` | `{name,title,contact_text,is_active,expected_updated_at}` | `200 {data:sourceContact}` | `INVALID_ID`,`UNKNOWN_FIELD`,`VALIDATION_ERROR`,`CONTACT_NOT_FOUND`,`409 CONTACT_EXISTS`,`409 RESOURCE_CONFLICT` |
+| `GET /api/v2/cryostats` | `include_inactive=0|1,search?,limit?,offset?,sort=name_asc|updated_desc`；默认 `0,name_asc` | `200 {data:[cryostat],meta:{limit,offset,total,sort}}` | `INVALID_QUERY` |
+| `POST /api/v2/cryostats` | `{name,note?}` | `201 {data:cryostat}` | `UNKNOWN_FIELD`,`VALIDATION_ERROR`,`409 CRYOSTAT_EXISTS {normalized_name}` |
+| `PUT /api/v2/cryostats/:id` | `{name,note,status:'active'|'inactive',expected_updated_at}` | `200 {data:cryostat}` | `INVALID_ID`,`UNKNOWN_FIELD`,`VALIDATION_ERROR`,`CRYOSTAT_NOT_FOUND`,`409 CRYOSTAT_EXISTS`,`409 RESOURCE_CONFLICT` |
+
+来源资源和制冷机无 DELETE；停用保留历史。`expected_updated_at` 必须等于读取时的 UTC ISO 值，`RESOURCE_CONFLICT.details` 固定含 expected/current。所有 `_NOT_FOUND` 为 404，其余未标状态的校验码为 400，`EXISTS/CONFLICT` 为 409。
+
+### 6.3 计划、测试项、模板、事件和备份端点
+
+| 方法与路径 | query / request（完整字段） | canonical success | 稳定 4xx |
+| --- | --- | --- | --- |
+| `GET /api/v2/plans` | `search?,source_group_id?,cryostat_id?,primary_member_id?,display_status?,project_tag?,topic_tag?,group_by?,window_days?,include_archived?,limit?,offset?,sort?`；枚举见表后，默认 `none,7,0,50,0,eta_asc` | `200 {data:[planSummary],meta:{today,window_days,limit,offset,total,sort,group_by,groups:[{key,label,count}],stats:{testing,delayed,within,outside,pending,completed,unclassified}}}` | `INVALID_QUERY`,`INVALID_ID` |
+| `POST /api/v2/plans` | 第 6.4 节完整创建体 | `201 {data:planDetail}` | `UNKNOWN_FIELD`,`VALIDATION_ERROR`,`SOURCE_GROUP_NOT_FOUND`,`CONTACT_NOT_FOUND`,`CRYOSTAT_NOT_FOUND`,`RESOURCE_INACTIVE`,`CONTACT_GROUP_MISMATCH`,`TEST_ITEM_REQUIRED`,`TEMPLATE_ITEM_REQUIRED` |
+| `GET /api/v2/plans/:id` | 无 | `200 {data:planDetail}` | `INVALID_ID`,`PLAN_NOT_FOUND` |
+| `PUT /api/v2/plans/:id` | 第 6.4 节完整普通字段体 | `200 {data:planDetail}` | `INVALID_ID`,`UNKNOWN_FIELD`,`VALIDATION_ERROR`,`PLAN_NOT_FOUND`,`VERSION_CONFLICT`,`RESOURCE_INACTIVE`,`CONTACT_GROUP_MISMATCH` |
+| `POST /api/v2/plans/:id/archive` | `{actor_label?,expected_version}` | `200 {data:{plan,event}}` | `INVALID_ID`,`UNKNOWN_FIELD`,`PLAN_NOT_FOUND`,`VERSION_CONFLICT`,`PLAN_ALREADY_ARCHIVED` |
+| `POST /api/v2/plans/:id/restore` | `{actor_label?,expected_version}` | `200 {data:{plan,event}}` | `INVALID_ID`,`UNKNOWN_FIELD`,`PLAN_NOT_FOUND`,`VERSION_CONFLICT`,`PLAN_NOT_ARCHIVED` |
+| `POST /api/v2/plans/:id/arrival` | `{actual_arrival_date,sample_identifier|null,identifier_kind:null|'temporary'|'formal',actor_label?,expected_version}` | `200 {data:{plan,event}}` | `INVALID_ID`,`UNKNOWN_FIELD`,`VALIDATION_ERROR`,`PLAN_NOT_FOUND`,`VERSION_CONFLICT`,`IDENTIFIER_PAIR_INVALID` |
+| `POST /api/v2/plans/:id/test-items` | `{title,description?,acceptance_criteria?,is_required,position?,actor_label?,expected_version}` | `201 {data:{test_item,plan_version,event}}` | `INVALID_ID`,`UNKNOWN_FIELD`,`VALIDATION_ERROR`,`PLAN_NOT_FOUND`,`VERSION_CONFLICT`,`POSITION_CONFLICT` |
+| `PUT /api/v2/test-items/:id` | `{title,description,acceptance_criteria,is_required,position,archived,actor_label?,expected_version}` | `200 {data:{test_item,plan_version,event}}` | `INVALID_ID`,`UNKNOWN_FIELD`,`VALIDATION_ERROR`,`TEST_ITEM_NOT_FOUND`,`VERSION_CONFLICT`,`POSITION_CONFLICT`,`REQUIRED_ITEM_MINIMUM` |
+| `GET /api/v2/plans/:id/acceptance-template` | 无 | `200 {data:template}` | `INVALID_ID`,`PLAN_NOT_FOUND`,`TEMPLATE_NOT_FOUND` |
+| `PUT /api/v2/plans/:id/acceptance-template` | `{name,items:[{label,position}],actor_label?,expected_version}` | `200 {data:{template,plan_version,event}}` | `INVALID_ID`,`UNKNOWN_FIELD`,`VALIDATION_ERROR`,`PLAN_NOT_FOUND`,`VERSION_CONFLICT`,`TEMPLATE_ITEM_REQUIRED`,`POSITION_CONFLICT` |
+| `GET /api/v2/plans/:id/events` | `limit?,offset?,sort=id_desc|id_asc`；默认 `50,0,id_desc` | `200 {data:[event],meta:{limit,offset,total,sort}}` | `INVALID_ID`,`INVALID_QUERY`,`PLAN_NOT_FOUND` |
+| `GET /api/v2/backup` | 无 | 普通 JSON `200 {data:v2Backup}`，不设置下载附件语义 | 无业务 4xx；导出失败为 `500 BACKUP_FAILED` |
+
+`PLAN_NOT_FOUND/TEST_ITEM_NOT_FOUND/TEMPLATE_NOT_FOUND` 为 404；`VERSION_CONFLICT/RESOURCE_INACTIVE/POSITION_CONFLICT/REQUIRED_ITEM_MINIMUM/PLAN_ALREADY_ARCHIVED/PLAN_NOT_ARCHIVED` 为 409，其余为 400。ETA、制冷机、人工任务、submission/review 端点分别由第 8、9、10 节冻结；它们同样使用本节包装、空值和分页规则。
+
+计划列表枚举冻结为：`display_status=testing|delayed|arriving_within_window|arriving_outside_window|time_pending|completed|unclassified`，`group_by=none|source_group|cryostat|primary_member|project_tag|topic_tag`，`window_days=0..365`，`include_archived=0|1`，`sort=eta_asc|updated_desc|name_asc`。`source_group_id/cryostat_id/primary_member_id` 为正整数，标签最长 100；所有参数至多出现一次。`include_archived=1` **只** 让归档记录进入 `data/total/groups` 的历史可见集合；`stats` 永远先限定 `archived_at IS NULL`，再应用 search/source/cryostat/owner/tag 过滤并用请求的 window_days 分类，最后在 display_status 与分页前计数，绝不纳入归档计划。`total/groups` 基于 include_archived、全部过滤（含 display_status）后的分页前集合。`group_by=none` 时 groups=`[]` 且 data 直接按 sort；其他分组时 groups 按规范化 label 升序、缺失值固定 `{key:'__none__',label:'未设置'}` 置后，data 按组顺序再按 sort，count 是各组分页前数量。
+
+#### 6.3.1 稳定错误 details 字典
+
+下表覆盖所有可预期 4xx；`details` 必须恰含所列键（数组去重升序），没有附加调试字段。未命中业务条件的异常才可为 500。
+
+| HTTP / code | `details` 固定形状 |
+| --- | --- |
+| 400 `UNKNOWN_FIELD` / `UNKNOWN_QUERY` | `{fields:[string]}` |
+| 400 `INVALID_ID` | `{parameter,value}` |
+| 400 `INVALID_QUERY` / `VALIDATION_ERROR` | `{field,reason}` |
+| 400 `ETA_CHOICE_INVALID` | `{new_eta_date,eta_pending}` |
+| 400 `CRYOSTAT_CHOICE_INVALID` | `{new_cryostat_id,cryostat_pending}` |
+| 400 `TASK_SELECTION_INVALID` / `MEMBER_SET_INVALID` | `{ids:[integer],reason}` |
+| 400 `CHECKLIST_EMPTY` | `{field:'checklist'}` |
+| 400 `CHECKLIST_DUPLICATE_ITEM` | `{template_item_ids:[integer]}` |
+| 400 `CHECKLIST_ITEM_SET_MISMATCH` | `{missing_ids:[integer],unexpected_ids:[integer]}` |
+| 400 `CHECKLIST_ACCEPTANCE_INCOMPLETE` | `{failed_item_ids:[integer]}` |
+| 400 `IDENTIFIER_PAIR_INVALID` | `{sample_identifier,identifier_kind}` |
+| 404 各 `*_NOT_FOUND` | `{resource,id}`，resource 为 `plan|source_group|contact|cryostat|test_item|template|member|plan_task|task|submission` |
+| 409 `VERSION_CONFLICT` | `{expected_version,current_version}` |
+| 409 `RESOURCE_CONFLICT` | `{expected_updated_at,current_updated_at}` |
+| 409 `STALE_PREVIEW` | `{operation,plan_id}` |
+| 409 `CONFLICTS_NOT_ACKNOWLEDGED` | `{codes:[string]}` |
+| 409 `SOURCE_GROUP_EXISTS` / `CRYOSTAT_EXISTS` | `{normalized_name}` |
+| 409 `CONTACT_EXISTS` | `{source_group_id,normalized_name}` |
+| 409 `RESOURCE_INACTIVE` | `{resource,id}` |
+| 409 `CONTACT_GROUP_MISMATCH` | `{contact_id,expected_source_group_id,actual_source_group_id}` |
+| 409 `POSITION_CONFLICT` | `{resource,position,conflicting_id}` |
+| 409 `TEST_ITEM_REQUIRED` / `REQUIRED_ITEM_MINIMUM` | `{required_count}` |
+| 409 `TEMPLATE_ITEM_REQUIRED` | `{item_count}` |
+| 409 `PLAN_ALREADY_ARCHIVED` / `PLAN_NOT_ARCHIVED` | `{plan_id}` |
+| 409 `PROTECTED_TASK_SELECTED` | `{task_ids:[integer],reasons:[{task_id,reason}]}` |
+| 409 `CHECKLIST_TEMPLATE_STALE` | `{current_template_id,submitted_template_item_ids:[integer]}` |
+| 409 `SUBMISSION_PENDING` / `TASK_ALREADY_ACCEPTED` / `SUPERSESSION_REQUIRED` | `{submission_id}` |
+| 409 `SUPERSESSION_INVALID` | `{submission_id,reason}` |
+| 409 `SUBMISSION_HAS_SUCCESSOR` | `{successor_id}` |
+| 409 `SUBMISSION_NOT_REVIEWABLE` / `SUBMISSION_ALREADY_REVIEWED` | `{submission_id,status}` |
+| 409 `TASK_DELETED` | `{task_id}` |
+| 409 `PRIMARY_ASSIGNMENT_REQUIRED` | `{task_id,member_id}` |
+| 409 `PRIMARY_MEMBER_IN_USE` | `{member_id,task_ids:[integer]}` |
+| 409 `PRIMARY_MEMBER_UNAVAILABLE` / `PRIMARY_ASSIGNMENT_MISSING` | `{task_id,member_id}` |
+
+### 6.4 计划请求与响应
+
+计划创建请求固定为：
+
+```json
+{
+  "source_group_id": 1,
+  "counterpart_contact_id": 2,
+  "local_liaison_name": "本地用户",
+  "name": "QPU-A 测控计划",
+  "purpose": "验证基础参数",
+  "sample_model": "QPU-A",
+  "sample_identifier": null,
+  "identifier_kind": null,
+  "current_eta_date": "2026-09-10",
+  "eta_pending": false,
+  "cryostat_id": 1,
+  "cryostat_pending": false,
+  "project_tag": null,
+  "topic_tag": null,
+  "test_items": [
+    {"title":"基础谱测量","description":"","acceptance_criteria":"结果可复核","is_required":true,"position":0}
+  ],
+  "acceptance_template": {"name":"计划验收清单","items":[{"label":"结果链接可访问","position":0}]},
+  "actor_label": "本地用户"
+}
+```
+
+`counterpart_contact_id`、`local_liaison_name`、标签和样品编号可空；ETA 与制冷机各自必须在具体值和 pending 中二选一。至少一个 required 测试项。`initial_eta_date` 在首次具体 ETA 创建时等于该日期；以 pending 创建时为空，之后第一次确认具体日期才设置，后续永不覆盖。
+
+`PUT /api/v2/plans/:id` 是普通字段全量替换，必须提交 `source_group_id`、`counterpart_contact_id|null`、`local_liaison_name`、`name`、`purpose`、`sample_model`、`sample_identifier|null`、`identifier_kind|null`、`project_tag|null`、`topic_tag|null`、`actor_label?` 和 `expected_version`；不得包含 ETA、制冷机、实际到样、测试项、任务或 computed status。成功返回递增版本的完整 `planDetail`。
+
+资源响应字段与同名表列一致，但不返回 `normalized_name`。计划 canonical response 冻结为：
+
+```json
+{
+  "id": 10,
+  "version": 3,
+  "source_group": {"id":1,"name":"量子器件组","is_active":true},
+  "counterpart_contact": {"id":2,"name":"张老师","title":"负责人","contact_text":"...","is_active":true},
+  "local_liaison_name": "本地用户",
+  "name": "QPU-A 测控计划",
+  "purpose": "验证基础参数",
+  "sample_model": "QPU-A",
+  "sample_identifier": null,
+  "identifier_kind": null,
+  "initial_eta_date": "2026-09-01",
+  "current_eta_date": "2026-09-10",
+  "eta_pending": false,
+  "cryostat": {"id":1,"name":"DR-1","status":"active"},
+  "cryostat_pending": false,
+  "actual_arrival_date": null,
+  "project_tag": null,
+  "topic_tag": null,
+  "display_status": "arriving_outside_window",
+  "display_color": "#64748b",
+  "eta_drift_days": 9,
+  "window_bucket": "outside",
+  "archived": false,
+  "created_at": "UTC ISO",
+  "updated_at": "UTC ISO"
+}
+```
+
+列表元素是上述 summary；`source_group` 必为对象，`counterpart_contact/cryostat` 可为 null。详情在相同字段上追加 `test_items`（position/id 升序）、`plan_tasks`（start_date/task id 升序）、`acceptance_template`（对象或 null）、`latest_submissions`（task_lineage_key 升序）和最近 50 条 `events`（id 倒序）。`display_status=null` 时必须输出 JSON null、`display_color=null`、`window_bucket=null`。`plan_tasks` 包含 V1 task 字段、不可变 `task_lineage_key`、`primary_member`、`collaborators`（member id 升序）、`estimated_hours=estimated_half_hours/2`、`after_arrival`；个人 progress 从 V1 assignments 原样返回。V2 backup 的 `data` 固定为 `{schema_version:2,exported_at,source_groups,source_contacts,cryostats,control_plans,test_items,acceptance_templates,acceptance_template_items,plan_tasks,plan_events,deliverable_submissions,acceptance_reviews}`，各数组按主键升序且 JSON 字段已解析；完整 HTTP 响应必须是普通 JSON `{data:{...}}`，不带下载附件 header，不改变 V1 backup。
+
+计划列表 `eta_asc` 将具体 ETA 升序、pending/null 置后并以 id 升序收尾；`updated_desc` 以 updated_at/id 倒序；`name_asc` 以名称/id 升序。`group_by` 只改变 meta 分组标签和客户端呈现，不改变 data 对象形状。
+
+## 7. 状态分类器真值表
+
+服务端以 `todayLocalDate()` 的本地年月日为唯一 today；客户端只展示服务端返回的 `today` 和 `display_status`，不得自行用 UTC 重算。状态不存入 `v2_control_plans`。
+
+| 优先级 | 条件 | `display_status` | 颜色 | 窗口卡计数 |
+| --- | --- | --- | --- | --- |
+| 1 | 所有未归档 required 测试项均有未软删的关联任务，且各任务按 `(plan_id,task_lineage_key)` 的最新提交均 accepted | `completed` | `#16a34a` 绿 | completed |
+| 2 | 不满足 1，至少一个关联 V1 任务 status=`active` | `testing` | `#2563eb` 蓝 | testing |
+| 3 | 不满足 1/2，`actual_arrival_date != null` | `null`（主状态空白） | 无可见状态底色 | 全部到样窗口卡排除 |
+| 4 | 未到样，`eta_pending=1` | `time_pending` | `#7c3aed` 紫 | pending |
+| 5 | 未到样，`current_eta_date < today` | `delayed` | `#dc2626` 红 | delayed |
+| 6 | 未到样，`today <= current_eta_date <= addDays(today,window_days)` | `arriving_within_window` | `#f59e0b` 橙 | within |
+| 7 | 未到样且未来日期超过闭区间 | `arriving_outside_window` | `#64748b` 灰蓝 | outside |
+
+到样关注窗口默认 7 个自然日。`window_days=7` 表示今天到今天+7日的闭区间，共最多 8 个日期值；这是明确业务定义。改变窗口只改变 6/7 分类。初始 ETA 与当前 ETA 的漂移为 `daysBetween(initial,current)`；任一为空则 drift 为 null。归档计划可为历史列表计算 display_status，但永远不进入 stats 或冲突集合。
+
+## 8. ETA 与制冷机预览/确认
+
+### 8.1 ETA
+
+- `POST /api/v2/plans/:id/eta/preview`
+- 请求：`{new_eta_date|null,eta_pending,selected_task_ids?:[],actor_label?,expected_version}`；省略 selection 等同 `[]`，服务端将 ID 去重升序写入 normalized_input。
+- 响应固定为 `200 {data:{preview_token,normalized_input:{new_eta_date|null,eta_pending,selected_task_ids:[],actor_label,expected_version},old_eta:{current_eta_date|null,eta_pending},delta_days|null,eligible_tasks:[{task_id,task_lineage_key,title,old_start_date,old_end_date,new_start_date,new_end_date,selected,assignment_moves:[{assignment_id,member_id,old_start_date,old_end_date,new_start_date,new_end_date}]}],protected_tasks:[{task_id,task_lineage_key,title,reason}],conflicts:[conflict]}}`；task/assignment 均按 id 升序。
+- eligible 必须同时满足：有 `v2_plan_tasks.after_arrival=1`、V1 task 未软删、status=`planned`。旧/新 ETA 都是具体日期时才有 delta；否则 eligible 为空。
+- eligible 的 old/new 和 assignment_moves 始终给出模拟日期，即便尚未选中；protected 只包含 paused/active/completed/cancelled/archived、软删或非到样后任务及原因，未选中的 eligible 仍是 eligible。
+- 首次以 `selected_task_ids=[]` preview 时返回所有 eligible 的模拟日期、所有 selected=false、`conflicts=[]`；每次 checkbox 变化都必须携带当前完整 selection 重新调用 preview。只有最新响应 token 可用于 confirm，默认空 selection 表示只更新 ETA、不平移任务。
+- preview 稳定失败为 `400 ETA_CHOICE_INVALID {new_eta_date,eta_pending}`、`400 TASK_SELECTION_INVALID {ids,reason}`、`404 PLAN_NOT_FOUND`、`409 VERSION_CONFLICT {expected_version,current_version}`、`409 PROTECTED_TASK_SELECTED {task_ids,reasons}`。
+
+批量 preview 使用同一不可分割算法：
+
+1. 校验 selection 全是当前 eligible；先从冲突基线一次性排除 **全部 selected** 任务的旧 task/assignment 日期，以及它们在每个成员、每个本地 ISO 周的旧工时贡献。
+2. 按同一个 delta 为全部 selected 构造新 task/assignment 日期，再一次性加入基线；不得逐任务边写边算，也不得把旧/新贡献双计。
+3. 计算 selected 与 selected、selected 与同计划未选任务、selected 与其他未归档计划任务之间的 `MEMBER_DATE_OVERLAP`；成员比较使用平移后的 assignment 闭区间。
+4. 对受影响成员/周重新聚合，任何 `hours_after>40` 产生 `MEMBER_LOAD_HIGH`；`hours_before` 是平移前完整集合，`hours_after` 是全部 selected 同时平移后的完整集合。
+5. 若计划制冷机已确定，计算 selected 与 selected、同计划未选任务及其他未归档同制冷机计划任务的 `CRYOSTAT_DATE_OVERLAP`；已取消/归档/软删 task 和归档计划不进基线。
+6. 冲突使用第 9.2 节固定字段、去重和排序。token 的规范化 SHA-256 输入必须包含排序去重后的 selected IDs、完整 ETA 输入、plan version、当前 task/assignment/工时/制冷机事实、eligible/protected 和最终 conflicts；因此 selection 或任一事实变化都会改变 token。
+
+- `POST /api/v2/plans/:id/eta/confirm`
+- 请求必须完整回传 `{new_eta_date|null,eta_pending,preview_token,expected_version,selected_task_ids:[],acknowledged_conflict_codes:[],actor_label?}`；规范化后的 selection 和其余字段必须与产生 token 的 preview 完全一致。
+- 服务在 `BEGIN IMMEDIATE` 中重读计划、任务、assignments、工时和制冷机事实，按上述批量算法重算同一 conflicts/token 后才写入；selection 与 token 不一致统一返回 `409 STALE_PREVIEW`。若 initial 为空且新值具体则设置 initial；仅把 selected 任务的 default start/end 和所有未软删 assignment start/end 等量加 delta；空 selection 不平移任何任务；不改 status/progress/note；计划 version+1；追加包含 lineage、protected、selected 和 conflicts 的 `eta_confirm` 事件。
+- 成功固定为 `200 {data:{plan:planDetail,moved_tasks:[{task_id,task_lineage_key,old_start_date,old_end_date,new_start_date,new_end_date,assignment_moves:[{assignment_id,member_id,old_start_date,old_end_date,new_start_date,new_end_date}]}],event:event}}`，任务/assignment 按 id 升序；空 selection 时 moved_tasks=`[]`。
+- 稳定失败：`400 ETA_CHOICE_INVALID {new_eta_date,eta_pending}`、`400 TASK_SELECTION_INVALID {ids,reason}`、`404 PLAN_NOT_FOUND`、`409 VERSION_CONFLICT {expected_version,current_version}`、`409 STALE_PREVIEW`、`409 PROTECTED_TASK_SELECTED {task_ids,reasons}`、`409 CONFLICTS_NOT_ACKNOWLEDGED {codes}`。
+
+### 8.2 制冷机
+
+- `POST /api/v2/plans/:id/cryostat/preview`
+- 请求：`{new_cryostat_id|null,cryostat_pending,actor_label?,expected_version}`。
+- 响应固定为 `200 {data:{preview_token,normalized_input:{new_cryostat_id|null,cryostat_pending,actor_label,expected_version},old_cryostat:cryostat|null,new_cryostat:cryostat|null,plan_date_range:{start_date,end_date}|null,conflicts:[conflict]}}`。冲突列出与其他未归档计划在同一制冷机上的日期重叠；计划日期范围取关联的未取消/未归档任务最早开始至最晚结束，没有任务则为 null。
+- preview 稳定失败为 `400 CRYOSTAT_CHOICE_INVALID {new_cryostat_id,cryostat_pending}`、`404 PLAN_NOT_FOUND`、`404 CRYOSTAT_NOT_FOUND`、`409 RESOURCE_INACTIVE {resource:'cryostat',id}`、`409 VERSION_CONFLICT`。
+- `POST /api/v2/plans/:id/cryostat/confirm` 请求必须完整回传 `{new_cryostat_id|null,cryostat_pending,preview_token,expected_version,acknowledged_conflict_codes:[],actor_label?}`，业务输入必须与 preview normalized_input 一致。服务在 `BEGIN IMMEDIATE` 内重读当前计划/资源/排期，用当前事实和完整输入重算 token；事务只更新资源/pending、version 和事件，不改任何任务日期。
+- 成功固定为 `200 {data:{plan:planDetail,event:event,conflicts:[conflict]}}`。稳定失败：`400 CRYOSTAT_CHOICE_INVALID {new_cryostat_id,cryostat_pending}`、`404 PLAN_NOT_FOUND`、`404 CRYOSTAT_NOT_FOUND`、`409 RESOURCE_INACTIVE {resource:'cryostat',id}`、`409 VERSION_CONFLICT`、`409 STALE_PREVIEW`、`409 CONFLICTS_NOT_ACKNOWLEDGED {codes}`。
+
+## 9. 人工任务与冲突算法
+
+### 9.1 创建和编辑 API
+
+- `POST /api/v2/plans/:id/tasks/preview`：请求 `{test_item_id,title,description?,primary_member_id,collaborator_member_ids,start_date,end_date,estimated_hours,after_arrival,expected_version}`。
+- `POST /api/v2/plans/:id/tasks`：必须回传 preview 的全部字段，再加 `preview_token`、`acknowledged_conflict_codes`、`actor_label?`；单事务创建 V1 task、主负责人及协作者的 V1 assignments、带全新 `task_lineage_key` 的 `v2_plan_tasks` 和事件。成员列表来自人类请求，不得默认或推荐成员；主负责人必须包含在分配中。
+- `POST /api/v2/plan-tasks/:task_id/preview` 与 `PUT /api/v2/plan-tasks/:task_id`：同一契约用于改负责人、协作者、日期、工时和 after-arrival。保留成员的 assignment progress/note；新增成员 progress=0；移除成员沿用 V1 软删除；不得把 primary 移除而不同时指定新 primary。
+
+preview 成功固定返回 `200 {data:{preview_token,normalized_input,conflicts,related_load}}`；创建确认返回 `201 {data:{task,plan_task,plan_version}}`；更新确认返回相同形状和状态码 200。`task` 使用 V1 task 对象字段，`plan_task` 使用第 6.1 节 `planTaskMeta`。确认请求除 preview 原字段外必须包含 token、ack codes、actor 和相同 expected version，不得只传差异字段；更新不得传或改变 lineage。
+
+四个端点的 `title` 必须 trim 后按 Unicode code point 计数 1..200，normalized/store 使用 trim 后值；`description` 省略或 null 规范化为 `''`，否则 trim 后按 code point 计数 0..4000。空标题、201 字符标题或 4001 字符描述分别返回 `400 VALIDATION_ERROR {field:'title'|'description',reason:'length'}`；该限制只作用于四个 V2 plan-task 端点，不改变独立 V1 `/api/tasks` 接口。`normalized_input` 固定为 `{test_item_id|null,title,description,primary_member_id,collaborator_member_ids,start_date,end_date,estimated_hours,after_arrival,expected_version}`，协作者 ID 去重升序且不得含 primary。`related_load=[{member_id,weeks:[{week_start,hours_before,hours_after}]}]` 按 member/week 升序。稳定失败：`400 VALIDATION_ERROR`、`400 MEMBER_SET_INVALID {ids,reason}`、`404 PLAN_NOT_FOUND`、`404 PLAN_TASK_NOT_FOUND`、`404 TEST_ITEM_NOT_FOUND`、`404 MEMBER_NOT_FOUND`、`409 VERSION_CONFLICT`、`409 STALE_PREVIEW`、`409 RESOURCE_INACTIVE {resource,id}`、`409 CONFLICTS_NOT_ACKNOWLEDGED {codes}`；更新软删 task 返回 `409 TASK_DELETED`。确认在 `BEGIN IMMEDIATE` 内重读所有冲突事实并重算 token。
+
+### 9.2 冲突
+
+- 日期重叠使用闭区间：`a.start <= b.end && b.start <= a.end`。
+- `MEMBER_DATE_OVERLAP`：任一拟分配成员与未完成/未取消/未归档且未软删任务重叠。
+- `MEMBER_LOAD_HIGH`：按本地 ISO 周（周一至周日），该成员所有有 V2 工时的未完成任务与新任务按日期覆盖周计入任务总工时；任一周合计超过 40 小时。无法分摊的 V1 无工时任务只产生 overlap，不伪造工时。
+- `CRYOSTAT_DATE_OVERLAP`：计划制冷机已确定，且其他未归档计划同资源的有效任务日期与新任务重叠。
+- 所有人工任务与 ETA 冲突项统一为 `{code,severity:'warning',message,task_ids:[integer],member_ids:[integer],plan_ids:[integer],date_range:{start_date,end_date}|null,week_start:string|null,hours_before:number|null,hours_after:number|null}`；task_ids/plan_ids 必须列出冲突两侧全部任务/计划，成员类冲突必须列出 member_ids，制冷机冲突 member_ids=`[]`。不适用的数组为 `[]`、标量为 null。overlap 的 date_range 是交集闭区间，load 的 date_range 是该 ISO 周周一至周日。去重键固定为 `code+task_ids+member_ids+plan_ids+date_range+week_start`；各 ID 数组升序，最终按 `code,date_range.start(null最后),week_start(null最后),member_ids,plan_ids,task_ids` 字典序排序。所有冲突非阻塞，但确认必须逐 code acknowledge。
+- 更新 preview/confirm 必须把当前 task 当作“被替换的旧输入”：日期重叠和制冷机查询先排除 `candidate_task_id=current_task_id`；每个成员/ISO 周的负载先减去当前 task 旧 assignments 覆盖周上的旧 `estimated_half_hours` 贡献，再用完整 `normalized_input` 的新成员、日期和工时重新加入。不得让 task 与自身产生 overlap，也不得把旧工时与新工时双计；改后仍存在的其他任务冲突才返回。
+
+## 10. 成果提交与人工验收
+
+### 10.1 API
+
+- `GET /api/v2/plans/:id/submissions` query 固定为可选 `status`（`submitted|accepted|returned`）、canonical UUID `task_lineage_key`、`limit`、`offset`、`sort=lineage_asc_sequence_desc|submitted_desc`（默认 `50,0,lineage_asc_sequence_desc`）；成功 `200 {data:[submission],meta:{limit,offset,total,sort}}`。前一种排序为 task_lineage_key 升序、sequence/id 倒序，后一种为 submitted_at/id 倒序。`original_task_id` 不是查询身份。稳定失败为 `INVALID_ID`,`INVALID_QUERY`,`PLAN_NOT_FOUND`。
+- `POST /api/v2/tasks/:task_id/submissions` 请求固定为 `{description,submitter_label?,resource_kind:'url'|'local_path',resource_value,checklist:[{template_item_id,checked}],supersedes_submission_id?}`；客户端不得提交 label/position/template version。成功为 `201 {data:submission}`。
+- `POST /api/v2/submissions/:id/review` 请求固定为 `{decision:'accepted'|'returned',reviewer_label?,comment,checklist:[{template_item_id,passed,note?}],expected_version}`；客户端不得提交 label/position。成功为 `200 {data:{submission,review,task,plan_summary}}`，其中 task 在历史 task 已物理删除时为 null。
+
+submission/review 使用第 6.1 节对象，不返回内部 normalized 或未解析 JSON。提交稳定失败：`400 VALIDATION_ERROR`、`400 CHECKLIST_EMPTY`、`400 CHECKLIST_DUPLICATE_ITEM {template_item_ids}`、`400 CHECKLIST_ITEM_SET_MISMATCH {missing_ids,unexpected_ids}`、`404 TASK_NOT_FOUND`、`404 TEMPLATE_NOT_FOUND`、`409 CHECKLIST_TEMPLATE_STALE {current_template_id,submitted_template_item_ids}`、`409 SUBMISSION_PENDING {submission_id}`、`409 TASK_ALREADY_ACCEPTED {submission_id}`、`409 SUPERSESSION_REQUIRED {submission_id}`、`409 SUPERSESSION_INVALID {submission_id,reason}`、`409 SUBMISSION_HAS_SUCCESSOR {successor_id}`。审核稳定失败：`400 VALIDATION_ERROR`、`400 CHECKLIST_EMPTY`、`400 CHECKLIST_DUPLICATE_ITEM`、`400 CHECKLIST_ITEM_SET_MISMATCH`、`400 CHECKLIST_ACCEPTANCE_INCOMPLETE {failed_item_ids}`、`404 SUBMISSION_NOT_FOUND`、`409 VERSION_CONFLICT`、`409 SUBMISSION_NOT_REVIEWABLE`、`409 SUBMISSION_ALREADY_REVIEWED`。
+
+### 10.2 校验与事务效果
+
+- `resource_kind=url` 仅允许绝对 `https:` 或 `http:`；拒绝 `javascript:`、`data:`、相对 URL。`local_path` 仅做 1..2000 字符文本保存和展示，不执行存在性检查、不转链接、不启动文件。
+- 提交人、验收人、操作者仅为业务声明；空值默认“本地用户”。
+- 提交事务锁定计划和活动模板，要求 checklist 非空、template_item_id 无重复且与活动模板 exact set 完全相同；服务端按模板 position 复制 `{template_id,template_version,template_item_id,label,position,checked}` 快照，label/position 只能来自数据库。伪造、缺失或多余 ID 均不得落库。
+- 首次提交必须省略或传 null `supersedes_submission_id`。存在最新 `returned` 后再次提交必须指定该计划/该 `task_lineage_key` 的最新 returned submission；不得跨计划/跨 lineage，不得指定已有后继或非最新记录。最新为 submitted 时拒绝并等待审核，最新为 accepted 时拒绝新提交；序号按 `(plan_id,task_lineage_key)` 在事务内递增。任务已物理删除后该 lineage 只读历史，不允许新提交；新任务即便复用相同 task id 也因 lineage 不同而从首次规则开始。
+- 只有 `submitted` 且 `task_id` 仍非空才可审核；task 已物理删除时保留只读历史并返回 `409 SUBMISSION_NOT_REVIEWABLE {submission_id,status:'task_deleted'}`。每个 submission 只允许一次 review。review checklist 必须与 submission 快照的 template_item_id exact set、无重复/缺失，服务端从快照派生 `{template_item_id,label,position,passed,note}`。accepted 要求每项 `passed=true`；returned 必须有非空 comment。
+- accepted 事务：插入 review；submission→accepted/version+1；对应 V1 task→completed；不修改任何 assignment progress/note；追加 accept 事件。
+- returned 事务：插入 review；submission→returned/version+1；对应 task 若开始日在 today 之后→planned，否则→active；不修改个人 progress/note/日期；追加 return 事件。
+- 计划 completed 始终由第 7 节按当前关联 task lineage 计算。已完成计划若某 required lineage 的最新提交不再是 accepted，或该 lineage link 被 soft/hard delete，则不再 completed；旧 lineage 历史 review 永不改写，也不匹配后来复用相同 V1 id 的新 lineage。
+
+## 11. 六区桌面 DOM 契约
+
+### 11.1 页面层级与固定 ID
+
+保留现有 `#newTaskBtn`、`#ganttView`、`#tasksView`、`#loadView`、`#logsView`、`#maintenanceView` 及其 V1 控件 ID。新增顶层：
+
+```text
+#v2Nav
+  [data-v2-view=workbench|plans|assignment|execution|acceptance|management]
+#workbenchView  #plansView  #assignmentView
+#executionView  #acceptanceView  #managementView
+```
+
+- `#executionView` 内含 `#executionSubnav`，其 `[data-execution-view=gantt|tasks|load]` 切换原 `#ganttView/#tasksView/#loadView`，复用原 V1 toolbar、任务、甘特和负载逻辑。
+- `#managementView` 内含 `#managementSubnav`，其 `[data-management-view=logs|maintenance]` 切换原 `#logsView/#maintenanceView`，复用日志、备份、导入、归档、回收站和维护。
+- 顶层每次只显示一个 `[data-v2-panel]` 和一个 `[data-v2-toolbar-view]`。固定 toolbar ID：`#workbenchToolbar`、`#plansToolbar`、`#assignmentToolbar`、`#executionToolbar`、`#acceptanceToolbar`、`#managementToolbar`。
+- 顶部增加 `#newPlanBtn`；`#newTaskBtn` 保留且只在 execution/assignment 合适上下文出现。无 V2 计划时仍可创建独立 V1 任务。
+
+### 11.2 视图内容 ID
+
+| 区域 | 固定 ID |
+| --- | --- |
+| 工作台 | `#planStats`、`#planSearchInput`、`#planStatusFilter`、`#planSourceFilter`、`#planCryostatFilter`、`#planOwnerFilter`、`#planGroupBy`、`#arrivalWindowDays`、`#planResultCount`、`#planOverviewList` |
+| 测控计划 | `#planList`、`#planDetailPane`、`#planDetailContent`、`#closePlanDetailBtn`、`#planHistoryList`、`#testItemList` |
+| 人工分配 | `#assignmentPlanFilter`、`#assignmentTaskList`、`#assignmentConflictSummary`、`#openAssignmentBtn` |
+| 执行 | `#executionSubnav` 和全部冻结 V1 task/gantt/load ID |
+| 验收 | `#acceptancePlanFilter`、`#submissionStatusFilter`、`#submissionList`、`#acceptanceEmptyState` |
+| 管理 | `#managementSubnav`、`#sourceGroupAdmin`、`#cryostatAdmin`、`#migrationStatus` 和全部 V1 logs/maintenance ID |
+
+`#planStats` 固定六张可点击分类卡：testing、delayed、within、outside、pending、completed；实际到样未测试的空白状态不进入这六张卡，总数在 `#planResultCount` 单独显示。显示归档的开关只扩展列表/result count/分组，六张统计卡始终展示 active-only stats。
+
+### 11.3 对话框与抽屉
+
+| ID | 用途 | 首焦点/返焦 |
+| --- | --- | --- |
+| `#planDialog` / `#planForm` | 新建/编辑计划和测试项 | `name`；关闭回 `#newPlanBtn` 或编辑触发器 |
+| `#etaChangeDialog` / `#etaChangeForm` | ETA 输入、影响预览、候选勾选 | ETA 控件；回原 ETA 编辑按钮 |
+| `#cryostatChangeDialog` / `#cryostatChangeForm` | 制冷机选择与冲突预览 | 资源选择；回原资源按钮 |
+| `#assignmentDialog` / `#assignmentForm` | 人工任务、负责人/协作者、日期、工时、冲突 | title；回触发器 |
+| `#submissionDialog` / `#submissionForm` | 成果引用与清单快照 | description；回任务成果按钮 |
+| `#reviewDialog` / `#reviewForm` | 人工通过/退回 | decision；回 submission 审核按钮 |
+| `#resourceDialog` / `#resourceForm` | 来源小组、联系人、制冷机维护 | name；回管理触发器 |
+
+`#planDetailPane` 是 `position:fixed`、宽 420px 的按需右抽屉，默认 `hidden`，不成为第三列。打开时记住触发元素和稳定 `data-plan-id` 选择器；关闭先清 active plan，再重渲染，并按“仍连接的触发器→当前视图同 plan 选择器→当前视图首个可见控件→当前顶层 tab→#newPlanBtn”返焦。Escape 优先交给任一 `dialog[open]`；无 dialog 时才关闭计划抽屉，再之后才由既有任务抽屉逻辑处理。所有 dialog 使用原生 `showModal()` 并有可访问名称。
+
+### 11.4 表单、空态与反馈
+
+- 计划基本区字段顺序：来源小组、计划名称、目的、样品型号、ETA 日期/待确认、制冷机/待定、至少一个测试项；联系人、我方对接人、样品编号、项目/课题标签放 `#planAdvancedFields` 折叠区。
+- 工作台真空：标题“还没有测控计划”，CTA `data-open-plan-dialog`；筛选空：标题“没有匹配计划”，CTA `data-clear-plan-filters`。
+- 分配空：选择计划；计划无测试项时 CTA 编辑计划；无任务时 CTA 人工创建任务。验收空区分“没有待验收成果”和“筛选无结果”。
+- 保存按钮必须防重复、显示忙碌文本；失败保留输入/预览/勾选并在表单内 `role=alert`；成功刷新相关区域并使用现有 `#toast`。
+- `teamTaskGantt.v2Prefs.v1` 保存 `activeV2View`、execution/management 子视图、`arrivalWindowDays`、工作台 group/filter；损坏或写入失败回退默认值且不阻断业务。
+
+### 11.5 颜色与桌面边界
+
+CSS 变量固定：`--v2-testing:#2563eb`、`--v2-delayed:#dc2626`、`--v2-within:#f59e0b`、`--v2-outside:#64748b`、`--v2-pending:#7c3aed`、`--v2-completed:#16a34a`。空白主状态不渲染彩色 chip，屏幕阅读器文本为“已到样，尚未测试”。
+
+1280×720 和 1366×768 必须：六个顶层 tab 单行可见；活动主视图主体进入首屏；页面无水平溢出；表格/甘特仅容器局部滚动；420px 抽屉不改变两列布局；720px 内的对话框位于视口内并允许内部纵向滚动。不得增加移动断点、底部导航、触摸专用交互或手机端验收。
+
+## 12. 状态机
+
+### 12.1 计划
+
+- `open`：`archived_at IS NULL` 且 computed status 非 completed。
+- `completed`：第 7 节条件成立，仅计算、不持久化。
+- `archived`：人工归档写 `archived_at`；不删除历史。恢复清空 archived_at。归档计划不参与窗口与冲突统计。
+- 实际到样只是日期事实；不会生成“已到样待测试”状态。
+
+### 12.2 任务
+
+继续使用 V1 `planned/active/paused/completed/cancelled/archived`。创建和人员分配完全由人工提交；日期自动推导 planned/active 可沿用 V1，但系统不得自动创建任务或选择成员。ETA 平移只改变日期，个人 progress 独立。验收通过/退回按第 10 节改变任务状态，仍不改个人 progress。
+
+### 12.3 成果与验收
+
+`submitted -> accepted` 或 `submitted -> returned`，每个 submission 只走一次；returned 后人工修订成果并以它为 supersedes 创建 `(plan_id,task_lineage_key)` sequence+1 的新 submitted。accepted/returned review 均追加不可覆盖记录。计划完成要求每个 required 测试项仍有未软删关联任务，且该 lineage 最新提交 accepted；task soft/hard delete 会使计划重新未完成但不改历史 review。相同 V1 task id 的新 lineage 永远不能继承旧 accepted/returned/pending。
+
+## 13. 安全、备份与审计
+
+- 所有用户文本在插入 HTML 前使用 textContent 或统一 `escapeHtml`；禁止把 API 字符串直接拼入属性、style 或 HTML。
+- URL 只允许 http/https，外链使用 `rel="noopener noreferrer"`；本地路径永远是文本，不调用 shell、不读取文件、不生成 `file://` 链接。
+- actor/submitter/reviewer 默认“本地用户”且可覆盖，UI 明示“业务记录，未经身份认证”。
+- V2 完整备份是第 6 节的普通 `{data:{...}}` JSON，包含新增表和 schema version；V1 `/api/backup` 原 JSON 键保持不变。迁移前 raw SQLite 备份与维护备份均需显示路径、时间和校验结果。
+- 计划、ETA、制冷机、到样、任务、成果、验收、归档/恢复及关联任务删除都写追加事件；事件不能通过普通 API 编辑或删除。task 事件和成果事件必须保存 `task_lineage_key`；物理删除前的 impact 另保存 original task id/title/plan 展示快照。
+
+## 14. V2 需求追踪矩阵
+
+| 需求 | UI/DOM | API | DDL/逻辑 | 必测项 |
+| --- | --- | --- | --- | --- |
+| V2-REQ-001 | 六区桌面、无移动入口 | 仅本地 `/api/v2` | 无 AI/认证实体 | 无 AI/移动/监听漂移静态检查 |
+| V2-REQ-002 | 计划基本/高级区、管理 | source-groups/contacts/plans | groups、contacts、plan 引用 | 规范化去重、停用历史显示 |
+| V2-REQ-003 | `#planDialog`、可选标签 | plans | control_plans | 无强制项目层级 |
+| V2-REQ-004 | 样品型号与可选编号 | plans/arrival | model/identifier 字段 | 无编号创建、到样后补录 |
+| V2-REQ-005 | 基本区+折叠高级区 | POST plans | ETA/制冷机互斥 CHECK、test items | 日期/pending、设备/pending、至少一 required |
+| V2-REQ-006 | `#assignmentDialog` | tasks preview/confirm | plan_tasks lineage+V1 tasks/assignments | 无自动任务/成员、字段边界、每个任务新 lineage |
+| V2-REQ-007 | ETA/制冷机 dialog | selection-bound preview/confirm | plan_events、version | 每次勾选重预览、token 绑定 selection/冲突、stale |
+| V2-REQ-008 | ETA 候选勾选 | eta batch confirm | after_arrival、批量事务平移 | 默认[]、选中间/外部三类冲突、进度不变 |
+| V2-REQ-009 | workbench stats/list/filter/group | GET plans | active-only stats 与历史 data 查询 | include_archived 仅影响 data/total/groups |
+| V2-REQ-010 | `#arrivalWindowDays` | GET plans `window_days` | 非持久分类 | 默认7闭区间、改窗口不改日期 |
+| V2-REQ-011 | 状态 chip/漂移/空白 | plan summary | ETA/arrival + classifier | 优先级、drift、到样空白且排除窗口 |
+| V2-REQ-012 | 人工分配冲突区 | task preview/confirm | plan_tasks、V1 assignments | overlap、40h周负载、制冷机冲突、ack |
+| V2-REQ-013 | submission dialog | submissions by lineage | deliverable_submissions lineage/原任务/标题/模板快照 | exact-set、伪造/重复/缺失拒绝、同 lineage supersession、URL/路径 |
+| V2-REQ-014 | review dialog | submission review | reviews+事务状态 | 通过完成、退回执行、个人进度不变 |
+| V2-REQ-015 | execution/management 复用 V1 | V1 不变、V2 追加、V2 backup | 增量表/可空 task link/不可复用 lineage/version | 真实 V1 库迁移、ID 复用隔离、soft-delete/restore/reset 历史保留、API/CSV/JSON 全回归 |
+| V2-REQ-016 | 双尺寸六区验收 | 全接口 | 全迁移/状态机 | 自动化、语法、1280×720、1366×768 |
+
+## 15. 验证清单
+
+### 自动化/API
+
+- 全新库、真实 V1 数据副本、已迁移库重开、迁移中途失败、checksum 不符、备份恢复。
+- 逐表字段/约束/索引/外键和 `foreign_key_check/quick_check`；V1 表字段顺序、CSV 标题、JSON backup keys 不变。
+- 资源规范化去重和停用；计划最小字段/高级字段；至少一 required 测试项；ETA/制冷机二选一。
+- 状态真值每一行、优先级覆盖、服务端本地 today、7 日闭区间、window 0/365、实际到样空白与统计排除、drift；构造相同状态的 active+archived 计划，`include_archived=1` 时 data/total/groups 含两者而 stats 只计 active。
+- ETA/制冷机 preview 无写、token/版本过期、候选保护；ETA 首次 `[]` 返回全部模拟日期且 conflicts=[]，勾选后重 preview，selection 改变 token/confirm stale；批量先排除全部旧贡献再加入新贡献，覆盖 selected-selected、同计划未选和其他计划的成员日期/ISO周>40h/制冷机冲突及稳定去重排序；空 selection 不移动，assignment 日期等量且 progress/note 不变。
+- 人工任务创建/更新、无默认成员、0.5h 校验、三类冲突、ack、事务回滚；分别覆盖 create-preview/create-confirm/update-preview/update-confirm 四端点的 V2 title 1/200 和 description 0/4000 成功边界，title 空/201、description 4001 返回指定 VALIDATION_ERROR，独立 V1 task 仍保持原行为；更新时排除自身旧 assignment/工时，未改输入不得产生自重叠或自负载，改后只报告外部冲突。
+- 模板版本、submission/review exact-set、空/伪造/重复/缺失 ID、服务端 label/position 快照、首次/退回按 lineage 的 supersession、URL/路径校验、accepted/returned 事务、重复 review 冲突、个人进度独立、计划按 lineage 完成计算。
+- 现有 V1 全部 `npm test`、未关联 mutator、关联 task soft-delete/restore、主 assignment/member 409、协作者删除、归档、日志、备份、动态首次 seed 和 reset 固定语义继续通过；reset 前备份、清 tasks sqlite_sequence 后复用旧 task id，再在同计划创建新 V2 task，断言新 UUID lineage、sequence=1、无旧 pending/accepted/returned 继承且不误 completed；hard delete 后 link 级联但 submission/review/event/lineage/原 ID/标题保留，无 FK 错误；`node --check public/app.js`。
+
+### 桌面浏览器
+
+- 两种分辨率逐一验证六顶层视图及 execution/management 子视图，仅显示适用 toolbar，V1 五视图功能仍可达。
+- 计划创建四态、ETA/制冷机预览确认、人工分配冲突、成果提交、通过/退回、Toast/错误保留、防重复。
+- 六状态颜色、到样空白、统计卡、筛选/分组、真实空态/筛选空态、窗口调整不改日期。
+- 420px 抽屉、所有 dialog 焦点、Escape 优先级、重渲染返焦、键盘可达、无页面水平溢出。
+- 无移动导航、无触摸专用 UI、无 AI/登录/附件上传入口。

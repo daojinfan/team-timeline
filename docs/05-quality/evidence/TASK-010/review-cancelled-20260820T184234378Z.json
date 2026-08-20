@@ -1,0 +1,28 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-010",
+  "reviewed_task_ids": [
+    "TASK-009"
+  ],
+  "work_package": "WP-002",
+  "baseline": "BL-002",
+  "result": "cancelled",
+  "diff_checked": true,
+  "changes": [],
+  "change_summary": "TASK-009 已由项目经理通过治理动作合法标记为 superseded。其历史交付范围同时包含仍有效的 WP-002 桌面 UX 实施简报和共享 docs/00-index/DOC-REGISTRY.md；后者正在随 V2 正式权威文档登记持续演进，因此 TASK-009 旧 passed review 的不可变 subject c108e979e9cd940ba58414d73954352341d43770f88afea910b66e49d2b5e75d 不应继续按当前共享注册表内容重新校验。此次仅取消该 superseded delivery 的审核资格，不撤销、改写或否定仍有效的实施简报，也不修改旧审核证据、注册表、设计或产品文件。",
+  "scope_checked": [
+    "TASK-009.contract.json：Release ARCHITECT 交付范围为 docs/09-reports/WP-002-implementation-brief.md 与共享 docs/00-index/DOC-REGISTRY.md，绑定 Reviewer TASK-010",
+    "TASK-009.state.json：state=superseded，review 原为 passed/pass_streak=2，last_error 明确说明实施简报仍 active、但共享 DOC-REGISTRY 交付范围在 V2 权威文档加入前已被替代",
+    "TASK-010.contract.json：ROLE=REVIEWER，唯一 allowed/write path 为 docs/05-quality/evidence/TASK-010，允许新增本取消证据且禁止实现修改或委派",
+    "TASK-010 历史 review-round-1/2/3 与 validation 证据保持不可变；本记录不复用旧文件、不把 cancelled 冒充 passed，也不形成产品变更清单",
+    "当前治理工作树中 DOC-REGISTRY 属于共享注册表，后续 V2 正式化需要合法继续更新；取消 superseded TASK-009 的旧 subject 校验可避免历史共享路径阻塞当前 Release，而不放宽活动任务或新交付的审核要求"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "新增证据在 RecordReview 前通过 ConvertFrom-Json 和 schemas/review-evidence.schema.json 校验",
+    "取消依据为 .governance/runtime/tasks/TASK-009.state.json 的 superseded 状态与 last_error，以及 TASK-009/TASK-010 契约的交付/审核路径边界",
+    "本次 changes=[]：治理维护未声称 TASK-009 有新的 added/modified/deleted/renamed 产品交付，旧交付和旧证据均未修改"
+  ],
+  "created_at": "2026-08-20T18:42:34.3860478Z"
+}
