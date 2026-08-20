@@ -14,7 +14,7 @@
       </div>
       <div class="topbar-actions" aria-label="全局操作">
         <button id="newTaskBtn" class="primary-action" type="button">＋ 新建任务</button>
-        <button id="dataMenuBtn" class="ghost-button" type="button" aria-haspopup="true">数据与维护</button>
+        <button id="dataMenuBtn" class="ghost-button" type="button" aria-controls="maintenanceView">数据与维护</button>
         <button id="refreshBtn" class="icon-button" type="button" title="刷新" aria-label="刷新">↻</button>
       </div>
     </header>
@@ -39,7 +39,7 @@
               <span class="eyebrow">团队</span>
               <h2>成员</h2>
             </div>
-            <button id="toggleMemberSidebar" class="icon-button sidebar-toggle" type="button" title="折叠成员栏" aria-label="折叠成员栏" aria-expanded="true">‹</button>
+            <button id="toggleMemberSidebar" class="icon-button sidebar-toggle" type="button" title="折叠成员栏" aria-label="折叠成员栏" aria-controls="memberSidebar" aria-expanded="true">‹</button>
           </div>
           <div class="member-sidebar-content">
             <label class="search-field" for="memberSearchInput">
