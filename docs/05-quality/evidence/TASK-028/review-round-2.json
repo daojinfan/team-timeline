@@ -1,0 +1,67 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-028",
+  "reviewed_task_ids": [
+    "TASK-027"
+  ],
+  "work_package": "WP-002",
+  "baseline": "BL-002",
+  "result": "changes-required",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-027",
+      "path": "docs/09-reports/V2-detailed-design.proposal",
+      "change_type": "added",
+      "summary": "新增并修订 V2 非规范详细设计候选，当前内容冻结 12 表、10 索引、34 个 /api/v2 端点、迁移/回滚、V1 历史兼容、状态/冲突/验收、六区 DOM、安全、16 需求追踪及权威化/新基线门。"
+    },
+    {
+      "task_id": "TASK-027",
+      "path": "docs/09-reports/V2-development-plan.proposal",
+      "change_type": "added",
+      "summary": "新增并修订 V2 非规范开发计划候选，要求正式 V2 文档/新基线/WP-context/Release 门后才启动 DEV-A/B，并冻结 A/B/C 所有权、依赖、测试、独立 Release 双轮审核、集成、停止与回滚条件。"
+    }
+  ],
+  "change_summary": "已独立从头核对 TASK-027 启动提交 79dca86441a0a8875c13e72549d4795f4e7eccbd 到当前交付提交 eb7a50d7e8b56d218c1f70be8c3327f37117d7fe 的全部 13 项 Git 变更、完整 proposal 内容和治理/证据 patch。其中 11 项为 TASK-027/028 运行状态、台账/工作状态、两轮验证及上轮 review 证据；产品候选交付精确为上述两个 added proposal，当前共 824 行。无 src/public/tests/package、governance.json、CURRENT-STATE、DOC/BASELINE-REGISTRY 或 APPROVAL-LOG 漂移。两文件工作树与交付 blob 相同，当前 Governance subject SHA-256=481b453a79d7bac91535fc236fa2dfef3bdcb7886e73671cd9ea488166a7fca6。上轮六项 finding 的直接修复均已落地，但全量复审发现历史任务身份可在 reset 后复用、快照标题长度与人工任务输入不一致、ETA 批量候选冲突无冻结算法以及归档计划统计口径矛盾四项新阻塞，本轮不得形成通过连续计数。",
+  "scope_checked": [
+    "TASK-027/TASK-028 Release 契约与最新运行状态、WP-002 generated context、BL-002、路径边界、依赖、Reviewer 绑定、租约、上轮 review 历史与最新 TASK-027 验证证据/输出",
+    "已接受 V2-requirements、V2-overall-design、V2-change 总体 proposal 全文：16 项需求、轻量计划、人工决策、状态空白、7 日窗口、选择性平移、六区 IA、V1 增量兼容及总体到详设批准门",
+    "现行 PROJ-CHARTER-001、REQ-001..007、ARC-OVERALL-001、ARC-COMP-001..003 与 DEC-001 全文，包括 V1 SQLite/API/CSV/JSON、软删除/归档/恢复/reset、原生技术栈、个人 progress 独立和双桌面尺寸边界",
+    "V2-detailed-design.proposal 最终 640 行从头逐行审查：12 张表、10 索引、DDL 检查/外键、跨表不变量、迁移备份/事务/幂等/失败停止/回滚",
+    "上轮基线门修复：详设 acceptance 后必须建立登记正式 V2 REQ/ARC/DEC/CR，绑定 canonical body 指纹，创建并激活预期 BL-003，新建 V2 WP/context/DEV+Reviewer 契约并通过活动新基线 Release 0/0，才能 Plan/Start DEV-A/B",
+    "上轮 preview-confirm 修复：ETA 和 cryostat preview/confirm 均冻结完整 new value/pending/token/version/ack/actor，confirm 在 BEGIN IMMEDIATE 内重读事实、重算 token、然后写入，并有 canonical success 和稳定错误",
+    "上轮 V1 兼容修复：submission.task_id ON DELETE SET NULL，original_task_id/title 快照，V2-linked task tombstone，primary assignment/member 409，restore 检查，purge/reset 备份、事件、plan version 和成果/验收/历史保留",
+    "上轮成果验收修复：submission 与 review 只接受 item ID+布尔值，服务端从活动模板/快照派生 label/position，exact-set 及空/重复/伪造/缺失拒绝，supersession 限同 plan/原任务/最新 returned",
+    "上轮编辑冲突修复：update preview 先排除当前 task 旧日期和旧周工时，再加入 normalized new input，覆盖成员日期重叠、40h 周负载与制冷机重叠",
+    "34 个唯一 /api/v2 端点完整审查：status、资源、计划、测试项、模板、事件、普通 JSON backup、ETA/cryo、人工任务、submission/review；canonical 字段、query、排序/分页、null/[]、成功包装、公共和业务 4xx details 矩阵",
+    "服务端本地日历 today、七级优先级真值、today..today+window_days 闭区间（默认 7）、ETA drift、实际到样未测试 display_status/color/window_bucket 均 null 且不进六张卡",
+    "人工任务主负责人/协作者/日期/0.5h 工时、三类冲突及人工 acknowledge；ETA 只平移用户选中的 planned+after_arrival 任务，status/progress/note 不变",
+    "submitted->accepted/returned 单次验收、退回后新 sequence、通过/退回任务状态事务、个人 progress/note 独立、计划 completed 计算及软/硬删历史保留",
+    "六顶层 panel/toolbar、execution/management 内嵌 V1 五视图、七个 dialog、420px fixed drawer、焦点/Escape/返焦、720px 内对话框、1280×720/1366×768、无页面横滚和无移动布局",
+    "URL 只允许 http/https、local_path 仅文本不执行、内容转义、noopener/noreferrer、actor/submitter/reviewer 为未认证业务声明，无 AI/手机/登录/云/二进制托管",
+    "V2-REQ-001..016 追踪矩阵 16/16 连续，每项有 UI/API/DDL-逻辑/必测项；V2-development-plan.proposal 最终 184 行中 DEV-A/B/C 互斥所有权、依赖、各自独立 Release 双轮审核、PM 集成、停止/回滚门均已复核",
+    "TASK-027 start 79dca86441a0a8875c13e72549d4795f4e7eccbd..delivery eb7a50d7e8b56d218c1f70be8c3327f37117d7fe 的 name-status、summary、stat、numstat、治理/证据 patch 与两份 proposal 最终全文；13 项中精确分离 11 项运行记录和 2 项候选交付"
+  ],
+  "findings": [
+    "[阻塞/历史任务身份可被 reset 复用] V2-detailed-design.proposal:165,179,211,427 把原任务历史和计划完成语义唯一绑到 `(plan_id,original_task_id)`，但 :220 要求沿用 V1 reset，而当前 src/server.js:1052 明确删除 tasks 的 `sqlite_sequence`。reset 后 task ID 会重用；保留旧 V2 计划后新建任务最终可取得旧 `original_task_id`，使旧 accepted/returned submission 被当成新任务的 latest，触发错误的完成判定或提交拒绝。最小修复：冻结不可复用的 V2 task lineage（例如在 plan-task/submission 同时保存不变 lineage key），或明确 reset 保留/transactionally 提升 tasks AUTOINCREMENT high-water 至所有保留 original_task_id 之上；添加 reset→重用候选 ID→同计划新任务的回归。",
+    "[阻塞/任务标题与成果快照约束不一致] V2-detailed-design.proposal:166 要求 `task_title_snapshot` trim 后长度 1..200，但 :467-473 的 V2 人工任务 request/normalized_input 没有冻结 title 长度，当前 V1 `tasks.title` 也无长度约束。实现者若保持 V1 语义，201 字符标题的 V2 task 可成功创建却永远无法提交成果；若自行限制则必须猜长度和错误 details。最小修复：在四个 plan-task preview/confirm 契约明确 title 1..200（及 description 的冻结上限）和 `VALIDATION_ERROR {field,reason}`，并增加边界/超界回归，不改独立 V1 task 接口。",
+    "[阻塞/ETA 候选冲突仍需猜测] 已接受总体设计要求 ETA 修订预览人员负载、日期和制冷机冲突。V2-detailed-design.proposal:443 返回 `conflicts`，但 :444-452 没有规定对全部 eligible 还是最终 selected 任务模拟平移、如何处理多任务同时平移的外部 overlap/周负载/制冷机冲突，也未将 selection 绑入 preview token。第 9 节算法是单个人工任务的 new/update，不能唯一决定 ETA 批量预览口径；DEV-A 和 DEV-C 会自行发明不同预览/ack 语义。最小修复：冻结可选集的两阶段 preview（或每候选的服务端新日期/冲突明细），明确 selected IDs 与 token/ack 绑定、批量计算顺序、外部冲突及稳定 canonical response/tests，保持默认不平移。",
+    "[阻塞/归档计划统计口径矛盾] V2-detailed-design.proposal:310 明确 `stats` 在 `include_archived` 过滤生效后计算；当 `include_archived=1` 时按该顺序归档计划会进入 testing/delayed/within/outside/pending/completed/unclassified 计数。但 :570 又规定归档计划不参与窗口与冲突统计，实现者无法决定统计卡是否计入归档数据。最小修复：明确 `include_archived=1` 只影响 data/total/groups 的历史可见性，`stats` 始终仅基于 `archived_at IS NULL` 计算；或者显式修订状态机语义并给出单一可测口径。"
+  ],
+  "validation_evidence": [
+    "TASK-027 最新必需验证：docs/05-quality/evidence/TASK-027/20260820T175007598Z-83142d52-required-validation.evidence.json 及对应 output；TASK/WP/BL-002/contract_sha256 匹配，Release exit_code=0，输出为 27 文档、0 错误、0 警告；证据 git_commit=306b9101204017d49d330a09465f98241d93f991，本审核另以当前交付 commit/blob/SHA 和独立 Release 绑定最终内容",
+    "完整差异：git diff --name-status/--summary/--stat/--numstat/治理证据 patch/两 proposal 全文 79dca86441a0a8875c13e72549d4795f4e7eccbd..eb7a50d7e8b56d218c1f70be8c3327f37117d7fe；共 13 项，产品候选精确为两个 added proposal",
+    "交付指纹：eb7a50d7e8b56d218c1f70be8c3327f37117d7fe，tree=9f9218d3f7df33793233c0e5b607905d2cacd176，commit subject=`Resolve V2 detailed design review findings`",
+    "V2-detailed-design.proposal delivery/worktree blob=067900a5a28699e0de91d503a4fe604e7798b615，SHA-256=811e871cd0b2b860d8bd8f66ca5cd057517e24d219f6c8733eddd4e454bd9404",
+    "V2-development-plan.proposal delivery/worktree blob=bfff065622e5337f60c3e50652063494cde1d4f2，SHA-256=db0acdac82cfdaf4af772af924c378244504637617b97162bd008b2b2966f4b4",
+    "两份最终候选交付 Governance subject SHA-256=481b453a79d7bac91535fc236fa2dfef3bdcb7886e73671cd9ea488166a7fca6",
+    "git diff --exit-code eb7a50d7e8b56d218c1f70be8c3327f37117d7fe -- 两份 proposal：exit 0，当前工作树与交付内容完全一致",
+    "git diff --exit-code 79dca86441a0a8875c13e72549d4795f4e7eccbd eb7a50d7e8b56d218c1f70be8c3327f37117d7fe -- governance.json/CURRENT-STATE/DOC-REGISTRY/BASELINE-REGISTRY/APPROVAL-LOG/src/public/tests/package：exit 0",
+    "独立静态计数：CREATE TABLE=12，INDEX=10，V2-REQ=16/16，dialog=7，唯一 /api/v2 method+path=34，六顶层 V2 view/toolbar 和 V1 五子视图均已冻结",
+    "JSON/schema：review-round-2.json ConvertFrom-Json 成功，Test-Json -SchemaFile schemas/review-evidence.schema.json=True",
+    "git diff --check 79dca86441a0a8875c13e72549d4795f4e7eccbd eb7a50d7e8b56d218c1f70be8c3327f37117d7fe 及 git diff --check -- docs/05-quality/evidence/TASK-028/review-round-2.json：均 exit 0",
+    "审核者独立运行 powershell.exe Test-ProjectGovernance.ps1 -Level Release：扫描 27 文档，0 错误、0 警告，exit 0"
+  ],
+  "created_at": "2026-08-20T17:56:12.7936008Z"
+}
