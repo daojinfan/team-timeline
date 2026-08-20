@@ -1,0 +1,48 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-038",
+  "reviewed_task_ids": [
+    "TASK-037"
+  ],
+  "work_package": "WP-006",
+  "baseline": "BL-003",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-037",
+      "path": "src/server.js",
+      "change_type": "modified",
+      "summary": "修正人工任务冲突计算，使制冷机日期冲突只比较当前候选计划之外的 active 计划，同时保持确认阶段事务内重算。"
+    },
+    {
+      "task_id": "TASK-037",
+      "path": "tests/v2-api.test.js",
+      "change_type": "modified",
+      "summary": "增加同计划、其他 active 计划及 archived 计划的制冷机冲突回归，并覆盖预览到确认路径。"
+    }
+  ],
+  "change_summary": "从 TASK-037 启动提交 74574ba03a85b40fd5a75e44fcce51a337c35585 到交付提交 b6e7396a7badbd4ecf97fc57a2b8c53a27d655fe 的任务写入范围实际差异精确为 src/server.js modified（4 insertions/3 deletions）与 tests/v2-api.test.js modified（108 insertions）；TASK-037 Governance review subject SHA-256 为 9400dd9b63a6d9246d652243f957d3290deaa9c0d471b7e6adfd941350ca6205。",
+  "scope_checked": [
+    "从头读取 BL-003/WP-006 权威路由、TASK-037/TASK-038 Release 契约与状态、TASK-037 验证证据，以及 74574ba..b6e7396 完整实际差异",
+    "从头读取当前 src/server.js、tests/api.test.js 和 tests/v2-api.test.js 全文，核对修复未越出 server/tests 且未改变 V1 API 或数据形状",
+    "独立核对 scheduleTasks 只含未归档计划的有效未完成任务、人工 task preview 排除本 plan 制冷机比较、update 自排除，以及 create/update confirm 在 BEGIN IMMEDIATE 内调用同一 preview 重算",
+    "独立通过真实 HTTP 场景证明同计划不报、其他 active 计划报告、归档计划不报、事实变化使旧 token 在 confirm 返回 STALE_PREVIEW、重新 preview 后 confirm 成功",
+    "复核 exactly 12 V2 tables、10 indexes、schema version 2/checksum、quick_check/FK、真实 V1-shaped 库迁移前 raw backup、幂等重开和失败停止路径",
+    "复核 ARC-COMP-004 与 V2_ENDPOINTS 的 34 method-path exact set、canonical request/response/error、两阶段 token/version/ack 与事务回滚",
+    "复核 UUID v4 lineage、soft/hard delete/reset 后 ID 复用隔离、submission/review checklist snapshot exact-set、returned/supersession/accepted 和个人 progress/note 独立",
+    "复核 V1 动态首次 seed、已有库重开、固定 reset、CRUD/归档/回收站/维护、任务与 assignment、SQLite schema、CSV、JSON 和 backup 兼容"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "独立 npm test：26 tests、26 pass、0 fail；包含 16 个 V1 回归和 10 个 V2 schema/迁移/API/冲突/lineage/验收场景。",
+    "独立冲突矩阵：same-plan CRYOSTAT_DATE_OVERLAP=0 且 confirm 成功 task_id=6；other active plan conflicts=2；归档后旧 confirm=409 STALE_PREVIEW；re-preview conflicts=0 且 confirm 成功 task_id=7。",
+    "独立 schema/API 诊断：12 tables、10 indexes、version=2、checksum=e87fc318d929c1f71cee72bd207c57a63b1a7f5d98bf673656c158bc040be4c4、quick_check=ok、FK violations=0；正式 34 endpoints 与实现 34 endpoints exact_set=true。",
+    "独立 V1-shaped 迁移诊断：迁移前后 tasks=4；raw backup quick_check=ok 且 v2 tables=0；迁移后 checksum 匹配；首次迁移与重开 backup count 均为 1。",
+    "node --check src/server.js、tests/api.test.js、tests/v2-api.test.js 均 exit 0；git diff --check 74574ba..b6e7396 -- src/server.js tests exit 0。",
+    "内容指纹：src/server.js blob=44715fd15fdd61dc72c84f315f33f937907914b1 SHA-256=2bb79cda0c444dd5b52a3f958a92fb2442bc2bff115d94480a2b89f996525f40 3203 lines；tests/api.test.js blob=61e34a0e879b84afd7328364ae11f4641368bc87 SHA-256=9740c9db7e7b7e48b282c09a1ff8e4e855c9f09771529a785aaab68a83b0492a 492 lines；tests/v2-api.test.js blob=5809e1483f393dd4c6adbeae8d4ae2692bf411ea SHA-256=d02ce4c2b0b90ca1666b8a05d74ef5e6c15d91e92c777ff3c9df8d30feed22db 707 lines。",
+    "交付指纹：commit=b6e7396a7badbd4ecf97fc57a2b8c53a27d655fe、tree=ae00898432b805813aae8defe31079e0e2416f2f、subject='Fix reviewed V2 conflict and focus behavior'、TASK-037 review subject=9400dd9b63a6d9246d652243f957d3290deaa9c0d471b7e6adfd941350ca6205。"
+  ],
+  "created_at": "2026-08-20T20:14:45.0116596Z"
+}
