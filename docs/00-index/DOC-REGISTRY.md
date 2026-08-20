@@ -17,8 +17,8 @@ last_reviewed: 2026-08-20
 
 | 文档编号 | 路径 | 类型 | 状态 | 版本 | 基线 | 负责人 |
 | --- | --- | --- | --- | --- | --- | --- |
-| PROJ-INDEX-001 | docs/00-index/PROJECT.md | governance.project-index | active | 1.0 | BL-001 | human |
-| PROJ-STATE-001 | docs/00-index/CURRENT-STATE.md | governance.current-state | active | 1.0 | BL-001 | human |
+| PROJ-INDEX-001 | docs/00-index/PROJECT.md | governance.project-index | active | 1.1 | BL-001 | human |
+| PROJ-STATE-001 | docs/00-index/CURRENT-STATE.md | governance.current-state | active | 1.1 | BL-001 | human |
 | PROJ-DECISION-QUEUE-001 | docs/00-index/DECISION-QUEUE.md | governance.decision-queue | active | 1.0 | BL-001 | human |
 | PROJ-DOC-REGISTRY-001 | docs/00-index/DOC-REGISTRY.md | governance.document-registry | active | 1.0 | BL-001 | human |
 | PROJ-BASELINE-REGISTRY-001 | docs/00-index/BASELINE-REGISTRY.md | governance.baseline-registry | active | 1.0 | BL-001 | human |

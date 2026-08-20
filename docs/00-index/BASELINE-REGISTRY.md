@@ -23,7 +23,7 @@ last_reviewed: 2026-08-20
 
 | 基线 | 状态 | 清单 | Git 提交 | 批准记录 | 创建日期 | 说明 |
 | --- | --- | --- | --- | --- | --- | --- |
-| BL-001 | draft | 尚未生成 | 尚未锁定 | 无 | 2026-08-20 | 初始化草案 |
+| BL-001 | active | baselines/BL-001/manifest.json | 0e33df4bf03bcfabc812eda9e1d549e621feb98f | APR-002 | 2026-08-20 | Approved desktop UX TEAM_PROJECT baseline |
 
 允许的状态：`draft`、`approved`、`active`、`superseded`、`archived`。同一时刻只能有一个 `active` 基线。
 
