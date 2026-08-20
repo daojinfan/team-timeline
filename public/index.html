@@ -13,191 +13,152 @@
         <p id="summary">正在载入数据...</p>
       </div>
       <div class="topbar-actions" aria-label="全局操作">
+        <button id="newPlanBtn" class="primary-action" type="button" data-open-plan-dialog>＋ 新建计划</button>
         <button id="newTaskBtn" class="primary-action" type="button">＋ 新建任务</button>
         <button id="dataMenuBtn" class="ghost-button" type="button" aria-controls="maintenanceView">数据与维护</button>
         <button id="refreshBtn" class="icon-button" type="button" title="刷新" aria-label="刷新">↻</button>
       </div>
     </header>
 
-    <main class="page">
-      <section id="stats" class="stats" aria-label="项目统计"></section>
-
-      <nav class="view-navigation" aria-label="主视图">
-        <div class="segmented" role="tablist" aria-label="工作视图">
-          <button class="active" data-view="gantt" type="button" role="tab" aria-selected="true" aria-controls="ganttView">甘特图</button>
-          <button data-view="tasks" type="button" role="tab" aria-selected="false" aria-controls="tasksView">任务</button>
-          <button data-view="load" type="button" role="tab" aria-selected="false" aria-controls="loadView">负载</button>
-          <button data-view="logs" type="button" role="tab" aria-selected="false" aria-controls="logsView">日志</button>
-          <button data-view="maintenance" type="button" role="tab" aria-selected="false" aria-controls="maintenanceView">维护</button>
+    <main class="page v2-page">
+      <nav id="v2Nav" class="v2-navigation" aria-label="测控工作区">
+        <div class="v2-tabs" role="tablist" aria-label="六区工作视图">
+          <button class="active" data-v2-view="workbench" type="button" role="tab" aria-selected="true" aria-controls="workbenchView">工作台</button>
+          <button data-v2-view="plans" type="button" role="tab" aria-selected="false" aria-controls="plansView">测控计划</button>
+          <button data-v2-view="assignment" type="button" role="tab" aria-selected="false" aria-controls="assignmentView">人工分配</button>
+          <button data-v2-view="execution" type="button" role="tab" aria-selected="false" aria-controls="executionView">执行</button>
+          <button data-v2-view="acceptance" type="button" role="tab" aria-selected="false" aria-controls="acceptanceView">验收</button>
+          <button data-v2-view="management" type="button" role="tab" aria-selected="false" aria-controls="managementView">管理</button>
         </div>
       </nav>
 
-      <section id="workspace" class="workspace">
-        <aside id="memberSidebar" class="member-sidebar" aria-label="成员浏览">
-          <div class="member-sidebar-heading">
-            <div class="member-sidebar-title">
-              <span class="eyebrow">团队</span>
-              <h2>成员</h2>
-            </div>
-            <button id="toggleMemberSidebar" class="icon-button sidebar-toggle" type="button" title="折叠成员栏" aria-label="折叠成员栏" aria-controls="memberSidebar" aria-expanded="true">‹</button>
+      <div id="workbenchToolbar" class="v2-toolbar" data-v2-toolbar-view="workbench" aria-label="工作台工具栏">
+        <div class="v2-filter-row">
+          <label class="v2-search-control">搜索计划<input id="planSearchInput" type="search" placeholder="计划、型号或标签"></label>
+          <label>主状态<select id="planStatusFilter"><option value="">全部</option><option value="testing">正在测试中</option><option value="delayed">延期</option><option value="arriving_within_window">规定时间内</option><option value="arriving_outside_window">规定时间外</option><option value="time_pending">时间待确认</option><option value="completed">已完成</option><option value="unclassified">已到样，尚未测试</option></select></label>
+          <label>来源小组<select id="planSourceFilter"><option value="">全部来源</option></select></label>
+          <label>制冷机<select id="planCryostatFilter"><option value="">全部设备</option></select></label>
+          <label>负责人<select id="planOwnerFilter"><option value="">全部负责人</option></select></label>
+          <label>分组<select id="planGroupBy"><option value="none">不分组</option><option value="source_group">来源小组</option><option value="cryostat">制冷机</option><option value="primary_member">主负责人</option><option value="project_tag">项目标签</option><option value="topic_tag">课题标签</option></select></label>
+          <label class="v2-window-control">关注窗口<input id="arrivalWindowDays" type="number" min="0" max="365" value="7"><span>天</span></label>
+          <label class="inline v2-archive-toggle"><input id="planIncludeArchived" type="checkbox"> 显示归档</label>
+        </div>
+      </div>
+
+      <div id="plansToolbar" class="v2-toolbar" data-v2-toolbar-view="plans" hidden>
+        <div class="toolbar-summary"><strong>测控计划</strong><span>按型号提前规划，样品编号可在到样后补录。</span></div>
+        <button class="primary-action" type="button" data-open-plan-dialog>新建测控计划</button>
+      </div>
+
+      <div id="assignmentToolbar" class="v2-toolbar" data-v2-toolbar-view="assignment" hidden>
+        <div class="toolbar-group">
+          <label>测控计划<select id="assignmentPlanFilter"><option value="">请选择计划</option></select></label>
+          <span class="v2-toolbar-note">任务与人员均由人明确创建和分配，冲突只作提示。</span>
+        </div>
+        <button id="openAssignmentBtn" class="primary-action" type="button" disabled>人工创建任务</button>
+      </div>
+
+      <div id="executionToolbar" class="v2-toolbar v2-toolbar-host" data-v2-toolbar-view="execution" hidden>
+        <div class="view-toolbar" data-toolbar-view="gantt">
+          <div class="toolbar-group">
+            <label>粒度<select id="scaleSelect"><option value="day">日</option><option value="week">周</option><option value="month">月</option></select></label>
+            <label class="zoom-control">缩放<input id="zoomRange" type="range" min="8" max="60" value="60"></label>
+            <label>范围<select id="rangeSelect"><option value="smart" selected>智能</option><option value="all">全部</option><option value="week">本周</option><option value="month">本月</option><option value="30">未来 30 天</option><option value="90">未来 90 天</option></select></label>
+            <span id="rangeLabel" class="range-label">正在计算范围...</span>
           </div>
-          <div class="member-sidebar-content">
-            <label class="search-field" for="memberSearchInput">
-              <span>搜索成员</span>
-              <input id="memberSearchInput" type="search" placeholder="姓名或角色">
-            </label>
-            <div class="member-sidebar-actions">
-              <label class="inline mini"><input id="stackMemberList" type="checkbox" checked> 紧凑排列</label>
-              <button id="newMemberBtn" class="small-button" type="button">新增成员</button>
-            </div>
-            <div id="memberList" class="member-list"></div>
+          <div class="toolbar-group toolbar-options"><label class="inline"><input id="onlyBusyMembers" type="checkbox"> 只看有任务成员</label><label class="inline"><input id="stackTasks" type="checkbox" checked> 任务堆叠</label><button id="todayBtn" class="ghost-button" type="button">今天</button></div>
+        </div>
+
+        <div class="view-toolbar task-toolbar" data-toolbar-view="tasks" hidden>
+          <div class="task-filter-grid">
+            <label class="wide-control">关键词<input id="searchInput" type="search" placeholder="任务、成员或状态"></label>
+            <label>成员<select id="filterMember"><option value="">全部成员</option></select></label><label>状态<select id="filterStatus"><option value="">全部状态</option></select></label>
+            <label>开始后<input id="filterStart" type="date"></label><label>结束前<input id="filterEnd" type="date"></label>
+            <label class="inline checkbox-control"><input id="filterOverdue" type="checkbox"> 逾期</label><label class="inline checkbox-control"><input id="filterOverlap" type="checkbox"> 重叠</label>
+            <button id="clearFiltersBtn" class="ghost-button" type="button">清空</button>
           </div>
+          <div class="task-view-controls"><label>排序<select id="taskSort"><option value="time_asc">时间从早到晚</option><option value="time_desc">时间从晚到早</option><option value="name_asc">任务名 A-Z</option><option value="name_desc">任务名 Z-A</option></select></label><div class="segmented compact-segmented" role="tablist" aria-label="任务查看方式"><button class="active" data-task-view-mode="cards" type="button">卡片</button><button data-task-view-mode="list" type="button">列表</button></div></div>
+          <div class="filter-feedback"><div id="activeFilters" class="active-filters" aria-label="已启用筛选"></div><span id="filterResultCount" class="filter-result-count">正在统计...</span></div>
+        </div>
+
+        <div class="view-toolbar" data-toolbar-view="load" hidden><div class="toolbar-group"><label>统计周期<select id="loadPeriod"><option value="current">当前</option><option value="7">未来 7 天</option><option value="30" selected>未来 30 天</option></select></label><label>成员<select id="loadMemberFilter"><option value="">全部成员</option></select></label></div></div>
+      </div>
+
+      <div id="acceptanceToolbar" class="v2-toolbar" data-v2-toolbar-view="acceptance" hidden>
+        <div class="toolbar-group"><label>测控计划<select id="acceptancePlanFilter"><option value="">全部计划</option></select></label><label>成果状态<select id="submissionStatusFilter"><option value="">全部状态</option><option value="submitted">待验收</option><option value="accepted">已通过</option><option value="returned">已退回</option></select></label></div>
+        <span class="v2-toolbar-note">成果只保存 URL 或本地路径文本，由人通过或退回。</span>
+      </div>
+
+      <div id="managementToolbar" class="v2-toolbar v2-toolbar-host" data-v2-toolbar-view="management" hidden>
+        <div class="view-toolbar" data-toolbar-view="logs" hidden><div class="toolbar-group"><label class="wide-control">关键词<input id="logSearchInput" type="search" placeholder="操作类型或对象"></label><label>日志类型<select id="logTypeFilter"><option value="">全部类型</option></select></label><label>日期<input id="logDateFilter" type="date"></label></div></div>
+        <div class="view-toolbar" data-toolbar-view="maintenance" hidden><div class="toolbar-summary"><strong>数据与维护</strong><span>资源、备份、模板、导入、归档和回收操作集中在此处。</span></div><div class="toolbar-group"><button class="ghost-button" type="button" data-maintenance-target="sourceGroupAdmin">业务资源</button><button class="ghost-button" type="button" data-maintenance-target="dataExports">备份与导出</button><button class="ghost-button" type="button" data-maintenance-target="templatesPanel">模板</button><button class="ghost-button" type="button" data-maintenance-target="importsPanel">导入</button></div></div>
+      </div>
+
+      <section id="workbenchView" class="v2-panel active" data-v2-panel="workbench" role="tabpanel" aria-label="工作台">
+        <div id="planStats" class="v2-plan-stats" aria-label="活动计划状态统计">
+          <button class="v2-stat-card is-testing" type="button" data-plan-status="testing"><span>正在测试中</span><strong>—</strong><small>活动计划</small></button>
+          <button class="v2-stat-card is-delayed" type="button" data-plan-status="delayed"><span>延期</span><strong>—</strong><small>需关注</small></button>
+          <button class="v2-stat-card is-within" type="button" data-plan-status="arriving_within_window"><span>规定时间内到来</span><strong>—</strong><small>未来 7 天</small></button>
+          <button class="v2-stat-card is-outside" type="button" data-plan-status="arriving_outside_window"><span>规定时间外到来</span><strong>—</strong><small>远期计划</small></button>
+          <button class="v2-stat-card is-pending" type="button" data-plan-status="time_pending"><span>时间待确认</span><strong>—</strong><small>待人工确认</small></button>
+          <button class="v2-stat-card is-completed" type="button" data-plan-status="completed"><span>已完成</span><strong>—</strong><small>人工验收通过</small></button>
+        </div>
+        <section class="v2-surface v2-overview-surface" aria-labelledby="planOverviewTitle">
+          <header class="v2-section-heading"><div><span class="eyebrow">计划总览</span><h2 id="planOverviewTitle">测控计划</h2></div><strong id="planResultCount" aria-live="polite">0 个计划</strong></header>
+          <div id="planOverviewList" class="v2-plan-list" aria-live="polite">
+            <div class="v2-empty-state"><h3>还没有测控计划</h3><p>从样品型号开始规划测试项、资源和人工任务。</p><button type="button" data-open-plan-dialog>新建第一个计划</button></div>
+          </div>
+          <template id="planTrueEmptyStateTemplate"><div class="v2-empty-state"><h3>还没有测控计划</h3><p>从样品型号开始规划测试项、资源和人工任务。</p><button type="button" data-open-plan-dialog>新建第一个计划</button></div></template>
+          <template id="planFilterEmptyStateTemplate"><div class="v2-empty-state"><h3>没有匹配计划</h3><p>当前筛选条件下没有结果。</p><button class="ghost-button" type="button" data-clear-plan-filters>清空筛选</button></div></template>
+        </section>
+      </section>
+
+      <section id="plansView" class="v2-panel" data-v2-panel="plans" role="tabpanel" aria-label="测控计划" hidden>
+        <section class="v2-surface" aria-labelledby="planListTitle"><header class="v2-section-heading"><div><span class="eyebrow">轻量计划</span><h2 id="planListTitle">全部测控计划</h2></div><span class="v2-muted">选择计划查看测试项与变更历史</span></header><div id="planList" class="v2-plan-list"><div class="v2-empty-state"><h3>还没有测控计划</h3><p>样品编号未知也不阻塞提前规划。</p><button type="button" data-open-plan-dialog>新建计划</button></div></div></section>
+        <aside id="planDetailPane" class="plan-detail-pane" aria-labelledby="planDetailTitle" hidden>
+          <header class="detail-pane-header"><div><span class="eyebrow">测控计划</span><strong id="planDetailTitle">计划详情</strong></div><button id="closePlanDetailBtn" class="icon-button" type="button" aria-label="关闭计划详情">×</button></header>
+          <div id="planDetailContent" class="detail-content"><div class="detail-empty">从列表中选择计划查看详情。</div><section aria-labelledby="testItemListTitle"><h3 id="testItemListTitle">结构化测试项</h3><div id="testItemList" class="v2-detail-list"></div></section><section aria-labelledby="planHistoryListTitle"><h3 id="planHistoryListTitle">确认与变更历史</h3><div id="planHistoryList" class="v2-detail-list"></div></section></div>
         </aside>
+      </section>
 
-        <section id="workspaceMain" class="workspace-main" aria-live="polite">
-          <h2 id="viewTitle" class="visually-hidden">甘特图</h2>
-          <div class="view-toolbar" data-toolbar-view="gantt">
-            <div class="toolbar-group">
-              <label>粒度
-                <select id="scaleSelect">
-                  <option value="day">日</option>
-                  <option value="week">周</option>
-                  <option value="month">月</option>
-                </select>
-              </label>
-              <label class="zoom-control">缩放
-                <input id="zoomRange" type="range" min="8" max="60" value="60">
-              </label>
-              <label>范围
-                <select id="rangeSelect">
-                  <option value="smart" selected>智能</option>
-                  <option value="all">全部</option>
-                  <option value="week">本周</option>
-                  <option value="month">本月</option>
-                  <option value="30">未来 30 天</option>
-                  <option value="90">未来 90 天</option>
-                </select>
-              </label>
-              <span id="rangeLabel" class="range-label">正在计算范围...</span>
-            </div>
-            <div class="toolbar-group toolbar-options">
-              <label class="inline"><input id="onlyBusyMembers" type="checkbox"> 只看有任务成员</label>
-              <label class="inline"><input id="stackTasks" type="checkbox" checked> 任务堆叠</label>
-              <button id="todayBtn" class="ghost-button" type="button">今天</button>
-            </div>
-          </div>
+      <section id="assignmentView" class="v2-panel" data-v2-panel="assignment" role="tabpanel" aria-label="人工分配" hidden>
+        <div id="assignmentConflictSummary" class="v2-conflict-summary" role="status">选择计划后显示人员负载、日期重叠和制冷机冲突；最终决定由人作出。</div>
+        <section class="v2-surface"><div id="assignmentTaskList" class="v2-plan-list"><div class="v2-empty-state"><h3>请选择测控计划</h3><p>选择计划后，可为测试项人工创建任务并明确分配负责人。</p></div></div></section>
+        <template id="assignmentNoTestItemsTemplate"><div class="v2-empty-state"><h3>计划还没有测试项</h3><p>先编辑计划并添加至少一个结构化测试项。</p><button type="button" data-open-plan-dialog>编辑计划</button></div></template>
+        <template id="assignmentNoTasksTemplate"><div class="v2-empty-state"><h3>还没有人员任务</h3><p>从测试项出发，由人明确创建并分配任务。</p><button type="button" data-open-assignment-dialog>人工创建任务</button></div></template>
+      </section>
 
-          <div class="view-toolbar task-toolbar" data-toolbar-view="tasks" hidden>
-            <div class="task-filter-grid">
-              <label class="wide-control">关键词<input id="searchInput" type="search" placeholder="任务、成员或状态"></label>
-              <label>成员<select id="filterMember"><option value="">全部成员</option></select></label>
-              <label>状态<select id="filterStatus"><option value="">全部状态</option></select></label>
-              <label>开始后<input id="filterStart" type="date"></label>
-              <label>结束前<input id="filterEnd" type="date"></label>
-              <label class="inline checkbox-control"><input id="filterOverdue" type="checkbox"> 逾期</label>
-              <label class="inline checkbox-control"><input id="filterOverlap" type="checkbox"> 重叠</label>
-              <button id="clearFiltersBtn" class="ghost-button" type="button">清空</button>
-            </div>
-            <div class="task-view-controls">
-              <label>排序
-                <select id="taskSort">
-                  <option value="time_asc">时间从早到晚</option>
-                  <option value="time_desc">时间从晚到早</option>
-                  <option value="name_asc">任务名 A-Z</option>
-                  <option value="name_desc">任务名 Z-A</option>
-                </select>
-              </label>
-              <div class="segmented compact-segmented" role="tablist" aria-label="任务查看方式">
-                <button class="active" data-task-view-mode="cards" type="button">卡片</button>
-                <button data-task-view-mode="list" type="button">列表</button>
-              </div>
-            </div>
-            <div class="filter-feedback">
-              <div id="activeFilters" class="active-filters" aria-label="已启用筛选"></div>
-              <span id="filterResultCount" class="filter-result-count">正在统计...</span>
-            </div>
-          </div>
-
-          <div class="view-toolbar" data-toolbar-view="load" hidden>
-            <div class="toolbar-group">
-              <label>统计周期
-                <select id="loadPeriod">
-                  <option value="current">当前</option>
-                  <option value="7">未来 7 天</option>
-                  <option value="30" selected>未来 30 天</option>
-                </select>
-              </label>
-              <label>成员
-                <select id="loadMemberFilter"><option value="">全部成员</option></select>
-              </label>
-            </div>
-          </div>
-
-          <div class="view-toolbar" data-toolbar-view="logs" hidden>
-            <div class="toolbar-group">
-              <label class="wide-control">关键词<input id="logSearchInput" type="search" placeholder="操作类型或对象"></label>
-              <label>日志类型
-                <select id="logTypeFilter"><option value="">全部类型</option></select>
-              </label>
-              <label>日期<input id="logDateFilter" type="date"></label>
-            </div>
-          </div>
-
-          <div class="view-toolbar" data-toolbar-view="maintenance" hidden>
-            <div class="toolbar-summary">
-              <strong>数据与维护</strong>
-              <span>备份、模板、导入、归档和回收操作集中在此处。</span>
-            </div>
-            <div class="toolbar-group">
-              <button class="ghost-button" type="button" data-maintenance-target="dataExports">备份与导出</button>
-              <button class="ghost-button" type="button" data-maintenance-target="templatesPanel">模板</button>
-              <button class="ghost-button" type="button" data-maintenance-target="importsPanel">导入</button>
-            </div>
-          </div>
-
-          <div class="batchbar" hidden>
-            <span id="selectionInfo">未选择任务</span>
-            <label>批量状态
-              <select id="batchStatus">
-                <option value="">状态不变</option>
-                <option value="auto">自动判断</option>
-                <option value="paused">暂停</option>
-                <option value="completed">已完成</option>
-                <option value="cancelled">取消</option>
-              </select>
-            </label>
-            <label>结束日期<input id="batchEndDate" type="date" title="批量结束日期"></label>
-            <label class="inline"><input id="batchSync" type="checkbox" checked> 同步个人时间</label>
-            <button id="batchApplyBtn" type="button" disabled>批量应用</button>
-            <button id="archiveSelectedBtn" class="ghost-button" type="button">归档所选</button>
-          </div>
-
-          <section id="ganttView" class="view active" aria-labelledby="ganttViewTitle">
-            <div class="view-heading visually-hidden">
-              <h2 id="ganttViewTitle">甘特图</h2>
-            </div>
-            <div class="gantt-shell"><div id="gantt" class="gantt"></div></div>
+      <section id="executionView" class="v2-panel" data-v2-panel="execution" role="tabpanel" aria-label="执行" hidden>
+        <nav id="executionSubnav" class="view-navigation v2-subnav" aria-label="执行视图"><div class="segmented" role="tablist" aria-label="执行工作视图"><button class="active" data-v2-subview data-execution-view="gantt" data-view="gantt" type="button" role="tab" aria-selected="true" aria-controls="ganttView">甘特图</button><button data-v2-subview data-execution-view="tasks" data-view="tasks" type="button" role="tab" aria-selected="false" aria-controls="tasksView">任务</button><button data-v2-subview data-execution-view="load" data-view="load" type="button" role="tab" aria-selected="false" aria-controls="loadView">负载</button></div></nav>
+        <section id="stats" class="stats" aria-label="项目统计"></section>
+        <section id="workspace" class="workspace">
+          <aside id="memberSidebar" class="member-sidebar" aria-label="成员浏览"><div class="member-sidebar-heading"><div class="member-sidebar-title"><span class="eyebrow">团队</span><h2>成员</h2></div><button id="toggleMemberSidebar" class="icon-button sidebar-toggle" type="button" title="折叠成员栏" aria-label="折叠成员栏" aria-controls="memberSidebar" aria-expanded="true">‹</button></div><div class="member-sidebar-content"><label class="search-field" for="memberSearchInput"><span>搜索成员</span><input id="memberSearchInput" type="search" placeholder="姓名或角色"></label><div class="member-sidebar-actions"><label class="inline mini"><input id="stackMemberList" type="checkbox" checked> 紧凑排列</label><button id="newMemberBtn" class="small-button" type="button">新增成员</button></div><div id="memberList" class="member-list"></div></div></aside>
+          <section id="workspaceMain" class="workspace-main" aria-live="polite">
+            <h2 id="viewTitle" class="visually-hidden">甘特图</h2>
+            <div class="batchbar" hidden><span id="selectionInfo">未选择任务</span><label>批量状态<select id="batchStatus"><option value="">状态不变</option><option value="auto">自动判断</option><option value="paused">暂停</option><option value="completed">已完成</option><option value="cancelled">取消</option></select></label><label>结束日期<input id="batchEndDate" type="date" title="批量结束日期"></label><label class="inline"><input id="batchSync" type="checkbox" checked> 同步个人时间</label><button id="batchApplyBtn" type="button" disabled>批量应用</button><button id="archiveSelectedBtn" class="ghost-button" type="button">归档所选</button></div>
+            <section id="ganttView" class="view active" aria-labelledby="ganttViewTitle"><div class="view-heading visually-hidden"><h2 id="ganttViewTitle">甘特图</h2></div><div class="gantt-shell"><div id="gantt" class="gantt"></div></div></section>
+            <section id="tasksView" class="view" aria-labelledby="tasksViewTitle"><div class="view-heading visually-hidden"><h2 id="tasksViewTitle">任务</h2></div><div id="taskCards" class="task-grid"></div></section>
+            <section id="loadView" class="view" aria-labelledby="loadViewTitle"><div class="view-heading"><h2 id="loadViewTitle">成员负载</h2><p>按所选周期查看每位成员的任务压力。</p></div><div id="loadTable" class="table-wrap"></div></section>
           </section>
+        </section>
+      </section>
 
-          <section id="tasksView" class="view" aria-labelledby="tasksViewTitle">
-            <div class="view-heading visually-hidden"><h2 id="tasksViewTitle">任务</h2></div>
-            <div id="taskCards" class="task-grid"></div>
-          </section>
+      <section id="acceptanceView" class="v2-panel" data-v2-panel="acceptance" role="tabpanel" aria-label="成果验收" hidden>
+        <section class="v2-surface" aria-labelledby="submissionListTitle"><header class="v2-section-heading"><div><span class="eyebrow">人工闭环</span><h2 id="submissionListTitle">成果与验收</h2></div><span class="v2-muted">引用信息与清单快照，不托管附件</span></header><div id="submissionList" class="v2-plan-list"></div><div id="acceptanceEmptyState" class="v2-empty-state"><h3>没有待验收成果</h3><p>成果提交后会在这里等待人工通过或退回。</p></div></section>
+        <template id="acceptanceFilterEmptyTemplate"><div class="v2-empty-state"><h3>筛选无结果</h3><p>当前计划或成果状态下没有匹配记录。</p><button class="ghost-button" type="button" data-clear-submission-filters>清空筛选</button></div></template>
+      </section>
 
-          <section id="loadView" class="view" aria-labelledby="loadViewTitle">
-            <div class="view-heading"><h2 id="loadViewTitle">成员负载</h2><p>按所选周期查看每位成员的任务压力。</p></div>
-            <div id="loadTable" class="table-wrap"></div>
-          </section>
-
-          <section id="logsView" class="view" aria-labelledby="logsViewTitle">
-            <div class="view-heading"><h2 id="logsViewTitle">操作日志</h2><p>筛选并核对任务与成员的变更记录。</p></div>
-            <div id="logs" class="logs"></div>
-          </section>
-
-          <section id="maintenanceView" class="view" aria-labelledby="maintenanceViewTitle">
-            <div class="view-heading"><h2 id="maintenanceViewTitle">数据与维护</h2><p>集中处理备份、导出、模板、导入和恢复操作。</p></div>
-
-            <div class="maintenance-grid maintenance-data-grid">
+      <section id="managementView" class="v2-panel" data-v2-panel="management" role="tabpanel" aria-label="管理" hidden>
+        <nav id="managementSubnav" class="view-navigation v2-subnav" aria-label="管理视图"><div class="segmented" role="tablist" aria-label="管理工作视图"><button class="active" data-v2-subview data-management-view="logs" data-view="logs" type="button" role="tab" aria-selected="true" aria-controls="logsView">日志</button><button data-v2-subview data-management-view="maintenance" data-view="maintenance" type="button" role="tab" aria-selected="false" aria-controls="maintenanceView">资源与维护</button></div></nav>
+        <section id="logsView" class="view" aria-labelledby="logsViewTitle"><div class="view-heading"><h2 id="logsViewTitle">操作日志</h2><p>筛选并核对任务、成员和测控计划的变更记录。</p></div><div id="logs" class="logs"></div></section>
+        <section id="maintenanceView" class="view" aria-labelledby="maintenanceViewTitle">
+          <div class="view-heading"><h2 id="maintenanceViewTitle">资源与数据维护</h2><p>集中处理来源小组、制冷机、备份、模板、导入和恢复。</p></div>
+          <div class="v2-resource-grid">
+            <article id="sourceGroupAdmin" class="maintenance-card"><span class="eyebrow">业务来源</span><h2>来源小组与联系人</h2><p>维护其他小组及其业务联系人，停用后仍保留历史。</p><button class="ghost-button" type="button" data-open-resource-dialog="source-group">维护来源小组</button></article>
+            <article id="cryostatAdmin" class="maintenance-card"><span class="eyebrow">设备资源</span><h2>制冷机</h2><p>维护设备名称与启用状态；分配冲突仅提示。</p><button class="ghost-button" type="button" data-open-resource-dialog="cryostat">维护制冷机</button></article>
+            <article id="migrationStatus" class="maintenance-card"><span class="eyebrow">数据状态</span><h2>迁移与备份</h2><p>正在读取 schema 版本、备份时间与校验状态。</p></article>
+          </div>
+          <div class="maintenance-grid maintenance-data-grid">
               <article id="dataExports" class="maintenance-card">
                 <span class="eyebrow">数据安全</span>
                 <h2>备份与导出</h2>
@@ -248,9 +209,9 @@
                 </div>
                 <div id="importErrors" class="notice" role="alert"></div>
               </article>
-            </div>
+          </div>
 
-            <div class="maintenance-grid maintenance-operations-grid">
+          <div class="maintenance-grid maintenance-operations-grid">
               <article class="maintenance-card">
                 <h2>清空日志</h2>
                 <p id="clearLogsHint">仅清理操作日志，不影响成员、任务和分配。</p>
@@ -275,11 +236,131 @@
                 <p id="trashHint">可恢复软删除的任务和成员。</p>
                 <div id="trashList" class="recovery-list"></div>
               </article>
-            </div>
-          </section>
+          </div>
         </section>
       </section>
     </main>
+
+    <dialog id="planDialog" class="v2-dialog" aria-labelledby="planDialogTitle">
+      <form id="planForm" class="v2-dialog-form">
+        <header class="dialog-header"><div><span class="eyebrow">轻量计划</span><h2 id="planDialogTitle">新建测控计划</h2><p>样品型号即可开始规划；所有任务和人员仍由人明确创建。</p></div><button id="closePlanDialogBtn" class="icon-button dialog-close" type="button" aria-label="关闭测控计划对话框">×</button></header>
+        <div id="planFormError" class="form-error" role="alert" hidden></div>
+        <div class="v2-dialog-body">
+          <fieldset class="dialog-section"><legend>基本信息</legend>
+            <label>来源小组<select id="planSourceGroup" name="source_group_id" required autofocus><option value="">请选择来源小组</option></select></label>
+            <label>计划名称<input id="planName" name="name" maxlength="200" required autocomplete="off" placeholder="例如：QPU-A 测控计划"></label>
+            <label>目的<textarea id="planPurpose" name="purpose" rows="3" maxlength="4000" required placeholder="说明测试目的与预期结果"></textarea></label>
+            <label>样品型号<input id="planSampleModel" name="sample_model" maxlength="200" required placeholder="编号未知时只填型号即可"></label>
+          </fieldset>
+          <fieldset class="dialog-section"><legend>到样与资源</legend>
+            <label>最新预计到样<input id="planEtaDate" name="current_eta_date" type="date"></label>
+            <label class="inline"><input id="planEtaPending" name="eta_pending" type="checkbox"> 时间待确认</label>
+            <label>计划制冷机<select id="planCryostat" name="cryostat_id"><option value="">请选择制冷机</option></select></label>
+            <label class="inline"><input id="planCryostatPending" name="cryostat_pending" type="checkbox"> 制冷机待定</label>
+            <div class="v2-inline-note">预计到样和制冷机必须各自选择具体值或明确标记待确认。</div>
+          </fieldset>
+          <fieldset class="dialog-section dialog-section-wide"><legend>结构化测试项</legend>
+            <div id="planTestItemEditor" class="v2-item-editor"><label>测试项名称<input name="test_item_title" maxlength="200" required placeholder="例如：基础谱测量"></label><label>验收标准<input name="test_item_acceptance_criteria" maxlength="1000" placeholder="说明可复核标准"></label><label class="inline"><input name="test_item_required" type="checkbox" checked> 必测项</label><button id="addPlanTestItemBtn" class="ghost-button" type="button">添加测试项</button></div>
+            <div id="planTestItemDrafts" class="v2-detail-list" aria-live="polite"></div>
+          </fieldset>
+          <details id="planAdvancedFields" class="v2-advanced-fields dialog-section-wide"><summary>联系人、样品编号与可选标签</summary><div class="v2-advanced-grid">
+            <label>对方负责人<select id="planCounterpartContact" name="counterpart_contact_id"><option value="">稍后补充</option></select></label>
+            <label>我方对接人<input id="planLocalLiaison" name="local_liaison_name" maxlength="100" placeholder="业务记录，未经身份认证"></label>
+            <label>样品编号<input id="planSampleIdentifier" name="sample_identifier" maxlength="200" placeholder="可到样后补录"></label>
+            <label>编号类型<select id="planIdentifierKind" name="identifier_kind"><option value="">未填写</option><option value="temporary">临时编号</option><option value="formal">正式编号</option></select></label>
+            <label>项目标签<input id="planProjectTag" name="project_tag" maxlength="100"></label><label>课题标签<input id="planTopicTag" name="topic_tag" maxlength="100"></label>
+          </div></details>
+        </div>
+        <footer class="dialog-actions"><button id="cancelPlanBtn" class="ghost-button" type="button">取消</button><button id="savePlanBtn" type="submit" data-busy-text="正在保存…">保存计划</button></footer>
+      </form>
+    </dialog>
+
+    <dialog id="etaChangeDialog" class="v2-dialog" aria-labelledby="etaChangeDialogTitle">
+      <form id="etaChangeForm" class="v2-dialog-form">
+        <header class="dialog-header"><div><span class="eyebrow">影响预览</span><h2 id="etaChangeDialogTitle">修订预计到样</h2><p>默认不移动任务；仅可勾选未开始且标记为到样后执行的任务。</p></div><button id="closeEtaChangeDialogBtn" class="icon-button dialog-close" type="button" aria-label="关闭预计到样对话框">×</button></header>
+        <div id="etaChangeFormError" class="form-error" role="alert" hidden></div>
+        <div class="v2-dialog-body v2-dialog-body-single">
+          <div class="two-cols"><label>新的预计到样<input id="etaChangeDate" name="new_eta_date" type="date" autofocus></label><label class="inline v2-dialog-checkbox"><input id="etaChangePending" name="eta_pending" type="checkbox"> 时间待确认</label></div>
+          <label>操作者说明<input id="etaActorLabel" name="actor_label" maxlength="100" placeholder="本地用户（业务记录）"></label>
+          <section id="etaImpactPreview" class="v2-preview" aria-labelledby="etaImpactTitle"><h3 id="etaImpactTitle">影响预览</h3><p>填写新日期后预览漂移、候选任务和冲突。</p></section>
+          <section aria-labelledby="etaCandidateTitle"><h3 id="etaCandidateTitle">可选择平移的任务</h3><div id="etaCandidateTasks" class="check-list v2-candidate-list"></div></section>
+          <section aria-labelledby="etaProtectedTitle"><h3 id="etaProtectedTitle">保持不变的任务</h3><div id="etaProtectedTasks" class="v2-detail-list"></div></section>
+        </div>
+        <footer class="dialog-actions"><button id="cancelEtaChangeBtn" class="ghost-button" type="button">取消</button><button id="previewEtaChangeBtn" class="ghost-button" type="button">重新预览</button><button id="confirmEtaChangeBtn" type="submit" data-busy-text="正在确认…">确认修订</button></footer>
+      </form>
+    </dialog>
+
+    <dialog id="cryostatChangeDialog" class="v2-dialog" aria-labelledby="cryostatChangeDialogTitle">
+      <form id="cryostatChangeForm" class="v2-dialog-form">
+        <header class="dialog-header"><div><span class="eyebrow">资源修订</span><h2 id="cryostatChangeDialogTitle">修订计划制冷机</h2><p>保存前预览冲突；修改设备不会自动改任务日期。</p></div><button id="closeCryostatChangeDialogBtn" class="icon-button dialog-close" type="button" aria-label="关闭制冷机对话框">×</button></header>
+        <div id="cryostatChangeFormError" class="form-error" role="alert" hidden></div>
+        <div class="v2-dialog-body v2-dialog-body-single">
+          <label>新的计划制冷机<select id="cryostatChangeSelect" name="new_cryostat_id" autofocus><option value="">请选择制冷机</option></select></label>
+          <label class="inline"><input id="cryostatChangePending" name="cryostat_pending" type="checkbox"> 制冷机待定</label>
+          <label>操作者说明<input id="cryostatActorLabel" name="actor_label" maxlength="100" placeholder="本地用户（业务记录）"></label>
+          <section id="cryostatConflictPreview" class="v2-preview" aria-labelledby="cryostatConflictTitle"><h3 id="cryostatConflictTitle">冲突预览</h3><p>选择设备后显示相同日期范围内的资源冲突。</p></section>
+        </div>
+        <footer class="dialog-actions"><button id="cancelCryostatChangeBtn" class="ghost-button" type="button">取消</button><button id="previewCryostatChangeBtn" class="ghost-button" type="button">预览冲突</button><button id="confirmCryostatChangeBtn" type="submit" data-busy-text="正在确认…">确认修订</button></footer>
+      </form>
+    </dialog>
+
+    <dialog id="assignmentDialog" class="v2-dialog" aria-labelledby="assignmentDialogTitle">
+      <form id="assignmentForm" class="v2-dialog-form">
+        <header class="dialog-header"><div><span class="eyebrow">人工创建与分配</span><h2 id="assignmentDialogTitle">创建人员任务</h2><p>系统不推荐或默认成员；冲突提示不替代人工决定。</p></div><button id="closeAssignmentDialogBtn" class="icon-button dialog-close" type="button" aria-label="关闭人工分配对话框">×</button></header>
+        <div id="assignmentFormError" class="form-error" role="alert" hidden></div>
+        <div class="v2-dialog-body">
+          <fieldset class="dialog-section"><legend>任务</legend><label>结构化测试项<select id="assignmentTestItem" name="test_item_id"><option value="">计划级任务</option></select></label><label>任务名称<input id="assignmentTitle" name="title" maxlength="200" required autofocus></label><label>描述<textarea id="assignmentDescription" name="description" rows="4" maxlength="4000"></textarea></label><label class="inline"><input id="assignmentAfterArrival" name="after_arrival" type="checkbox"> 到样后执行</label></fieldset>
+          <fieldset class="dialog-section"><legend>负责人、日期与工时</legend><label>主负责人<select id="assignmentPrimaryMember" name="primary_member_id" required><option value="">请选择负责人</option></select></label><label>协作成员<select id="assignmentCollaborators" name="collaborator_member_ids" multiple size="4"></select></label><div class="two-cols"><label>开始日期<input id="assignmentStartDate" name="start_date" type="date" required></label><label>结束日期<input id="assignmentEndDate" name="end_date" type="date" required></label></div><label>预计工时<input id="assignmentEstimatedHours" name="estimated_hours" type="number" min="0.5" step="0.5" required></label></fieldset>
+          <section id="assignmentDialogConflictSummary" class="v2-preview dialog-section-wide" aria-labelledby="assignmentDialogConflictTitle"><h3 id="assignmentDialogConflictTitle">冲突预览</h3><p>填写负责人、日期和工时后检查日期重叠、周负载与制冷机冲突。</p></section>
+        </div>
+        <footer class="dialog-actions"><button id="cancelAssignmentBtn" class="ghost-button" type="button">取消</button><button id="previewAssignmentBtn" class="ghost-button" type="button">预览冲突</button><button id="saveAssignmentBtn" type="submit" data-busy-text="正在创建…">人工确认创建</button></footer>
+      </form>
+    </dialog>
+
+    <dialog id="submissionDialog" class="v2-dialog" aria-labelledby="submissionDialogTitle">
+      <form id="submissionForm" class="v2-dialog-form">
+        <header class="dialog-header"><div><span class="eyebrow">成果引用</span><h2 id="submissionDialogTitle">提交成果</h2><p>只保存 URL 或本地路径文本，不上传或复制二进制文件。</p></div><button id="closeSubmissionDialogBtn" class="icon-button dialog-close" type="button" aria-label="关闭成果提交对话框">×</button></header>
+        <div id="submissionFormError" class="form-error" role="alert" hidden></div>
+        <div class="v2-dialog-body v2-dialog-body-single">
+          <label>成果说明<textarea id="submissionDescription" name="description" rows="4" maxlength="4000" required autofocus></textarea></label>
+          <label>提交人<input id="submissionSubmitter" name="submitter_label" maxlength="100" placeholder="本地用户（业务记录，未经身份认证）"></label>
+          <div class="two-cols"><label>引用类型<select id="submissionResourceKind" name="resource_kind"><option value="url">HTTP/HTTPS URL</option><option value="local_path">本地路径文本</option></select></label><label>引用值<input id="submissionResourceValue" name="resource_value" maxlength="2000" required placeholder="https://… 或本地路径"></label></div>
+          <fieldset class="dialog-section"><legend>验收清单快照</legend><div id="submissionChecklist" class="check-list"></div></fieldset>
+        </div>
+        <footer class="dialog-actions"><button id="cancelSubmissionBtn" class="ghost-button" type="button">取消</button><button id="saveSubmissionBtn" type="submit" data-busy-text="正在提交…">提交成果</button></footer>
+      </form>
+    </dialog>
+
+    <dialog id="reviewDialog" class="v2-dialog" aria-labelledby="reviewDialogTitle">
+      <form id="reviewForm" class="v2-dialog-form">
+        <header class="dialog-header"><div><span class="eyebrow">人工验收</span><h2 id="reviewDialogTitle">验收成果</h2><p>通过或退回必须由人确认，个人进度不会被自动改写。</p></div><button id="closeReviewDialogBtn" class="icon-button dialog-close" type="button" aria-label="关闭人工验收对话框">×</button></header>
+        <div id="reviewFormError" class="form-error" role="alert" hidden></div>
+        <div class="v2-dialog-body v2-dialog-body-single">
+          <label>验收结论<select id="reviewDecision" name="decision" required autofocus><option value="">请选择结论</option><option value="accepted">通过</option><option value="returned">退回</option></select></label>
+          <label>验收人<input id="reviewerLabel" name="reviewer_label" maxlength="100" placeholder="本地用户（业务记录，未经身份认证）"></label>
+          <label>意见<textarea id="reviewComment" name="comment" rows="4" maxlength="4000" placeholder="退回时必须填写意见"></textarea></label>
+          <fieldset class="dialog-section"><legend>逐项验收</legend><div id="reviewChecklist" class="check-list"></div></fieldset>
+        </div>
+        <footer class="dialog-actions"><button id="cancelReviewBtn" class="ghost-button" type="button">取消</button><button id="saveReviewBtn" type="submit" data-busy-text="正在记录…">确认验收结论</button></footer>
+      </form>
+    </dialog>
+
+    <dialog id="resourceDialog" class="v2-dialog" aria-labelledby="resourceDialogTitle">
+      <form id="resourceForm" class="v2-dialog-form">
+        <header class="dialog-header"><div><span class="eyebrow">业务资源</span><h2 id="resourceDialogTitle">维护资源</h2><p>停用资源保留历史引用，不删除既有计划记录。</p></div><button id="closeResourceDialogBtn" class="icon-button dialog-close" type="button" aria-label="关闭资源维护对话框">×</button></header>
+        <div id="resourceFormError" class="form-error" role="alert" hidden></div>
+        <div class="v2-dialog-body v2-dialog-body-single">
+          <label>资源类型<select id="resourceType" name="resource_type"><option value="source_group">来源小组</option><option value="source_contact">来源联系人</option><option value="cryostat">制冷机</option></select></label>
+          <label>名称<input id="resourceName" name="name" maxlength="200" required autofocus autocomplete="off"></label>
+          <label>所属来源小组<select id="resourceSourceGroup" name="source_group_id"><option value="">不适用</option></select></label>
+          <label>职务或称谓<input id="resourceTitle" name="title" maxlength="100"></label>
+          <label>联络信息<textarea id="resourceContactText" name="contact_text" rows="3" maxlength="1000"></textarea></label>
+          <label>备注<textarea id="resourceNote" name="note" rows="3" maxlength="1000"></textarea></label>
+          <label class="inline"><input id="resourceIsActive" name="is_active" type="checkbox" checked> 启用</label>
+        </div>
+        <footer class="dialog-actions"><button id="cancelResourceBtn" class="ghost-button" type="button">取消</button><button id="saveResourceBtn" type="submit" data-busy-text="正在保存…">保存资源</button></footer>
+      </form>
+    </dialog>
 
     <dialog id="taskDialog" class="task-dialog" aria-labelledby="taskDialogTitle">
       <form id="taskForm" class="task-dialog-form">
