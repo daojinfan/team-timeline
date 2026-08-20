@@ -2011,6 +2011,7 @@ const v2State = {
   dialogReturnFocus: new Map(),
   planDetailReturnFocus: null,
   planDetailReturnSelector: "",
+  planDetailOriginView: null,
   initialized: false
 };
 
@@ -2368,9 +2369,12 @@ function closeV2PlanDetail({ restoreFocus = true } = {}) {
   v2State.activePlan = null;
   const trigger = v2State.planDetailReturnFocus;
   const selector = v2State.planDetailReturnSelector;
+  const originView = v2State.planDetailOriginView;
   v2State.planDetailReturnFocus = null;
   v2State.planDetailReturnSelector = "";
+  v2State.planDetailOriginView = null;
   renderV2Plans();
+  if (originView && originView !== v2State.activeV2View) setV2View(originView);
   if (restoreFocus) restoreV2Focus(trigger, selector);
 }
 
@@ -2404,10 +2408,12 @@ function renderV2SubmissionCard(submission, planName = "") {
 function renderV2PlanDetail(plan) {
   const pane = $("#planDetailPane");
   $("#planDetailTitle").textContent = plan.name;
-  const status = plan.display_status ? v2StatusLabels[plan.display_status] : "已到样，尚未测试（主状态空白）";
+  const status = plan.display_status
+    ? ` · 状态 ${escapeHtml(v2StatusLabels[plan.display_status])}`
+    : '<span class="visually-hidden"> · 状态：已到样，尚未测试</span>';
   const template = plan.acceptance_template;
   $("#planDetailContent").innerHTML = `
-    <section><h3>计划信息</h3><div class="v2-detail-list"><div><strong>${escapeHtml(plan.name)}</strong> ${v2StatusChip(plan)}<p>${escapeHtml(plan.purpose)}</p><p>来源 ${escapeHtml(plan.source_group.name)} · 对方 ${escapeHtml(plan.counterpart_contact?.name || "未填写")} · 我方 ${escapeHtml(plan.local_liaison_name || "未填写")}</p><p>型号 ${escapeHtml(plan.sample_model)} · 编号 ${escapeHtml(plan.sample_identifier || "未补录")} · 状态 ${escapeHtml(status)}</p><p>预计到样 ${escapeHtml(plan.eta_pending ? "待确认" : plan.current_eta_date || "—")} · 实际到样 ${escapeHtml(plan.actual_arrival_date || "未到样")} · 制冷机 ${escapeHtml(plan.cryostat_pending ? "待定" : plan.cryostat?.name || "—")}</p></div></div></section>
+    <section><h3>计划信息</h3><div class="v2-detail-list"><div><strong>${escapeHtml(plan.name)}</strong> ${v2StatusChip(plan)}<p>${escapeHtml(plan.purpose)}</p><p>来源 ${escapeHtml(plan.source_group.name)} · 对方 ${escapeHtml(plan.counterpart_contact?.name || "未填写")} · 我方 ${escapeHtml(plan.local_liaison_name || "未填写")}</p><p>型号 ${escapeHtml(plan.sample_model)} · 编号 ${escapeHtml(plan.sample_identifier || "未补录")}${status}</p><p>预计到样 ${escapeHtml(plan.eta_pending ? "待确认" : plan.current_eta_date || "—")} · 实际到样 ${escapeHtml(plan.actual_arrival_date || "未到样")} · 制冷机 ${escapeHtml(plan.cryostat_pending ? "待定" : plan.cryostat?.name || "—")}</p></div></div></section>
     <div class="form-actions">
       <button class="small-button" type="button" data-edit-plan="${plan.id}">编辑计划</button>
       <button class="small-button" type="button" data-open-eta-change="${plan.id}">修订到样</button>
@@ -2425,16 +2431,32 @@ function renderV2PlanDetail(plan) {
 }
 
 async function openV2PlanDetail(planId, trigger = null) {
-  rememberV2PlanTrigger(trigger, planId);
-  const [result, events] = await Promise.all([
-    v2Api(`/api/v2/plans/${planId}`),
-    v2Api(`/api/v2/plans/${planId}/events?limit=50&sort=id_desc`)
-  ]);
-  result.data.events = events.data;
-  v2State.activePlanId = Number(planId);
-  v2State.activePlan = result.data;
-  renderV2PlanDetail(result.data);
-  window.requestAnimationFrame(() => $("#closePlanDetailBtn")?.focus());
+  const paneWasOpen = !$("#planDetailPane").hidden && $("#planDetailPane").classList.contains("is-open");
+  const originView = v2State.activeV2View;
+  if (!paneWasOpen) {
+    rememberV2PlanTrigger(trigger, planId);
+    v2State.planDetailOriginView = originView;
+  }
+  if (v2State.activeV2View !== "plans") setV2View("plans");
+  try {
+    const [result, events] = await Promise.all([
+      v2Api(`/api/v2/plans/${planId}`),
+      v2Api(`/api/v2/plans/${planId}/events?limit=50&sort=id_desc`)
+    ]);
+    result.data.events = events.data;
+    v2State.activePlanId = Number(planId);
+    v2State.activePlan = result.data;
+    renderV2PlanDetail(result.data);
+    window.requestAnimationFrame(() => $("#closePlanDetailBtn")?.focus());
+  } catch (error) {
+    if (!paneWasOpen && originView !== v2State.activeV2View) setV2View(originView);
+    if (!paneWasOpen) {
+      v2State.planDetailReturnFocus = null;
+      v2State.planDetailReturnSelector = "";
+      v2State.planDetailOriginView = null;
+    }
+    throw error;
+  }
 }
 
 function openV2Dialog(id, trigger, focusSelector) {
@@ -2461,6 +2483,8 @@ async function fillV2Contacts(groupId, selected = "") {
 
 function renderV2PlanDraftItems() {
   $("#planTestItemDrafts").innerHTML = v2State.planDraftItems.map((item, index) => `<div><strong>${escapeHtml(item.title)}</strong> · ${item.is_required ? "必测" : "可选"}<p>${escapeHtml(item.acceptance_criteria || "未设置验收标准")}</p><button class="small-button" type="button" data-remove-plan-draft="${index}">移除</button></div>`).join("") || "<div>至少添加一个测试项。</div>";
+  const draftTitle = $("#planTestItemEditor [name='test_item_title']");
+  if (draftTitle) draftTitle.required = !v2State.planEditId && v2State.planDraftItems.length === 0;
 }
 
 async function openV2PlanDialog(plan = null, trigger = null) {
