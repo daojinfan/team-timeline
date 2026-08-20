@@ -1,0 +1,71 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-035",
+  "work_package": "WP-008",
+  "title": "Integrate V2 client interactions",
+  "goal": "Implement the approved V2 plan overview, manual assignment, two-stage ETA and cryostat confirmation, deliverable submission, manual acceptance, focus and error flows on top of integrated TASK-031 and TASK-033 contracts while preserving V1 views",
+  "baseline": "BL-003",
+  "profile": "Release",
+  "role": "INTEGRATOR",
+  "allowed_paths": [
+    "public/app.js"
+  ],
+  "read_paths": [
+    "public"
+  ],
+  "write_paths": [
+    "public/app.js"
+  ],
+  "out_of_scope": [
+    "public/index.html",
+    "public/styles.css",
+    "server",
+    "database",
+    "AI task generation",
+    "authentication",
+    "mobile"
+  ],
+  "authoritative_documents": [
+    "REQ-V2-001",
+    "ARC-COMP-004",
+    "QUAL-TRACE-V2-001",
+    "ARC-OVERALL-002",
+    "DEC-002"
+  ],
+  "dependencies": [
+    "TASK-031",
+    "TASK-033"
+  ],
+  "acceptance_criteria": [
+    "Implement all six V2 zones with human-only create assign submit and review flows",
+    "Use the frozen 34 API contracts including stale preview re-confirmation and stable errors",
+    "Preserve V1 five-view interactions, personal progress independence, focus restoration and error state retention",
+    "All syntax automated desktop browser and Release checks pass"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "node.exe",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-20T19:22:33.0546778Z",
+  "release_controls": {
+    "target_environment": "local dev branch",
+    "execution_window": "after TASK-031 and TASK-033 are integrated and approved in the current V2 session",
+    "rollback_plan": "revert the independent app.js delivery commit; if a real database was migrated also use the WP-006 database rollback",
+    "observation_metrics": "syntax and test results, API and DOM contract coverage, key browser flows, V1 regressions, reviewer evidence",
+    "stop_conditions": "A or B contract drift, stale preview bypass, automatic task creation, V1 regression, failing validation, or unresolved reviewer finding",
+    "post_release_owner": "PROJECT_MANAGER 01a01ef6-d413-7660-bdc5-62bd5873cbf4"
+  }
+}

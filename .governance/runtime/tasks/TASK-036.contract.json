@@ -1,0 +1,72 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-036",
+  "work_package": "WP-008",
+  "title": "Review V2 client interactions",
+  "goal": "Independently review TASK-035 complete app.js and integrated V2 human workflow against approved server and DOM contracts for two consecutive Release passes",
+  "baseline": "BL-003",
+  "profile": "Release",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-036"
+  ],
+  "read_paths": [
+    "public"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-036"
+  ],
+  "out_of_scope": [
+    "implementation changes",
+    "delegation"
+  ],
+  "authoritative_documents": [
+    "REQ-V2-001",
+    "ARC-COMP-004",
+    "QUAL-TRACE-V2-001",
+    "ARC-OVERALL-002",
+    "DEC-002"
+  ],
+  "dependencies": [
+    "TASK-035"
+  ],
+  "acceptance_criteria": [
+    "Review complete app.js and exact TASK-035 diff",
+    "Exercise normal error keyboard focus stale preview assignment progress submission acceptance and V1 flows",
+    "Record exact changed paths and two consecutive unchanged-content Release passes"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-ProjectPath",
+        ".",
+        "-Level",
+        "Release"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface",
+    "production_release"
+  ],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-20T19:22:33.2326009Z",
+  "release_controls": {
+    "target_environment": "local dev branch",
+    "execution_window": "after TASK-035 completes in the current V2 session",
+    "rollback_plan": "reviewer writes evidence only; cancel the review if TASK-035 is superseded",
+    "observation_metrics": "key browser flow results, API DOM contract coverage, V1 regression and exact diff",
+    "stop_conditions": "scope drift, integrated contract mismatch, failing key flow, or unresolved finding",
+    "post_release_owner": "PROJECT_MANAGER 01a01ef6-d413-7660-bdc5-62bd5873cbf4"
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-033",
+  "work_package": "WP-007",
+  "title": "Implement V2 six-zone desktop shell",
+  "goal": "Implement the approved six-zone desktop navigation, plan overview, plan and assignment forms, acceptance surfaces, resource maintenance, dialogs, 420px drawer and desktop-only styles while retaining V1 DOM contracts",
+  "baseline": "BL-003",
+  "profile": "Release",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/index.html",
+    "public/styles.css"
+  ],
+  "read_paths": [
+    "public"
+  ],
+  "write_paths": [
+    "public/index.html",
+    "public/styles.css"
+  ],
+  "out_of_scope": [
+    "public/app.js",
+    "server code",
+    "database",
+    "mobile",
+    "touch-only interaction"
+  ],
+  "authoritative_documents": [
+    "REQ-V2-001",
+    "ARC-COMP-004",
+    "ARC-OVERALL-002",
+    "DEC-002"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "Preserve every frozen V1 ID and add every frozen V2 ID exactly once",
+    "Six top-level tabs and active content fit 1280x720 and 1366x768 without page horizontal overflow",
+    "All seven dialogs, 420px drawer, empty states, status colors, focus targets and accessibility semantics match ARC-COMP-004",
+    "No mobile breakpoint or touch-only navigation is introduced"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "npm.cmd",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-20T19:22:04.7171775Z",
+  "release_controls": {
+    "target_environment": "local dev branch",
+    "execution_window": "current approved V2 development session",
+    "rollback_plan": "revert the independent index.html and styles.css delivery commit",
+    "observation_metrics": "DOM ID uniqueness, V1 selector preservation, two desktop viewport metrics, browser screenshots, reviewer evidence",
+    "stop_conditions": "DOM contract drift, V1 selector removal, page horizontal overflow, mobile scope expansion, failing validation, or unresolved reviewer finding",
+    "post_release_owner": "PROJECT_MANAGER 01a01ef6-d413-7660-bdc5-62bd5873cbf4"
+  }
+}

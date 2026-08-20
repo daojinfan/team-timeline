@@ -1,0 +1,74 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-032",
+  "work_package": "WP-006",
+  "title": "Review V2 server migration and APIs",
+  "goal": "Independently review TASK-031 implementation, actual diff, migration safety, all V2 contracts and V1 regressions for two consecutive Release passes",
+  "baseline": "BL-003",
+  "profile": "Release",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-032"
+  ],
+  "read_paths": [
+    "src",
+    "tests"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-032"
+  ],
+  "out_of_scope": [
+    "implementation changes",
+    "delegation"
+  ],
+  "authoritative_documents": [
+    "REQ-V2-001",
+    "ARC-COMP-004",
+    "CR-002",
+    "ARC-OVERALL-002",
+    "DEC-002"
+  ],
+  "dependencies": [
+    "TASK-031"
+  ],
+  "acceptance_criteria": [
+    "Review the complete server and test files and exact TASK-031 diff",
+    "Independently exercise migration backup rollback reopen stale previews and V1 compatibility",
+    "Record exact changed paths and findings for two consecutive unchanged-content passes"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-ProjectPath",
+        ".",
+        "-Level",
+        "Release"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface",
+    "data_model_or_migration",
+    "production_release"
+  ],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-20T19:21:40.5049893Z",
+  "release_controls": {
+    "target_environment": "local dev branch",
+    "execution_window": "current approved V2 development session",
+    "rollback_plan": "reviewer writes evidence only; cancel the review if TASK-031 is superseded",
+    "observation_metrics": "independent schema API transaction migration and regression evidence",
+    "stop_conditions": "scope drift, baseline mismatch, failing migration safety check, or unresolved finding",
+    "post_release_owner": "PROJECT_MANAGER 01a01ef6-d413-7660-bdc5-62bd5873cbf4"
+  }
+}

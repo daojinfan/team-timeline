@@ -1,0 +1,69 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-031",
+  "work_package": "WP-006",
+  "title": "Implement V2 server migration and APIs",
+  "goal": "Implement the approved V2 additive SQLite schema, safe migration and backup, all 34 API endpoints, human assignment conflicts, submissions and manual acceptance with full V1 regression coverage",
+  "baseline": "BL-003",
+  "profile": "Release",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "src/server.js",
+    "tests"
+  ],
+  "read_paths": [
+    "src",
+    "tests"
+  ],
+  "write_paths": [
+    "src/server.js",
+    "tests"
+  ],
+  "out_of_scope": [
+    "public",
+    "AI task generation",
+    "authentication",
+    "cloud sync",
+    "mobile"
+  ],
+  "authoritative_documents": [
+    "REQ-V2-001",
+    "ARC-COMP-004",
+    "CR-002",
+    "ARC-OVERALL-002",
+    "DEC-002"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "Create exactly the approved 12 tables and 10 indexes with schema version 2 and migration checksum",
+    "Implement all 34 frozen API endpoints and stable errors without changing V1 API CSV or JSON formats",
+    "Migration backup idempotent reopen rollback and V1 reset or delete history semantics are regression tested",
+    "All automated tests and Release governance validation pass"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "npm.cmd",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface",
+    "data_model_or_migration"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-20T19:21:28.5628533Z",
+  "release_controls": {
+    "target_environment": "local dev branch",
+    "execution_window": "current approved V2 development session",
+    "rollback_plan": "stop the service, preserve the failed database, atomically restore the validated pre-v2 SQLite backup, then revert the task commit",
+    "observation_metrics": "test results, migration backups, schema checks, API contract counts, V1 regressions, reviewer evidence",
+    "stop_conditions": "scope drift, migration checksum mismatch, backup failure, API contract drift, failing validation, or unresolved reviewer finding",
+    "post_release_owner": "PROJECT_MANAGER 01a01ef6-d413-7660-bdc5-62bd5873cbf4"
+  }
+}
