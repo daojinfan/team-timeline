@@ -241,7 +241,13 @@ async function api(path, options = {}) {
   });
   const type = response.headers.get("content-type") || "";
   const payload = type.includes("application/json") ? await response.json() : await response.text();
-  if (!response.ok) throw new Error(payload.error || "请求失败");
+  if (!response.ok) {
+    const error = new Error(payload?.error || "请求失败");
+    error.code = payload?.code || "REQUEST_FAILED";
+    error.details = payload?.details || {};
+    error.status = response.status;
+    throw error;
+  }
   return payload;
 }
 
@@ -1474,7 +1480,10 @@ function filterMemberChoiceOptions() {
 
 function bindEvents() {
   $("#refreshBtn").addEventListener("click", (event) => runBusyAction("refresh", loadData, { control: event.currentTarget, busyText: "刷新中…" }));
-  $("#newTaskBtn").addEventListener("click", openTaskDialog);
+  $("#newTaskBtn").addEventListener("click", (event) => {
+    if (v2State.activeV2View === "assignment" && v2State.assignmentPlanId) return openV2AssignmentDialog(v2State.assignmentPlanId, event.currentTarget);
+    return openTaskDialog();
+  });
   $("#cancelTaskCreate").addEventListener("click", closeTaskDialog);
   $("#cancelTaskCreateTop")?.addEventListener("click", closeTaskDialog);
   $("#taskDialog")?.addEventListener("cancel", (event) => {
@@ -1921,6 +1930,12 @@ function bindEvents() {
   document.addEventListener("keydown", (event) => {
     if (event.key !== "Escape" || event.defaultPrevented) return;
     if (document.querySelector("dialog[open]")) return;
+    const planPane = $("#planDetailPane");
+    if (planPane && !planPane.hidden && planPane.classList.contains("is-open")) {
+      event.preventDefault();
+      closeV2PlanDetail();
+      return;
+    }
     const pane = $("#detailPane");
     if (!pane || pane.hidden || !pane.classList.contains("is-open")) return;
     event.preventDefault();
@@ -1928,10 +1943,1310 @@ function bindEvents() {
   });
 }
 
+// V2 is deliberately isolated from the V1 task workspace. It only coordinates
+// the approved additive APIs and frozen desktop DOM; V1 rendering remains the
+// owner of the execution and management subviews it already supports.
+const V2_PREFS_KEY = "teamTaskGantt.v2Prefs.v1";
+const v2PreferenceDefaults = {
+  activeV2View: "workbench",
+  executionView: "gantt",
+  managementView: "logs",
+  arrivalWindowDays: 7,
+  groupBy: "none",
+  search: "",
+  displayStatus: "",
+  sourceGroupId: "",
+  cryostatId: "",
+  primaryMemberId: "",
+  includeArchived: false
+};
+
+function readV2Preferences() {
+  try {
+    const raw = JSON.parse(window.localStorage.getItem(V2_PREFS_KEY) || "null");
+    if (!raw || typeof raw !== "object") return { ...v2PreferenceDefaults };
+    const next = { ...v2PreferenceDefaults };
+    if (["workbench", "plans", "assignment", "execution", "acceptance", "management"].includes(raw.activeV2View)) next.activeV2View = raw.activeV2View;
+    if (["gantt", "tasks", "load"].includes(raw.executionView)) next.executionView = raw.executionView;
+    if (["logs", "maintenance"].includes(raw.managementView)) next.managementView = raw.managementView;
+    if (Number.isInteger(Number(raw.arrivalWindowDays)) && Number(raw.arrivalWindowDays) >= 0 && Number(raw.arrivalWindowDays) <= 365) next.arrivalWindowDays = Number(raw.arrivalWindowDays);
+    if (["none", "source_group", "cryostat", "primary_member", "project_tag", "topic_tag"].includes(raw.groupBy)) next.groupBy = raw.groupBy;
+    for (const key of ["search", "displayStatus", "sourceGroupId", "cryostatId", "primaryMemberId"]) if (typeof raw[key] === "string") next[key] = raw[key];
+    if (typeof raw.includeArchived === "boolean") next.includeArchived = raw.includeArchived;
+    return next;
+  } catch {
+    return { ...v2PreferenceDefaults };
+  }
+}
+
+const v2State = {
+  ...readV2Preferences(),
+  sourceGroups: [],
+  contactsByGroup: new Map(),
+  cryostats: [],
+  plans: [],
+  allPlans: [],
+  planMeta: null,
+  status: null,
+  activePlanId: null,
+  activePlan: null,
+  assignmentPlanId: "",
+  acceptancePlanId: "",
+  submissionStatus: "",
+  planDraftItems: [],
+  planEditId: null,
+  planEditVersion: null,
+  etaPlan: null,
+  etaPreview: null,
+  cryostatPlan: null,
+  cryostatPreview: null,
+  assignmentPlan: null,
+  assignmentTaskId: null,
+  assignmentPreview: null,
+  submissionTask: null,
+  submissionPlan: null,
+  reviewSubmission: null,
+  resourceEdit: null,
+  busy: new Set(),
+  dialogReturnFocus: new Map(),
+  planDetailReturnFocus: null,
+  planDetailReturnSelector: "",
+  initialized: false
+};
+
+const v2StatusLabels = {
+  testing: "正在测试中",
+  delayed: "延期",
+  arriving_within_window: "规定时间内到来",
+  arriving_outside_window: "规定时间外到来",
+  time_pending: "时间待确认",
+  completed: "已完成",
+  unclassified: "已到样，尚未测试"
+};
+
+function saveV2Preferences() {
+  const value = {};
+  for (const key of Object.keys(v2PreferenceDefaults)) value[key] = v2State[key];
+  try {
+    window.localStorage.setItem(V2_PREFS_KEY, JSON.stringify(value));
+  } catch {
+    // Preferences are optional and never block work.
+  }
+}
+
+async function v2Api(path, options = {}) {
+  const response = await fetch(path, {
+    headers: { "content-type": "application/json" },
+    ...options
+  });
+  const type = response.headers.get("content-type") || "";
+  const payload = type.includes("application/json") ? await response.json() : await response.text();
+  if (!response.ok) {
+    const error = new Error(payload?.error || "请求失败");
+    error.code = payload?.code || "REQUEST_FAILED";
+    error.details = payload?.details || {};
+    error.status = response.status;
+    throw error;
+  }
+  return payload;
+}
+
+function v2ErrorText(error) {
+  const labels = {
+    STALE_PREVIEW: "数据已变化，请核对新的影响预览后再次确认。",
+    VERSION_CONFLICT: "计划已被其他操作更新，请刷新后重试。",
+    CONFLICT_ACK_REQUIRED: "存在冲突，请核对预览后明确确认。",
+    RESOURCE_INACTIVE: "所选资源已停用，请重新选择。",
+    CHECKLIST_TEMPLATE_STALE: "验收清单模板已更新，请重新打开后提交。",
+    SUBMISSION_PENDING: "该任务已有待验收成果。",
+    TASK_ALREADY_ACCEPTED: "该任务成果已经验收通过。"
+  };
+  return labels[error?.code] || error?.message || "操作失败";
+}
+
+function setV2FormError(id, message = "") {
+  const node = $(id);
+  if (!node) return;
+  node.textContent = message;
+  node.hidden = !message;
+}
+
+async function runV2Busy(key, action, { control = null, formError = "", busyText = "处理中…" } = {}) {
+  if (v2State.busy.has(key)) return false;
+  const button = control?.closest?.("button") || control;
+  const oldText = button?.textContent;
+  v2State.busy.add(key);
+  if (button) {
+    button.disabled = true;
+    if (busyText) button.textContent = busyText;
+  }
+  if (formError) setV2FormError(formError);
+  try {
+    await action();
+    return true;
+  } catch (error) {
+    const message = v2ErrorText(error);
+    if (formError) setV2FormError(formError, message);
+    else showToast(message, { type: "error" });
+    return false;
+  } finally {
+    v2State.busy.delete(key);
+    if (button?.isConnected) {
+      button.disabled = false;
+      if (oldText !== undefined) button.textContent = oldText;
+    }
+  }
+}
+
+function v2Json(method, body) {
+  return { method, body: JSON.stringify(body) };
+}
+
+function nullableId(value) {
+  return value === "" || value === null || value === undefined ? null : Number(value);
+}
+
+function nullableText(value) {
+  const text = String(value ?? "").trim();
+  return text || null;
+}
+
+function actorValue(value) {
+  return String(value ?? "").trim() || "本地用户";
+}
+
+function v2Option(value, label, selected = false, disabled = false) {
+  return `<option value="${escapeHtml(value)}"${selected ? " selected" : ""}${disabled ? " disabled" : ""}>${escapeHtml(label)}</option>`;
+}
+
+function v2ConflictCodes(conflicts = []) {
+  return [...new Set(conflicts.map((item) => item.code).filter(Boolean))].sort();
+}
+
+function v2ConflictHtml(conflicts = []) {
+  if (!conflicts.length) return '<p>未发现日期、负载或制冷机冲突。</p>';
+  return `<ul>${conflicts.map((item) => {
+    const dates = item.date_range ? `${item.date_range.start_date}～${item.date_range.end_date}` : "";
+    return `<li><strong>${escapeHtml(item.code)}</strong> ${escapeHtml(dates)}${item.member_ids?.length ? ` · 成员 ${escapeHtml(item.member_ids.join(", "))}` : ""}${item.plan_ids?.length ? ` · 计划 ${escapeHtml(item.plan_ids.join(", "))}` : ""}</li>`;
+  }).join("")}</ul>`;
+}
+
+function setV2View(view, focusTab = false) {
+  if (!["workbench", "plans", "assignment", "execution", "acceptance", "management"].includes(view)) return;
+  v2State.activeV2View = view;
+  $$('[data-v2-view]').forEach((tab) => {
+    const active = tab.dataset.v2View === view;
+    tab.classList.toggle("active", active);
+    tab.setAttribute("aria-selected", String(active));
+    tab.tabIndex = active ? 0 : -1;
+  });
+  $$('[data-v2-toolbar-view]').forEach((toolbar) => { toolbar.hidden = toolbar.dataset.v2ToolbarView !== view; });
+  $$('[data-v2-panel]').forEach((panel) => {
+    const active = panel.dataset.v2Panel === view;
+    panel.classList.toggle("active", active);
+    panel.hidden = !active;
+  });
+  const newTask = $("#newTaskBtn");
+  if (newTask) newTask.hidden = !["assignment", "execution"].includes(view);
+  if (view === "execution") {
+    state.activeView = v2State.executionView;
+    saveDesktopPreferences();
+    renderViewState();
+    renderSelection();
+  } else if (view === "management") {
+    state.activeView = v2State.managementView;
+    saveDesktopPreferences();
+    renderViewState();
+  }
+  updateV2DocumentTitle();
+  saveV2Preferences();
+  if (focusTab) $("[data-v2-view].active")?.focus();
+  if (view === "acceptance") loadV2Submissions().catch((error) => showToast(v2ErrorText(error), { type: "error" }));
+}
+
+function updateV2DocumentTitle() {
+  document.title = `${$("[data-v2-view].active")?.textContent?.trim() || "工作台"} · 小组任务管理与甘特图系统`;
+}
+
+function syncV2Controls() {
+  $("#planSearchInput").value = v2State.search;
+  $("#planStatusFilter").value = v2State.displayStatus;
+  $("#planSourceFilter").value = v2State.sourceGroupId;
+  $("#planCryostatFilter").value = v2State.cryostatId;
+  $("#planOwnerFilter").value = v2State.primaryMemberId;
+  $("#planGroupBy").value = v2State.groupBy;
+  $("#arrivalWindowDays").value = String(v2State.arrivalWindowDays);
+  $("#planIncludeArchived").checked = v2State.includeArchived;
+}
+
+function renderV2ResourceOptions() {
+  const activeGroups = v2State.sourceGroups.filter((item) => item.is_active);
+  const activeCryostats = v2State.cryostats.filter((item) => item.status === "active");
+  const currentValues = {
+    planSourceFilter: v2State.sourceGroupId,
+    planCryostatFilter: v2State.cryostatId,
+    planOwnerFilter: v2State.primaryMemberId,
+    planSourceGroup: $("#planSourceGroup")?.value || "",
+    planCryostat: $("#planCryostat")?.value || "",
+    cryostatChangeSelect: $("#cryostatChangeSelect")?.value || "",
+    resourceSourceGroup: $("#resourceSourceGroup")?.value || ""
+  };
+  $("#planSourceFilter").innerHTML = v2Option("", "全部来源") + v2State.sourceGroups.map((item) => v2Option(item.id, item.name, String(item.id) === currentValues.planSourceFilter)).join("");
+  $("#planCryostatFilter").innerHTML = v2Option("", "全部设备") + v2State.cryostats.map((item) => v2Option(item.id, item.name, String(item.id) === currentValues.planCryostatFilter)).join("");
+  $("#planOwnerFilter").innerHTML = v2Option("", "全部负责人") + state.members.filter((item) => item.status === "active").map((item) => v2Option(item.id, item.name, String(item.id) === currentValues.planOwnerFilter)).join("");
+  $("#planSourceGroup").innerHTML = v2Option("", "请选择来源小组") + activeGroups.map((item) => v2Option(item.id, item.name, String(item.id) === currentValues.planSourceGroup)).join("");
+  $("#planCryostat").innerHTML = v2Option("", "请选择制冷机") + activeCryostats.map((item) => v2Option(item.id, item.name, String(item.id) === currentValues.planCryostat)).join("");
+  $("#cryostatChangeSelect").innerHTML = v2Option("", "请选择制冷机") + activeCryostats.map((item) => v2Option(item.id, item.name, String(item.id) === currentValues.cryostatChangeSelect)).join("");
+  $("#resourceSourceGroup").innerHTML = v2Option("", "请选择来源小组") + activeGroups.map((item) => v2Option(item.id, item.name, String(item.id) === currentValues.resourceSourceGroup)).join("");
+  syncV2Controls();
+}
+
+function v2PlanParams() {
+  const params = new URLSearchParams({
+    window_days: String(v2State.arrivalWindowDays),
+    group_by: v2State.groupBy,
+    include_archived: v2State.includeArchived ? "1" : "0",
+    limit: "200",
+    sort: "eta_asc"
+  });
+  if (v2State.search) params.set("search", v2State.search);
+  if (v2State.displayStatus) params.set("display_status", v2State.displayStatus);
+  if (v2State.sourceGroupId) params.set("source_group_id", v2State.sourceGroupId);
+  if (v2State.cryostatId) params.set("cryostat_id", v2State.cryostatId);
+  if (v2State.primaryMemberId) params.set("primary_member_id", v2State.primaryMemberId);
+  return params;
+}
+
+function v2HasPlanFilters() {
+  return Boolean(v2State.search || v2State.displayStatus || v2State.sourceGroupId || v2State.cryostatId || v2State.primaryMemberId || v2State.includeArchived);
+}
+
+function v2StatusChip(plan) {
+  const status = plan.display_status || "unclassified";
+  const label = v2StatusLabels[status];
+  return `<span class="v2-status-chip" data-status="${escapeHtml(status)}">${escapeHtml(label)}</span>`;
+}
+
+function v2PlanRow(plan) {
+  const eta = plan.eta_pending ? "到样时间待确认" : `预计到样 ${plan.current_eta_date || "—"}`;
+  const cryostat = plan.cryostat_pending ? "制冷机待定" : (plan.cryostat?.name || "未设置制冷机");
+  const archived = plan.archived ? " · 已归档" : "";
+  return `<article class="v2-plan-row" data-plan-row="${plan.id}">
+    <div><strong>${escapeHtml(plan.name)}</strong> ${v2StatusChip(plan)}</div>
+    <p>${escapeHtml(plan.source_group?.name || "未知来源")} · 型号 ${escapeHtml(plan.sample_model)}${plan.sample_identifier ? ` · 编号 ${escapeHtml(plan.sample_identifier)}` : ""}</p>
+    <p>${escapeHtml(eta)} · ${escapeHtml(cryostat)}${plan.eta_drift_days ? ` · 漂移 ${escapeHtml(plan.eta_drift_days)} 天` : ""}${archived}</p>
+    <button class="ghost-button" type="button" data-open-plan-detail="${plan.id}" data-plan-id="${plan.id}">查看详情</button>
+  </article>`;
+}
+
+function renderV2Plans() {
+  const stats = v2State.planMeta?.stats || {};
+  const statKeys = {
+    testing: "testing", delayed: "delayed", arriving_within_window: "within",
+    arriving_outside_window: "outside", time_pending: "pending", completed: "completed"
+  };
+  $$("#planStats [data-plan-status]").forEach((card) => {
+    card.querySelector("strong").textContent = String(stats[statKeys[card.dataset.planStatus]] ?? 0);
+    card.classList.toggle("active", v2State.displayStatus === card.dataset.planStatus);
+  });
+  const windowNote = $("#planStats [data-plan-status='arriving_within_window'] small");
+  if (windowNote) windowNote.textContent = `未来 ${v2State.arrivalWindowDays} 天`;
+  $("#planResultCount").textContent = `${v2State.planMeta?.total ?? v2State.plans.length} 个计划`;
+  let html = "";
+  const groups = v2State.groupBy === "none" ? [] : (v2State.planMeta?.groups || []);
+  let groupIndex = 0;
+  let remainingInGroup = 0;
+  for (const plan of v2State.plans) {
+    if (groups.length && remainingInGroup === 0) {
+      const group = groups[groupIndex++];
+      remainingInGroup = group?.count || 0;
+      html += `<h3 class="v2-group-heading">${escapeHtml(group?.label || "未设置")}</h3>`;
+    }
+    html += v2PlanRow(plan);
+    if (remainingInGroup > 0) remainingInGroup -= 1;
+  }
+  if (!html) {
+    const template = $(v2HasPlanFilters() ? "#planFilterEmptyStateTemplate" : "#planTrueEmptyStateTemplate");
+    html = template?.innerHTML || '<div class="v2-empty-state"><h3>没有计划</h3></div>';
+  }
+  $("#planOverviewList").innerHTML = html;
+  $("#planList").innerHTML = html;
+  renderV2PlanSelectors();
+}
+
+function renderV2PlanSelectors() {
+  const plans = v2State.allPlans.filter((plan) => !plan.archived);
+  const assignment = v2State.assignmentPlanId;
+  const acceptance = v2State.acceptancePlanId;
+  $("#assignmentPlanFilter").innerHTML = v2Option("", "请选择计划") + plans.map((plan) => v2Option(plan.id, plan.name, String(plan.id) === String(assignment))).join("");
+  $("#acceptancePlanFilter").innerHTML = v2Option("", "全部计划") + plans.map((plan) => v2Option(plan.id, plan.name, String(plan.id) === String(acceptance))).join("");
+  $("#openAssignmentBtn").disabled = !v2State.assignmentPlanId;
+}
+
+async function loadV2Resources() {
+  const [groups, cryostats, status] = await Promise.all([
+    v2Api("/api/v2/source-groups?include_inactive=1&limit=200&sort=name_asc"),
+    v2Api("/api/v2/cryostats?include_inactive=1&limit=200&sort=name_asc"),
+    v2Api("/api/v2/status")
+  ]);
+  v2State.sourceGroups = groups.data;
+  v2State.cryostats = cryostats.data;
+  v2State.status = status.data;
+  const contactResults = await Promise.all(v2State.sourceGroups.map(async (group) => {
+    const result = await v2Api(`/api/v2/source-groups/${group.id}/contacts?include_inactive=1&limit=200&sort=name_asc`);
+    return [group.id, result.data];
+  }));
+  v2State.contactsByGroup = new Map(contactResults);
+  renderV2ResourceOptions();
+  renderV2ResourceAdmin();
+}
+
+async function loadV2Plans() {
+  const allParams = new URLSearchParams({ window_days: String(v2State.arrivalWindowDays), include_archived: "0", limit: "200", sort: "name_asc" });
+  const [result, all] = await Promise.all([
+    v2Api(`/api/v2/plans?${v2PlanParams()}`),
+    v2Api(`/api/v2/plans?${allParams}`)
+  ]);
+  v2State.plans = result.data;
+  v2State.allPlans = all.data;
+  v2State.planMeta = result.meta;
+  renderV2Plans();
+}
+
+async function loadV2Workspace() {
+  await Promise.all([loadV2Resources(), loadV2Plans()]);
+  v2State.initialized = true;
+  if (v2State.assignmentPlanId && v2State.plans.some((plan) => String(plan.id) === String(v2State.assignmentPlanId))) await loadV2AssignmentPlan(v2State.assignmentPlanId);
+  if (v2State.activeV2View === "acceptance") await loadV2Submissions();
+  updateV2DocumentTitle();
+}
+
+function renderV2ResourceAdmin() {
+  const source = $("#sourceGroupAdmin");
+  if (source) source.innerHTML = `
+    <span class="eyebrow">业务来源</span><h2>来源小组与联系人</h2>
+    <p>停用资源保留历史引用；联系人按来源小组维护。</p>
+    <div class="v2-detail-list">${v2State.sourceGroups.map((group) => {
+      const contacts = v2State.contactsByGroup.get(group.id) || [];
+      return `<div><strong>${escapeHtml(group.name)}</strong>${group.is_active ? "" : "（已停用）"}
+        <div>${contacts.map((contact) => `<span>${escapeHtml(contact.name)}${contact.title ? ` · ${escapeHtml(contact.title)}` : ""}${contact.is_active ? "" : "（已停用）"} <button class="small-button" type="button" data-edit-resource="source_contact" data-resource-id="${contact.id}" data-source-group-id="${group.id}">编辑</button></span>`).join("<br>") || "暂无联系人"}</div>
+        <div class="form-actions"><button class="small-button" type="button" data-edit-resource="source_group" data-resource-id="${group.id}">编辑小组</button><button class="small-button" type="button" data-open-resource-dialog="source_contact" data-source-group-id="${group.id}">新增联系人</button></div>
+      </div>`;
+    }).join("") || "<div>尚未维护来源小组</div>"}</div>
+    <button class="ghost-button" type="button" data-open-resource-dialog="source_group">新增来源小组</button>`;
+  const cryostat = $("#cryostatAdmin");
+  if (cryostat) cryostat.innerHTML = `
+    <span class="eyebrow">设备资源</span><h2>制冷机</h2><p>停用不会删除既有计划历史。</p>
+    <div class="v2-detail-list">${v2State.cryostats.map((item) => `<div><strong>${escapeHtml(item.name)}</strong> · ${item.status === "active" ? "启用" : "停用"}<br><span>${escapeHtml(item.note || "无备注")}</span> <button class="small-button" type="button" data-edit-resource="cryostat" data-resource-id="${item.id}">编辑</button></div>`).join("") || "<div>尚未维护制冷机</div>"}</div>
+    <button class="ghost-button" type="button" data-open-resource-dialog="cryostat">新增制冷机</button>`;
+  const status = $("#migrationStatus");
+  if (status) status.innerHTML = `<span class="eyebrow">数据状态</span><h2>迁移与备份</h2><p>Schema v${escapeHtml(v2State.status?.schema_version ?? "—")} · ${escapeHtml(v2State.status?.quick_check || "未读取")} · 外键异常 ${escapeHtml(v2State.status?.foreign_key_violations ?? "—")}</p><a class="ghost-link" href="/api/v2/backup">读取 V2 JSON 备份</a>`;
+}
+
+function rememberV2PlanTrigger(trigger, planId) {
+  v2State.planDetailReturnFocus = trigger instanceof HTMLElement ? trigger : document.activeElement;
+  v2State.planDetailReturnSelector = `[data-open-plan-detail][data-plan-id="${planId}"]`;
+}
+
+function restoreV2Focus(element, selector = "") {
+  window.requestAnimationFrame(() => {
+    const visible = (node) => node?.isConnected && !node.hidden && !node.closest("[hidden]");
+    const fallback = selector ? $$(selector).find(visible) : null;
+    const panel = $(`[data-v2-panel="${v2State.activeV2View}"]`);
+    const firstControl = panel ? [...panel.querySelectorAll("button, input, select, textarea, a[href]")].find(visible) : null;
+    const target = visible(element) ? element : fallback || firstControl || $("[data-v2-view].active") || $("#newPlanBtn");
+    target?.focus();
+  });
+}
+
+function closeV2PlanDetail({ restoreFocus = true } = {}) {
+  const pane = $("#planDetailPane");
+  if (!pane || pane.hidden) return;
+  pane.classList.remove("is-open");
+  pane.hidden = true;
+  v2State.activePlanId = null;
+  v2State.activePlan = null;
+  const trigger = v2State.planDetailReturnFocus;
+  const selector = v2State.planDetailReturnSelector;
+  v2State.planDetailReturnFocus = null;
+  v2State.planDetailReturnSelector = "";
+  renderV2Plans();
+  if (restoreFocus) restoreV2Focus(trigger, selector);
+}
+
+function renderV2TestItem(item, plan) {
+  return `<div><strong>${escapeHtml(item.title)}</strong> · ${item.is_required ? "必测" : "可选"}<p>${escapeHtml(item.acceptance_criteria || "未设置验收标准")}</p>${!item.archived ? `<button class="small-button" type="button" data-edit-test-item="${item.id}" data-plan-id="${plan.id}">编辑</button>` : "（已归档）"}</div>`;
+}
+
+function renderV2Task(task, plan) {
+  const primary = task.primary_member?.name || "未设置";
+  const collaborators = task.collaborators?.map((item) => item.name).join("、") || "无";
+  const latest = plan.latest_submissions?.find((item) => item.task_lineage_key === task.task_lineage_key);
+  return `<div><strong>${escapeHtml(task.title)}</strong> · ${escapeHtml(statusLabels[task.status] || task.status)}
+    <p>${escapeHtml(task.default_start_date)}～${escapeHtml(task.default_end_date)} · 主责 ${escapeHtml(primary)} · 协作 ${escapeHtml(collaborators)} · ${escapeHtml(task.estimated_hours)}h${task.after_arrival ? " · 到样后" : ""}</p>
+    <div class="form-actions"><button class="small-button" type="button" data-edit-plan-task="${task.id}" data-plan-id="${plan.id}">编辑分配</button>${!task.deleted_at && latest?.status !== "accepted" && latest?.status !== "submitted" ? `<button class="small-button" type="button" data-open-submission="${task.id}" data-plan-id="${plan.id}">提交成果</button>` : ""}</div>
+    ${latest ? `<p>最新成果：${escapeHtml(latest.status)} #${latest.sequence}</p>` : ""}
+  </div>`;
+}
+
+function renderV2SubmissionCard(submission, planName = "") {
+  const safeLink = submission.resource_kind === "url" && /^https?:\/\//i.test(submission.resource_value)
+    ? `<a href="${escapeHtml(submission.resource_value)}" target="_blank" rel="noopener noreferrer">打开成果 URL</a>`
+    : `<span>${escapeHtml(submission.resource_value)}</span>`;
+  return `<article class="v2-plan-row" data-submission-id="${submission.id}">
+    <div><strong>${escapeHtml(submission.task_title_snapshot)}</strong> · ${escapeHtml(planName)} · ${escapeHtml(submission.status)}</div>
+    <p>${escapeHtml(submission.description)} · 提交人 ${escapeHtml(submission.submitter_label)} · ${escapeHtml(submission.submitted_at)}</p>
+    <p>${safeLink}</p>
+    ${submission.status === "submitted" && submission.task_id !== null ? `<button class="ghost-button" type="button" data-open-review="${submission.id}">人工验收</button>` : ""}
+  </article>`;
+}
+
+function renderV2PlanDetail(plan) {
+  const pane = $("#planDetailPane");
+  $("#planDetailTitle").textContent = plan.name;
+  const status = plan.display_status ? v2StatusLabels[plan.display_status] : "已到样，尚未测试（主状态空白）";
+  const template = plan.acceptance_template;
+  $("#planDetailContent").innerHTML = `
+    <section><h3>计划信息</h3><div class="v2-detail-list"><div><strong>${escapeHtml(plan.name)}</strong> ${v2StatusChip(plan)}<p>${escapeHtml(plan.purpose)}</p><p>来源 ${escapeHtml(plan.source_group.name)} · 对方 ${escapeHtml(plan.counterpart_contact?.name || "未填写")} · 我方 ${escapeHtml(plan.local_liaison_name || "未填写")}</p><p>型号 ${escapeHtml(plan.sample_model)} · 编号 ${escapeHtml(plan.sample_identifier || "未补录")} · 状态 ${escapeHtml(status)}</p><p>预计到样 ${escapeHtml(plan.eta_pending ? "待确认" : plan.current_eta_date || "—")} · 实际到样 ${escapeHtml(plan.actual_arrival_date || "未到样")} · 制冷机 ${escapeHtml(plan.cryostat_pending ? "待定" : plan.cryostat?.name || "—")}</p></div></div></section>
+    <div class="form-actions">
+      <button class="small-button" type="button" data-edit-plan="${plan.id}">编辑计划</button>
+      <button class="small-button" type="button" data-open-eta-change="${plan.id}">修订到样</button>
+      <button class="small-button" type="button" data-open-cryostat-change="${plan.id}">修订制冷机</button>
+      <button class="small-button" type="button" data-confirm-arrival="${plan.id}">记录实际到样</button>
+      <button class="small-button" type="button" data-toggle-plan-archive="${plan.id}" data-restore="${plan.archived ? "1" : "0"}">${plan.archived ? "恢复计划" : "归档计划"}</button>
+    </div>
+    <section><h3>结构化测试项</h3><div id="testItemList" class="v2-detail-list">${plan.test_items.map((item) => renderV2TestItem(item, plan)).join("") || "<div>暂无测试项</div>"}</div><button class="small-button" type="button" data-add-test-item="${plan.id}">新增测试项</button></section>
+    <section><h3>人员任务</h3><div class="v2-detail-list">${plan.plan_tasks.map((task) => renderV2Task(task, plan)).join("") || "<div>尚未人工创建任务</div>"}</div><button class="small-button" type="button" data-open-assignment-dialog data-plan-id="${plan.id}">人工创建任务</button></section>
+    <section><h3>验收模板</h3><div class="v2-detail-list"><div><strong>${escapeHtml(template?.name || "未设置")}</strong><p>${template?.items?.map((item) => escapeHtml(item.label)).join("；") || "暂无清单项"}</p><button class="small-button" type="button" data-edit-acceptance-template="${plan.id}">维护模板</button></div></div></section>
+    <section><h3>最新成果</h3><div class="v2-detail-list">${plan.latest_submissions.map((item) => renderV2SubmissionCard(item, plan.name)).join("") || "<div>暂无成果提交</div>"}</div></section>
+    <section><h3>确认与变更历史</h3><div id="planHistoryList" class="v2-detail-list">${plan.events.map((event) => `<div><strong>${escapeHtml(event.event_type)}</strong> · ${escapeHtml(event.actor_label)}<p>${escapeHtml(event.created_at)}</p></div>`).join("") || "<div>暂无历史</div>"}</div></section>`;
+  pane.hidden = false;
+  pane.classList.add("is-open");
+}
+
+async function openV2PlanDetail(planId, trigger = null) {
+  rememberV2PlanTrigger(trigger, planId);
+  const [result, events] = await Promise.all([
+    v2Api(`/api/v2/plans/${planId}`),
+    v2Api(`/api/v2/plans/${planId}/events?limit=50&sort=id_desc`)
+  ]);
+  result.data.events = events.data;
+  v2State.activePlanId = Number(planId);
+  v2State.activePlan = result.data;
+  renderV2PlanDetail(result.data);
+  window.requestAnimationFrame(() => $("#closePlanDetailBtn")?.focus());
+}
+
+function openV2Dialog(id, trigger, focusSelector) {
+  const dialog = $(id);
+  if (!dialog) return;
+  v2State.dialogReturnFocus.set(id, trigger instanceof HTMLElement ? trigger : document.activeElement);
+  if (!dialog.open) dialog.showModal();
+  window.requestAnimationFrame(() => dialog.querySelector(focusSelector)?.focus());
+}
+
+function closeV2Dialog(id, { restoreFocus = true } = {}) {
+  const dialog = $(id);
+  if (!dialog?.open) return;
+  dialog.close();
+  const trigger = v2State.dialogReturnFocus.get(id);
+  v2State.dialogReturnFocus.delete(id);
+  if (restoreFocus) restoreV2Focus(trigger);
+}
+
+async function fillV2Contacts(groupId, selected = "") {
+  const contacts = v2State.contactsByGroup.get(Number(groupId)) || [];
+  $("#planCounterpartContact").innerHTML = v2Option("", "稍后补充") + contacts.filter((item) => item.is_active || String(item.id) === String(selected)).map((item) => v2Option(item.id, `${item.name}${item.title ? ` · ${item.title}` : ""}`, String(item.id) === String(selected), !item.is_active)).join("");
+}
+
+function renderV2PlanDraftItems() {
+  $("#planTestItemDrafts").innerHTML = v2State.planDraftItems.map((item, index) => `<div><strong>${escapeHtml(item.title)}</strong> · ${item.is_required ? "必测" : "可选"}<p>${escapeHtml(item.acceptance_criteria || "未设置验收标准")}</p><button class="small-button" type="button" data-remove-plan-draft="${index}">移除</button></div>`).join("") || "<div>至少添加一个测试项。</div>";
+}
+
+async function openV2PlanDialog(plan = null, trigger = null) {
+  const form = $("#planForm");
+  form.reset();
+  setV2FormError("#planFormError");
+  v2State.planEditId = plan?.id || null;
+  v2State.planEditVersion = plan?.version || null;
+  v2State.planDraftItems = plan?.test_items?.map((item) => ({
+    title: item.title,
+    description: item.description || "",
+    acceptance_criteria: item.acceptance_criteria || "",
+    is_required: Boolean(item.is_required),
+    position: item.position
+  })) || [];
+  $("#planDialogTitle").textContent = plan ? "编辑测控计划" : "新建测控计划";
+  $("#planEtaPending").disabled = Boolean(plan);
+  $("#planCryostatPending").disabled = Boolean(plan);
+  $("#planEtaDate").disabled = Boolean(plan);
+  $("#planCryostat").disabled = Boolean(plan);
+  $("#planSourceGroup").value = plan ? String(plan.source_group.id) : "";
+  await fillV2Contacts(plan?.source_group?.id || "", plan?.counterpart_contact?.id || "");
+  if (plan) {
+    $("#planName").value = plan.name;
+    $("#planPurpose").value = plan.purpose;
+    $("#planSampleModel").value = plan.sample_model;
+    $("#planEtaDate").value = plan.current_eta_date || "";
+    $("#planEtaPending").checked = plan.eta_pending;
+    $("#planCryostat").value = plan.cryostat?.id ? String(plan.cryostat.id) : "";
+    $("#planCryostatPending").checked = plan.cryostat_pending;
+    $("#planLocalLiaison").value = plan.local_liaison_name || "";
+    $("#planSampleIdentifier").value = plan.sample_identifier || "";
+    $("#planIdentifierKind").value = plan.identifier_kind || "";
+    $("#planProjectTag").value = plan.project_tag || "";
+    $("#planTopicTag").value = plan.topic_tag || "";
+  }
+  $("#planTestItemEditor").hidden = Boolean(plan);
+  $("#planTestItemDrafts").hidden = Boolean(plan);
+  renderV2PlanDraftItems();
+  openV2Dialog("#planDialog", trigger, "#planName");
+}
+
+function addV2PlanDraft() {
+  const title = $("#planTestItemEditor [name='test_item_title']").value.trim();
+  if (!title) return setV2FormError("#planFormError", "请填写测试项名称。");
+  v2State.planDraftItems.push({
+    title,
+    description: "",
+    acceptance_criteria: $("#planTestItemEditor [name='test_item_acceptance_criteria']").value.trim(),
+    is_required: $("#planTestItemEditor [name='test_item_required']").checked,
+    position: v2State.planDraftItems.length
+  });
+  $("#planTestItemEditor [name='test_item_title']").value = "";
+  $("#planTestItemEditor [name='test_item_acceptance_criteria']").value = "";
+  renderV2PlanDraftItems();
+  setV2FormError("#planFormError");
+}
+
+function v2PlanFormPayload() {
+  const identifier = nullableText($("#planSampleIdentifier").value);
+  const base = {
+    source_group_id: Number($("#planSourceGroup").value),
+    counterpart_contact_id: nullableId($("#planCounterpartContact").value),
+    local_liaison_name: $("#planLocalLiaison").value.trim(),
+    name: $("#planName").value.trim(),
+    purpose: $("#planPurpose").value.trim(),
+    sample_model: $("#planSampleModel").value.trim(),
+    sample_identifier: identifier,
+    identifier_kind: identifier ? ($("#planIdentifierKind").value || null) : null,
+    project_tag: nullableText($("#planProjectTag").value),
+    topic_tag: nullableText($("#planTopicTag").value),
+    actor_label: "本地用户"
+  };
+  if (v2State.planEditId) return { ...base, expected_version: v2State.planEditVersion };
+  return {
+    ...base,
+    current_eta_date: $("#planEtaPending").checked ? null : ($("#planEtaDate").value || null),
+    eta_pending: $("#planEtaPending").checked,
+    cryostat_id: $("#planCryostatPending").checked ? null : nullableId($("#planCryostat").value),
+    cryostat_pending: $("#planCryostatPending").checked,
+    test_items: v2State.planDraftItems.map((item, position) => ({ ...item, position })),
+    acceptance_template: { name: "计划验收清单", items: [{ label: "结果引用可访问且说明完整", position: 0 }] }
+  };
+}
+
+async function saveV2Plan(event) {
+  event.preventDefault();
+  if (!v2State.planEditId && !v2State.planDraftItems.length) return setV2FormError("#planFormError", "至少添加一个结构化测试项。");
+  await runV2Busy("save-plan", async () => {
+    const payload = v2PlanFormPayload();
+    const path = v2State.planEditId ? `/api/v2/plans/${v2State.planEditId}` : "/api/v2/plans";
+    const method = v2State.planEditId ? "PUT" : "POST";
+    const result = await v2Api(path, v2Json(method, payload));
+    closeV2Dialog("#planDialog");
+    showToast(v2State.planEditId ? "计划已更新" : "计划已创建");
+    await loadV2Plans();
+    if (v2State.activePlanId === result.data.id) await openV2PlanDetail(result.data.id, v2State.planDetailReturnFocus);
+  }, { control: $("#savePlanBtn"), formError: "#planFormError", busyText: "正在保存…" });
+}
+
+function openV2ResourceDialog(kind, trigger, { id = null, sourceGroupId = null } = {}) {
+  const aliases = { "source-group": "source_group", "source-contact": "source_contact" };
+  kind = aliases[kind] || kind;
+  $("#resourceForm").reset();
+  setV2FormError("#resourceFormError");
+  let item = null;
+  if (kind === "source_group") item = v2State.sourceGroups.find((row) => row.id === Number(id));
+  if (kind === "cryostat") item = v2State.cryostats.find((row) => row.id === Number(id));
+  if (kind === "source_contact") item = [...v2State.contactsByGroup.values()].flat().find((row) => row.id === Number(id));
+  v2State.resourceEdit = { kind, id: item?.id || null, sourceGroupId: Number(sourceGroupId || item?.source_group_id || 0) || null, item };
+  $("#resourceType").value = kind;
+  $("#resourceType").disabled = Boolean(item) || kind === "source_contact";
+  $("#resourceName").value = item?.name || "";
+  $("#resourceSourceGroup").value = v2State.resourceEdit.sourceGroupId ? String(v2State.resourceEdit.sourceGroupId) : "";
+  $("#resourceTitle").value = item?.title || "";
+  $("#resourceContactText").value = item?.contact_text || "";
+  $("#resourceNote").value = item?.note || "";
+  $("#resourceIsActive").checked = kind === "cryostat" ? item?.status !== "inactive" : item?.is_active !== false;
+  syncV2ResourceFields();
+  $("#resourceDialogTitle").textContent = `${item ? "编辑" : "新增"}${kind === "source_group" ? "来源小组" : kind === "source_contact" ? "来源联系人" : "制冷机"}`;
+  openV2Dialog("#resourceDialog", trigger, "#resourceName");
+}
+
+function syncV2ResourceFields() {
+  const kind = $("#resourceType").value;
+  $("#resourceSourceGroup").closest("label").hidden = kind !== "source_contact";
+  $("#resourceTitle").closest("label").hidden = kind !== "source_contact";
+  $("#resourceContactText").closest("label").hidden = kind !== "source_contact";
+  $("#resourceNote").closest("label").hidden = kind === "source_contact";
+  $("#resourceIsActive").closest("label").hidden = !v2State.resourceEdit?.item;
+}
+
+async function saveV2Resource(event) {
+  event.preventDefault();
+  await runV2Busy("save-resource", async () => {
+    const edit = v2State.resourceEdit || { kind: $("#resourceType").value };
+    const kind = edit.kind;
+    const name = $("#resourceName").value.trim();
+    let path;
+    let method;
+    let payload;
+    if (kind === "source_group") {
+      path = edit.id ? `/api/v2/source-groups/${edit.id}` : "/api/v2/source-groups";
+      method = edit.id ? "PUT" : "POST";
+      payload = { name, note: $("#resourceNote").value.trim() };
+      if (edit.id) Object.assign(payload, { is_active: $("#resourceIsActive").checked, expected_updated_at: edit.item.updated_at });
+    } else if (kind === "source_contact") {
+      const groupId = edit.sourceGroupId || Number($("#resourceSourceGroup").value);
+      path = edit.id ? `/api/v2/source-contacts/${edit.id}` : `/api/v2/source-groups/${groupId}/contacts`;
+      method = edit.id ? "PUT" : "POST";
+      payload = { name, title: $("#resourceTitle").value.trim(), contact_text: $("#resourceContactText").value.trim() };
+      if (edit.id) Object.assign(payload, { is_active: $("#resourceIsActive").checked, expected_updated_at: edit.item.updated_at });
+    } else {
+      path = edit.id ? `/api/v2/cryostats/${edit.id}` : "/api/v2/cryostats";
+      method = edit.id ? "PUT" : "POST";
+      payload = { name, note: $("#resourceNote").value.trim() };
+      if (edit.id) Object.assign(payload, { status: $("#resourceIsActive").checked ? "active" : "inactive", expected_updated_at: edit.item.updated_at });
+    }
+    await v2Api(path, v2Json(method, payload));
+    closeV2Dialog("#resourceDialog");
+    showToast("资源已保存");
+    await Promise.all([loadV2Resources(), loadV2Plans()]);
+  }, { control: $("#saveResourceBtn"), formError: "#resourceFormError", busyText: "正在保存…" });
+}
+
+async function openV2EtaDialog(planId, trigger) {
+  const result = await v2Api(`/api/v2/plans/${planId}`);
+  v2State.etaPlan = result.data;
+  v2State.etaPreview = null;
+  $("#etaChangeForm").reset();
+  $("#etaChangeDate").value = result.data.current_eta_date || "";
+  $("#etaChangePending").checked = result.data.eta_pending;
+  $("#etaActorLabel").value = "";
+  $("#etaImpactPreview").innerHTML = '<h3>影响预览</h3><p>默认不移动任务；填写后先预览。</p>';
+  $("#etaCandidateTasks").innerHTML = "";
+  $("#etaProtectedTasks").innerHTML = "";
+  setV2FormError("#etaChangeFormError");
+  openV2Dialog("#etaChangeDialog", trigger, "#etaChangeDate");
+  await previewV2Eta([]);
+}
+
+function v2EtaInput(selectedTaskIds = null) {
+  const selected = selectedTaskIds || $$("#etaCandidateTasks [data-eta-task]").filter((input) => input.checked).map((input) => Number(input.dataset.etaTask));
+  return {
+    new_eta_date: $("#etaChangePending").checked ? null : ($("#etaChangeDate").value || null),
+    eta_pending: $("#etaChangePending").checked,
+    selected_task_ids: [...new Set(selected)].sort((a, b) => a - b),
+    actor_label: actorValue($("#etaActorLabel").value),
+    expected_version: v2State.etaPlan.version
+  };
+}
+
+function renderV2EtaPreview(preview, notice = "") {
+  $("#etaImpactPreview").innerHTML = `<h3>影响预览</h3>${notice ? `<p><strong>${escapeHtml(notice)}</strong></p>` : ""}<p>原预计 ${escapeHtml(preview.old_eta.current_eta_date || "待确认")} · 漂移 ${escapeHtml(preview.delta_days ?? "—")} 天 · 已选择 ${preview.normalized_input.selected_task_ids.length} 项</p>${v2ConflictHtml(preview.conflicts)}`;
+  $("#etaCandidateTasks").innerHTML = preview.eligible_tasks.map((task) => `<label><input type="checkbox" data-eta-task="${task.task_id}"${task.selected ? " checked" : ""}> <span>${escapeHtml(task.title)}：${escapeHtml(task.old_start_date)}～${escapeHtml(task.old_end_date)} → ${escapeHtml(task.new_start_date)}～${escapeHtml(task.new_end_date)}</span></label>`).join("") || "<p>没有符合条件的未开始到样后任务。</p>";
+  $("#etaProtectedTasks").innerHTML = preview.protected_tasks.map((task) => `<div><strong>${escapeHtml(task.title)}</strong> · ${escapeHtml(task.reason)}</div>`).join("") || "<div>没有受保护任务。</div>";
+}
+
+async function previewV2Eta(selectedTaskIds = null, notice = "") {
+  await runV2Busy("preview-eta", async () => {
+    const result = await v2Api(`/api/v2/plans/${v2State.etaPlan.id}/eta/preview`, v2Json("POST", v2EtaInput(selectedTaskIds)));
+    v2State.etaPreview = result.data;
+    renderV2EtaPreview(result.data, notice);
+  }, { control: $("#previewEtaChangeBtn"), formError: "#etaChangeFormError", busyText: "预览中…" });
+}
+
+async function confirmV2Eta(event) {
+  event.preventDefault();
+  if (!v2State.etaPreview) return previewV2Eta();
+  await runV2Busy("confirm-eta", async () => {
+    const input = v2EtaInput();
+    try {
+      const result = await v2Api(`/api/v2/plans/${v2State.etaPlan.id}/eta/confirm`, v2Json("POST", {
+        ...input,
+        preview_token: v2State.etaPreview.preview_token,
+        acknowledged_conflict_codes: v2ConflictCodes(v2State.etaPreview.conflicts)
+      }));
+      v2State.etaPlan = result.data.plan;
+      closeV2Dialog("#etaChangeDialog");
+      showToast(`预计到样已确认，平移 ${result.data.moved_tasks.length} 个任务`);
+      await refreshV2AfterPlanChange(result.data.plan.id);
+    } catch (error) {
+      if (["STALE_PREVIEW", "VERSION_CONFLICT"].includes(error.code)) {
+        const fresh = await v2Api(`/api/v2/plans/${v2State.etaPlan.id}`);
+        v2State.etaPlan = fresh.data;
+        const result = await v2Api(`/api/v2/plans/${v2State.etaPlan.id}/eta/preview`, v2Json("POST", { ...input, expected_version: fresh.data.version }));
+        v2State.etaPreview = result.data;
+        renderV2EtaPreview(result.data, "数据已变化，请核对新预览并再次确认。");
+        setV2FormError("#etaChangeFormError", "数据已变化，本次没有保存；请再次确认。");
+        return;
+      }
+      throw error;
+    }
+  }, { control: $("#confirmEtaChangeBtn"), formError: "#etaChangeFormError", busyText: "正在确认…" });
+}
+
+async function openV2CryostatDialog(planId, trigger) {
+  const result = await v2Api(`/api/v2/plans/${planId}`);
+  v2State.cryostatPlan = result.data;
+  v2State.cryostatPreview = null;
+  $("#cryostatChangeForm").reset();
+  $("#cryostatChangeSelect").value = result.data.cryostat?.id ? String(result.data.cryostat.id) : "";
+  $("#cryostatChangePending").checked = result.data.cryostat_pending;
+  $("#cryostatConflictPreview").innerHTML = '<h3>冲突预览</h3><p>选择设备后先预览。</p>';
+  setV2FormError("#cryostatChangeFormError");
+  openV2Dialog("#cryostatChangeDialog", trigger, "#cryostatChangeSelect");
+  await previewV2Cryostat();
+}
+
+function v2CryostatInput() {
+  return {
+    new_cryostat_id: $("#cryostatChangePending").checked ? null : nullableId($("#cryostatChangeSelect").value),
+    cryostat_pending: $("#cryostatChangePending").checked,
+    actor_label: actorValue($("#cryostatActorLabel").value),
+    expected_version: v2State.cryostatPlan.version
+  };
+}
+
+function renderV2CryostatPreview(preview, notice = "") {
+  $("#cryostatConflictPreview").innerHTML = `<h3>冲突预览</h3>${notice ? `<p><strong>${escapeHtml(notice)}</strong></p>` : ""}<p>${escapeHtml(preview.old_cryostat?.name || "待定")} → ${escapeHtml(preview.new_cryostat?.name || "待定")}${preview.plan_date_range ? ` · ${escapeHtml(preview.plan_date_range.start_date)}～${escapeHtml(preview.plan_date_range.end_date)}` : " · 尚无任务日期"}</p>${v2ConflictHtml(preview.conflicts)}`;
+}
+
+async function previewV2Cryostat(notice = "") {
+  await runV2Busy("preview-cryostat", async () => {
+    const result = await v2Api(`/api/v2/plans/${v2State.cryostatPlan.id}/cryostat/preview`, v2Json("POST", v2CryostatInput()));
+    v2State.cryostatPreview = result.data;
+    renderV2CryostatPreview(result.data, notice);
+  }, { control: $("#previewCryostatChangeBtn"), formError: "#cryostatChangeFormError", busyText: "预览中…" });
+}
+
+async function confirmV2Cryostat(event) {
+  event.preventDefault();
+  if (!v2State.cryostatPreview) return previewV2Cryostat();
+  await runV2Busy("confirm-cryostat", async () => {
+    const input = v2CryostatInput();
+    try {
+      const result = await v2Api(`/api/v2/plans/${v2State.cryostatPlan.id}/cryostat/confirm`, v2Json("POST", {
+        ...input,
+        preview_token: v2State.cryostatPreview.preview_token,
+        acknowledged_conflict_codes: v2ConflictCodes(v2State.cryostatPreview.conflicts)
+      }));
+      closeV2Dialog("#cryostatChangeDialog");
+      showToast("计划制冷机已确认");
+      await refreshV2AfterPlanChange(result.data.plan.id);
+    } catch (error) {
+      if (["STALE_PREVIEW", "VERSION_CONFLICT"].includes(error.code)) {
+        const fresh = await v2Api(`/api/v2/plans/${v2State.cryostatPlan.id}`);
+        v2State.cryostatPlan = fresh.data;
+        const result = await v2Api(`/api/v2/plans/${fresh.data.id}/cryostat/preview`, v2Json("POST", { ...input, expected_version: fresh.data.version }));
+        v2State.cryostatPreview = result.data;
+        renderV2CryostatPreview(result.data, "数据已变化，请核对新预览并再次确认。");
+        setV2FormError("#cryostatChangeFormError", "数据已变化，本次没有保存；请再次确认。");
+        return;
+      }
+      throw error;
+    }
+  }, { control: $("#confirmCryostatChangeBtn"), formError: "#cryostatChangeFormError", busyText: "正在确认…" });
+}
+
+async function loadV2AssignmentPlan(planId) {
+  if (!planId) {
+    v2State.assignmentPlan = null;
+    $("#assignmentTaskList").innerHTML = '<div class="v2-empty-state"><h3>请选择测控计划</h3><p>选择后由人明确创建并分配任务。</p></div>';
+    $("#assignmentConflictSummary").textContent = "选择计划后显示人员负载、日期重叠和制冷机冲突；最终决定由人作出。";
+    return;
+  }
+  const result = await v2Api(`/api/v2/plans/${planId}`);
+  v2State.assignmentPlanId = String(planId);
+  v2State.assignmentPlan = result.data;
+  const tasks = result.data.plan_tasks.filter((task) => !task.deleted_at);
+  $("#assignmentTaskList").innerHTML = tasks.length ? tasks.map((task) => renderV2Task(task, result.data)).join("") : $(result.data.test_items.length ? "#assignmentNoTasksTemplate" : "#assignmentNoTestItemsTemplate").innerHTML;
+  $("#assignmentConflictSummary").textContent = `计划「${result.data.name}」已有 ${tasks.length} 个正式人工任务；冲突只提示，不自动改派。`;
+  $("#openAssignmentBtn").disabled = !result.data.test_items.length;
+}
+
+async function openV2AssignmentDialog(planId, trigger, taskId = null) {
+  const result = await v2Api(`/api/v2/plans/${planId}`);
+  const plan = result.data;
+  const task = taskId ? plan.plan_tasks.find((item) => item.id === Number(taskId)) : null;
+  v2State.assignmentPlan = plan;
+  v2State.assignmentPlanId = String(plan.id);
+  v2State.assignmentTaskId = task?.id || null;
+  v2State.assignmentPreview = null;
+  $("#assignmentForm").reset();
+  $("#assignmentDialogTitle").textContent = task ? "编辑人员任务" : "创建人员任务";
+  $("#assignmentTestItem").innerHTML = v2Option("", "计划级任务") + plan.test_items.filter((item) => !item.archived).map((item) => v2Option(item.id, item.title, task?.test_item_id === item.id)).join("");
+  const members = state.members.filter((item) => item.status === "active" || task?.assignments.some((assignment) => assignment.member_id === item.id));
+  $("#assignmentPrimaryMember").innerHTML = v2Option("", "请选择负责人") + members.map((item) => v2Option(item.id, item.name, task?.primary_member?.id === item.id)).join("");
+  const collaboratorIds = new Set(task?.collaborators?.map((item) => item.id) || []);
+  $("#assignmentCollaborators").innerHTML = members.map((item) => v2Option(item.id, item.name, collaboratorIds.has(item.id))).join("");
+  if (task) {
+    $("#assignmentTitle").value = task.title;
+    $("#assignmentDescription").value = task.description || "";
+    $("#assignmentAfterArrival").checked = task.after_arrival;
+    $("#assignmentStartDate").value = task.default_start_date;
+    $("#assignmentEndDate").value = task.default_end_date;
+    $("#assignmentEstimatedHours").value = String(task.estimated_hours);
+  } else {
+    const start = plan.actual_arrival_date || plan.current_eta_date || todayLocalDate();
+    $("#assignmentStartDate").value = start;
+    $("#assignmentEndDate").value = start;
+    $("#assignmentEstimatedHours").value = "0.5";
+  }
+  $("#assignmentDialogConflictSummary").innerHTML = '<h3>冲突预览</h3><p>填写后点击预览；系统不会自动指派或改派成员。</p>';
+  setV2FormError("#assignmentFormError");
+  openV2Dialog("#assignmentDialog", trigger, "#assignmentTitle");
+}
+
+function v2AssignmentInput() {
+  return {
+    test_item_id: nullableId($("#assignmentTestItem").value),
+    title: $("#assignmentTitle").value.trim(),
+    description: $("#assignmentDescription").value.trim(),
+    primary_member_id: Number($("#assignmentPrimaryMember").value),
+    collaborator_member_ids: [...$("#assignmentCollaborators").selectedOptions].map((option) => Number(option.value)).filter((id) => id !== Number($("#assignmentPrimaryMember").value)).sort((a, b) => a - b),
+    start_date: $("#assignmentStartDate").value,
+    end_date: $("#assignmentEndDate").value,
+    estimated_hours: Number($("#assignmentEstimatedHours").value),
+    after_arrival: $("#assignmentAfterArrival").checked,
+    expected_version: v2State.assignmentPlan.version
+  };
+}
+
+function renderV2AssignmentPreview(preview, notice = "") {
+  const load = preview.related_load.flatMap((member) => member.weeks.map((week) => `成员 ${member.member_id} ${week.week_start}: ${week.hours_before}h → ${week.hours_after}h`));
+  $("#assignmentDialogConflictSummary").innerHTML = `<h3>冲突预览</h3>${notice ? `<p><strong>${escapeHtml(notice)}</strong></p>` : ""}${v2ConflictHtml(preview.conflicts)}${load.length ? `<p>${load.map(escapeHtml).join("；")}</p>` : ""}`;
+}
+
+async function previewV2Assignment(notice = "") {
+  await runV2Busy("preview-assignment", async () => {
+    const path = v2State.assignmentTaskId ? `/api/v2/plan-tasks/${v2State.assignmentTaskId}/preview` : `/api/v2/plans/${v2State.assignmentPlan.id}/tasks/preview`;
+    const result = await v2Api(path, v2Json("POST", v2AssignmentInput()));
+    v2State.assignmentPreview = result.data;
+    renderV2AssignmentPreview(result.data, notice);
+  }, { control: $("#previewAssignmentBtn"), formError: "#assignmentFormError", busyText: "预览中…" });
+}
+
+async function confirmV2Assignment(event) {
+  event.preventDefault();
+  if (!v2State.assignmentPreview) {
+    await previewV2Assignment("请核对预览后再次点击人工确认。");
+    return;
+  }
+  await runV2Busy("confirm-assignment", async () => {
+    const input = v2AssignmentInput();
+    const path = v2State.assignmentTaskId ? `/api/v2/plan-tasks/${v2State.assignmentTaskId}` : `/api/v2/plans/${v2State.assignmentPlan.id}/tasks`;
+    const method = v2State.assignmentTaskId ? "PUT" : "POST";
+    try {
+      const result = await v2Api(path, v2Json(method, {
+        ...input,
+        preview_token: v2State.assignmentPreview.preview_token,
+        acknowledged_conflict_codes: v2ConflictCodes(v2State.assignmentPreview.conflicts),
+        actor_label: "本地用户"
+      }));
+      const planId = result.data.plan_task.plan_id;
+      closeV2Dialog("#assignmentDialog");
+      showToast(v2State.assignmentTaskId ? "人工任务已更新" : "人工任务已创建");
+      await refreshV2AfterPlanChange(planId, { reloadV1: true });
+      await loadV2AssignmentPlan(planId);
+    } catch (error) {
+      if (["STALE_PREVIEW", "VERSION_CONFLICT"].includes(error.code)) {
+        const fresh = await v2Api(`/api/v2/plans/${v2State.assignmentPlan.id}`);
+        v2State.assignmentPlan = fresh.data;
+        v2State.assignmentPreview = null;
+        await previewV2Assignment("数据已变化，请核对新预览并再次确认。");
+        setV2FormError("#assignmentFormError", "数据已变化，本次没有保存；请再次确认。");
+        return;
+      }
+      throw error;
+    }
+  }, { control: $("#saveAssignmentBtn"), formError: "#assignmentFormError", busyText: "正在确认…" });
+}
+
+async function openV2SubmissionDialog(taskId, planId, trigger) {
+  const result = await v2Api(`/api/v2/plans/${planId}`);
+  const task = result.data.plan_tasks.find((item) => item.id === Number(taskId));
+  if (!task) throw new Error("任务不存在或已删除");
+  v2State.submissionTask = task;
+  v2State.submissionPlan = result.data;
+  $("#submissionForm").reset();
+  setV2FormError("#submissionFormError");
+  $("#submissionChecklist").innerHTML = result.data.acceptance_template.items.map((item) => `<label><input type="checkbox" data-submission-template-item="${item.id}"> <span>${escapeHtml(item.label)}</span></label>`).join("");
+  openV2Dialog("#submissionDialog", trigger, "#submissionDescription");
+}
+
+async function saveV2Submission(event) {
+  event.preventDefault();
+  await runV2Busy("save-submission", async () => {
+    const resourceKind = $("#submissionResourceKind").value;
+    const resourceValue = $("#submissionResourceValue").value.trim();
+    if (resourceKind === "url") {
+      let parsed;
+      try { parsed = new URL(resourceValue); } catch { throw new Error("请输入有效的 HTTP/HTTPS URL。"); }
+      if (!["http:", "https:"].includes(parsed.protocol)) throw new Error("成果 URL 只允许 HTTP/HTTPS 协议。");
+    }
+    const latest = v2State.submissionPlan.latest_submissions.find((item) => item.task_lineage_key === v2State.submissionTask.task_lineage_key);
+    const payload = {
+      description: $("#submissionDescription").value.trim(),
+      submitter_label: actorValue($("#submissionSubmitter").value),
+      resource_kind: resourceKind,
+      resource_value: resourceValue,
+      checklist: $$("#submissionChecklist [data-submission-template-item]").map((input) => ({ template_item_id: Number(input.dataset.submissionTemplateItem), checked: input.checked })),
+      supersedes_submission_id: latest?.status === "returned" ? latest.id : null
+    };
+    await v2Api(`/api/v2/tasks/${v2State.submissionTask.id}/submissions`, v2Json("POST", payload));
+    const planId = v2State.submissionPlan.id;
+    closeV2Dialog("#submissionDialog");
+    showToast("成果已提交，等待人工验收");
+    await refreshV2AfterPlanChange(planId, { reloadV1: true });
+    await loadV2Submissions();
+  }, { control: $("#saveSubmissionBtn"), formError: "#submissionFormError", busyText: "正在提交…" });
+}
+
+async function openV2ReviewDialog(submissionId, trigger) {
+  let submission = null;
+  for (const plan of v2State.allPlans) {
+    const result = await v2Api(`/api/v2/plans/${plan.id}/submissions?limit=200&sort=submitted_desc`);
+    submission = result.data.find((item) => item.id === Number(submissionId));
+    if (submission) break;
+  }
+  if (!submission) throw new Error("成果记录不存在");
+  v2State.reviewSubmission = submission;
+  $("#reviewForm").reset();
+  setV2FormError("#reviewFormError");
+  $("#reviewChecklist").innerHTML = submission.checklist_snapshot.map((item) => `<div><label><input type="checkbox" data-review-template-item="${item.template_item_id}"> <span>${escapeHtml(item.label)}</span></label><input type="text" data-review-note="${item.template_item_id}" maxlength="1000" placeholder="可选备注"></div>`).join("");
+  openV2Dialog("#reviewDialog", trigger, "#reviewDecision");
+}
+
+async function saveV2Review(event) {
+  event.preventDefault();
+  await runV2Busy("save-review", async () => {
+    const decision = $("#reviewDecision").value;
+    if (!decision) throw new Error("请选择通过或退回。");
+    const checks = $$("#reviewChecklist [data-review-template-item]");
+    if (decision === "accepted" && checks.some((input) => !input.checked)) throw new Error("通过验收前必须确认全部清单项。");
+    const payload = {
+      decision,
+      reviewer_label: actorValue($("#reviewerLabel").value),
+      comment: $("#reviewComment").value.trim(),
+      checklist: checks.map((input) => ({
+        template_item_id: Number(input.dataset.reviewTemplateItem),
+        passed: input.checked,
+        note: $(`[data-review-note="${input.dataset.reviewTemplateItem}"]`)?.value.trim() || ""
+      })),
+      expected_version: v2State.reviewSubmission.version
+    };
+    if (decision === "returned" && !payload.comment) throw new Error("退回时必须填写意见。");
+    const result = await v2Api(`/api/v2/submissions/${v2State.reviewSubmission.id}/review`, v2Json("POST", payload));
+    const planId = result.data.submission.plan_id;
+    closeV2Dialog("#reviewDialog");
+    showToast(decision === "accepted" ? "成果已人工验收通过" : "成果已退回，任务恢复执行");
+    await refreshV2AfterPlanChange(planId, { reloadV1: true });
+    await loadV2Submissions();
+  }, { control: $("#saveReviewBtn"), formError: "#reviewFormError", busyText: "正在记录…" });
+}
+
+async function loadV2Submissions() {
+  const selectedPlan = v2State.acceptancePlanId;
+  const planRows = selectedPlan
+    ? v2State.allPlans.filter((plan) => String(plan.id) === String(selectedPlan))
+    : v2State.allPlans.filter((plan) => !plan.archived);
+  const rows = [];
+  for (const plan of planRows) {
+    const params = new URLSearchParams({ limit: "200", sort: "submitted_desc" });
+    if (v2State.submissionStatus) params.set("status", v2State.submissionStatus);
+    const result = await v2Api(`/api/v2/plans/${plan.id}/submissions?${params}`);
+    rows.push(...result.data.map((submission) => ({ submission, plan })));
+  }
+  rows.sort((a, b) => b.submission.submitted_at.localeCompare(a.submission.submitted_at) || b.submission.id - a.submission.id);
+  $("#submissionList").innerHTML = rows.map(({ submission, plan }) => renderV2SubmissionCard(submission, plan.name)).join("");
+  const empty = $("#acceptanceEmptyState");
+  empty.hidden = rows.length > 0 || Boolean(selectedPlan || v2State.submissionStatus);
+  if (!rows.length && (selectedPlan || v2State.submissionStatus)) $("#submissionList").innerHTML = $("#acceptanceFilterEmptyTemplate").innerHTML;
+}
+
+async function refreshV2AfterPlanChange(planId, { reloadV1 = false } = {}) {
+  await loadV2Plans();
+  if (reloadV1) await loadData();
+  updateV2DocumentTitle();
+  if (v2State.activePlanId === Number(planId)) {
+    const result = await v2Api(`/api/v2/plans/${planId}`);
+    v2State.activePlan = result.data;
+    renderV2PlanDetail(result.data);
+  }
+}
+
+async function toggleV2PlanArchive(planId, restore, trigger) {
+  const result = await v2Api(`/api/v2/plans/${planId}`);
+  if (!window.confirm(`确认${restore ? "恢复" : "归档"}计划「${result.data.name}」？`)) return;
+  await runV2Busy(`archive-plan-${planId}`, async () => {
+    const changed = await v2Api(`/api/v2/plans/${planId}/${restore ? "restore" : "archive"}`, v2Json("POST", { actor_label: "本地用户", expected_version: result.data.version }));
+    showToast(restore ? "计划已恢复" : "计划已归档");
+    await refreshV2AfterPlanChange(changed.data.plan.id);
+  }, { control: trigger, busyText: restore ? "恢复中…" : "归档中…" });
+}
+
+async function confirmV2Arrival(planId, trigger) {
+  const result = await v2Api(`/api/v2/plans/${planId}`);
+  const plan = result.data;
+  const date = window.prompt("实际到样日期（YYYY-MM-DD）", plan.actual_arrival_date || todayLocalDate());
+  if (date === null) return;
+  const identifier = window.prompt("样品编号（可留空）", plan.sample_identifier || "");
+  if (identifier === null) return;
+  let kind = plan.identifier_kind;
+  if (identifier.trim() && !kind) {
+    const input = window.prompt("编号类型：输入 formal 或 temporary", "temporary");
+    if (input === null) return;
+    kind = input.trim();
+  }
+  await runV2Busy(`arrival-${planId}`, async () => {
+    const changed = await v2Api(`/api/v2/plans/${planId}/arrival`, v2Json("POST", {
+      actual_arrival_date: date.trim(),
+      sample_identifier: nullableText(identifier),
+      identifier_kind: identifier.trim() ? kind : null,
+      actor_label: "本地用户",
+      expected_version: plan.version
+    }));
+    showToast("实际到样已记录；未测试时主状态保持空白");
+    await refreshV2AfterPlanChange(changed.data.plan.id);
+  }, { control: trigger, busyText: "记录中…" });
+}
+
+async function addV2TestItem(planId, trigger) {
+  const result = await v2Api(`/api/v2/plans/${planId}`);
+  const title = window.prompt("测试项名称");
+  if (!title?.trim()) return;
+  const criteria = window.prompt("验收标准（可留空）", "");
+  if (criteria === null) return;
+  await runV2Busy(`add-test-item-${planId}`, async () => {
+    await v2Api(`/api/v2/plans/${planId}/test-items`, v2Json("POST", { title: title.trim(), description: "", acceptance_criteria: criteria.trim(), is_required: true, position: result.data.test_items.length, actor_label: "本地用户", expected_version: result.data.version }));
+    showToast("测试项已添加");
+    await refreshV2AfterPlanChange(planId);
+  }, { control: trigger, busyText: "添加中…" });
+}
+
+async function editV2TestItem(itemId, planId, trigger) {
+  const result = await v2Api(`/api/v2/plans/${planId}`);
+  const item = result.data.test_items.find((row) => row.id === Number(itemId));
+  if (!item) return;
+  const title = window.prompt("测试项名称", item.title);
+  if (!title?.trim()) return;
+  const criteria = window.prompt("验收标准", item.acceptance_criteria || "");
+  if (criteria === null) return;
+  await runV2Busy(`edit-test-item-${itemId}`, async () => {
+    await v2Api(`/api/v2/test-items/${itemId}`, v2Json("PUT", { title: title.trim(), description: item.description || "", acceptance_criteria: criteria.trim(), is_required: Boolean(item.is_required), position: item.position, archived: Boolean(item.archived), actor_label: "本地用户", expected_version: result.data.version }));
+    showToast("测试项已更新");
+    await refreshV2AfterPlanChange(planId);
+  }, { control: trigger, busyText: "保存中…" });
+}
+
+async function editV2AcceptanceTemplate(planId, trigger) {
+  const [result, planResult] = await Promise.all([
+    v2Api(`/api/v2/plans/${planId}/acceptance-template`),
+    v2Api(`/api/v2/plans/${planId}`)
+  ]);
+  const template = result.data;
+  const labels = window.prompt("验收清单（每行一项）", template.items.map((item) => item.label).join("\n"));
+  if (labels === null) return;
+  const items = labels.split(/\r?\n/).map((label) => label.trim()).filter(Boolean).map((label, position) => ({ label, position }));
+  if (!items.length) return showToast("验收清单至少包含一项", { type: "error" });
+  await runV2Busy(`template-${planId}`, async () => {
+    await v2Api(`/api/v2/plans/${planId}/acceptance-template`, v2Json("PUT", { name: template.name, items, actor_label: "本地用户", expected_version: planResult.data.version }));
+    showToast("验收模板已生成新版本");
+    await refreshV2AfterPlanChange(planId);
+  }, { control: trigger, busyText: "保存中…" });
+}
+
+function clearV2PlanFilters() {
+  Object.assign(v2State, { search: "", displayStatus: "", sourceGroupId: "", cryostatId: "", primaryMemberId: "", includeArchived: false });
+  syncV2Controls();
+  saveV2Preferences();
+  return loadV2Plans();
+}
+
+let v2SearchTimer = null;
+
+function bindV2Events() {
+  $$('[data-v2-view]').forEach((tab) => tab.addEventListener("click", () => setV2View(tab.dataset.v2View)));
+  $$('[data-execution-view]').forEach((tab) => tab.addEventListener("click", () => {
+    v2State.executionView = tab.dataset.executionView;
+    saveV2Preferences();
+  }));
+  $$('[data-management-view]').forEach((tab) => tab.addEventListener("click", () => {
+    v2State.managementView = tab.dataset.managementView;
+    saveV2Preferences();
+  }));
+  $("#dataMenuBtn").addEventListener("click", () => {
+    v2State.managementView = "maintenance";
+    setV2View("management");
+  });
+  $("#refreshBtn").addEventListener("click", (event) => runV2Busy("v2-refresh", loadV2Workspace, { control: event.currentTarget, busyText: "刷新中…" }));
+  $("#planSearchInput").addEventListener("input", (event) => {
+    v2State.search = event.target.value.trim();
+    saveV2Preferences();
+    window.clearTimeout(v2SearchTimer);
+    v2SearchTimer = window.setTimeout(() => loadV2Plans().catch((error) => showToast(v2ErrorText(error), { type: "error" })), 250);
+  });
+  for (const [id, key] of [["#planStatusFilter", "displayStatus"], ["#planSourceFilter", "sourceGroupId"], ["#planCryostatFilter", "cryostatId"], ["#planOwnerFilter", "primaryMemberId"], ["#planGroupBy", "groupBy"]]) {
+    $(id).addEventListener("change", async (event) => {
+      v2State[key] = event.target.value;
+      saveV2Preferences();
+      await loadV2Plans();
+    });
+  }
+  $("#arrivalWindowDays").addEventListener("change", async (event) => {
+    const value = clamp(Number.parseInt(event.target.value, 10) || 0, 0, 365);
+    v2State.arrivalWindowDays = value;
+    event.target.value = String(value);
+    saveV2Preferences();
+    await loadV2Plans();
+  });
+  $("#planIncludeArchived").addEventListener("change", async (event) => {
+    v2State.includeArchived = event.target.checked;
+    saveV2Preferences();
+    await loadV2Plans();
+  });
+  $$("#planStats [data-plan-status]").forEach((card) => card.addEventListener("click", async () => {
+    v2State.displayStatus = v2State.displayStatus === card.dataset.planStatus ? "" : card.dataset.planStatus;
+    $("#planStatusFilter").value = v2State.displayStatus;
+    saveV2Preferences();
+    await loadV2Plans();
+  }));
+  $("#assignmentPlanFilter").addEventListener("change", async (event) => {
+    v2State.assignmentPlanId = event.target.value;
+    await loadV2AssignmentPlan(event.target.value);
+  });
+  $("#acceptancePlanFilter").addEventListener("change", async (event) => {
+    v2State.acceptancePlanId = event.target.value;
+    await loadV2Submissions();
+  });
+  $("#submissionStatusFilter").addEventListener("change", async (event) => {
+    v2State.submissionStatus = event.target.value;
+    await loadV2Submissions();
+  });
+  $("#openAssignmentBtn").addEventListener("click", (event) => openV2AssignmentDialog(v2State.assignmentPlanId, event.currentTarget));
+  $("#closePlanDetailBtn").addEventListener("click", () => closeV2PlanDetail());
+  $("#addPlanTestItemBtn").addEventListener("click", addV2PlanDraft);
+  $("#planSourceGroup").addEventListener("change", (event) => fillV2Contacts(event.target.value));
+  $("#planEtaPending").addEventListener("change", (event) => {
+    $("#planEtaDate").disabled = event.target.checked;
+    if (event.target.checked) $("#planEtaDate").value = "";
+  });
+  $("#planCryostatPending").addEventListener("change", (event) => {
+    $("#planCryostat").disabled = event.target.checked;
+    if (event.target.checked) $("#planCryostat").value = "";
+  });
+  $("#resourceType").addEventListener("change", () => {
+    v2State.resourceEdit = { kind: $("#resourceType").value, id: null, sourceGroupId: null, item: null };
+    syncV2ResourceFields();
+  });
+  $("#previewEtaChangeBtn").addEventListener("click", () => previewV2Eta());
+  $("#previewCryostatChangeBtn").addEventListener("click", () => previewV2Cryostat());
+  $("#previewAssignmentBtn").addEventListener("click", () => previewV2Assignment());
+  $("#etaChangePending").addEventListener("change", (event) => {
+    $("#etaChangeDate").disabled = event.target.checked;
+    if (event.target.checked) $("#etaChangeDate").value = "";
+    v2State.etaPreview = null;
+  });
+  $("#cryostatChangePending").addEventListener("change", (event) => {
+    $("#cryostatChangeSelect").disabled = event.target.checked;
+    if (event.target.checked) $("#cryostatChangeSelect").value = "";
+    v2State.cryostatPreview = null;
+  });
+  $("#etaChangeDate").addEventListener("input", () => { v2State.etaPreview = null; });
+  $("#etaActorLabel").addEventListener("input", () => { v2State.etaPreview = null; });
+  $("#cryostatChangeSelect").addEventListener("change", () => { v2State.cryostatPreview = null; });
+  $("#cryostatActorLabel").addEventListener("input", () => { v2State.cryostatPreview = null; });
+  $("#assignmentForm").addEventListener("input", (event) => {
+    if (!event.target.closest("#previewAssignmentBtn, #saveAssignmentBtn")) v2State.assignmentPreview = null;
+  });
+  $("#assignmentForm").addEventListener("change", () => { v2State.assignmentPreview = null; });
+  $("#planForm").addEventListener("submit", saveV2Plan);
+  $("#etaChangeForm").addEventListener("submit", confirmV2Eta);
+  $("#cryostatChangeForm").addEventListener("submit", confirmV2Cryostat);
+  $("#assignmentForm").addEventListener("submit", confirmV2Assignment);
+  $("#submissionForm").addEventListener("submit", saveV2Submission);
+  $("#reviewForm").addEventListener("submit", saveV2Review);
+  $("#resourceForm").addEventListener("submit", saveV2Resource);
+  const dialogBindings = [
+    ["#planDialog", "#closePlanDialogBtn", "#cancelPlanBtn"],
+    ["#etaChangeDialog", "#closeEtaChangeDialogBtn", "#cancelEtaChangeBtn"],
+    ["#cryostatChangeDialog", "#closeCryostatChangeDialogBtn", "#cancelCryostatChangeBtn"],
+    ["#assignmentDialog", "#closeAssignmentDialogBtn", "#cancelAssignmentBtn"],
+    ["#submissionDialog", "#closeSubmissionDialogBtn", "#cancelSubmissionBtn"],
+    ["#reviewDialog", "#closeReviewDialogBtn", "#cancelReviewBtn"],
+    ["#resourceDialog", "#closeResourceDialogBtn", "#cancelResourceBtn"]
+  ];
+  for (const [dialogId, ...buttons] of dialogBindings) {
+    buttons.forEach((buttonId) => $(buttonId).addEventListener("click", () => closeV2Dialog(dialogId)));
+    $(dialogId).addEventListener("cancel", (event) => {
+      event.preventDefault();
+      closeV2Dialog(dialogId);
+    });
+  }
+  document.body.addEventListener("change", async (event) => {
+    const etaTask = event.target.closest("[data-eta-task]");
+    if (etaTask) await previewV2Eta();
+  });
+  document.body.addEventListener("click", async (event) => {
+    const action = (selector) => event.target.closest(selector);
+    if (action("[data-open-plan-dialog]")) {
+      const planId = action("[data-open-plan-dialog]").dataset.planId || v2State.assignmentPlanId;
+      const plan = planId ? (await v2Api(`/api/v2/plans/${planId}`)).data : null;
+      await openV2PlanDialog(plan, action("[data-open-plan-dialog]"));
+      return;
+    }
+    if (action("[data-clear-plan-filters]")) return clearV2PlanFilters();
+    if (action("[data-clear-submission-filters]")) {
+      v2State.acceptancePlanId = "";
+      v2State.submissionStatus = "";
+      $("#acceptancePlanFilter").value = "";
+      $("#submissionStatusFilter").value = "";
+      return loadV2Submissions();
+    }
+    if (action("[data-open-plan-detail]")) return openV2PlanDetail(action("[data-open-plan-detail]").dataset.openPlanDetail, action("[data-open-plan-detail]"));
+    if (action("[data-edit-plan]")) {
+      const result = await v2Api(`/api/v2/plans/${action("[data-edit-plan]").dataset.editPlan}`);
+      return openV2PlanDialog(result.data, action("[data-edit-plan]"));
+    }
+    if (action("[data-open-eta-change]")) return openV2EtaDialog(action("[data-open-eta-change]").dataset.openEtaChange, action("[data-open-eta-change]"));
+    if (action("[data-open-cryostat-change]")) return openV2CryostatDialog(action("[data-open-cryostat-change]").dataset.openCryostatChange, action("[data-open-cryostat-change]"));
+    if (action("[data-open-assignment-dialog]")) return openV2AssignmentDialog(action("[data-open-assignment-dialog]").dataset.planId || v2State.assignmentPlanId || v2State.activePlanId, action("[data-open-assignment-dialog]"));
+    if (action("[data-edit-plan-task]")) return openV2AssignmentDialog(action("[data-edit-plan-task]").dataset.planId, action("[data-edit-plan-task]"), action("[data-edit-plan-task]").dataset.editPlanTask);
+    if (action("[data-open-submission]")) return openV2SubmissionDialog(action("[data-open-submission]").dataset.openSubmission, action("[data-open-submission]").dataset.planId, action("[data-open-submission]"));
+    if (action("[data-open-review]")) return openV2ReviewDialog(action("[data-open-review]").dataset.openReview, action("[data-open-review]"));
+    if (action("[data-open-resource-dialog]")) return openV2ResourceDialog(action("[data-open-resource-dialog]").dataset.openResourceDialog, action("[data-open-resource-dialog]"), { sourceGroupId: action("[data-open-resource-dialog]").dataset.sourceGroupId });
+    if (action("[data-edit-resource]")) return openV2ResourceDialog(action("[data-edit-resource]").dataset.editResource, action("[data-edit-resource]"), { id: action("[data-edit-resource]").dataset.resourceId, sourceGroupId: action("[data-edit-resource]").dataset.sourceGroupId });
+    if (action("[data-remove-plan-draft]")) {
+      v2State.planDraftItems.splice(Number(action("[data-remove-plan-draft]").dataset.removePlanDraft), 1);
+      v2State.planDraftItems.forEach((item, index) => { item.position = index; });
+      return renderV2PlanDraftItems();
+    }
+    if (action("[data-toggle-plan-archive]")) return toggleV2PlanArchive(action("[data-toggle-plan-archive]").dataset.togglePlanArchive, action("[data-toggle-plan-archive]").dataset.restore === "1", action("[data-toggle-plan-archive]"));
+    if (action("[data-confirm-arrival]")) return confirmV2Arrival(action("[data-confirm-arrival]").dataset.confirmArrival, action("[data-confirm-arrival]"));
+    if (action("[data-add-test-item]")) return addV2TestItem(action("[data-add-test-item]").dataset.addTestItem, action("[data-add-test-item]"));
+    if (action("[data-edit-test-item]")) return editV2TestItem(action("[data-edit-test-item]").dataset.editTestItem, action("[data-edit-test-item]").dataset.planId, action("[data-edit-test-item]"));
+    if (action("[data-edit-acceptance-template]")) return editV2AcceptanceTemplate(action("[data-edit-acceptance-template]").dataset.editAcceptanceTemplate, action("[data-edit-acceptance-template]"));
+  });
+}
+
 bindEvents();
+bindV2Events();
 setDefaultDates();
 renderViewState();
 renderSelection();
-loadData().catch((error) => showToast(error.message, { type: "error" }));
-
-
+setV2View(v2State.activeV2View);
+loadData()
+  .then(loadV2Workspace)
+  .catch((error) => showToast(v2ErrorText(error), { type: "error" }));

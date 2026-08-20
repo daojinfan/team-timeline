@@ -37,7 +37,7 @@ review_policy: independent-required
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | WP-008 | TASK-042 | pending | REVIEWER | Review integrated V2 client workflows | BL-003 | pending | TASK-041 | pending | docs/05-quality/evidence/TASK-042 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
-| WP-008 | TASK-041 | pending | INTEGRATOR | Integrate reviewed V2 client interactions | BL-003 | pending | TASK-037, TASK-039 | pending | public/app.js | required-validation | TASK-042 | pending | pending | Plan 自动登记，等待调度 |
+| WP-008 | TASK-041 | pending | INTEGRATOR | Integrate reviewed V2 client interactions | BL-003 | pending | TASK-037, TASK-039 | running | public/app.js | required-validation | TASK-042 | pending | pending | Plan 自动登记，等待调度 |
 | WP-007 | TASK-040 | pending | REVIEWER | Review repaired V2 desktop shell | BL-003 | pending | TASK-039 | completed | docs/05-quality/evidence/TASK-040 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-007 | TASK-039 | pending | IMPLEMENTER | Apply reviewed V2 shell focus repair | BL-003 | pending | n/a | running | public/index.html, public/styles.css | required-validation | TASK-040 | passed | docs/05-quality/evidence/TASK-040/review-round-2.json | Plan 自动登记，等待调度 |
 | WP-006 | TASK-038 | pending | REVIEWER | Review repaired V2 server integration | BL-003 | pending | TASK-037 | completed | docs/05-quality/evidence/TASK-038 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
