@@ -1,0 +1,48 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-038",
+  "reviewed_task_ids": [
+    "TASK-037"
+  ],
+  "work_package": "WP-006",
+  "baseline": "BL-003",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-037",
+      "path": "src/server.js",
+      "change_type": "modified",
+      "summary": "修正人工任务冲突计算，使同计划任务不产生制冷机日期冲突，其他未归档计划仍参与，并在确认事务中重算。"
+    },
+    {
+      "task_id": "TASK-037",
+      "path": "tests/v2-api.test.js",
+      "change_type": "modified",
+      "summary": "增加同计划、其他 active 计划、archived 计划与确认路径的制冷机冲突回归覆盖。"
+    }
+  ],
+  "change_summary": "第 2 轮从 TASK-037 启动提交 74574ba03a85b40fd5a75e44fcce51a337c35585 独立重算当前 scoped diff，仍精确为 src/server.js modified（4 insertions/3 deletions）与 tests/v2-api.test.js modified（108 insertions）。当前产品内容与交付提交 b6e7396a7badbd4ecf97fc57a2b8c53a27d655fe 完全一致；review subject 仍为 9400dd9b63a6d9246d652243f957d3290deaa9c0d471b7e6adfd941350ca6205，与 round 1 相同。",
+  "scope_checked": [
+    "重新读取 TASK-037/TASK-038 Release 契约、当前状态、round 1 证据、启动提交、当前 HEAD 和 74574ba..current scoped actual diff",
+    "重新读取完整 src/server.js、tests/api.test.js、tests/v2-api.test.js 当前字节内容，并从实现控制流复核 migration、V1 mutators、V2 routes、conflict、lineage、submission/review",
+    "独立复核 scheduleTasks 的 active-only 基线、同 plan 制冷机排除、其他 plan 保留、archived 排除、update task self-exclusion 与 create/update confirm 的 BEGIN IMMEDIATE 重算",
+    "以不同于 round 1 的临时 HTTP 数据重新证明同计划 0、其他 active 计划 1、archived 后 0、旧 token stale、重新 preview 后 confirm 成功",
+    "独立重建临时 SQLite 并核对 12 tables、10 indexes、version/checksum、quick_check、FK、34 method-path exact set",
+    "独立重建 V1-shaped 库并核对 pre-v2 raw backup、V1 数据保留、幂等重开、单一备份和 checksum mismatch 不改写失败拒绝",
+    "重新复核 UUID lineage、reset ID 复用隔离、成果 checklist snapshot exact-set、returned/supersession/accepted、计划完成状态及 progress/note 独立",
+    "重新执行完整 V1 seed/reopen/status/CRUD/任务/assignment/归档/维护/SQLite/CSV/JSON/backup 与 V2 API 回归"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "第 2 轮独立 npm test：26 tests、26 pass、0 fail；满足 25+，V1 16 项与 V2 10 项全部通过。",
+    "第 2 轮冲突矩阵：same-plan=0；other active=1 且 plan_ids=[[1,2]]；归档事实变化使旧 confirm 返回 STALE_PREVIEW；archived=0；重新 preview/confirm 成功 task_id=6。",
+    "第 2 轮 schema/API：12 tables、10 indexes、version=2/v2-control-plan、checksum=e87fc318d929c1f71cee72bd207c57a63b1a7f5d98bf673656c158bc040be4c4 匹配、quick_check=ok、FK=0、34 formal endpoints 与 34 implementation endpoints exact-set。",
+    "第 2 轮 V1 migration：tasks 4→4；raw backup v2 tables=0；迁移与重开 backup count=1→1；checksum mismatch 启动拒绝且 corrupt value retained=true。",
+    "node --check server 与两份 tests、git diff --check、git diff --exit-code b6e7396 -- src/server.js tests 均 exit 0；产品交付内容自 round 1 后零变化。",
+    "当前内容指纹与 round 1 相同：server blob=44715fd15fdd61dc72c84f315f33f937907914b1 SHA-256=2bb79cda0c444dd5b52a3f958a92fb2442bc2bff115d94480a2b89f996525f40 3203 lines；api.test blob=61e34a0e879b84afd7328364ae11f4641368bc87 SHA-256=9740c9db7e7b7e48b282c09a1ff8e4e855c9f09771529a785aaab68a83b0492a 492 lines；v2-api.test blob=5809e1483f393dd4c6adbeae8d4ae2692bf411ea SHA-256=d02ce4c2b0b90ca1666b8a05d74ef5e6c15d91e92c777ff3c9df8d30feed22db 707 lines。",
+    "当前协调 HEAD=1eb28c4c59dd357b532ba7c35d80da21ad4cbcbf，仅增加 round 1 审核治理记录；TASK-037 产品交付仍等同 b6e7396，subject=9400dd9b63a6d9246d652243f957d3290deaa9c0d471b7e6adfd941350ca6205。"
+  ],
+  "created_at": "2026-08-20T20:19:43.4051667Z"
+}

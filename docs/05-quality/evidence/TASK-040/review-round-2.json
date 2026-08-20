@@ -1,0 +1,49 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-040",
+  "reviewed_task_ids": [
+    "TASK-039"
+  ],
+  "work_package": "WP-007",
+  "baseline": "BL-003",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-039",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "修复默认工作台的 V1 新建任务入口可见性，并将测控计划对话框首焦点改为计划名称；具体为 newTaskBtn 增加 hidden、planSourceGroup 移除 autofocus、planName 增加 autofocus。"
+    }
+  ],
+  "change_summary": "本轮没有沿用上一轮结论，而是重新读取当前完整 HTML/CSS/JavaScript、BL-003 权威契约和 TASK-039 实际 Git 区间。74574ba03a85b40fd5a75e44fcce51a337c35585..b6e7396a7badbd4ecf97fc57a2b8c53a27d655fe 在 TASK-039 产品范围内仍精确只有 public/index.html modified，numstat 为 3/3；styles.css、app.js 没有 TASK-039 差异，当前 public 三文件与交付内容一致。独立重算交付 subject 为 08824efc390eadb819f9a6360d0d79d6ed640e19b75a5e57bd14d04ef1e3ff5e，与第1轮完全相同。完整重新审查未发现新的正确性、ARIA、选择器兼容、桌面布局或移动端范围问题。",
+  "scope_checked": [
+    "重新读取 TASK-039/TASK-040 Release 契约、当前运行状态和 lease、WP-007 context、活动 BL-003、REQ-V2-001、ARC-COMP-004、ARC-OVERALL-002、DEC-002 及继续有效的 V1 桌面契约",
+    "重新从 TASK-039 start commit 74574ba0 枚举全部 Git 变更，再按 TASK-039 write_paths 分离产品清单；确认只有 public/index.html modified，没有漏列 added/deleted/renamed 或 styles.css 变化",
+    "重新完整载入 public/index.html 40977 字符、public/styles.css 38285 字符、public/app.js 81199 字符并执行全文件静态检查，而不是只复查两个属性",
+    "重新独立计算 TASK-039 Governance entries 指纹，得到 08824efc390eadb819f9a6360d0d79d6ed640e19b75a5e57bd14d04ef1e3ff5e，并与第1轮 state subject 精确比较相等",
+    "重新统计 261 个 HTML ID 全部唯一；95 个 V1 ID 与 63 个 ARC-COMP-004 §11 明列 ID 均各出现一次，未因修复丢失或复制选择器目标",
+    "重新验证 newTaskBtn 唯一且初始 hidden；planDialog 内 autofocus exact set 为 [planName]，planSourceGroup 无 autofocus；其余六个 V2 dialog 也各自只有冻结的一个首焦点",
+    "重新检查六个顶层 tab、六个 toolbar、六个 panel 和 execution/management V1 子视图；ARIA controls/labelledby 均指向现有唯一 ID，初始只有 workbench toolbar/panel 可见",
+    "重新检查七个 V2 dialogs、七个表单错误区域、关闭控件、空态和 CTA；对话框标题可访问名称完整，默认 plan drawer 不占工作区第三列",
+    "重新解析 app.js 的 78 个字面 ID selector，全部在当前 DOM 中存在；V1 gantt/tasks/load/logs/maintenance、taskDialog/detailPane/editDialog 契约继续兼容",
+    "重新检查六个状态颜色、unclassified 视觉隐藏、420px fixed planDetailPane、720px V2 dialog、内部纵向滚动和页面/局部滚动边界",
+    "重新独立查看 1280x720 与 1366x768 两张 PM headless Chrome 截图并核对既有测量；TASK-039 仅隐藏一个顶栏按钮并移动 autofocus，布局占用只减少不增加，保守的无溢出和首屏结论保持成立",
+    "重新扫描 styles.css：@media 数量为 0，无底部移动导航或触摸专用新增交互；本轮也未发现 AI、登录、云端或附件上传入口"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "第2轮独立 subject 计算：Get-GovernanceGitChangedEntries(start=74574ba0)+Get-GovernanceGitEntriesSha256 对 TASK-039 写范围得到 08824efc390eadb819f9a6360d0d79d6ed640e19b75a5e57bd14d04ef1e3ff5e；第1轮 state subject 同值，内容未变",
+    "当前内容指纹重新计算：index blob 1993bef14e53515e3658ff7a2cf3efc89499449a / SHA-256 125fce788eaf5154154e9f6d8cd12718a7bb388fc3c44f798c653892d0c7b376；styles blob 549c34411af50a13ee3ec94a689d3afb01c1635f / SHA-256 bd5ffa691fb2ea18ab9018315369706eb466b9a835f7315fa0adb6eb07354e75；app blob c37d4168684240307bd17bdec143d1e8ac07faf5 / SHA-256 3e78254b07dd9af296cbff0304e835dd48d0d1999e8ed12c647a2af8402008a8",
+    "独立静态结果：261 IDs/261 unique、V1 missing/nonunique=0、ARC §11 missing/nonunique=0、ARIA missing=0、tabs/toolbars/panels=6/6/6、V2 dialogs=7、app literal selectors=78 且 missing=0",
+    "焦点与可见性结果：newTaskBtn initial hidden=true；plan autofocus=[planName]；eta/cryo/assignment/submission/review/resource autofocus 分别为 etaChangeDate/cryostatChangeSelect/assignmentTitle/submissionDescription/reviewDecision/resourceName",
+    "CSS 与结构结果：六冻结颜色无缺失，@media=0，planDetailPane hidden+fixed+420px=true，V2 dialog max-width 720px=true，真实空态/筛选空态和各类 CTA 仍存在",
+    "审核者第2轮独立运行 node --check public/app.js：exit 0；npm.cmd test：26/26 通过，0 失败、0 跳过",
+    "审核者第2轮运行 git diff --name-status/--numstat/--check 74574ba0..b6e7396 -- public：M public/index.html、3/3、diff-check exit 0；当前 HEAD public 工作树无差异",
+    "再次目视核对 v2-1280x720.png（SHA-256 5b6c299cd37a6758dd3547be719a3dda9524dd2d990b1512b0fc117461c89434）：1265<=1280、六 tab 单行、六统计卡同 top、唯一 workbench toolbar/view、planDialog 720x651、drawer 420px fixed",
+    "再次目视核对 v2-1366x768.png（SHA-256 0c13d377ffb719b573d8c17fe313334fcdcdd04c7b6ca1fffa99f93d646c8bb）：1351<=1366、六 tab/统计区/空态首屏、唯一 workbench toolbar/view；截图为修复前保守宽度，隐藏按钮不会恶化指标",
+    "审核者第2轮独立运行 Release 治理校验：扫描 33 份文档，0 错误、0 警告"
+  ],
+  "created_at": "2026-08-20T20:19:25.4350992Z"
+}

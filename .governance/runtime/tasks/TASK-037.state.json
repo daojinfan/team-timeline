@@ -27,14 +27,14 @@
   "review": {
     "required": true,
     "reviewer_task_id": "TASK-038",
-    "status": "provisional-passed",
+    "status": "passed",
     "evidence": [
-      "docs/05-quality/evidence/TASK-038/review-round-1.json"
+      "docs/05-quality/evidence/TASK-038/review-round-2.json"
     ],
-    "pass_streak": 1,
+    "pass_streak": 2,
     "subject_sha256": "9400dd9b63a6d9246d652243f957d3290deaa9c0d471b7e6adfd941350ca6205"
   },
   "last_error": "",
   "created_at": "2026-08-20T20:09:28.1115778Z",
-  "updated_at": "2026-08-20T20:15:56.9062223Z"
+  "updated_at": "2026-08-20T20:20:38.9242520Z"
 }
