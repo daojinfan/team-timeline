@@ -1,0 +1,37 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-030",
+  "reviewed_task_ids": ["TASK-029"],
+  "work_package": "WP-002",
+  "baseline": "BL-002",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {"task_id":"TASK-029","path":"docs/00-index/DOC-REGISTRY.md","change_type":"modified","summary":"登记六份正式 V2 权威文档并保持 BL-002 为当前活动基线。"},
+    {"task_id":"TASK-029","path":"docs/02-product/requirements-v2.md","change_type":"added","summary":"新增正式 V2-REQ-001..016、人工决策、桌面边界、V1 兼容与新基线门。"},
+    {"task_id":"TASK-029","path":"docs/03-architecture/overall-design-v2.md","change_type":"added","summary":"新增轻量测控计划、六区桌面 IA、人工闭环、迁移回滚与兼容的总体设计。"},
+    {"task_id":"TASK-029","path":"docs/03-architecture/components/v2-detailed-design.md","change_type":"added","summary":"新增与 accepted proposal canonical body 等价的正式详设，冻结 12 表、10 索引、34 API 和 7 dialogs。"},
+    {"task_id":"TASK-029","path":"docs/05-quality/traceability-v2.md","change_type":"added","summary":"新增 V2-REQ-001..016 到 canonical API、DDL、字段、DOM、验证与 DEV 所有权的精确追踪。"},
+    {"task_id":"TASK-029","path":"docs/07-decisions/DEC-002.md","change_type":"added","summary":"新增无 AI、人工执行验收、增量 schema、桌面 IA 与 V1 兼容决策。"},
+    {"task_id":"TASK-029","path":"docs/08-changes/CR-002.md","change_type":"added","summary":"新增 V2 范围、迁移兼容回滚及 BL-003 激活门变更包。"}
+  ],
+  "change_summary": "独立重算 TASK-029 启动提交 4c5bd043bed23597856eadefd594f58642c00358 到当前 HEAD 34029fae95720131f74f6705c45b98a64536d21c 的完整实际差异，产品 manifest 仍精确为上述 7 项。当前七项内容及工作区与 round3 完全一致，Governance review subject 仍为 085616225329a1d6e7682c0892ad2940282acb347942ddde8ece735d4bc87e69；期间仅新增审核/治理记录，没有规范内容变化。",
+  "scope_checked": [
+    "重新核对 TASK-029/TASK-030 契约、状态、启动提交、当前 lease 与 start-to-current actual changes",
+    "重新读取六份 formal 与 DOC-REGISTRY，并独立重算七项 blob、SHA-256、行数和 review subject",
+    "独立重算 V2-REQ-001..016 exact-set，以及 trace 中 DOM、API、表、关键字段的 ARC-COMP-004 存在性",
+    "重新比较 accepted proposal 与正式详设 canonical body，并复核 12 表、10 索引、34 API、7 dialogs",
+    "重新复核无 AI、无自动分配/验收、无手机端、V1 API/CSV/JSON/SQLite 兼容及 BL-003 激活前停止门"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "current HEAD=34029fae95720131f74f6705c45b98a64536d21c、tree=f25dc18a10fc306772422b3511da103f0cbc540f；TASK-029 scoped subject=085616225329a1d6e7682c0892ad2940282acb347942ddde8ece735d4bc87e69，与 round3 相同",
+    "blobs 与 round3 相同：registry=fdf246d90f937dba3116d04fa03b0984e183de38，requirements=5b32b68ccdc72142798d3bd28ab9a9cffa205932，overall=e44c6fc6290744e45ee8df8581a8c26a88bfb9dc，detailed=bfb19ebf5a77c261481a5765901a552b31ecd62b，trace=4f81d88433bc8b46e2a4c168961042757eefbda9，DEC=885857f3847f52204d7a77d8b48b036711589cb4，CR=adc4796f2b3666b1f7ce3cdb9cfbe9a38b96d729",
+    "SHA-256 与 round3 相同：registry=c9d5dc62dd4d6029865125e72b51a77400e2d8f3c9b7fc99b76c85bb275f33bc；requirements=6b7ee7437bf35099f0706bd87f31294ee7c389c989cbfeffe8e7e41017317b24；overall=c916c554c045522ccc9f3bf9b23caaa4240db45ebd66b6f296450ba2d3c1e2c4；detailed=61608be7e4da8e4aa653e47e0792fbf4cae744d02b2c8d21a350b443031766af；trace=b93d1deadc96c748b00e81d04d029fae30bf51b5f95894dd385d2641d5f6d1dc；DEC=7e3f689bc8d291453e72586630a2bdb9971c53db9951ab9098cc98ad4f2335f8；CR=f66628b38407704dcc7ed2a5a858bc8af8f61a5edd75d590d540fb4df2c184ea",
+    "trace 独立校验：16/16 exact-set；45 DOM refs/0 missing；26 endpoint refs/0 missing；11 table refs/0 missing；17 key fields/0 missing；stale refs=0",
+    "canonical body equal=true、49680 chars、SHA-256=f683c2e0ea6211ace89f4623890232cf7160637eecc1760f7f9500d4b216924d；12 tables、10 indexes、34 endpoints、7 dialogs",
+    "git diff --check 4c5bd043bed23597856eadefd594f58642c00358 HEAD exit 0；git diff --exit-code HEAD -- 七项正式交付 exit 0"
+  ],
+  "created_at": "2026-08-20T19:10:42.7659408Z"
+}
