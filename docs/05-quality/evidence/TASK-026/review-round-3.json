@@ -1,0 +1,73 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-026",
+  "reviewed_task_ids": [
+    "TASK-025"
+  ],
+  "work_package": "WP-002",
+  "baseline": "BL-002",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-025",
+      "path": "docs/09-reports/V2-requirements.proposal",
+      "change_type": "added",
+      "summary": "增加非规范 V2 需求候选，定义测控组场景、16 项可验收候选需求、到样状态和日期规则、人工边界、兼容要求及详细设计前置批准条件。"
+    },
+    {
+      "task_id": "TASK-025",
+      "path": "docs/09-reports/V2-overall-design.proposal",
+      "change_type": "added",
+      "summary": "增加非规范 V2 总体设计候选，定义六区桌面 IA、状态分类、轻量计划与人工执行闭环、增量数据概念、迁移回滚、安全兼容和两阶段批准门。"
+    },
+    {
+      "task_id": "TASK-025",
+      "path": "docs/09-reports/V2-change.proposal",
+      "change_type": "added",
+      "summary": "增加非规范 V2 变更候选，说明变更动机、候选决策、备选方案、影响边界、迁移兼容回滚原则及当前待批状态。"
+    }
+  ],
+  "change_summary": "第 2 个连续通过候选轮独立审查了 TASK-025 启动提交 5dbeddb64202459cc122eade6cd1dd724ff4e751 到当前提交 646837f2af98dfc47e4202e730f496df7c6109ea 的完整 17 项差异。去除任务状态、台账、工作状态及验证/审核证据等运行记录后，TASK-025 实质变化仍精确为三个 added proposal，共 283 行。自首个通过内容提交 534475afcaa8d776f10412cab94cbf827f00e583 至当前提交，三个 proposal 的 Git 差异为零，工作区也与当前提交一致。独立重算的交付 subject 为 4a148b7a53b5b7112e71ca2c2f871654d8870267127ac2c27a40a0d700ed0dd0，与 TASK-025 已记录 subject 及 round-2 证据相同；本轮完整内容审核没有 finding。",
+  "scope_checked": [
+    "从头读取 governance.json、项目入口、当前状态、WP-002 generated context、TASK-025/TASK-026 Release 契约与当前状态，确认基线、角色、写范围、依赖、风险和连续审核要求",
+    "从头读取 PROJ-CHARTER-001、REQ-BASE-001 的 REQ-001 至 REQ-007、ARC-OVERALL-001、ARC-COMP-001 至 ARC-COMP-003 与 DEC-001，重新建立批准范围、技术栈和 V1 兼容约束",
+    "从头逐字读取三份最终 proposal 全文以及最新 TASK-025 验证证据和输出，不以 round-2 的 scope_checked 或结论代替本轮判断",
+    "完整核对 5dbeddb64202459cc122eade6cd1dd724ff4e751..646837f2af98dfc47e4202e730f496df7c6109ea 的新增、修改、删除与重命名清单、统计和运行记录，实质交付 manifest 仅含三个 added proposal",
+    "确认自 534475afcaa8d776f10412cab94cbf827f00e583 首个通过内容提交至 646837f2af98dfc47e4202e730f496df7c6109ea 三份 proposal 零差异，当前工作区的三份 proposal 也无未提交变化",
+    "确认三文件均明确标注 NONNORMATIVE PROPOSAL 与 PENDING HUMAN OVERALL-DESIGN APPROVAL，无规范 front matter 或 doc_id，且未加入活动文档或基线注册表",
+    "复核超导量子计算测控组承接来源小组需求、到样前计划、资源排期、人工执行、成果引用和人工验收的端到端场景",
+    "逐项复核 V2-REQ-001 至 V2-REQ-016：编号连续、需求内容非空、优先级明确、候选验收标准可检查，并覆盖后续自动化、桌面和迁移回归",
+    "复核来源小组、对方负责人、我方对接人和业务操作者说明的记录与检索需要，以及单用户业务声明不等同于认证身份",
+    "复核轻量测控计划的必需信息、项目/课题可选标签、时间待确认和制冷机待定的显式语义，未引入完整实验需求单或强制层级",
+    "复核样品编号未知时以型号提前建立计划、测试项、人工任务和资源排期，正式或临时编号可在到样后补录且不阻塞前期规划",
+    "复核预计到样与计划制冷机可直接修改；保存前展示候选任务、人员负载、日期重叠和制冷机冲突，保存后保留当前值、旧值、新值、确认时间和不可覆盖历史",
+    "复核到样日期变化默认不移动任务，只有用户勾选的未开始且标记为到样后执行任务可以等量平移；未选、执行中、已完成任务及制冷机变更均不触发隐式改期",
+    "复核单一主状态优先级：人工验收完成、正在测试、实际到样未测试为空白、时间待确认、延期、窗口内、窗口外；肯定式“已到样待测试”状态为零，空白状态排除到样窗口统计",
+    "复核关注窗口默认 7 个自然日、使用本地日期且可配置，窗口只影响分类、统计卡和列表，不修改预计到样、实际到样或任务日期",
+    "复核正式任务及主负责人、协作者、开始/结束日期、预计工时由人确认；冲突提示不自动决策，成果不托管二进制文件，人工验收通过/退回均形成历史闭环",
+    "复核工作台、测控计划、人工分配、执行、验收、管理六区桌面 IA 及 1280×720、1366×768 验收要求，同时保留 V1 任务、甘特图、负载、日志、维护、备份和恢复",
+    "复核无 AI、无手机端、无登录/权限/实时协作/云部署、无外部数据发送、无二进制附件托管及不扩大监听范围的明确排除项",
+    "复核 V1 公共 API 路径和请求响应字段、CSV/JSON 格式、SQLite 既有数据不被破坏；V2 只增量添加且既有记录不强制关联或猜测回填",
+    "复核迁移前备份、版本化和可重复检查、事务或可恢复分段、失败停止/只读安全状态，以及通过应用回退和迁移前备份恢复而非重置数据库进行回滚",
+    "复核总体设计批准前详细设计、DDL、API、DOM、算法、迁移脚本和实施任务持续阻塞；总体设计获批后详细设计仍须再次经人类批准才可实施",
+    "确认 5dbeddb..646837f 区间没有修改 governance.json、CURRENT-STATE、DOC-REGISTRY、BASELINE-REGISTRY、APPROVAL-LOG 或产品代码，活动 BL-002 和现行 V1 权威文档保持不变"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "最新 TASK-025 验证 docs/05-quality/evidence/TASK-025/20260820T165518873Z-8b8e7000-required-validation.evidence.json 及 output 已重新读取：task/work package/baseline/contract 绑定正确，Release exit_code=0；最终内容由本轮当前提交和指纹另行独立绑定",
+    "git diff --name-status/--summary/--stat/--numstat 5dbeddb64202459cc122eade6cd1dd724ff4e751..646837f2af98dfc47e4202e730f496df7c6109ea：完整区间 17 项变化，实质 TASK-025 manifest 精确为 A V2-requirements.proposal、A V2-overall-design.proposal、A V2-change.proposal",
+    "git diff --exit-code 534475afcaa8d776f10412cab94cbf827f00e583 646837f2af98dfc47e4202e730f496df7c6109ea -- 三份 proposal：exit 0；首个通过轮之后交付内容未变化",
+    "git diff --exit-code 646837f2af98dfc47e4202e730f496df7c6109ea -- 三份 proposal：exit 0；当前工作区内容与当前提交一致",
+    "V2-requirements.proposal：当前提交及工作区 blob=af4bd1b4fd03011c71c2b6a8f94cc93e6d1e358b，SHA-256=008b54c8ce2d03b12bb60ff96dc0637d31f30a6cfa621a1da9218e177b8dae24，73 行",
+    "V2-overall-design.proposal：当前提交及工作区 blob=68b83d3493d04e8973bb70c29d30f269931eca36，SHA-256=7c4a27350621777704c5671eca66d2cf227f8177bfb966b5bca50d8310122481，133 行",
+    "V2-change.proposal：当前提交及工作区 blob=8e6a591152773c2bb008469ad35289eb0b5f342c，SHA-256=9a737dc6d7350df0c007674b34b074dd12ffb5a3d9a7ade1a0309353a11bb465，77 行",
+    "独立调用 Get-GovernanceGitEntriesSha256 对三个 added proposal 重算 subject=4a148b7a53b5b7112e71ca2c2f871654d8870267127ac2c27a40a0d700ed0dd0；与 TASK-025 state 的 provisional-passed subject 及 round-2 记录相同",
+    "独立内容检查：非规范头 3/3、连续需求及验收 16/16、六区 IA 6/6、业务/架构/兼容/审批门矩阵 23/23、肯定式“已到样待测试”状态 0",
+    "git diff --check 5dbeddb64202459cc122eade6cd1dd724ff4e751 646837f2af98dfc47e4202e730f496df7c6109ea：exit 0",
+    "git diff --exit-code 同一区间针对 governance.json、CURRENT-STATE、DOC-REGISTRY、BASELINE-REGISTRY、APPROVAL-LOG、src、public、tests 和 package 文件：exit 0",
+    "本轮独立 Release 治理校验：扫描 27 份文档，0 错误、0 警告"
+  ],
+  "created_at": "2026-08-20T17:03:27.5418849Z"
+}
