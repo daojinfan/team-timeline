@@ -1,0 +1,71 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-041",
+  "work_package": "WP-008",
+  "title": "Integrate reviewed V2 client interactions",
+  "goal": "Implement the approved V2 demand overview, human assignment, ETA and cryostat preview-confirm flows, deliverable submission, manual acceptance, focus and error handling on verified TASK-037 and TASK-039 contracts while preserving V1 interactions",
+  "baseline": "BL-003",
+  "profile": "Release",
+  "role": "INTEGRATOR",
+  "allowed_paths": [
+    "public/app.js"
+  ],
+  "read_paths": [
+    "public"
+  ],
+  "write_paths": [
+    "public/app.js"
+  ],
+  "out_of_scope": [
+    "public/index.html",
+    "public/styles.css",
+    "src/server.js",
+    "tests",
+    "AI task generation",
+    "authentication",
+    "mobile"
+  ],
+  "authoritative_documents": [
+    "REQ-V2-001",
+    "ARC-COMP-004",
+    "QUAL-TRACE-V2-001",
+    "ARC-OVERALL-002",
+    "DEC-002"
+  ],
+  "dependencies": [
+    "TASK-037",
+    "TASK-039"
+  ],
+  "acceptance_criteria": [
+    "Implement all six V2 zones with human-only plan create assign submit and review flows",
+    "Use the frozen 34 API contracts including stale preview re-confirmation and stable errors",
+    "Preserve V1 five-view interactions personal progress independence focus restoration and error state retention",
+    "Pass syntax automated regression desktop two-size and Release checks"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "node.exe",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-20T20:22:55.3674577Z",
+  "release_controls": {
+    "target_environment": "local dev branch",
+    "execution_window": "after TASK-037 and TASK-039 achieved two consecutive independent Release passes",
+    "rollback_plan": "revert the independent public/app.js delivery commit; keep verified server database and desktop shell contracts unchanged",
+    "observation_metrics": "syntax and 26+ test results API and DOM contract coverage key browser workflows V1 regressions reviewer evidence",
+    "stop_conditions": "server or DOM contract drift stale preview bypass automatic task creation V1 regression failing validation or unresolved reviewer finding",
+    "post_release_owner": "PROJECT_MANAGER 01a01ef6-d413-7660-bdc5-62bd5873cbf4"
+  }
+}

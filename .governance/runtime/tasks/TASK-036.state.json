@@ -5,7 +5,7 @@
   "work_package": "WP-008",
   "contract_sha256": "b48d159b1aead854325ed7a21f5ae56135b5f0799e2e3c080c9d54e6ac024764",
   "baseline": "BL-003",
-  "state": "planned",
+  "state": "superseded",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -28,7 +28,7 @@
     "pass_streak": 0,
     "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "Reviewer for superseded TASK-035; a replacement reviewer will bind the replacement WP-008 integration task.",
   "created_at": "2026-08-20T19:22:33.2326009Z",
-  "updated_at": "2026-08-20T19:22:33.2326009Z"
+  "updated_at": "2026-08-20T20:21:34.7063892Z"
 }

@@ -1,0 +1,72 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-042",
+  "work_package": "WP-008",
+  "title": "Review integrated V2 client workflows",
+  "goal": "Independently review TASK-041 complete app.js and end-to-end V2 human workflows against verified server and DOM contracts for two consecutive Release passes",
+  "baseline": "BL-003",
+  "profile": "Release",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-042"
+  ],
+  "read_paths": [
+    "public"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-042"
+  ],
+  "out_of_scope": [
+    "implementation changes",
+    "delegation"
+  ],
+  "authoritative_documents": [
+    "REQ-V2-001",
+    "ARC-COMP-004",
+    "QUAL-TRACE-V2-001",
+    "ARC-OVERALL-002",
+    "DEC-002"
+  ],
+  "dependencies": [
+    "TASK-041"
+  ],
+  "acceptance_criteria": [
+    "Review complete app.js and exact TASK-041 diff",
+    "Exercise plan ETA cryostat assignment submission acceptance and V1 regression flows using an isolated temporary database",
+    "Record two consecutive unchanged-content Release passes with desktop 1280x720 and 1366x768 evidence"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-ProjectPath",
+        ".",
+        "-Level",
+        "Release"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface",
+    "production_release"
+  ],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-20T20:23:06.8541303Z",
+  "release_controls": {
+    "target_environment": "local dev branch",
+    "execution_window": "after TASK-041 completes in the current approved V2 session",
+    "rollback_plan": "reviewer writes evidence only; cancel if TASK-041 is superseded",
+    "observation_metrics": "full diff API DOM and browser flow checks two-pass subject fingerprint Release validation",
+    "stop_conditions": "scope drift contract mismatch browser workflow failure V1 regression or unresolved finding",
+    "post_release_owner": "PROJECT_MANAGER 01a01ef6-d413-7660-bdc5-62bd5873cbf4"
+  }
+}

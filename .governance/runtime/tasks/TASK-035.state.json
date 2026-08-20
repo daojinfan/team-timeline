@@ -5,7 +5,7 @@
   "work_package": "WP-008",
   "contract_sha256": "23b8c482299c109df133901a3fde1feb390e2a720e1300b97eb202533210e46d",
   "baseline": "BL-003",
-  "state": "planned",
+  "state": "superseded",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -28,7 +28,7 @@
     "pass_streak": 0,
     "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "Its immutable dependencies TASK-031 and TASK-033 were replaced by independently verified repair deliveries TASK-037 and TASK-039; a replacement WP-008 integration task will bind the reviewed contracts.",
   "created_at": "2026-08-20T19:22:33.0546778Z",
-  "updated_at": "2026-08-20T19:22:33.3695811Z"
+  "updated_at": "2026-08-20T20:21:34.5826482Z"
 }
