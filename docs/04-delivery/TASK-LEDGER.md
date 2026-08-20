@@ -36,8 +36,8 @@ review_policy: independent-required
 
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| WP-002 | TASK-028 | pending | REVIEWER | Review V2 detailed design and development plan | BL-002 | pending | TASK-027 | completed | docs/05-quality/evidence/TASK-028 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
-| WP-002 | TASK-027 | pending | ARCHITECT | Create V2 detailed design and development plan | BL-002 | pending | TASK-025 | running | docs/09-reports/V2-detailed-design.proposal, docs/09-reports/V2-development-plan.proposal | required-validation | TASK-028 | changes-required | docs/05-quality/evidence/TASK-028/review-round-1.json | Plan 自动登记，等待调度 |
+| WP-002 | TASK-028 | pending | REVIEWER | Review V2 detailed design and development plan | BL-002 | pending | TASK-027 | pending | docs/05-quality/evidence/TASK-028 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-002 | TASK-027 | pending | ARCHITECT | Create V2 detailed design and development plan | BL-002 | pending | TASK-025 | running | docs/09-reports/V2-detailed-design.proposal, docs/09-reports/V2-development-plan.proposal | required-validation | TASK-028 | pending |  | Plan 自动登记，等待调度 |
 | WP-002 | TASK-026 | pending | REVIEWER | Review V2 requirements and overall design proposal | BL-002 | pending | TASK-025 | completed | docs/05-quality/evidence/TASK-026 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-002 | TASK-025 | pending | ARCHITECT | Prepare V2 requirements and overall design proposal | BL-002 | pending | n/a | completed | docs/09-reports/V2-requirements.proposal, docs/09-reports/V2-overall-design.proposal, docs/09-reports/V2-change.proposal | required-validation | TASK-026 | passed | docs/05-quality/evidence/TASK-026/review-round-3.json | Plan 自动登记，等待调度 |
 | WP-001 | TASK-024 | pending | REVIEWER | Review V2 requirements and overall design | BL-002 | pending | TASK-023 | replaced | docs/05-quality/evidence/TASK-024 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |

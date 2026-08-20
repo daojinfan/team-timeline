@@ -1,7 +1,7 @@
 NONNORMATIVE DEVELOPMENT-PLAN PROPOSAL
 PENDING INDEPENDENT DETAILED-DESIGN REVIEW
 
-本文件是与 `V2-detailed-design.proposal` 配套的非规范发展计划，不是工作包台账、任务契约或基线成员。详细设计独立审核通过前不得创建开发任务；审核通过后，项目经理可依据用户本轮授权记录 acceptance 并直接进入开发调度。本文不修改治理状态，也不授权任何成员越过实际 TASK allowed_paths。
+本文件是与 `V2-detailed-design.proposal` 配套的非规范发展计划，不是工作包台账、任务契约或基线成员。详细设计独立审核通过后，项目经理可依据用户本轮授权记录 acceptance，但必须先完成第 2 节权威化与新基线门；当前 BL-002 不得直接承载 V2 schema/API 开发。本文不修改治理状态，也不授权任何成员越过实际 TASK allowed_paths。
 
 # V2 开发计划提案
 
@@ -11,47 +11,59 @@ PENDING INDEPENDENT DETAILED-DESIGN REVIEW
 
 | 包 | 独占写入 | 核心交付 | 依赖 | 可并行关系 |
 | --- | --- | --- | --- | --- |
-| DEV-A 服务端与测试 | `src/server.js`、`tests/**` | schema v2、迁移/备份、全部 `/api/v2`、状态/冲突/验收事务、自动化回归 | 详设 accepted | 可与 DEV-B 并行 |
-| DEV-B 桌面外壳与样式 | `public/index.html`、`public/styles.css` | 六区 DOM、V1 子视图嵌套、dialogs/drawer、颜色、双尺寸静态布局 | 详设 accepted | 可与 DEV-A 并行 |
+| DEV-A 服务端与测试 | `src/server.js`、`tests/**` | schema v2、迁移/备份、全部 `/api/v2`、状态/冲突/验收事务、自动化回归 | 正式 V2 文档/新基线 active、Release 0/0 | 可与 DEV-B 并行 |
+| DEV-B 桌面外壳与样式 | `public/index.html`、`public/styles.css` | 六区 DOM、V1 子视图嵌套、dialogs/drawer、颜色、双尺寸静态布局 | 正式 V2 文档/新基线 active、Release 0/0 | 可与 DEV-A 并行 |
 | DEV-C 客户端交互 | `public/app.js` | API 适配、状态/筛选、预览确认、人工分配、成果/验收、焦点与反馈 | DEV-A、DEV-B 已集成并验证 | 不与 A/B 同时修改其文件 |
 
 不得在包内修改文档注册表、基线、治理运行状态或其他包文件；治理动作只由 PM 在唯一协调工作树执行。每个交付包开始前必须建立 Release TASK、绑定独立 Reviewer，明确启动提交、租约、验证和回滚。
 
-## 2. 推荐执行序列
+## 2. 不可跳过的权威化与新基线门
+
+详细设计 Reviewer 对最终指纹通过、PM 记录 acceptance 后，PM 必须在唯一协调工作树执行以下治理序列，四项全成才可 `Plan/Start` DEV-A/DEV-B：
+
+1. 以最终候选内容建立并登记正式 V2 REQ、总体 ARC、详细 ARC/组件契约、DEC 和 CR；权威详细设计 canonical design body（详设候选从 `## 1. 冻结边界` 至 `## 16. 审核通过后的权威化与新基线门` 前一内容行，统一 LF 的 UTF-8 字节）须与 Reviewer 最终指纹一致，只允许规范头、登记元数据和治理门包装变化，并同时记录候选 SHA、正式文档 SHA 和 canonical design body SHA。
+2. 创建并激活新 V2 基线（预期 `BL-003`），固定上述指纹并纳入正式文档、决定和批准记录；BL-002 保留为 V1/提案阶段历史，明确不能授权 schema 开发。
+3. 在新基线建立 V2 work packages、generated context routes 以及 DEV-A/DEV-B/DEV-C 与各独立 Reviewer 的 Release TASK 契约，绑定相同详设指纹、写入边界、依赖和回滚。
+4. 针对活动新基线运行 Release 治理校验并达到 0 error / 0 warning。
+
+用户本轮授权覆盖不发生实质设计漂移时的 acceptance、权威化、登记、新基线和工作包治理，无需再询问同一详细设计。任一正式文档、基线清单或任务契约不能忠实表达最终指纹，必须停止为 `needs-decision`，不能把差异留给开发成员猜测。
+
+## 3. 推荐执行序列
 
 ```text
-详设独立审核通过
-  └─ PM 记录 acceptance / 建立 V2 开发工作包
-       ├─ DEV-A server + tests ──独立审核──┐
-       └─ DEV-B index + styles ──独立审核─┤
-                                          ├─ PM 顺序集成并复验
-                                          └─ DEV-C app.js ─独立审核
-                                                        └─ 集成验收与用户验收
+详设独立审核通过 / PM 记录 acceptance
+  └─ 正式 V2 REQ/ARC/DEC/CR 登记且指纹一致
+       └─ 新基线（预期 BL-003）active + V2 WP/context + Release 0/0
+            ├─ DEV-A server + tests ──独立审核──┐
+            └─ DEV-B index + styles ──独立审核─┤
+                                               ├─ PM 顺序集成并复验
+                                               └─ DEV-C app.js ─独立审核
+                                                             └─ 集成验收与用户验收
 ```
 
 DEV-A 与 DEV-B 只有在不同隔离 worktree、路径完全不重叠、均以同一详设指纹为输入时才并行。DEV-C 必须基于 A/B 的已集成提交开始，避免猜测 API 或 DOM。
 
-## 3. DEV-A：服务端、迁移与自动化
+## 4. DEV-A：服务端、迁移与自动化
 
-### 3.1 任务范围
+### 4.1 任务范围
 
 - 只写 `src/server.js`、`tests/**`；不修改 package.json、public、数据文件或治理文档。
 - 按详设逐字实现 schema 版本 2、表/索引/外键、启动前备份、事务迁移、幂等重开、失败停止和恢复验证。
-- 实现全部 `/api/v2` 资源、计划、测试项、模板、ETA/制冷机 preview-confirm、人工任务、成果、审核、事件和 V2 backup；V1 API 路径/字段/错误行为不变。
+- 实现全部 `/api/v2` status、资源、计划、测试项、模板、ETA/制冷机 preview-confirm、人工任务、成果、审核、事件和普通 JSON V2 backup；逐端点严格实现 query/request、canonical `{data,meta?}`、空值、排序/分页和稳定 4xx；V1 API 路径/字段/既有未关联行为不变。
 - 使用服务端本地日历日实现状态分类和日期平移；正式任务与人员数组必须来自请求，禁止默认成员或自动任务。
 
-### 3.2 必须新增的测试组
+### 4.2 必须新增的测试组
 
 1. migration：新库、V1 副本、重开不改写、失败回滚、checksum/未来版本拒绝、raw backup 校验、外键与 quick_check。
 2. schema：逐表列、约束、索引、外键；V1 表列顺序不变。
-3. resources/plans：联系人规范化唯一、制冷机停用历史、计划最小字段、pending 互斥、测试项和模板版本。
+3. endpoint-contracts/resources/plans：逐个 `/api/v2` 的 unknown query/field、canonical data/meta、null/[]、排序/分页、稳定 error/details；联系人规范化唯一、制冷机停用历史、计划最小字段、pending 互斥、测试项/模板版本、status 和普通 `{data:{...}}` backup。
 4. classifier：七级优先级、默认 7 日闭区间、窗口边界、actual arrived 空白且排除统计、漂移和本地 today。
-5. previews：无写入、token/expected_version、stale、protected tasks、ETA 等量平移与制冷机冲突。
-6. assignment：人工载荷、主负责人/协作者、0.5h、日期/40h/制冷机冲突与 acknowledge、事务失败无半成品。
-7. deliverable/review：模板快照、URL 白名单、本地路径文本、accepted/returned、重复审核拒绝、个人 progress/note 独立、计划完成。
-8. compatibility：现有全部测试、CSV 标题、V1 JSON backup keys、软删除/归档/日志、首次 seed 与 reset 固定日期语义。
+5. previews：无写入；ETA/制冷机 confirm 回传相同 new value/pending、token/version/ack/actor；事务内按当前事实+完整输入重算 token；stale/protected、等量平移、canonical success 与稳定错误。
+6. assignment：人工载荷、主负责人/协作者、0.5h、日期/40h/制冷机冲突与 acknowledge；更新 task 先排除自身旧 assignment/旧周工时，未改输入无自重叠/自负载，改后仅外部冲突；事务失败无半成品。
+7. deliverable/review：客户端仅传 item ID+布尔值；活动模板/submission 快照 exact set、空/伪造/重复/缺失拒绝、服务端 label/position 快照、首次/returned supersession、URL 白名单、本地路径文本、accepted/returned、重复审核拒绝、个人 progress/note 独立、计划完成。
+8. compatibility：现有全部测试、CSV 标题、V1 JSON backup keys、未关联 mutator；V2 task soft-delete tombstone、主 assignment/member 稳定 409、协作者删除、restore primary 检查；purge/reset 先备份，hard delete 后 plan link 消失但 submission/review/event/original task/title 保留且无 FK 失败；首次 seed 与 reset 固定日期语义。
 
-### 3.3 验收与验证
+### 4.3 验收与验证
 
 - `node --check src/server.js`。
 - `npm test` 全部通过，V1 测试不得删除、放宽或改成跳过。
@@ -59,13 +71,13 @@ DEV-A 与 DEV-B 只有在不同隔离 worktree、路径完全不重叠、均以�
 - `git diff --check -- src/server.js tests`；Release 治理校验通过。
 - 实际差异只有 `src/server.js` 和 `tests/**`。
 
-### 3.4 DEV-A 独立 Reviewer
+### 4.4 DEV-A 独立 Reviewer
 
 Reviewer 只写自己的 `docs/05-quality/evidence/<TASK-ID>/review-round-N.json`，完整读取详设、服务端、测试、启动到交付 diff 和验证证据。Release 要求对同一最终指纹连续两轮完整通过；重点独立制造迁移失败、重开、stale preview、事务回滚和 V1 格式比较，不能只复述测试输出。
 
-## 4. DEV-B：六区外壳与桌面样式
+## 5. DEV-B：六区外壳与桌面样式
 
-### 4.1 任务范围
+### 5.1 任务范围
 
 - 只写 `public/index.html`、`public/styles.css`；不修改 app.js、server、tests 或治理文档。
 - 精确建立详设冻结的 `#v2Nav`、六个顶层 panel/toolbar、execution/management 子导航、所有列表/筛选 ID、七个 dialogs 和 420px `#planDetailPane`。
@@ -73,14 +85,14 @@ Reviewer 只写自己的 `docs/05-quality/evidence/<TASK-ID>/review-round-N.json
 - 实现六状态 CSS 变量、空白状态无可见 chip、焦点可见样式、busy/error/empty 容器、局部滚动和桌面布局。
 - 不新增移动断点、底部导航、触摸专用交互、AI/登录/上传控件。
 
-### 4.2 静态 DOM 检查
+### 5.2 静态 DOM 检查
 
 - 所有 HTML ID 唯一；详设必需 ID 100% 存在；`aria-controls`/`aria-labelledby` 指向存在节点。
 - 六个 `[data-v2-view]` 和六个 `[data-v2-toolbar-view]` 值一一对应；V1 五个 view/toolbar 契约仍可解析。
 - dialog 有可访问名称、显式关闭按钮和 form error live region；drawer 默认 hidden 且有关闭按钮。
 - CSS 无手机端 media query、底部导航或全页水平滚动规则；颜色与详设完全一致。
 
-### 4.3 验收与验证
+### 5.3 验收与验证
 
 - `node --check public/app.js` 确认 HTML 移动未破坏现有脚本解析前提。
 - 在临时最小静态激活脚本或审查者 DOM 检查下验证六区结构；此阶段不伪造完整交互完成。
@@ -88,11 +100,11 @@ Reviewer 只写自己的 `docs/05-quality/evidence/<TASK-ID>/review-round-N.json
 - `git diff --check -- public/index.html public/styles.css`；Release 治理校验通过。
 - 实际差异仅两个独占文件。
 
-### 4.4 DEV-B 独立 Reviewer
+### 5.4 DEV-B 独立 Reviewer
 
 Reviewer 两轮完整检查实际 diff、完整 HTML/CSS、冻结 ID、可访问性、双分辨率截图/布局指标和 V1 ID 保留。不能用源码静态阅读替代两种桌面尺寸的浏览器证据；不得修改产品文件。
 
-## 5. PM 中间集成门
+## 6. PM 中间集成门
 
 DEV-A 与 DEV-B 各自通过最终 Reviewer 后，PM 才可顺序集成两项交付提交。集成后必须：
 
@@ -101,9 +113,9 @@ DEV-A 与 DEV-B 各自通过最终 Reviewer 后，PM 才可顺序集成两项交
 - 启动本地服务，确认 V1 API、V1 五视图和静态 V2 六区外壳可加载；不在此门宣布 V2 客户端完成。
 - 冻结集成提交作为 DEV-C 的 start commit；API/DOM 与详设不一致时停止，不让 DEV-C 自行适配漂移。
 
-## 6. DEV-C：客户端交互
+## 7. DEV-C：客户端交互
 
-### 6.1 任务范围
+### 7.1 任务范围
 
 - 只写 `public/app.js`；不修改 HTML/CSS、server、tests 或治理文档。
 - 扩展客户端 state 和 `teamTaskGantt.v2Prefs.v1`，实现六区/子视图切换、bootstrap/load、工作台筛选分组、状态和漂移显示。
@@ -112,7 +124,7 @@ DEV-A 与 DEV-B 各自通过最终 Reviewer 后，PM 才可顺序集成两项交
 - 精确实现 dialog 优先的 Escape、420px 抽屉清状态与重渲染返焦；保留现有任务抽屉焦点行为。
 - 所有 API 文本先转义；URL 仅 http/https 且 noopener；本地路径只 textContent。无自动成员、自动任务、自动验收或附件读取。
 
-### 6.2 验收与验证
+### 7.2 验收与验证
 
 - `node --check public/app.js` 和 `npm test` 全部通过。
 - 静态契约脚本：全部直接 ID 引用存在、无重复 listener/ID、六顶层与五 V1 子视图唯一可见。
@@ -121,11 +133,11 @@ DEV-A 与 DEV-B 各自通过最终 Reviewer 后，PM 才可顺序集成两项交
 - `git diff --check -- public/app.js`；Release 治理校验通过。
 - 实际差异仅 `public/app.js`。
 
-### 6.3 DEV-C 独立 Reviewer
+### 7.3 DEV-C 独立 Reviewer
 
 Reviewer 从头审查完整 app.js、A/B 集成契约、实际交付 diff和全部关键交互。Release 两轮必须覆盖正常、错误、键盘、焦点、stale preview、任务进度独立、实际到样空白统计排除和 V1 五视图回归；不得只看新增函数或自动化 pass。
 
-## 7. 最终集成与验收
+## 8. 最终集成与验收
 
 PM 在 DEV-C 两轮最终通过后执行唯一协调树集成和完整验证：
 
@@ -136,7 +148,7 @@ PM 在 DEV-C 两轮最终通过后执行唯一协调树集成和完整验证：
 5. 核对无 AI、移动、登录、云、附件托管；本地路径未被执行，URL 协议受限。
 6. 汇总 Reviewer 最终 passed、内容指纹、验证证据、迁移备份/回滚演练和已知限制后，由 PM 请求/记录最终产品验收；未经产品验收不部署、不推送、不删除备份。
 
-## 8. 需求到交付包映射
+## 9. 需求到交付包映射
 
 | 需求 | DEV-A | DEV-B | DEV-C |
 | --- | --- | --- | --- |
@@ -146,11 +158,11 @@ PM 在 DEV-C 两轮最终通过后执行唯一协调树集成和完整验证：
 | V2-REQ-007..008 | preview/token/history/平移保护 | ETA/制冷机 dialog | 预览、勾选、ack、反馈 |
 | V2-REQ-009..011 | overview/classifier/window | 工作台/六色/空态 | 筛选分组、窗口偏好、漂移 |
 | V2-REQ-012 | 冲突算法/工时 | 分配冲突区 | 负责人/协作者与冲突确认 |
-| V2-REQ-013..014 | submission/review transaction | submission/review dialog | 快照、URL/路径、通过/退回 |
-| V2-REQ-015 | 增量迁移和 V1 回归 | V1 ID/视图保留 | V1 功能与偏好兼容 |
+| V2-REQ-013..014 | submission/review exact-set、历史快照与事务 | submission/review dialog | 只传 item ID+布尔值、URL/路径、通过/退回 |
+| V2-REQ-015 | 增量迁移、V1 mutator/reset 历史保留回归 | V1 ID/视图保留 | V1 功能与偏好兼容 |
 | V2-REQ-016 | 自动化/迁移证据 | 双尺寸结构证据 | 双尺寸完整交互证据 |
 
-## 9. 通用停止条件
+## 10. 通用停止条件
 
 任一情况立即停止受影响包并报告 PM，不自行修正设计：
 
@@ -161,12 +173,12 @@ PM 在 DEV-C 两轮最终通过后执行唯一协调树集成和完整验证：
 - 出现 AI、手机端、身份认证、云端、附件托管或扩大网络暴露的范围漂移。
 - 独立 Reviewer finding 未解决、两轮指纹不同、Release 不通过或浏览器关键路径失败。
 
-## 10. 回滚和开发完成定义
+## 11. 回滚和开发完成定义
 
 - 每包回滚为撤销尚未集成的本地交付提交；PM 集成后按反向顺序回退 C、B、A。不得使用 `git reset --hard` 或删除用户数据。
 - 数据迁移后的运行回滚必须停止服务并恢复迁移前 SQLite 备份，不能仅回退代码继续打开 v2 schema，也不能 reset sample。
 - “开发完成”要求三包均有最终 Reviewer passed、集成验证与迁移演练通过、双尺寸浏览器证据完整、V1 回归无退化并获得产品验收；单个任务自述或测试 pass 不等于完成。
 
-## 11. 审核通过后的动作
+## 12. 审核通过后的动作
 
-本发展计划与详细设计使用同一内容指纹接受独立完整审核。审核最终通过后，PM 按用户已授予的持续执行授权记录 acceptance、建立新的 V2 开发工作包和 DEV-A/DEV-B 任务及独立 Reviewer，然后按第 2 节推进；无需再次请求同一详细设计确认。若审核要求实质修改，则修改后必须重新审核最终内容，不能以旧结论进入开发。
+本发展计划与详细设计使用同一最终内容接受独立完整审核。审核最终通过后，PM 按用户已授予的持续执行授权记录 acceptance，并严格完成第 2 节权威化/新基线门；只有新基线 active、V2 work packages/context routes 就绪且 Release 0 error / 0 warning，才能按第 3 节 `Plan/Start` DEV-A/DEV-B。无需再次请求同一详细设计确认；若权威化或审核要求实质修改，则修改后必须重新审核最终内容，不能以旧结论或 BL-002 进入开发。
