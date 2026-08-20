@@ -146,6 +146,8 @@ function monthChanged(previous, current) {
 }
 
 let toastTimer = null;
+let detailReturnFocus = null;
+let detailReturnSelector = "";
 
 function showToast(message, options = {}) {
   const toast = $("#toast");
@@ -952,6 +954,44 @@ function renderDetail() {
   content.innerHTML = "";
 }
 
+function rememberDetailTrigger(trigger) {
+  detailReturnFocus = trigger?.focus ? trigger : null;
+  if (trigger?.dataset.selectAssignment) {
+    detailReturnSelector = `[data-select-assignment="${trigger.dataset.selectAssignment}"]`;
+  } else if (trigger?.dataset.selectTask) {
+    detailReturnSelector = `[data-select-task="${trigger.dataset.selectTask}"]`;
+  } else {
+    detailReturnSelector = "";
+  }
+}
+
+function closeDetail({ restoreFocus = true } = {}) {
+  const trigger = detailReturnFocus;
+  const returnSelector = detailReturnSelector;
+  detailReturnFocus = null;
+  detailReturnSelector = "";
+  state.activeAssignmentId = null;
+  state.activeTaskId = null;
+  renderGantt();
+  renderDetail();
+
+  if (!restoreFocus) return;
+  const activeView = document.getElementById(`${state.activeView}View`);
+  const candidates = [
+    trigger,
+    returnSelector ? activeView?.querySelector(returnSelector) : null,
+    activeView?.querySelector("button:not([disabled]), input:not([disabled]), select:not([disabled])"),
+    document.querySelector(`[data-view="${state.activeView}"]`),
+    $("#newTaskBtn")
+  ];
+  const target = candidates.find((candidate) => (
+    candidate?.isConnected
+    && typeof candidate.focus === "function"
+    && candidate.getClientRects().length > 0
+  ));
+  target?.focus();
+}
+
 function memberAssignmentBlock(task) {
   return `
     <div class="assigned-members">
@@ -1715,10 +1755,7 @@ function bindEvents() {
     const action = (selector) => target.closest(selector);
 
     if (action("#closeDetailBtn")) {
-      state.activeAssignmentId = null;
-      state.activeTaskId = null;
-      renderGantt();
-      renderDetail();
+      closeDetail();
       return;
     }
     if (action("[data-open-task-dialog]")) return openTaskDialog();
@@ -1769,14 +1806,18 @@ function bindEvents() {
     if (action("[data-edit-task]")) return openTaskEditor(action("[data-edit-task]").dataset.editTask);
     if (action("[data-edit-assignment]")) return openAssignmentEditor(action("[data-edit-assignment]").dataset.editAssignment);
     if (action("[data-select-assignment]")) {
-      state.activeAssignmentId = Number(action("[data-select-assignment]").dataset.selectAssignment);
+      const trigger = action("[data-select-assignment]");
+      rememberDetailTrigger(trigger);
+      state.activeAssignmentId = Number(trigger.dataset.selectAssignment);
       state.activeTaskId = null;
       renderGantt();
       renderDetail();
       return;
     }
     if (action("[data-select-task]")) {
-      state.activeTaskId = Number(action("[data-select-task]").dataset.selectTask);
+      const trigger = action("[data-select-task]");
+      rememberDetailTrigger(trigger);
+      state.activeTaskId = Number(trigger.dataset.selectTask);
       state.activeAssignmentId = null;
       renderGantt();
       renderDetail();
@@ -1875,6 +1916,15 @@ function bindEvents() {
         await loadData();
       }, { control: action("[data-delete-member]"), busyText: "删除中…" });
     }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape" || event.defaultPrevented) return;
+    if (document.querySelector("dialog[open]")) return;
+    const pane = $("#detailPane");
+    if (!pane || pane.hidden || !pane.classList.contains("is-open")) return;
+    event.preventDefault();
+    closeDetail();
   });
 }
 
