@@ -1,4 +1,5 @@
 @echo off
+chcp 65001 >nul
 setlocal
 
 cd /d "%~dp0"
@@ -27,7 +28,7 @@ if not errorlevel 1 (
   exit /b 0
 )
 
-echo Starting team task manager service...
+echo Starting 小组任务管理与甘特图系统...
 echo URL: http://localhost:3000
 echo.
 

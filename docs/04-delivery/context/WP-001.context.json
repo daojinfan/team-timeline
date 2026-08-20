@@ -1,0 +1,31 @@
+{
+  "$schema": "schemas/work-package-context.schema.json",
+  "schema_version": 1,
+  "work_package": "WP-001",
+  "baseline": "BL-001",
+  "scope": [
+    "project-governance"
+  ],
+  "required_documents": [
+    {
+      "doc_id": "DEL-WORK-001",
+      "mode": "full"
+    },
+    {
+      "doc_id": "PROJ-INDEX-001",
+      "mode": "summary"
+    },
+    {
+      "doc_id": "PROJ-CHARTER-001",
+      "mode": "summary"
+    },
+    {
+      "doc_id": "ARC-OVERALL-001",
+      "mode": "summary"
+    }
+  ],
+  "decisions": [],
+  "validation": [
+    "治理检查"
+  ]
+}

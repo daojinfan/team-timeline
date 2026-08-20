@@ -1,0 +1,72 @@
+---
+doc_id: DEL-TASK-LEDGER-001
+type: delivery.task-ledger
+status: active
+version: 1.0
+owner: human
+baseline: BL-001
+depends_on:
+  - DEL-WORK-001
+affects:
+  - PROJ-STATE-001
+supersedes: null
+last_reviewed: 2026-08-20
+project_mode: SINGLE_TASK
+ledger_status: inactive
+project_manager_task_id: none
+project_manager_host_id: none
+review_policy: independent-required
+---
+
+# 团队任务台账
+
+本台账仅在项目启用 `TEAM_PROJECT` 后使用。它记录独立 Codex 任务的身份、基线、工作包、环境、状态、交付物和生命周期。
+
+切换到团队模式时，必须把元数据 `project_mode` 改为 `TEAM_PROJECT`、`ledger_status` 改为 `active`，填写真实的项目经理任务与宿主标识，并保持 `review_policy: independent-required`。`governance.json.authoritative_documents.task_ledger` 必须指向本文件。机器校验器以这些字段和下表固定列名判断团队台账及强制审核门是否可执行。
+
+## 项目经理
+
+- 项目经理任务：未启用
+- 项目经理任务标识：none
+- 项目经理宿主标识：none
+- 当前阶段：DISCOVERY
+- 当前基线：BL-001
+
+## 任务列表
+
+| 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+
+允许的任务状态：
+
+```text
+pending
+running
+needs-attention
+completed
+replaced
+archived
+```
+
+## 任务登记要求
+
+每个任务至少记录：
+
+- `thread_id` 和宿主标识；
+- 工作包编号、任务角色和任务标题；
+- 使用的项目基线；
+- 环境、分支或 worktree；
+- 上游依赖及满足状态；
+- 最近一次有意义的进展；
+- 实际交付物、验证命令和结果；
+- 对非 `REVIEWER` 任务指定独立审核任务、审核状态和审核证据；
+- 未解决问题、风险和后续建议；
+- 替换、复用或归档原因。
+
+任务台账是项目经理的协调记录，不替代设计、代码、测试和实际交付物。
+
+任务角色只允许 `ANALYST`、`ARCHITECT`、`IMPLEMENTER`、`TESTER`、`INTEGRATOR` 和 `REVIEWER`。非 `REVIEWER` 任务在开始前必须绑定另一个同工作包的 `REVIEWER` 任务；审核任务必须依赖被审核任务。审核通过的证据必须位于审核任务自己的 `docs/05-quality/evidence/TASK-NNN/` 目录。`REVIEWER` 行的审核任务、审核状态和审核证据统一填写 `n/a`，避免产生无限递归审核。
+
+任务契约中的 `read_paths` 用于声明可读取范围，`write_paths` 用于声明可修改范围，`review.required` 只记录不可变审核要求；审核任务标识、状态和证据属于运行状态与本台账。`Plan` 自动创建本表任务行，`AssignReview` 自动写入审核任务标识，AI 不得要求用户预先手工造行。审核状态允许 `pending`、`running`、`changes-required`、`provisional-passed`、`passed` 和 `cancelled`。审核任务的 `allowed_paths` 和 `write_paths` 只能位于自己的审核证据目录。推荐流程为：`Lite：Plan -> AssignReview -> Start -> Verify -> RecordReview -> passed -> Accept`；`Standard/Release：Plan -> AssignReview -> Start -> Verify -> 第一轮 RecordReview -> provisional-passed -> ReopenReview -> Start reviewer -> Verify reviewer -> 第二轮 RecordReview -> passed -> Accept`。任一所需轮次 `changes-required` 时执行 `修复 -> Verify -> ReopenReview`，连续通过计数按档位重新开始；一次审核中的多个证据文件仍只算一轮。`RecordReview` 必须写入符合 `schemas/review-evidence.schema.json` 的一个或多个审核证据，其中 `diff_checked=true`、`changes` 和 `change_summary` 用于证明审核确实检查了新增/修改内容；清单必须匹配任务启动提交后的实际 Git 变更及变更类型，重命名还需记录 `old_path`，且工作包、基线必须与 TASK 契约一致。只有自动化测试 pass、没有实际变更清单时不得通过。审核任务由 `RecordReview` 完成并保持 `verified`，不得记录 acceptance approval 或单独执行 `Accept`；工作包聚合时该状态按审核已完成处理。历史 `accepted` 审核任务使用 `MigrateReviewer` 规范化并重新执行 Strict。取消审核时应先用 `Supersede` 将运行时状态置为 `superseded`，由工具映射为台账 `replaced`；`archived` 只用于之后的历史台账整理。
+
+本台账和 `.governance/runtime` 只允许由项目经理的唯一协调工作树写入。表中的环境/worktree 字段用于定位成员交付来源，不表示成员 worktree 可以独立维护治理状态；项目经理应先集成成员提交，再在协调工作树执行 Verify、审核登记和验收。

@@ -1128,7 +1128,7 @@ if (process.argv[1] === __filename) {
   const database = await initDatabase();
   const server = createAppServer(database);
   server.listen(port, () => {
-    console.log(`Team task manager is running at http://localhost:${port}`);
+    console.log(`小组任务管理与甘特图系统已启动：http://localhost:${port}`);
     console.log(`SQLite database: ${dbPath}`);
   });
 }

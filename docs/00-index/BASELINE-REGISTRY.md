@@ -1,0 +1,40 @@
+---
+doc_id: PROJ-BASELINE-REGISTRY-001
+type: governance.baseline-registry
+status: active
+version: 1.0
+owner: human
+baseline: BL-001
+depends_on:
+  - PROJ-DOC-REGISTRY-001
+affects:
+  - DEL-WORK-001
+supersedes: null
+last_reviewed: 2026-08-20
+---
+
+# 基线注册表
+
+本文件登记所有项目基线。基线清单位于 `baselines/<基线编号>/manifest.json`，记录文档版本、文件哈希、Git 提交和批准记录。清单一旦批准不得原地修改。
+
+清单的 `documents` 是不可变的基线受控内容；`context_routes` 锁定目标基线中活动工作包的上下文读取路由及哈希；`operational_documents` 仅登记运行状态文件，不参与内容哈希。运行状态文件可以随着基线登记、激活和任务推进更新，不构成基线内容漂移。
+
+初始化产生的 `BL-001` 是草案基线，只能用于编写和评审，不能授权实现。完成项目章程、需求和设计评审后，生成清单并取得批准，再通过独立激活步骤将其设为唯一可执行基线。
+
+| 基线 | 状态 | 清单 | Git 提交 | 批准记录 | 创建日期 | 说明 |
+| --- | --- | --- | --- | --- | --- | --- |
+| BL-001 | draft | 尚未生成 | 尚未锁定 | 无 | 2026-08-20 | 初始化草案 |
+
+允许的状态：`draft`、`approved`、`active`、`superseded`、`archived`。同一时刻只能有一个 `active` 基线。
+
+## 登记要求
+
+激活基线前必须确认：
+
+- 清单中的规范性文件路径和版本与 `DOC-REGISTRY.md` 一致；
+- 文件哈希和 Git 提交可重现；
+- 所有关联决策和变更包已经批准；
+- 批准日志明确记录批准对象和范围；
+- 受影响工作包已经重新评估。
+
+状态必须按 `draft -> approved -> active -> superseded -> archived` 转换。`approved` 只表示内容已获批准；激活时必须先将原 `active` 基线转为 `superseded`，再把新基线转为唯一 `active`，最后同步更新 `governance.json.current_baseline` 和 `CURRENT-STATE.md`。不得跳过激活步骤。

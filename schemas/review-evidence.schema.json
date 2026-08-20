@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/daojinfan/large-project-governance-framework/schemas/review-evidence.schema.json",
+  "title": "独立审核证据",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schema_version", "reviewer_task_id", "reviewed_task_ids", "work_package", "baseline", "result", "diff_checked", "changes", "change_summary", "scope_checked", "findings", "validation_evidence", "created_at"],
+  "properties": {
+    "$schema": { "const": "schemas/review-evidence.schema.json" },
+    "schema_version": { "const": 1 },
+    "reviewer_task_id": { "type": "string", "pattern": "^TASK-[0-9]{3,}$" },
+    "reviewed_task_ids": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "pattern": "^TASK-[0-9]{3,}$" } },
+    "work_package": { "type": "string", "pattern": "^WP-[0-9]{3,}$" },
+    "baseline": { "type": "string", "pattern": "^BL-[0-9]{3,}$" },
+    "result": { "enum": ["passed", "changes-required", "cancelled"] },
+    "diff_checked": { "type": "boolean" },
+    "changes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["task_id", "path", "change_type", "summary"],
+        "properties": {
+          "task_id": { "type": "string", "pattern": "^TASK-[0-9]{3,}$" },
+          "path": { "type": "string", "minLength": 1, "pattern": "^(?![A-Za-z]:)(?![/\\\\])(?!.*(?:^|[/\\\\])\\.\\.(?:[/\\\\]|$))(?![.*]?$).+$" },
+          "old_path": { "type": "string", "minLength": 1, "pattern": "^(?![A-Za-z]:)(?![/\\\\])(?!.*(?:^|[/\\\\])\\.\\.(?:[/\\\\]|$))(?![.*]?$).+$" },
+          "change_type": { "enum": ["added", "modified", "deleted", "renamed"] },
+          "summary": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "change_summary": { "type": "string", "minLength": 1 },
+    "scope_checked": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "findings": { "type": "array", "items": { "type": "string" } },
+    "validation_evidence": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "created_at": { "type": "string", "minLength": 1 }
+  }
+}

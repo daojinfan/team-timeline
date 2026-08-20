@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/daojinfan/large-project-governance-framework/schemas/validation-evidence.schema.json",
+  "title": "工具生成的验证证据",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schema_version", "task_id", "work_package", "baseline", "contract_sha256", "git_commit", "validation_id", "command", "args", "started_at", "finished_at", "exit_code", "redactions_applied", "output_path", "output_sha256"],
+  "properties": {
+    "$schema": { "const": "schemas/validation-evidence.schema.json" },
+    "schema_version": { "const": 1 },
+    "task_id": { "type": "string", "pattern": "^TASK-[0-9]{3,}$" },
+    "work_package": { "type": "string", "pattern": "^WP-[0-9]{3,}$" },
+    "baseline": { "type": "string", "pattern": "^BL-[0-9]{3,}$" },
+    "contract_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "git_commit": { "type": "string", "minLength": 1 },
+    "validation_id": { "type": "string", "minLength": 1 },
+    "command": { "type": "string", "minLength": 1 },
+    "args": { "type": "array", "items": { "type": "string" } },
+    "started_at": { "type": "string", "minLength": 1 },
+    "finished_at": { "type": "string", "minLength": 1 },
+    "exit_code": { "type": "integer" },
+    "redactions_applied": { "type": "integer", "minimum": 0 },
+    "output_path": { "type": "string", "minLength": 1 },
+    "output_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+  }
+}

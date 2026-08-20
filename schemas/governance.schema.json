@@ -1,0 +1,256 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/daojinfan/large-project-governance-framework/schemas/governance.schema.json",
+  "title": "大型项目治理状态",
+  "description": "项目根目录 governance.json 的机器可读结构。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "framework",
+    "project",
+    "current_baseline",
+    "task_profile",
+    "validation_level",
+    "context_policy",
+    "approval_required_for",
+    "authoritative_documents"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "schemas/governance.schema.json"
+    },
+    "schema_version": {
+      "const": "2.0"
+    },
+    "framework": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "version",
+        "source_commit",
+        "source_dirty",
+        "source_tree_hash",
+        "installed_at",
+        "local_modifications"
+      ],
+      "properties": {
+        "name": {
+          "const": "large-project-governance-framework"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?$"
+        },
+        "source_commit": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-fA-F]{7,40}|unknown)$"
+        },
+        "source_dirty": {
+          "type": "boolean"
+        },
+        "source_tree_hash": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-fA-F]{64}|unknown)$"
+        },
+        "installed_at": {
+          "type": "string",
+          "format": "date"
+        },
+        "local_modifications": {
+          "type": "boolean"
+        }
+      }
+    },
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "owner", "mode", "phase"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9._-]{2,63}$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "owner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mode": {
+          "enum": ["SINGLE_TASK", "TEAM_PROJECT"]
+        },
+        "phase": {
+          "enum": [
+            "DISCOVERY",
+            "OVERALL_DESIGN_PENDING_APPROVAL",
+            "DETAILED_DESIGN_PENDING_APPROVAL",
+            "EXECUTION_PLANNING",
+            "TEAM_EXECUTION",
+            "INTEGRATION_AND_VERIFICATION",
+            "USER_ACCEPTANCE",
+            "CLOSED"
+          ]
+        }
+      }
+    },
+    "current_baseline": {
+      "type": "string",
+      "pattern": "^BL-[0-9]{3,}$"
+    },
+    "task_profile": {
+      "enum": ["Lite", "Standard", "Release"]
+    },
+    "validation_level": {
+      "enum": ["Basic", "Strict", "Release"]
+    },
+    "context_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["Lite", "Standard", "Release", "required_documents_override_budget", "allow_silent_truncation", "overflow_strategy"],
+      "properties": {
+        "Lite": { "$ref": "#/$defs/contextBudget" },
+        "Standard": { "$ref": "#/$defs/contextBudget" },
+        "Release": { "$ref": "#/$defs/contextBudget" },
+        "required_documents_override_budget": { "const": true },
+        "allow_silent_truncation": { "const": false },
+        "overflow_strategy": {
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 5,
+          "uniqueItems": true,
+          "items": {
+            "enum": ["remove_irrelevant", "use_summary_for_routing", "expand_context", "split_work_package", "raise_task_profile"]
+          }
+        }
+      }
+    },
+    "approval_required_for": {
+      "type": "array",
+      "minItems": 9,
+      "maxItems": 9,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "scope",
+          "success_criteria",
+          "overall_architecture",
+          "public_interface",
+          "data_model_or_migration",
+          "security_privacy_compliance",
+          "quality_gate_exception",
+          "production_release",
+          "irreversible_operation"
+        ]
+      }
+    },
+    "authoritative_documents": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "project",
+        "current_state",
+        "document_registry",
+        "baseline_registry",
+        "approval_log",
+        "charter",
+        "requirements",
+        "overall_design",
+        "work_packages",
+        "work_status",
+        "traceability"
+      ],
+      "properties": {
+        "project": { "$ref": "#/$defs/projectPath" },
+        "current_state": { "$ref": "#/$defs/projectPath" },
+        "document_registry": { "$ref": "#/$defs/projectPath" },
+        "baseline_registry": { "$ref": "#/$defs/projectPath" },
+        "approval_log": { "$ref": "#/$defs/projectPath" },
+        "charter": { "$ref": "#/$defs/projectPath" },
+        "requirements": { "$ref": "#/$defs/projectPath" },
+        "overall_design": { "$ref": "#/$defs/projectPath" },
+        "work_packages": { "$ref": "#/$defs/projectPath" },
+        "work_status": { "$ref": "#/$defs/projectPath" },
+        "task_ledger": { "$ref": "#/$defs/projectPath" },
+        "traceability": { "$ref": "#/$defs/projectPath" }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "project": {
+            "properties": {
+              "mode": { "const": "TEAM_PROJECT" }
+            },
+            "required": ["mode"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "authoritative_documents": {
+            "required": ["task_ledger"]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "framework": {
+            "properties": {
+              "source_dirty": { "const": true }
+            },
+            "required": ["source_dirty"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "framework": {
+            "properties": {
+              "source_tree_hash": {
+                "pattern": "^[0-9a-fA-F]{64}$"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task_profile": { "const": "Release" }
+        },
+        "required": ["task_profile"]
+      },
+      "then": {
+        "properties": {
+          "validation_level": { "const": "Release" }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "contextBudget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target_chars", "warning_chars"],
+      "properties": {
+        "target_chars": { "type": "integer", "minimum": 1 },
+        "warning_chars": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "projectPath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?![A-Za-z]:)(?![/\\\\])(?!.*(?:^|[/\\\\])\\.\\.(?:[/\\\\]|$)).+$"
+    }
+  }
+}

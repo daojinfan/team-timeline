@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/daojinfan/large-project-governance-framework/schemas/legacy-task-migration.schema.json",
+  "title": "旧版 TEAM_PROJECT 任务迁移清单",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schema_version", "migration_id", "generated_at", "mode", "source_runtime", "backup_directory", "contract_policy", "state_policy", "task_set_sha256", "tasks", "ledger_plan", "manifest_sha256"],
+  "properties": {
+    "$schema": { "const": "schemas/legacy-task-migration.schema.json" },
+    "schema_version": { "const": 1 },
+    "migration_id": { "type": "string", "pattern": "^LTM-[0-9]{8}T[0-9]{9}Z-[0-9a-f]{12}$" },
+    "generated_at": { "type": "string", "minLength": 1 },
+    "mode": { "const": "apply" },
+    "source_runtime": { "const": ".governance/runtime/tasks" },
+    "backup_directory": { "type": "string", "pattern": "^\\.governance/migration-backups/.+$" },
+    "contract_policy": { "const": "frozen-sha256" },
+    "state_policy": { "const": "superseded-only-auto-upgrade" },
+    "task_set_sha256": { "$ref": "#/$defs/sha256" },
+    "tasks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["task_id", "work_package", "title", "source_contract_path", "source_contract_sha256", "source_state_path", "source_state_sha256", "source_state", "source_baseline", "effective_role", "effective_read_paths", "effective_write_paths", "review_required", "disposition", "execution_disposition", "automatic_state_upgrade", "migrated_state_sha256"],
+        "properties": {
+          "task_id": { "type": "string", "pattern": "^TASK-[0-9]{3,}$" },
+          "work_package": { "type": "string", "pattern": "^WP-[0-9]{3,}$" },
+          "title": { "type": "string", "minLength": 1 },
+          "source_contract_path": { "type": "string", "pattern": "^\\.governance/runtime/tasks/TASK-[0-9]+\\.contract\\.json$" },
+          "source_contract_sha256": { "$ref": "#/$defs/sha256" },
+          "source_state_path": { "type": "string", "pattern": "^\\.governance/runtime/tasks/TASK-[0-9]+\\.state\\.json$" },
+          "source_state_sha256": { "$ref": "#/$defs/sha256" },
+          "source_state": { "enum": ["planned", "in-progress", "implemented", "verified", "accepted", "blocked", "needs-decision", "superseded"] },
+          "source_baseline": { "type": "string", "pattern": "^BL-[0-9]{3,}$" },
+          "effective_role": { "enum": ["IMPLEMENTER"] },
+          "effective_read_paths": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/projectPath" } },
+          "effective_write_paths": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/projectPath" } },
+          "review_required": { "const": true },
+          "disposition": { "enum": ["historical-terminal", "reopened-for-review", "pending-review"] },
+          "execution_disposition": { "const": "historical-pre-team-review" },
+          "automatic_state_upgrade": { "type": "boolean" },
+          "migrated_state_sha256": { "type": "string", "pattern": "^(?:[0-9a-f]{64})?$" }
+        }
+      }
+    },
+    "ledger_plan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["columns", "rows", "note"],
+      "properties": {
+        "columns": {
+          "const": ["work_package", "task_id", "host_id", "role", "title", "baseline", "environment", "dependencies", "status", "deliverables", "validation", "reviewer_task_id", "review_status", "review_evidence", "latest_progress"]
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "minItems": 15,
+            "maxItems": 15,
+            "items": { "type": "string" }
+          }
+        },
+        "note": { "type": "string", "minLength": 1 }
+      }
+    },
+    "manifest_sha256": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "projectPath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?![A-Za-z]:)(?![/\\\\])(?!.*(?:^|[/\\\\])\\.\\.(?:[/\\\\]|$))(?![.*]?$).+$"
+    }
+  }
+}

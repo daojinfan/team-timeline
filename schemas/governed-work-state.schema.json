@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/daojinfan/large-project-governance-framework/schemas/governed-work-state.schema.json",
+  "title": "AI 治理执行任务运行状态",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schema_version", "task_id", "work_package", "contract_sha256", "baseline", "state", "approval_id", "acceptance_subject_sha256", "acceptance_evidence_sha256", "acceptance_git_commit", "start_git_commit", "execution_lease", "execution_lease_owner", "execution_lease_expires_at", "preexisting_changes", "evidence", "evidence_history", "review_history", "review", "last_error", "created_at", "updated_at"],
+  "properties": {
+    "$schema": { "const": "schemas/governed-work-state.schema.json" },
+    "schema_version": { "const": 2 },
+    "task_id": { "type": "string", "pattern": "^TASK-[0-9]{3,}$" },
+    "work_package": { "type": "string", "pattern": "^WP-[0-9]{3,}$" },
+    "contract_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "baseline": { "type": "string", "pattern": "^BL-[0-9]{3,}$" },
+    "state": { "enum": ["planned", "in-progress", "implemented", "verified", "accepted", "blocked", "needs-decision", "superseded"] },
+    "approval_id": { "type": "string", "pattern": "^(?:APR-[0-9]{3,})?$" },
+    "acceptance_subject_sha256": { "type": "string", "pattern": "^(?:[0-9a-f]{64})?$", "description": "验收时冻结的最终交付内容指纹；accepted 后不再随当前 HEAD 重算。" },
+    "acceptance_evidence_sha256": { "type": "string", "pattern": "^(?:[0-9a-f]{64})?$", "description": "验收时冻结的当前验证证据指纹。" },
+    "acceptance_git_commit": { "type": "string", "pattern": "^(?:[0-9a-fA-F]{7,64}|unknown)?$", "description": "验收快照所在 Git 提交；仅用于历史追踪。" },
+    "start_git_commit": { "type": "string", "pattern": "^(?:[0-9a-fA-F]{7,64}|unknown)?$" },
+    "execution_lease": { "type": "string" },
+    "execution_lease_owner": { "type": "string" },
+    "execution_lease_expires_at": { "type": "string" },
+    "preexisting_changes": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "plan_checkpoint_git_commit": { "type": "string", "pattern": "^(?:[0-9a-fA-F]{7,64}|unknown)?$" },
+    "plan_rebase_history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["previous_changes", "checkpoint_git_commit", "rebased_at"],
+        "properties": {
+          "previous_changes": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+          "checkpoint_git_commit": { "type": "string", "pattern": "^[0-9a-fA-F]{7,64}$" },
+          "rebased_at": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "evidence": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "evidence_history": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "review_history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256", "result", "recorded_at"],
+        "properties": {
+          "path": { "type": "string", "minLength": 1 },
+          "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "result": { "enum": ["passed", "changes-required", "cancelled"] },
+          "round_id": { "type": "string", "pattern": "^RR-[0-9a-f]{32}$" },
+          "recorded_at": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required", "reviewer_task_id", "status", "evidence", "pass_streak", "subject_sha256"],
+      "properties": {
+        "required": { "type": "boolean" },
+        "reviewer_task_id": { "type": "string", "pattern": "^(?:TASK-[0-9]{3,})?$" },
+        "status": { "enum": ["unassigned", "pending", "running", "changes-required", "provisional-passed", "passed", "cancelled", "not-applicable"] },
+        "evidence": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "pass_streak": { "type": "integer", "minimum": 0, "maximum": 2, "description": "对同一审核对象的连续完整审核通过轮数。" },
+        "subject_sha256": { "type": "string", "pattern": "^(?:[0-9a-f]{64})?$", "description": "连续通过轮次绑定的最终 Git 变更内容指纹。" }
+      }
+    },
+    "last_error": { "type": "string" },
+    "created_at": { "type": "string", "minLength": 1 },
+    "updated_at": { "type": "string", "minLength": 1 }
+  }
+}

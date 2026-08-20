@@ -1,0 +1,19 @@
+{
+  "$schema": "schemas/work-package-context.schema.json",
+  "schema_version": 1,
+  "work_package": "WP-999",
+  "baseline": "BL-001",
+  "scope": [
+    "replace-with-module-or-path"
+  ],
+  "required_documents": [
+    {
+      "doc_id": "DEL-WORK-001",
+      "mode": "full"
+    }
+  ],
+  "decisions": [],
+  "validation": [
+    "replace-with-validation-command"
+  ]
+}
