@@ -1,0 +1,51 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-022",
+  "reviewed_task_ids": [
+    "TASK-021"
+  ],
+  "work_package": "WP-005",
+  "baseline": "BL-002",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-021",
+      "path": "tests/api.test.js",
+      "change_type": "modified",
+      "summary": "在维护 reset 回归中增加“相稳定性实验”固定任务日期以及张三、李四两条固定 assignment 日期的存在性和精确值断言；未新增、删除或重命名产品文件，src/server.js 无产品差异。"
+    }
+  ],
+  "change_summary": "第 2 轮从头审核了 TASK-021 启动提交 0de761c0f8ad7b0a8062d79ba679ae6d19c69e14 到交付提交 b3dea99651d8f8bd39f11a528d6beaa88594cfb2 的完整 Git 差异。提交区间包含三项治理运行记录修改，产品差异精确为 modified tests/api.test.js（增加 11 行、删除 0 行）；src/server.js 无差异。当前 src/server.js 与交付提交的 Git blob 均为 a8d7415459c27a87534d26fd358cee3791df54fc，当前 tests/api.test.js 与交付提交的 Git blob 均为 61e34a0e879b84afd7328364ae11f4641368bc87；两文件工作区内容与交付提交完全一致。已重新完整审核当前 1156 行服务端和 492 行 API 测试，未发现阻塞性功能、兼容性或范围漂移问题。",
+  "scope_checked": [
+    "重新完整读取 TASK-022 与 TASK-021 Release 契约、运行状态、WP-005 context、BL-002、依赖、路径边界、Reviewer 连续审核状态和 TASK-021 验证证据及输出",
+    "重新完整读取批准的 REQ-001 至 REQ-007（重点 REQ-006）、ARC-COMP-003、ARC-OVERALL-001 与 DEC-001，核对 SQLite、API、CSV、JSON、原生技术栈及仅桌面端范围边界",
+    "重新核对 TASK-021 启动提交 0de761c0f8ad7b0a8062d79ba679ae6d19c69e14 到交付提交 b3dea99651d8f8bd39f11a528d6beaa88594cfb2 的完整新增、修改、删除与重命名清单，并区分治理记录与产品交付差异",
+    "重新逐行审核 src/server.js 当前 1156 行全文与 tests/api.test.js 当前 492 行全文，而非只复查第 1 轮或新增 11 行",
+    "内容不变性指纹：src/server.js Git blob a8d7415459c27a87534d26fd358cee3791df54fc、文件 SHA-256 327ef54e71bb8e49b9ab884ae04c9479fc8b4db594c1e795512292278b45dfcf；tests/api.test.js Git blob 61e34a0e879b84afd7328364ae11f4641368bc87、文件 SHA-256 9740c9db7e7b7e48b282c09a1ff8e4e855c9f09771529a785aaab68a83b0492a",
+    "todayIsoDate 通过本地 getFullYear/getMonth/getDate 构造 YYYY-MM-DD，addDays 按本地日历日运算；本轮临时库 dashboard.today 与服务器本地日期 2026-08-20 一致",
+    "initDatabase 在打开前以目标文件是否存在判断首次新库，仅首次传递 today 动态 seed；已有库传入空锚点且成员存在时 seedMembersAndTasks 直接返回，不改写任务或 assignment 日期",
+    "新库四个样例分别覆盖历史 completed、当前 active、未来 planned 和另一当前 active；四任务日期状态与 7 条 assignment 偏移全部重新断言通过",
+    "动态样例中张三、李四、王五恰为三名存在非 completed/cancelled/archived 任务时间重叠的成员，赵六只有 completed 样例而不计入活动重叠",
+    "resetSampleData 调用 insertSampleMembersAndTasks 时不传日期锚点，固定恢复四个任务与 7 条 assignment；“相稳定性实验”固定为 2026-06-24 至 2026-07-12，张三同期，李四从任务开始日加 2 天即 2026-06-26 至 2026-07-12",
+    "新增 reset assignment 断言与实际 seed 偏移重新逐项对照并通过实际 API reset 验证，不依赖第 1 轮结果",
+    "updateTask 通过 resolveTaskStatus 使用 existing.status 作为回退，标题和描述编辑保持 completed；本轮实际 API 验证完成态与每条个人 progress 均保持",
+    "batchUpdate 在仅发送 task_ids 与 status=completed 时只更新任务状态和既有结束日，不触发 assignment 日期同步，且代码路径不写 progress；本轮实际 API 验证多个 assignment progress 全部保持",
+    "SQLite 六张业务表、tasks 列顺序和字段保持不变，无迁移；公共 API 路径、请求和响应字段保持既有语义",
+    "备份 JSON 键集合、任务 CSV 与成员负载 CSV 表头重新通过实际 API 验证；既有导入、归档、软删除、恢复、维护和个人 assignment 回归继续通过",
+    "交付区间未修改 package.json、src/server.js 或 public 前端文件，未引入依赖、框架、schema migration、移动端、认证、云服务、部署或其他范围漂移"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "docs/05-quality/evidence/TASK-021/20260820T151111401Z-718ca4be-required-validation.evidence.json 及对应 output 已重新完整读取：git_commit=b3dea99651d8f8bd39f11a528d6beaa88594cfb2，npm test 16/16 通过，exit_code=0",
+    "第 2 轮独立运行 git diff --name-status/--stat/--numstat/完整 patch（0de761c0f8ad7b0a8062d79ba679ae6d19c69e14..b3dea99651d8f8bd39f11a528d6beaa88594cfb2）：产品仅 M tests/api.test.js，11 行增加、0 行删除；src/server.js 无差异",
+    "第 2 轮独立运行 git diff --exit-code b3dea99651d8f8bd39f11a528d6beaa88594cfb2 -- src/server.js tests/api.test.js：验证前后均 exit 0；git diff --check 指定交付区间：exit 0",
+    "第 2 轮独立指纹：server 交付与工作区 blob 均为 a8d7415459c27a87534d26fd358cee3791df54fc；tests 交付与工作区 blob 均为 61e34a0e879b84afd7328364ae11f4641368bc87；文件 SHA-256 分别为 327ef54e71bb8e49b9ab884ae04c9479fc8b4db594c1e795512292278b45dfcf 与 9740c9db7e7b7e48b282c09a1ff8e4e855c9f09771529a785aaab68a83b0492a",
+    "第 2 轮独立运行 npm.cmd test：16 项全部通过、0 失败；node --check src/server.js 与 node --check tests/api.test.js：均 exit 0",
+    "第 2 轮在系统临时目录独立创建新 SQLite 库并实际断言本地 today、动态任务和 assignment、历史/当前/未来、三人重叠、已有库重开保持、completed 编辑和批量进度独立、六表 schema：全部通过，临时目录已清理",
+    "第 2 轮通过临时本地 HTTP 服务实际验证备份 JSON、任务 CSV、成员负载 CSV、维护 reset 和 dashboard：全部通过；reset 任务与张三、李四 assignment 固定日期与新增断言完全一致",
+    "第 2 轮独立运行 Release 治理校验：扫描 27 份文档，0 错误、0 警告"
+  ],
+  "created_at": "2026-08-20T15:24:09.9610317Z"
+}
