@@ -1,0 +1,50 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-018",
+  "reviewed_task_ids": [
+    "TASK-017"
+  ],
+  "work_package": "WP-003",
+  "baseline": "BL-002",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-017",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "将 #dataMenuBtn 从不适用的 aria-haspopup 改为指向 #maintenanceView 的 aria-controls，并为 #toggleMemberSidebar 增加指向 #memberSidebar 的 aria-controls；TASK-017 未改动 public/styles.css。"
+    }
+  ],
+  "change_summary": "第 2 轮从头对 TASK-017 启动提交 7295530c793ef9eafd18dbc1d3d464ebde738d1d 到交付提交 ed6c76cfb806142d6b59bec59f6bed4ce80b55f5 执行完整独立审核。实际产品差异仍仅为 public/index.html 的两处 ARIA 关系修正，无新增、删除、重命名或 public/styles.css 变更；当前 public/index.html 与 public/styles.css 的 Git blob 均与交付提交完全一致，确认第 1 轮后受审内容未变化。完整集成后的 HTML/CSS 在桌面布局、冻结 DOM、可访问性和批准设计边界内，无新发现。",
+  "scope_checked": [
+    "TASK-017 与 TASK-018 的 Release 契约、WP-003 上下文、BL-002 基线、依赖、路径边界、独立 Reviewer 绑定和第 2 轮连续通过要求",
+    "REQ-001 至 REQ-007、ARC-OVERALL-001、ARC-COMP-001、DEC-001 与 WP-002 实施简报中的桌面工作区和冻结 DOM 契约",
+    "public/index.html 与 public/styles.css 全文，包括顶部栏、五张统计卡、五视图导航、专属工具栏、两列工作区、维护内容集中性和完整隐藏规则",
+    "1280×720 和 1366×768 的首屏活动甘特主体、五卡单行、页面水平溢出、甘特容器局部滚动和两列网格尺寸",
+    "五个主视图在两种分辨率下逐一切换后的唯一可见工具栏、唯一活动视图、导航选中态和批量栏默认隐藏",
+    "#taskDialog 在两种分辨率下的 720px 宽度、视口内完整布局、可访问名称、任务名称焦点和关闭后焦点返回",
+    "#detailPane 在两种分辨率下的 360px 固定覆盖抽屉、按需 is-open/hidden 状态、有效关闭按钮和不改变两列工作区",
+    "冻结主要 ID、五个 data-toolbar-view 值、HTML ID 唯一性、app.js 直接 ID 引用可解析性和 aria-controls/aria-labelledby 目标有效性",
+    "键盘可聚焦统计筛选按钮、可见焦点样式、对话框与抽屉可访问名称、数据菜单和成员栏的 ARIA 关联",
+    "桌面专用边界：CSS 无 @media 移动断点，HTML/CSS 无底部导航、手机视图或移动端专用实现",
+    "TASK-017 启动提交到交付提交的实际 Git 新增、修改、删除和重命名清单，以及当前受审文件相对交付提交的内容指纹"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "docs/05-quality/evidence/TASK-017/20260820T142449673Z-d94d40a3-required-validation.evidence.json（git_commit=ed6c76cfb806142d6b59bec59f6bed4ce80b55f5，exit_code=0）",
+    "docs/05-quality/evidence/TASK-017/20260820T142449673Z-d94d40a3-required-validation.output.txt（npm test：16/16 通过）",
+    "第 2 轮审核者独立运行 node --check public/app.js：通过；npm test：16/16 通过；git diff --check 对 TASK-017 产品差异通过",
+    "第 2 轮审核者独立运行 Release 治理校验：扫描 27 份文档，0 错误、0 警告",
+    "git diff --name-status 7295530c793ef9eafd18dbc1d3d464ebde738d1d ed6c76cfb806142d6b59bec59f6bed4ce80b55f5 -- public：仅 M public/index.html；diff stat 为 1 file changed、2 insertions、2 deletions",
+    "当前内容指纹复算：public/index.html 当前与 ed6c76c blob 均为 d9ac8b183eb5f3f38555135cd7a886268abe3998；public/styles.css 当前与 ed6c76c blob 均为 f5fac6ccea3fa7c7b623c10c3dbed8437f8d7edc；git diff ed6c76c -- 两文件为空",
+    "1280×720 第 2 轮浏览器实测：5 张统计卡单行，甘特主体 y=322 在首屏可见，页面 scrollWidth=clientWidth=1265，甘特容器自身水平滚动，工作区为 226px/999px 两列且页面无水平溢出",
+    "1366×768 第 2 轮浏览器实测：5 张统计卡单行，甘特主体 y=287 在首屏可见，页面 scrollWidth=clientWidth=1351，甘特容器自身水平滚动，工作区为 226px/1085px 两列且页面无水平溢出",
+    "两种分辨率第 2 轮逐项实测：gantt/tasks/load/logs/maintenance 均只显示同名工具栏和唯一活动视图，批量栏默认隐藏",
+    "两种分辨率第 2 轮实测：#taskDialog 宽 720px 且完整位于视口内，打开后焦点落在 name=title 的输入框、关闭后返回 #newTaskBtn；#detailPane 宽 360px、position=fixed、aria-label=任务详情，打开和关闭均不改变两列工作区",
+    "冻结 DOM 静态核对：28 个必需 ID 全部存在，95 个 HTML ID 无重复，app.js 78 个直接 ID 引用均能在 HTML 解析，五个视图和工具栏值恰为 gantt/tasks/load/logs/maintenance，全部 ARIA 关联目标存在",
+    "样式静态核对：桌面最小宽度 1100px、任务模态框 720px、详情抽屉 360px、工作区 226px 加主区；@media 数量为 0，移动端/底部导航专用标识数量为 0"
+  ],
+  "created_at": "2026-08-20T14:47:05.7428367Z"
+}
