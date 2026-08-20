@@ -5,7 +5,7 @@
   "work_package": "WP-001",
   "contract_sha256": "49ee81f1aebed7608bbffce9d7c7ac023808a3142f4d2c24cda5a1e266b081d9",
   "baseline": "BL-002",
-  "state": "planned",
+  "state": "superseded",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -28,7 +28,7 @@
     "pass_streak": 0,
     "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "Reviewer replaced together with TASK-023 before review started; successor reviewer will audit the non-normative V2 proposal.",
   "created_at": "2026-08-20T16:27:11.2159329Z",
-  "updated_at": "2026-08-20T16:27:11.2159329Z"
+  "updated_at": "2026-08-20T16:38:40.3159410Z"
 }

@@ -5,20 +5,24 @@
   "work_package": "WP-001",
   "contract_sha256": "c49e3c24488fa7cbddb7d99ef3cd6188a0c161f314544d5c0a2270b7fa06d98b",
   "baseline": "BL-002",
-  "state": "in-progress",
+  "state": "superseded",
   "approval_id": "APR-026",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
   "acceptance_git_commit": "",
   "start_git_commit": "648c687e28833930be8410c397c8e5ce9167a489",
-  "execution_lease": "d925f669222344d1afb3ce8e319702b2",
-  "execution_lease_owner": "01a01ef6-d413-7660-bdc5-62bd5873cbf4",
-  "execution_lease_expires_at": "2026-08-20T18:27:39.8521481Z",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
   "preexisting_changes": [],
   "plan_checkpoint_git_commit": "dc62abadf71ec4061ed1d539eaddc055e46a2f70",
   "plan_rebase_history": [],
-  "evidence": [],
-  "evidence_history": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-023/20260820T163558761Z-0219c385-required-validation.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-023/20260820T163558761Z-0219c385-required-validation.evidence.json"
+  ],
   "review_history": [],
   "review": {
     "required": true,
@@ -28,7 +32,7 @@
     "pass_streak": 0,
     "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "Replaced because normative docs/ registration would invalidate the still-unaccepted V1 shared-registry review; V2 candidates will move to a non-normative proposal path until human approval.",
   "created_at": "2026-08-20T16:27:11.0095023Z",
-  "updated_at": "2026-08-20T16:27:39.8579850Z"
+  "updated_at": "2026-08-20T16:38:40.1742457Z"
 }

@@ -1,0 +1,8 @@
+项目：D:\Codex\人员管理系统
+级别：Release
+扫描文档数：30
+错误数：0
+警告数：3
+警告：文档未登记到 DOC-REGISTRY.md：CR-002
+警告：文档未登记到 DOC-REGISTRY.md：ARC-OVERALL-002
+警告：文档未登记到 DOC-REGISTRY.md：REQ-V2-001
