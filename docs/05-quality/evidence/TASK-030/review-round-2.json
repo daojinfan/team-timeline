@@ -1,0 +1,86 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-030",
+  "reviewed_task_ids": [
+    "TASK-029"
+  ],
+  "work_package": "WP-002",
+  "baseline": "BL-002",
+  "result": "changes-required",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-029",
+      "path": "docs/00-index/DOC-REGISTRY.md",
+      "change_type": "modified",
+      "summary": "登记六份 BL-003 正式 V2 文档并保持 BL-002 为当前活动基线。"
+    },
+    {
+      "task_id": "TASK-029",
+      "path": "docs/02-product/requirements-v2.md",
+      "change_type": "added",
+      "summary": "新增包含 V2-REQ-001..016、人工决策、状态、兼容和 BL-003 门的正式 V2 需求。"
+    },
+    {
+      "task_id": "TASK-029",
+      "path": "docs/03-architecture/overall-design-v2.md",
+      "change_type": "added",
+      "summary": "新增轻量计划、六区 IA、人工闭环、增量迁移、安全与 V1 兼容的正式总体设计。"
+    },
+    {
+      "task_id": "TASK-029",
+      "path": "docs/03-architecture/components/v2-detailed-design.md",
+      "change_type": "added",
+      "summary": "新增与 accepted proposal canonical body 等价的正式详设，冻结 12 表、10 索引、34 API、7 dialogs、状态、迁移和验收契约。"
+    },
+    {
+      "task_id": "TASK-029",
+      "path": "docs/05-quality/traceability-v2.md",
+      "change_type": "added",
+      "summary": "新增 16 项 V2 需求到 API/DDL/DOM/验证/DEV-A-B-C 的追踪矩阵；本轮发现其中具体标识与 canonical 详设不一致。"
+    },
+    {
+      "task_id": "TASK-029",
+      "path": "docs/07-decisions/DEC-002.md",
+      "change_type": "added",
+      "summary": "新增无 AI、人工分配与验收、增量 schema、六区 IA 和 V1 兼容的批准决策。"
+    },
+    {
+      "task_id": "TASK-029",
+      "path": "docs/08-changes/CR-002.md",
+      "change_type": "added",
+      "summary": "新增 V2 变更包，冻结影响、迁移回滚和 BL-003 激活前禁止开发的控制门。"
+    }
+  ],
+  "change_summary": "本轮从头复核 TASK-029 启动提交 4c5bd043bed23597856eadefd594f58642c00358 到当前 HEAD 35e2cdddba1efbb6f9b53cad571d13079b3154de 的完整实际差异，并把运行状态、台账、TASK-010/TASK-029/TASK-030 验证与审核证据同 TASK-029 产品交付分离。TASK-029 scoped manifest 仍精确为上述 7 项。七项正式交付从交付提交 40b160898e2b78e0052cf9c88cb374f8bb26c56b 到当前 HEAD、再到当前工作区均零变化；所有 blob/SHA-256 与 round-1 相同，独立重算 Governance subject 仍为 f8c9935db9d3844f845bbc1b6bb491143be23699a21e8110c331f104640f4ed1。内容未变不覆盖本轮独立发现的追踪矩阵阻塞问题。",
+  "scope_checked": [
+    "从头读取 governance/PROJECT/CURRENT-STATE、WP-002 context、TASK-029/TASK-030 Release 契约与状态、当前 lease、启动/交付/当前提交和 TASK-029 验证证据",
+    "从头逐行读取 DOC-REGISTRY 与 requirements-v2、overall-design-v2、v2-detailed-design、traceability-v2、DEC-002、CR-002 六份正式文档全文",
+    "从头读取 TASK-025 requirements/overall/change 三份 accepted proposal、TASK-027 detailed/development proposal；accepted 详设 canonical body 通过逐字节相等关系逐行覆盖",
+    "重新核对 TASK-025/TASK-027 accepted 状态、APR-030/APR-033、两组最终 passed subject 及正式文档记录的 proposal SHA-256",
+    "独立重算正式详设与 accepted 详设 canonical body：统一 LF、保留单个末行 LF、长度 49680，逐字节相同且 SHA-256=f683c2e0ea6211ace89f4623890232cf7160637eecc1760f7f9500d4b216924d",
+    "独立复核 12 张表、10 个索引、34 个唯一 /api/v2 method+path、7 dialogs 与 16 项需求，及 lineage/reset、preview/version/ack、exact-set、状态优先级和 active-only stats",
+    "复核 V1 原生技术栈、任务/甘特图/负载/日志/备份、soft-delete/reset、API/CSV/JSON 与个人 progress 独立兼容边界",
+    "复核无 AI、无自动任务/分配/验收、无手机端/移动布局、无认证/云端/二进制附件托管和不扩大网络监听",
+    "复核服务端本地 today、默认 7 日闭区间、实际到样未测试为空白并排除窗口、ETA 只平移人工选择的 eligible 任务、人工冲突确认和成果验收事务",
+    "逐项把 QUAL-TRACE-V2-001 的每个 DDL/字段/DOM/range 代码引用与 ARC-COMP-004 §3、§6、§11、§14 对照，而非只检查 V2-REQ 编号是否为 16 行",
+    "确认当前活动基线仍为 BL-002，正式文档均阻塞开发到 BL-003 创建/激活、新 WP/context/DEV+Reviewer 契约与 Release 0/0，未提前授权产品实现",
+    "独立核对七项当前 blob/SHA、40b1608..HEAD 正式文件零差异、HEAD..worktree 正式文件零差异，以及 4c5bd043..HEAD 完整 name-status/diff-check"
+  ],
+  "findings": [
+    "[P1] QUAL-TRACE-V2-001 第 30–43 行没有忠实追踪 canonical ARC-COMP-004：它引用不存在的 `v2_plan_test_items`、`temporary_sample_no`/`formal_sample_no`、`main_status`，以及不存在的 `#v2PlanDialog`、`#v2PlanFilters`、`#v2PlanDrawer`、`#v2PlansView`、`#v2AssignmentView`、`#v2TaskDialog`、`#v2EtaDialog`、`#v2CryostatDialog`、`#v2WorkbenchView`、`#v2Stats`、`#v2PlanGroups`、`#v2ArrivalWindowDays`、`#v2ConflictDrawer`、`#v2SubmissionDialog`、`#v2ReviewDialog`、`#v2AcceptanceView`、`#v2ExecutionView`、`#v2ManagementView` 等 DOM ID；同一矩阵还把 `window_days` 写成 1..365，而 ARC-COMP-004 §6.3 明确冻结为 0..365，且该行自己的验证列要求 window 0。由于本矩阵声称把需求精确映射到 DDL/DOM/API 并将作为 DEV-A/B/C 输入，这些过期标识会直接导致实现者猜测，违反 TASK-029 的注册一致性和完整追踪验收标准。最小修复是只修改 traceability-v2.md，把第 30–43 行所有字段、表、DOM ID 和 window 范围逐项替换为 ARC-COMP-004 的 exact canonical names/range（例如 `v2_test_items`、`sample_identifier`/`identifier_kind`、`display_status`、`#planDialog`、`#workbenchView`、`#assignmentDialog`、`#etaChangeDialog`、`#planDetailPane`、`#arrivalWindowDays`、`#executionView`/`#managementView` 和 0..365），不修改 accepted canonical 详设语义；修复后重跑 TASK-029 Verify 并重新开始所需连续审核。"
+  ],
+  "validation_evidence": [
+    "TASK-029 验证 evidence/output 重新读取：contract/WP/BL-002 匹配、Release 扫描 33 文档 0 error/0 warning；治理 schema 校验未检测到追踪矩阵的语义标识漂移",
+    "当前 formal scoped Governance subject=f8c9935db9d3844f845bbc1b6bb491143be23699a21e8110c331f104640f4ed1，与 round-1 完全相同；说明 finding 来自本轮独立内容审查而不是轮次间交付变化",
+    "当前正式 blobs 与 round-1 相同：registry=fdf246d90f937dba3116d04fa03b0984e183de38，requirements=5b32b68ccdc72142798d3bd28ab9a9cffa205932，overall=e44c6fc6290744e45ee8df8581a8c26a88bfb9dc，detailed=bfb19ebf5a77c261481a5765901a552b31ecd62b，trace=de6f7f68222d0b61c217959740f51fb7c7a60076，DEC=885857f3847f52204d7a77d8b48b036711589cb4，CR=adc4796f2b3666b1f7ce3cdb9cfbe9a38b96d729",
+    "正式文件 SHA-256 与 round-1 相同：registry c9d5dc62...f33bc、requirements 6b7ee743...17b24、overall c916c554...1e2c4、detailed 61608be7...766af、trace bd464639...87e0、DEC 7e3f689b...335f8、CR f66628b3...184ea",
+    "canonical body 独立比较 equal=true、chars=49680、SHA-256=f683c2e0ea6211ace89f4623890232cf7160637eecc1760f7f9500d4b216924d",
+    "独立静态计数 CREATE TABLE=12、CREATE INDEX=10、唯一 /api/v2 method+path=34、dialog/form=7、正式需求行=16、追踪行=16",
+    "精确语义差异定位：traceability-v2.md 第30、31、33、34、35、37、38、40、41、42、43行包含 canonical 详设不存在或不一致的 DDL/字段/DOM/range 引用；ARC-COMP-004 第223/336/548–582行分别冻结表/字段、window 0..365 与 DOM ID",
+    "git diff --exit-code 40b160898e2b78e0052cf9c88cb374f8bb26c56b HEAD -- 七项正式交付，以及 git diff --exit-code HEAD -- 七项正式交付：均 exit 0",
+    "git diff --check 4c5bd043bed23597856eadefd594f58642c00358 HEAD：exit 0"
+  ],
+  "created_at": "2026-08-20T18:55:07.6218275Z"
+}

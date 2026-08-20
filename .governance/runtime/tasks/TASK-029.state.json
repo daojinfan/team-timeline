@@ -5,7 +5,7 @@
     "work_package":  "WP-002",
     "contract_sha256":  "1ea2008307758623fb2b4ecf159ef83d552966f4315930b097a589b8ba2debf9",
     "baseline":  "BL-002",
-    "state":  "verified",
+    "state":  "implemented",
     "approval_id":  "APR-034",
     "acceptance_subject_sha256":  "",
     "acceptance_evidence_sha256":  "",
@@ -33,14 +33,14 @@
     "review":  {
                    "required":  true,
                    "reviewer_task_id":  "TASK-030",
-                   "status":  "provisional-passed",
+                   "status":  "changes-required",
                    "evidence":  [
-                                    "docs/05-quality/evidence/TASK-030/review-round-1.json"
+                                    "docs/05-quality/evidence/TASK-030/review-round-2.json"
                                 ],
-                   "pass_streak":  1,
-                   "subject_sha256":  "f8c9935db9d3844f845bbc1b6bb491143be23699a21e8110c331f104640f4ed1"
+                   "pass_streak":  0,
+                   "subject_sha256":  ""
                },
-    "last_error":  "",
+    "last_error":  "Independent review requires changes; consecutive pass count reset.",
     "created_at":  "2026-08-20T18:27:36.7500256Z",
-    "updated_at":  "2026-08-20T18:51:30.8106176Z"
+    "updated_at":  "2026-08-20T18:56:40.1587937Z"
 }
