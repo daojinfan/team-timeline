@@ -1,0 +1,28 @@
+{
+  "$schema": "schemas/validation-evidence.schema.json",
+  "schema_version": 1,
+  "task_id": "TASK-028",
+  "work_package": "WP-002",
+  "baseline": "BL-002",
+  "contract_sha256": "4e59b8efb18bf4c705d6a2345338033392ed83ea2ec34d6bafc0b20c315d1fc0",
+  "git_commit": "9924fb5e6370d25a37e766655115899c89f31c6a",
+  "validation_id": "required-validation",
+  "command": "powershell.exe",
+  "args": [
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    ".governance/tools/Test-ProjectGovernance.ps1",
+    "-ProjectPath",
+    ".",
+    "-Level",
+    "Release"
+  ],
+  "started_at": "2026-08-20T17:32:00.5361100Z",
+  "finished_at": "2026-08-20T17:32:03.7238423Z",
+  "exit_code": 0,
+  "redactions_applied": 0,
+  "output_path": "docs/05-quality/evidence/TASK-028/20260820T173200530Z-590316ac-required-validation.output.txt",
+  "output_sha256": "0fe47784020c867a71164928fb47557069348b43b475daa2ed888009f5081d74"
+}
