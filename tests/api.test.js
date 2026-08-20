@@ -386,8 +386,19 @@ test("maintenance preview and safer maintenance backups work", async () => {
     assert.equal(dashboard.members.length, 4);
     assert.equal(dashboard.tasks.length, 4);
     const resetTask = dashboard.tasks.find((item) => item.title === "相稳定性实验");
+    assert.ok(resetTask, "missing reset sample task: 相稳定性实验");
     assert.equal(resetTask.default_start_date, "2026-06-24");
     assert.equal(resetTask.default_end_date, "2026-07-12");
+    const resetAssignments = [
+      ["张三", "2026-06-24", "2026-07-12"],
+      ["李四", "2026-06-26", "2026-07-12"]
+    ];
+    for (const [memberName, startDate, endDate] of resetAssignments) {
+      const assignment = dashboard.assignments.find((item) => item.task_title === "相稳定性实验" && item.member_name === memberName);
+      assert.ok(assignment, `missing reset sample assignment: 相稳定性实验/${memberName}`);
+      assert.equal(assignment.start_date, startDate);
+      assert.equal(assignment.end_date, endDate);
+    }
   } finally {
     await app.close();
   }
