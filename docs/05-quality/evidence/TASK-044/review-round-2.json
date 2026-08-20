@@ -1,0 +1,58 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-044",
+  "reviewed_task_ids": [
+    "TASK-043"
+  ],
+  "work_package": "WP-008",
+  "baseline": "BL-003",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-043",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "修复计划草稿临时必填约束、工作台计划详情抽屉可见性与来源视图返焦，以及实际到样未测试主状态的仅屏幕阅读器文本呈现。"
+    }
+  ],
+  "change_summary": "TASK-043 产品交付范围从启动提交 338b0bc95c8bae3083c3522008de8751e0a1a06c 到交付提交 8c2146a20d826e8cc1d71cc467c0336cda0dd168 精确为 public/app.js modified（36 insertions/12 deletions）。第二轮当前 public/index.html、public/styles.css、public/app.js 分别与 8c2146a 的 blob 1993bef14e53515e3658ff7a2cf3efc89499449a、549c34411af50a13ee3ec94a689d3afb01c1635f、68e01bb3b6271974b08843e0066bf75118c3ebc8 完全一致；产品交付内容自 round1 后零变化，Governance review subject 独立复算为 832f594b8314de941597edbe1302824152e6d960d4ca83baed21640939982887，与 round1 完全相同。",
+  "scope_checked": [
+    "第二轮从头完整重读 BL-003 的 REQ-V2-001、ARC-COMP-004、QUAL-TRACE-V2-001、ARC-OVERALL-002、DEC-002，TASK-043/TASK-044 Release 契约与当前状态、TASK-043 验证证据和 TASK-044 round1 证据。",
+    "第二轮完整重读当前 public/index.html 452 行、public/styles.css 2211 行、public/app.js 3276 行，并独立审查 338b0bc..8c2146a 中 public/app.js 的完整修复差异。",
+    "独立复现三项 former blockers：零草稿不创建、一草稿及编辑态可保存；workbench/plans 两来源抽屉可见、Escape/关闭还原视图与返焦；到样未测试 API 空状态、主界面无可见 chip、仅剪裁文本且六卡排除。",
+    "在全新临时数据库完整重跑来源小组、联系人和两台制冷机维护，具体 ETA/制冷机计划与 pending 计划，型号先规划与到样后正式编号。",
+    "完整重跑人工任务与分配：主负责人初始为空，所有成员/日期/工时由人选择；同计划返回成员重叠和周负载而无制冷机误报，跨计划制冷机冲突仅提示并由人确认。",
+    "完整重跑 ETA 空选择和勾选后重预览、选择性等量平移、三类冲突、progress/note 独立，以及 ETA/制冷机 preview-confirm 的 stale 保护、输入/新预览保留和二次人工确认。",
+    "完整重跑成果第一版提交、人工退回、同 lineage sequence=2 supersession 重提和逐项人工通过；任务/计划状态按事实转换，assignment progress/note/日期不被验收覆盖。",
+    "重跑 execution 的 gantt/tasks/load 和 management 的 logs/maintenance 五个 V1 视图、V1 720px 任务对话框、六区唯一顶层 panel/toolbar 以及新任务按钮上下文显隐。",
+    "重跑 7 个 V2 dialog 冻结首焦点、420px 按需抽屉、1280x720 和 1366x768 桌面边界、忙碌防重复及输入保留；无页面级水平溢出、移动断点、底部导航、AI、自动分配、自动验收或文件上传入口。",
+    "独立复算当前三份 public 文件的 Git blob、SHA-256、字节和行数，确认与 8c2146a 和 round1 主体指纹完全相同，且 TASK-043 未漂移 HTML/CSS、服务端、测试或批准规范。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "node --check public/app.js exit 0；npm test 第二轮独立为 26 tests、26 pass、0 fail，包含 exact 12 表/10 索引/34 method-path、迁移幂等、lineage、冲突、成果验收和 V1 兼容。",
+    "git diff --check 338b0bc95c8bae3083c3522008de8751e0a1a06c 8c2146a20d826e8cc1d71cc467c0336cda0dd168 -- public/app.js 与当前 public 三文件 diff-check 均 exit 0。",
+    "静态独立计数：261 个 HTML ID 全部唯一；客户端 388 次/180 个唯一 $/$$ ID 引用零缺失；37 个 aria-controls/aria-labelledby 引用零缺失；7 个 V2 dialog 及首焦 ID 齐全；禁止 UI 模式扫描零匹配。",
+    "应用内浏览器 getForUrl 返回 no browser；按 browser:control-in-app-browser 完整读取 bootstrap-troubleshooting 并仅执行一次 browsers.list()=[]。用户未指定浏览器，故按任务授权透明降级为全新无状态本地 Chrome、临时端口 55134和临时库 C:/Users/Administrator/AppData/Local/Temp/codex-task044-r2-075e837ff71c4ecf86b757fc48503228/task044-r2.sqlite，不复用用户会话。",
+    "草稿实证：初始焦点 planName；0 项时 form.valid=false、临时 title required=true、点保存后 dialog 仍开启、焦点 test_item_title、计划数仍 0；1 项时临时 title 清空但 required=false、form.valid=true，计划创建成功。编辑时 editor/drafts hidden、required=false、form.valid=true，修改目的并保存成功。",
+    "抽屉实证：从 workbench 触发时真实可见、无 hidden ancestor、position=fixed、width=420、焦点 closePlanDetailBtn，只有 plans panel/toolbar；Escape 后回到只有 workbench panel/toolbar 且返焦 data-plan-id=1。从 plans 触发后关闭仍保持 plans 且返焦同计划按钮。",
+    "到样空白实证：计划 A 到样后 actual_arrival_date=2026-08-21、identifier=SN-044-R2/formal、display_status/display_color/window_bucket 均 null；截图中无可见主状态 chip，六卡 [0,0,1,0,0,0]合计 1 而 result count=2。另以计划 B 独立复核详情：相关两段文本分别是 clipped unclassified chip 和 visually-hidden 文本，均 clip=rect(0,0,0,0)/clip-path=inset(50%)，无可见彩色主状态。",
+    "资源实证：通过管理 UI 创建 TASK044 R2 来源组、对方负责人联系人和 TASK044 R2 DR-1/DR-2 两台制冷机；计划 A 使用具体 ETA/设备，计划 B 以 ETA/制冷机 pending 创建并在人工确认后转为 2026-08-27/DR-2。",
+    "stale 实证：ETA 与制冷机各在 preview 后通过合法的隔离 API 更新递增 version；首次确认均保持 dialog open、原日期/设备输入和新预览，并显示“数据已变化，本次没有保存”；第二次确认均成功。",
+    "人工分配实证：创建前 primary=''；task 5 由人选择张三主责、李四协作、30h、after_arrival=true。task 6 同人同日期预览含 MEMBER_DATE_OVERLAP 和 MEMBER_LOAD_HIGH 但无 CRYOSTAT_DATE_OVERLAP；延迟预览期间按钮 disabled/“预览中…”且 title 保留。",
+    "ETA 实证：空 selection 为 eligible=1、checked=0、conflicts=[]，另有 task 6 protected(not_after_arrival)；勾选 task 5 后预览稳定返回制冷机/成员重叠/周负载冲突。task 5 及其 assignments 由 2026-08-26..27 等量移到 2026-08-27..28，task 6 保持 2026-08-26..27，两个 assignment progress=0/note='' 不变。",
+    "制冷机实证：计划 B task 7 使用 DR-2 且日期 2026-08-27..28；计划 A 改为 DR-2 的预览返回 CRYOSTAT_DATE_OVERLAP、plan_ids=[1,2]、交集 2026-08-27..28，人工确认后 task 5/6 日期均不变。",
+    "成果验收实证：submission 1 人工 returned 后 task 5=planned，两条 assignment progress/note/日期均不变；submission 2 为 sequence=2、supersedes=1，人工 accepted 后 task 5=completed、plan A display_status=completed，两条 assignment progress 仍 0、note 仍空。",
+    "V1 回归实证：execution_gantt/tasks/load 各自只有对应 V1 view，management_logs/maintenance 各自只有对应 V1 view；每次仅有一个顶层 panel/toolbar。newTaskBtn 在 execution 可见、management 隐藏；1280x720 的 V1 taskDialog=720x680、top=20/bottom=700，完全位于视口。",
+    "7 个 V2 dialog 实际首焦点依次为 planName、etaChangeDate、cryostatChangeSelect、assignmentTitle、submissionDescription、reviewDecision、resourceName。",
+    "1280x720：document scrollWidth=1280<=innerWidth=1280，六 tabs 同 top=87/bottom=121，唯一 workbench panel/toolbar；计划创建/修改和抽屉流均在视口内完成，drawer fixed 420。截图 C:/Users/Administrator/AppData/Local/Temp/codex-task044-r2-075e837ff71c4ecf86b757fc48503228/arrival-blank-1280x720.png 视觉确认计划 A 无可见主状态 chip。",
+    "1366x768：document scrollWidth=1366<=innerWidth=1366，六 tabs 同 top=87/bottom=121，唯一 workbench panel/toolbar；planDialog=720x591、top=88/bottom=680；drawer fixed 420、top=14/bottom=754且无 hidden ancestor。截图 C:/Users/Administrator/AppData/Local/Temp/codex-task044-r2-075e837ff71c4ecf86b757fc48503228/final-1366x768.png 视觉复核良好。",
+    "最终 reload 后 console errors=[]、page errors=[]、request failures=[]、HTTP >=400=[]；只有 workbenchView/workbenchToolbar，V1 summary=4 名成员/7 个任务/0 条逾期，V2 result=2 个计划。",
+    "真实 data/team_tasks.sqlite 验收前后 length=57344、mtime UTC=2026-08-20T15:32:20.7401462Z，完全未变；临时库和临时服务仅用于本轮隔离验收，服务与无状态浏览器均已关闭。",
+    "指纹独立复算：public/index.html blob=1993bef14e53515e3658ff7a2cf3efc89499449a、SHA-256=125fce788eaf5154154e9f6d8cd12718a7bb388fc3c44f798c653892d0c7b376、46277 bytes；public/styles.css blob=549c34411af50a13ee3ec94a689d3afb01c1635f、SHA-256=bd5ffa691fb2ea18ab9018315369706eb466b9a835f7315fa0adb6eb07354e75、38285 bytes；public/app.js blob=68e01bb3b6271974b08843e0066bf75118c3ebc8、SHA-256=1fb0a5d7ca1b5586b46f9021697e62474efd1ff2d149298c23e315b1f6c78db5、158709 bytes、3276 lines。",
+    "交付指纹：commit=8c2146a20d826e8cc1d71cc467c0336cda0dd168、tree=6593e8a2f3039b2c33b97fc8d98ddf611ea929be、subject='Fix reviewed V2 client usability blockers'；review subject=832f594b8314de941597edbe1302824152e6d960d4ca83baed21640939982887，与 round1 相同且期间产品内容零变化。"
+  ],
+  "created_at": "2026-08-20T21:46:10.5411565Z"
+}

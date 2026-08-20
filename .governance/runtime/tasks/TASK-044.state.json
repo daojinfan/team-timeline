@@ -10,7 +10,7 @@
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
   "acceptance_git_commit": "",
-  "start_git_commit": "8c2146a20d826e8cc1d71cc467c0336cda0dd168",
+  "start_git_commit": "31265c600ed7807be72e19526d11b7541969480a",
   "execution_lease": "",
   "execution_lease_owner": "",
   "execution_lease_expires_at": "",
@@ -18,11 +18,13 @@
   "plan_checkpoint_git_commit": "ed55cfa44c86fd4025ad70301f148c0949352aec",
   "plan_rebase_history": [],
   "evidence": [
-    "docs/05-quality/evidence/TASK-044/20260820T212908715Z-eb2db1e5-required-validation.evidence.json"
+    "docs/05-quality/evidence/TASK-044/20260820T214914154Z-2f687ae7-required-validation.evidence.json"
   ],
   "evidence_history": [
     "docs/05-quality/evidence/TASK-044/20260820T212908715Z-eb2db1e5-required-validation.evidence.json",
-    "docs/05-quality/evidence/TASK-044/review-round-1.json"
+    "docs/05-quality/evidence/TASK-044/review-round-1.json",
+    "docs/05-quality/evidence/TASK-044/20260820T214914154Z-2f687ae7-required-validation.evidence.json",
+    "docs/05-quality/evidence/TASK-044/review-round-2.json"
   ],
   "review_history": [
     {
@@ -31,6 +33,13 @@
       "result": "passed",
       "round_id": "RR-2e938508af60462d9c683a75ca4f6586",
       "recorded_at": "2026-08-20T21:29:24.4526201Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-044/review-round-2.json",
+      "sha256": "cb37d97af3433b7f4b6d1705225d8ffb96fd9dd892db9fe462209b8532779173",
+      "result": "passed",
+      "round_id": "RR-2931e133f63a49f0a9a89c4cc874de55",
+      "recorded_at": "2026-08-20T21:49:29.6490115Z"
     }
   ],
   "review": {
@@ -43,5 +52,5 @@
   },
   "last_error": "",
   "created_at": "2026-08-20T21:01:03.8187703Z",
-  "updated_at": "2026-08-20T21:29:24.6807954Z"
+  "updated_at": "2026-08-20T21:49:29.8697879Z"
 }
