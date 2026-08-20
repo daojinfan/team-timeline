@@ -5,7 +5,7 @@
   "work_package": "WP-006",
   "contract_sha256": "8cb4f7f860a9506a27adc68f59bf32e0ce9779bb8a30625975b8da89646a5b3e",
   "baseline": "BL-003",
-  "state": "implemented",
+  "state": "superseded",
   "approval_id": "APR-045",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -34,7 +34,7 @@
     "pass_streak": 0,
     "subject_sha256": ""
   },
-  "last_error": "Independent review requires changes; consecutive pass count reset.",
+  "last_error": "Replaced by TASK-037, whose reviewed server repair and complete integrated backend passed two consecutive Release reviews.",
   "created_at": "2026-08-20T19:21:28.5628533Z",
-  "updated_at": "2026-08-20T20:01:46.3627657Z"
+  "updated_at": "2026-08-20T21:51:00.0061875Z"
 }

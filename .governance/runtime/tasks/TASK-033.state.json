@@ -5,7 +5,7 @@
   "work_package": "WP-007",
   "contract_sha256": "e6d7832c6ea227b2935c6dc0604aeea29f7169a2e676fc161015da2b78374fdc",
   "baseline": "BL-003",
-  "state": "needs-decision",
+  "state": "superseded",
   "approval_id": "APR-047",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -34,7 +34,7 @@
     "pass_streak": 0,
     "subject_sha256": ""
   },
-  "last_error": "Out-of-scope changes: src/server.js, tests/v2-api.test.js",
+  "last_error": "Replaced by TASK-039, whose reviewed desktop shell repair passed two consecutive Release reviews.",
   "created_at": "2026-08-20T19:22:04.7171775Z",
-  "updated_at": "2026-08-20T20:08:05.2367267Z"
+  "updated_at": "2026-08-20T21:51:00.1355456Z"
 }

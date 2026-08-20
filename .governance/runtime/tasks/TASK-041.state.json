@@ -5,7 +5,7 @@
   "work_package": "WP-008",
   "contract_sha256": "cbb2eb68f5fcb4395cea7ef81541b4e4554e6ac44bab14823fbbd48054b0a21f",
   "baseline": "BL-003",
-  "state": "implemented",
+  "state": "superseded",
   "approval_id": "APR-055",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -34,7 +34,7 @@
     "pass_streak": 0,
     "subject_sha256": ""
   },
-  "last_error": "Independent review requires changes; consecutive pass count reset.",
+  "last_error": "Replaced by TASK-043, whose three reviewed client usability repairs and complete V2 workflow passed two consecutive Release reviews.",
   "created_at": "2026-08-20T20:22:55.3674577Z",
-  "updated_at": "2026-08-20T20:59:35.5295082Z"
+  "updated_at": "2026-08-20T21:51:00.2007632Z"
 }
