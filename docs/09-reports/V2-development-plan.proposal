@@ -50,18 +50,18 @@ DEV-A 与 DEV-B 只有在不同隔离 worktree、路径完全不重叠、均以�
 - 只写 `src/server.js`、`tests/**`；不修改 package.json、public、数据文件或治理文档。
 - 按详设逐字实现 schema 版本 2、表/索引/外键、启动前备份、事务迁移、幂等重开、失败停止和恢复验证。
 - 实现全部 `/api/v2` status、资源、计划、测试项、模板、ETA/制冷机 preview-confirm、人工任务、成果、审核、事件和普通 JSON V2 backup；逐端点严格实现 query/request、canonical `{data,meta?}`、空值、排序/分页和稳定 4xx；V1 API 路径/字段/既有未关联行为不变。
-- 使用服务端本地日历日实现状态分类和日期平移；正式任务与人员数组必须来自请求，禁止默认成员或自动任务。
+- 使用服务端本地日历日实现状态分类和日期平移；正式任务与人员数组必须来自请求，禁止默认成员或自动任务。每个 V2 task 使用 `crypto.randomUUID()` 获得不可复用 lineage，submission/completed/supersession 只按 lineage 判定。
 
 ### 4.2 必须新增的测试组
 
 1. migration：新库、V1 副本、重开不改写、失败回滚、checksum/未来版本拒绝、raw backup 校验、外键与 quick_check。
-2. schema：逐表列、约束、索引、外键；V1 表列顺序不变。
+2. schema：逐表列、约束、索引、外键；plan-task/submission lineage 列、UUID/全局唯一、submission `(plan,lineage,sequence)` 唯一；V1 表列顺序不变，仍为 12 表/10 索引。
 3. endpoint-contracts/resources/plans：逐个 `/api/v2` 的 unknown query/field、canonical data/meta、null/[]、排序/分页、稳定 error/details；联系人规范化唯一、制冷机停用历史、计划最小字段、pending 互斥、测试项/模板版本、status 和普通 `{data:{...}}` backup。
-4. classifier：七级优先级、默认 7 日闭区间、窗口边界、actual arrived 空白且排除统计、漂移和本地 today。
-5. previews：无写入；ETA/制冷机 confirm 回传相同 new value/pending、token/version/ack/actor；事务内按当前事实+完整输入重算 token；stale/protected、等量平移、canonical success 与稳定错误。
-6. assignment：人工载荷、主负责人/协作者、0.5h、日期/40h/制冷机冲突与 acknowledge；更新 task 先排除自身旧 assignment/旧周工时，未改输入无自重叠/自负载，改后仅外部冲突；事务失败无半成品。
-7. deliverable/review：客户端仅传 item ID+布尔值；活动模板/submission 快照 exact set、空/伪造/重复/缺失拒绝、服务端 label/position 快照、首次/returned supersession、URL 白名单、本地路径文本、accepted/returned、重复审核拒绝、个人 progress/note 独立、计划完成。
-8. compatibility：现有全部测试、CSV 标题、V1 JSON backup keys、未关联 mutator；V2 task soft-delete tombstone、主 assignment/member 稳定 409、协作者删除、restore primary 检查；purge/reset 先备份，hard delete 后 plan link 消失但 submission/review/event/original task/title 保留且无 FK 失败；首次 seed 与 reset 固定日期语义。
+4. classifier：七级优先级、默认 7 日闭区间、窗口边界、actual arrived 空白且排除统计、漂移和本地 today；active+archived 同状态时 include_archived 只扩大 data/total/groups，stats 永远只计 active。
+5. previews：无写入；ETA 首次 selection=[] 模拟全部候选且无冲突，勾选变化重 preview；token 绑定完整 selection/事实/批量冲突，confirm selection 必须一致；一次性排除全部 selected 旧日期/工时再加入新贡献，覆盖 selected-selected/未选/其他计划三类冲突、稳定排序、默认不平移；制冷机 confirm 保持完整 token/version/ack/actor。
+6. assignment：人工载荷、主负责人/协作者、0.5h；create/update 的 preview+confirm 四端点逐一覆盖 title 1..200、description 0..4000 及超界错误；日期/40h/制冷机冲突与 acknowledge；更新 task 先排除自身旧 assignment/旧周工时，未改输入无自重叠/自负载，改后仅外部冲突；独立 V1 task 接口不变，事务失败无半成品。
+7. deliverable/review：客户端仅传 item ID+布尔值；活动模板/submission 快照 exact set、空/伪造/重复/缺失拒绝、服务端 label/position 快照、首次/returned 同 lineage supersession、URL 白名单、本地路径文本、accepted/returned、重复审核拒绝、个人 progress/note 独立、计划按 lineage 完成。
+8. compatibility：现有全部测试、CSV 标题、V1 JSON backup keys、未关联 mutator；V2 task soft-delete tombstone、主 assignment/member 稳定 409、协作者删除、restore primary 检查；purge/reset 先备份，hard delete 后 plan link 消失但 submission/review/event/lineage/original task/title 保留；reset 清 sqlite_sequence、复用相同 task id 后新 lineage 不继承旧 sequence/pending/accepted/completed；无 FK 失败，首次 seed 与 reset 固定日期语义。
 
 ### 4.3 验收与验证
 
@@ -119,7 +119,7 @@ DEV-A 与 DEV-B 各自通过最终 Reviewer 后，PM 才可顺序集成两项交
 
 - 只写 `public/app.js`；不修改 HTML/CSS、server、tests 或治理文档。
 - 扩展客户端 state 和 `teamTaskGantt.v2Prefs.v1`，实现六区/子视图切换、bootstrap/load、工作台筛选分组、状态和漂移显示。
-- 实现计划创建/编辑、测试项/模板、资源管理、ETA/制冷机 preview-confirm、候选平移、人工任务 preview-confirm、成果提交、通过/退回、事件和详情。
+- 实现计划创建/编辑、测试项/模板、资源管理、ETA/制冷机 preview-confirm、候选平移、人工任务 preview-confirm、成果提交、通过/退回、事件和详情。ETA dialog 首次以空 selection 预览，任何候选 checkbox 变化都重新 preview 并替换 token/conflicts，confirm 只使用最新 selection/token。
 - 所有写动作使用动作级 busy key 防重复；失败保留输入、预览、冲突确认和焦点；成功按最小范围刷新并 Toast。
 - 精确实现 dialog 优先的 Escape、420px 抽屉清状态与重渲染返焦；保留现有任务抽屉焦点行为。
 - 所有 API 文本先转义；URL 仅 http/https 且 noopener；本地路径只 textContent。无自动成员、自动任务、自动验收或附件读取。
@@ -144,7 +144,7 @@ PM 在 DEV-C 两轮最终通过后执行唯一协调树集成和完整验证：
 1. 对三项 start→delivery→integration diff 建立精确 added/modified/deleted/renamed 清单；任何越界文件停止。
 2. 从备份的真实 V1 数据副本升级，记录前后表/行数、关键记录、V1 API/CSV/JSON 和 V2 schema/version；再重开验证幂等。
 3. 运行全部 `npm test`、两项 node check、全产品 `git diff --check` 和 Release；不得带 warning/error 进入验收。
-4. 在 1280×720、1366×768 逐项执行六区/V1 子视图、创建计划、两种 pending、ETA/制冷机预览确认、选择性平移、人工分配、成果提交、通过/退回、历史、备份、键盘/焦点/空态/错误恢复。
+4. 在 1280×720、1366×768 逐项执行六区/V1 子视图、创建计划、两种 pending、ETA 空选择/勾选重预览/冲突确认与选择性平移、人工分配、成果提交、通过/退回、归档历史列表与 active-only 统计卡、备份、键盘/焦点/空态/错误恢复。
 5. 核对无 AI、移动、登录、云、附件托管；本地路径未被执行，URL 协议受限。
 6. 汇总 Reviewer 最终 passed、内容指纹、验证证据、迁移备份/回滚演练和已知限制后，由 PM 请求/记录最终产品验收；未经产品验收不部署、不推送、不删除备份。
 
@@ -154,12 +154,12 @@ PM 在 DEV-C 两轮最终通过后执行唯一协调树集成和完整验证：
 | --- | --- | --- | --- |
 | V2-REQ-001 | 本地 API/无 AI 后端 | 无移动/AI UI | 无自动决策入口 |
 | V2-REQ-002..005 | groups/contacts/plans/schema/validation | 计划与管理 DOM | 表单、联系人、pending/高级区 |
-| V2-REQ-006 | 人工 task transaction | 分配 dialog | 只从人工输入发请求 |
-| V2-REQ-007..008 | preview/token/history/平移保护 | ETA/制冷机 dialog | 预览、勾选、ack、反馈 |
-| V2-REQ-009..011 | overview/classifier/window | 工作台/六色/空态 | 筛选分组、窗口偏好、漂移 |
+| V2-REQ-006 | 人工 task transaction、lineage、字段边界 | 分配 dialog | 只从人工输入发请求 |
+| V2-REQ-007..008 | selection-bound preview/token、批量冲突/平移保护 | ETA/制冷机 dialog | 每次勾选重预览、ack、反馈 |
+| V2-REQ-009..011 | overview/classifier/window、active-only stats | 工作台/六色/空态 | 历史 data 与统计口径、筛选分组、窗口、漂移 |
 | V2-REQ-012 | 冲突算法/工时 | 分配冲突区 | 负责人/协作者与冲突确认 |
-| V2-REQ-013..014 | submission/review exact-set、历史快照与事务 | submission/review dialog | 只传 item ID+布尔值、URL/路径、通过/退回 |
-| V2-REQ-015 | 增量迁移、V1 mutator/reset 历史保留回归 | V1 ID/视图保留 | V1 功能与偏好兼容 |
+| V2-REQ-013..014 | submission/review exact-set、lineage 历史快照与事务 | submission/review dialog | 只传 item ID+布尔值、URL/路径、通过/退回 |
+| V2-REQ-015 | 增量迁移、V1 mutator/reset/ID 复用隔离回归 | V1 ID/视图保留 | V1 功能与偏好兼容 |
 | V2-REQ-016 | 自动化/迁移证据 | 双尺寸结构证据 | 双尺寸完整交互证据 |
 
 ## 10. 通用停止条件
