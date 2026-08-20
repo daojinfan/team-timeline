@@ -1,0 +1,83 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-023",
+  "work_package": "WP-001",
+  "title": "Draft V2 requirements and overall design",
+  "goal": "Create a proposed V2 requirements specification, change package, and overall architecture for the superconducting quantum-computing control group workflow without finalizing detailed design before human approval",
+  "baseline": "BL-002",
+  "profile": "Release",
+  "role": "ARCHITECT",
+  "allowed_paths": [
+    "docs/02-product/requirements-v2.md",
+    "docs/03-architecture/overall-design-v2.md",
+    "docs/08-changes/CR-002.md",
+    "docs/00-index/DOC-REGISTRY.md",
+    "docs/00-index/CURRENT-STATE.md",
+    "governance.json"
+  ],
+  "read_paths": [
+    "docs",
+    "governance.json"
+  ],
+  "write_paths": [
+    "docs/02-product/requirements-v2.md",
+    "docs/03-architecture/overall-design-v2.md",
+    "docs/08-changes/CR-002.md",
+    "docs/00-index/DOC-REGISTRY.md",
+    "docs/00-index/CURRENT-STATE.md",
+    "governance.json"
+  ],
+  "out_of_scope": [
+    "Detailed design finalization before human overall-design approval",
+    "Product code, database migration implementation, AI, mobile, authentication, deployment"
+  ],
+  "authoritative_documents": [
+    "DEL-WORK-001",
+    "PROJ-INDEX-001",
+    "PROJ-CHARTER-001",
+    "ARC-OVERALL-001"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "V2 requirements capture source groups, lightweight control plans, human assignment, configurable arrival-window overview, equipment changes, deliverable submission, and manual acceptance",
+    "Overall design preserves V1 operation and clearly defines proposed additive data, API, desktop information architecture, migration safety, and approval gates",
+    "Documents remain proposed/draft under BL-002 until explicit human overall-design approval"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-ProjectPath",
+        ".",
+        "-Level",
+        "Release"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "scope",
+    "success_criteria",
+    "overall_architecture",
+    "data_model_or_migration",
+    "production_release"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-20T16:27:11.0095023Z",
+  "release_controls": {
+    "target_environment": "local dev branch documentation workspace",
+    "execution_window": "current approved V2 design session",
+    "rollback_plan": "revert the local V2 design documentation commit before baseline approval",
+    "observation_metrics": "document registry consistency, requirement traceability, architecture completeness, review findings, and Release governance results",
+    "stop_conditions": "scope ambiguity, detailed-design gate violation, active baseline mutation, or unresolved reviewer finding",
+    "post_release_owner": "PROJECT_MANAGER 01a01ef6-d413-7660-bdc5-62bd5873cbf4"
+  }
+}
