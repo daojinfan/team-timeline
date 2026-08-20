@@ -1,0 +1,52 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-042",
+  "reviewed_task_ids": [
+    "TASK-041"
+  ],
+  "work_package": "WP-008",
+  "baseline": "BL-003",
+  "result": "changes-required",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-041",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "集成 V2 六区客户端状态、资源与计划、ETA/制冷机预览确认、人工任务、成果提交/验收、抽屉/对话框和 V1 子视图协调逻辑。"
+    }
+  ],
+  "change_summary": "从 TASK-041 启动提交 c0899dbb41d6618fcf522c4a4d605a5b54e4d632 到交付提交 69d67abbecbd9173f61034b157997d8dfcb86643 的任务写入范围实际差异精确为 public/app.js modified（1320 insertions/5 deletions）；当前 HEAD 与交付提交相同，当前 app.js blob=dfdd3ac32fb1063a53c13e3ee245876837183d77，Governance review subject=f9bb845d3c5025d5c1d3f0e34de1df635a543c7719c3838b1e85b7304758b7c9。",
+  "scope_checked": [
+    "从头完整读取 BL-003 的 REQ-V2-001、ARC-COMP-004、QUAL-TRACE-V2-001、ARC-OVERALL-002、DEC-002，TASK-041/TASK-042 Release 契约与状态、TASK-041 验证证据，以及 c0899db..69d67ab 的完整 public/app.js 实际差异",
+    "从头完整读取当前 public/app.js 3252 行、public/index.html 452 行和 public/styles.css 2211 行；确认当前 app.js 与交付提交内容一致",
+    "静态核对 261 个 HTML ID 唯一无重复、客户端 180 个唯一 selector ID 引用全部存在、aria-controls/aria-labelledby 目标零缺失、7 个 V2 dialog/form 与冻结焦点 ID 存在",
+    "逐项核对冻结 34 个 /api/v2 method-path 及资源、计划、ETA、制冷机、人工任务、submission/review 的 canonical query/request body；未发现未知字段、错误方法或路径漂移",
+    "复核所有动态 HTML 的 escapeHtml/textContent 边界、HTTP/HTTPS URL 与 noopener/noreferrer、本地路径只作文本、业务身份默认本地用户、无 AI/自动任务/自动分配/自动验收、无登录/上传/手机端/移动断点入口",
+    "按 browser:control-in-app-browser 技能完成连接选择、完整浏览器文档读取、browser-troubleshooting 与 bootstrap-troubleshooting；连接随后不可用且唯一一次 browsers.list() 为空，故按批准降级使用全新临时 Chrome 上下文、临时 DB 与临时端口，不接触用户会话或 data/team_tasks.sqlite",
+    "1280x720 实测六 tab 同行、页面 scrollWidth=1280、单一 panel/toolbar、默认窗口 7、资源 dialog 首焦点、型号先填且到样后补正式编号、ETA/制冷机 pending 组合、六卡排除实际到样未测试、六区及 V1 甘特/任务/负载/日志/维护均可达",
+    "1366x768 实测页面 scrollWidth=1366、六 tab 同行、单一 panel/toolbar；测控计划视图内抽屉 fixed 420px、关闭按钮首焦点、Escape 关闭并返焦正常",
+    "在正常计划创建、工作台抽屉和到样空白主状态三个冻结用户路径确认阻断后，按 Release stop condition 停止把后续 ETA/制冷机 stale、人工任务、成果退回/通过浏览器链路记为通过；其实现与请求体已完成静态全量复核，需修复后重新执行完整浏览器审核"
+  ],
+  "findings": [
+    "[P1] 正常的新建计划流程无法提交：#planTestItemEditor 的 test_item_title 在 index.html 保持 required，而 addV2PlanDraft() 把已加入草稿的名称清空。1280x720 实测在添加一个必测项后点击“保存计划”，原生 constraint validation 将焦点移回空的 test_item_title，#planDialog 仍 open，#planResultCount 仍为 0，saveV2Plan 根本未触发。这阻断 V2-REQ-003/004/005 的首要用户路径。最小修复是移除该临时编辑输入的 required 原生约束（草稿列表的至少一项校验已由 saveV2Plan 执行），或在加入草稿后以不会阻断提交的方式管理其有效性；不得要求用户填写一个不会保存的占位名称。",
+    "[P1] 工作台的计划详情按钮不可见地打开抽屉：v2PlanRow() 同时渲染到 #planOverviewList 和 #planList，但唯一 #planDetailPane 嵌套在 hidden 的 #plansView；openV2PlanDetail() 没有切换顶层视图或把抽屉置于可见祖先下。1280x720 实测从工作台点击后 pane 自身 hidden 属性已移除、class=is-open，但 closest('[hidden]')=#plansView、实际不可见且关闭按钮无法获得可见焦点；同按钮在测控计划 tab 内可正常显示 fixed 420px 抽屉。最小修复是让固定抽屉位于所有顶层 panel 之外，或在工作台触发时先进入 plans view，同时保持批准的稳定 plan 返焦规则。",
+    "[P1] 实际到样未测试仍被渲染为可见主状态文本：CSS 已把 data-status=unclassified 的 chip 裁剪为屏幕阅读器文本，截图确认工作台没有可见彩色 chip，因此“彩色 chip 可见”候选本身不成立；但 renderV2PlanDetail() 又把 null display_status 转为可见的“状态 已到样，尚未测试（主状态空白）”。真实到样后 API 返回 display_status=null、六统计卡均为 0，但详情 innerText 仍包含该状态句，违反 ARC-COMP-004 §7、§11.5、§12.1 的主状态空白及不生成“已到样待测试”状态约束。最小修复是 null 分支只保留统一的 visually-hidden 文本，不在可见的“状态”字段输出该标签；到样日期事实仍可正常显示。"
+  ],
+  "validation_evidence": [
+    "node --check public/app.js exit 0；npm test 为 26 tests、26 pass、0 fail（含 exact 12 表/10 索引/34 method-path、迁移、V1/V2 API、冲突、lineage、成果验收回归）。",
+    "HTML/ARIA 静态诊断：html_ids_total=261、unique=261、duplicate=0；selector_id_ref_occurrences=385、unique=180、missing=0；aria-controls 与 aria-labelledby missing=0。",
+    "API/范围静态诊断：34/34 冻结 method-path 均有客户端读写入口或 V2 backup 链接；canonical payload 字段逐项与 ARC-COMP-004 §6/§8/§9/§10 对齐；public 中无 @media、bottom/mobile nav、AI、登录、附件上传或自动成员选择入口。",
+    "浏览器连接记录：选择到 Edge extension 后 nameSession 报 browser unavailable；完整读取 browser-troubleshooting 和 bootstrap-troubleshooting，随后唯一一次 agent.browsers.list()=[]；透明降级为本机 Chrome headless 的隔离临时上下文。",
+    "隔离记录：临时 URL=http://127.0.0.1:55652/，临时 DB=C:/Users/Administrator/AppData/Local/Temp/codex-task042-67dd1fd9d04d4be4a76e85d9f1dae05c/task042.sqlite，结束后停止 PID 17440；真实 data/team_tasks.sqlite 前后 length=57344、mtime UTC=2026-08-20T15:32:20.7401462Z，未改变。",
+    "1280x720 布局：document scrollWidth=1280<=innerWidth=1280；六 tabs top=87/bottom=121；唯一 workbenchView/workbenchToolbar；默认 arrivalWindowDays=7。1366x768：scrollWidth=1366<=innerWidth=1366、六 tabs 同行、唯一 panel/toolbar。",
+    "计划创建阻断实证：加入“基础测试”后草稿可见且编辑器被清空；保存后 dialog.open=true、activeElement name=test_item_title、checkValidity=false、结果仍 0 个计划。截图保存在本轮临时隔离目录 task042-plan-block.png。",
+    "为继续验证只在隔离库中使用已记录的非正常占位 workaround 创建两计划：MODEL-A 无编号且具体 ETA/制冷机，后续到样补 SN-042/formal；MODEL-B 为 eta_pending=true/cryostat_pending=true。服务端实际到样计划 display_status=null，六卡全 0、result count=1；workbench 截图无彩色空白状态 chip。",
+    "抽屉实证：工作台触发后 #planDetailPane hidden attribute=null 但 visible=false、hidden ancestor=plansView；测控计划 tab 内 visible=true、position=fixed、width=420、focus=closePlanDetailBtn，Escape 后返焦原计划按钮。",
+    "到样空白实证：API 返回 actual_arrival_date=2026-08-21、sample_identifier=SN-042、identifier_kind=formal、display_status=null；详情可见文本仍为“型号 MODEL-A · 编号 SN-042 · 状态 已到样，尚未测试（主状态空白）”。",
+    "内容指纹：public/app.js blob=dfdd3ac32fb1063a53c13e3ee245876837183d77、SHA-256=8c3656c35b86ad75207c9cf7bf94f575b80ff9189b10affc6b75f80cd680f7c7、157698 bytes、3252 lines；交付 commit=69d67abbecbd9173f61034b157997d8dfcb86643、tree=c942fe2c1267213a70fc5eac41c98b07d6ea6703、subject='Integrate V2 human workflow interactions'、review subject=f9bb845d3c5025d5c1d3f0e34de1df635a543c7719c3838b1e85b7304758b7c9。",
+    "git diff --check c0899dbb41d6618fcf522c4a4d605a5b54e4d632 69d67abbecbd9173f61034b157997d8dfcb86643 -- public/app.js exit 0。"
+  ],
+  "created_at": "2026-08-20T20:57:58.3536890Z"
+}
