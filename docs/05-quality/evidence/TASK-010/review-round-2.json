@@ -1,0 +1,45 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-010",
+  "reviewed_task_ids": [
+    "TASK-009"
+  ],
+  "work_package": "WP-002",
+  "baseline": "BL-002",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-009",
+      "path": "docs/09-reports/WP-002-implementation-brief.md",
+      "change_type": "modified",
+      "summary": "当前最终差异明确简报的 BL-002 登记身份，并把动态日期限定在首次创建的新数据库；同时保留重置入口的 RESET、操作前备份及既有日期语义，删除重置动态化测试要求并同步 REQ-006 映射。"
+    }
+  ],
+  "change_summary": "从 TASK-009 启动提交 eebc47a3342b9c3812576958b4968d6a3743ceb8 到当前提交 ad35d75d2953279f522266b8788791ae348ffe13，交付写范围内恰有一个 modified 文件，无新增、删除、重命名或 DOC-REGISTRY.md 差异。已对该文件的完整最终内容重新执行需求、架构、兼容性和桌面验收审核，前轮动态日期范围问题已按批准设计纠正。",
+  "scope_checked": [
+    "重新读取 REQ-BASE-001 全部七项需求，并逐行核对简报第 9 节的责任文件、行为和验证检查",
+    "重新读取 ARC-OVERALL-001 及 ARC-COMP-001/002/003，核对页面层级、专属工具栏、详情抽屉、完成语义、智能范围与验证门",
+    "核对 DEC-001 与章程范围：原生 Node.js/SQLite/HTML/CSS/JavaScript，且不引入手机端、认证、云部署、迁移或运行时依赖",
+    "全量审查简报冻结的 DOM 标识、activeView/选择状态、工具栏可见性、模态框、抽屉、Toast、筛选和桌面偏好跨文件契约",
+    "分别核对 1280×720 和 1366×768 的首屏、单行统计卡、页面横向溢出、模态框、抽屉及全部浏览器验收步骤",
+    "核对单项与批量 completed、编辑保持完成、重新打开、个人 progress 独立以及归档/软删除撤销语义",
+    "核对智能甘特图当前优先、最近兜底、筛选空结果、真空库与手动范围行为不存在新增公共接口",
+    "核对动态示例日期仅首次创建新数据库；重置继续原日期语义，但 RESET 强确认、操作前备份和维护入口仍完整保留",
+    "核对 SQLite 表与路径、公共 API 路径/字段、CSV 列、JSON 备份结构、软删除和监听范围兼容边界",
+    "逐字段核对实施简报 front matter 与 DOC-REGISTRY.md 的编号、路径、类型、状态、版本、基线及负责人",
+    "使用 name-status 与完整 patch 重新核对 TASK-009 启动提交后的所有交付范围变更类型和内容"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "docs/05-quality/evidence/TASK-009/20260820T132237695Z-3153cee7-required-validation.evidence.json：TASK-009/WP-002/BL-002、契约哈希匹配、git_commit=ad35d75d2953279f522266b8788791ae348ffe13、exit_code=0",
+    "docs/05-quality/evidence/TASK-009/20260820T132237695Z-3153cee7-required-validation.output.txt：Release 扫描 27 个文档，错误 0、警告 0；文件 SHA-256 与证据记录一致",
+    "git diff --name-status --find-renames --find-copies eebc47a3342b9c3812576958b4968d6a3743ceb8 -- TASK-009 allowed_paths：仅 docs/09-reports/WP-002-implementation-brief.md 为 M",
+    "git diff --find-renames --find-copies --unified=60 eebc47a3342b9c3812576958b4968d6a3743ceb8 -- TASK-009 allowed_paths：完整检查登记说明、首次新库限制、重置语义保护、测试清单与 REQ-006 映射",
+    "实施简报第 31、111、113、120、131、149 行与 ARC-COMP-003 的首次新库限制及 ARC-COMP-002 的 RESET/备份要求相互一致",
+    "实施简报第 126 至 132 行覆盖 REQ-001～REQ-007，且第 134 至 152 行明确要求 1280×720 与 1366×768 各自执行全量浏览器清单",
+    "DOC-REGISTRY.md 的 RPT-WP-002-IMPLEMENTATION-BRIEF-001 记录与当前文档头七个登记字段一致"
+  ],
+  "created_at": "2026-08-20T13:24:10.3237773Z"
+}

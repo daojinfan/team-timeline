@@ -1,0 +1,49 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-010",
+  "reviewed_task_ids": [
+    "TASK-009"
+  ],
+  "work_package": "WP-002",
+  "baseline": "BL-002",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-009",
+      "path": "docs/09-reports/WP-002-implementation-brief.md",
+      "change_type": "modified",
+      "summary": "最终版本登记自身为 BL-002 实施输入，收紧服务端和测试责任为仅首次新库动态日期，并明确重置保持旧日期行为及其 RESET/备份保护；其余桌面 UX 实现契约保持完整。"
+    }
+  ],
+  "change_summary": "第二个连续通过轮独立重建了 TASK-009 的 Git 变更清单和内容指纹。以 eebc47a3342b9c3812576958b4968d6a3743ceb8 为基点，写范围只有实施简报发生修改，注册表无差异；当前交付指纹 c108e979e9cd940ba58414d73954352341d43770f88afea910b66e49d2b5e75d 与前一通过轮登记值完全相同，未发现轮次间内容变化。",
+  "scope_checked": [
+    "REQ-001：桌面首屏采用两列任务优先外壳，1280×720 已定义无需滚动即可识别活动主体，详情关闭时不占第三列",
+    "REQ-002：甘特图、任务、负载、日志、维护均有互斥专属工具栏，任务批量栏还受视图和选择数量双重约束",
+    "REQ-003：卡片/列表/详情及批量 completed 路径、编辑保持 completed、重新打开选项、低进度非阻塞提示和 progress 独立均已冻结",
+    "REQ-004：smart 范围覆盖当前优先、最近任务稳定兜底、筛选无结果与系统无任务两类空状态及对应操作",
+    "REQ-005：一次点击新建、模态框失败保留、写操作四态、筛选标签、撤销 Toast 与七项版本化桌面偏好均有实现和验收契约",
+    "REQ-006：沿用现有 API，SQLite/CSV/JSON/备份/软删除/监听边界不变；动态日期只用于首次新库且重置日期语义不变",
+    "REQ-007：npm test、客户端语法、现有库冒烟以及 1280×720/1366×768 双尺寸浏览器证据均列入交付门",
+    "ARC-OVERALL-001 与 ARC-COMP-001：顶部、五卡、五视图、两列工作区、约 720px 模态框和约 360px 按需抽屉逐项一致",
+    "ARC-COMP-002：新建、完成、重新打开、归档/软删除撤销、永久维护强确认和重置前备份语义逐项一致",
+    "ARC-COMP-003 与 DEC-001：首次新库限定、原生技术栈、桌面专用范围和不得更改公共接口/表/格式的约束无漂移",
+    "DOM/状态对接：导航 data-view、五个视图 ID、data-toolbar-view、activeView、选择集合、任务对话框、详情抽屉、筛选反馈和 Toast 标识无冲突",
+    "范围外核对：简报交付门明确排除手机端，同时未引入触摸专用方案、认证、实时协作、云部署、框架重写或迁移",
+    "文档登记核对：RPT-WP-002-IMPLEMENTATION-BRIEF-001 的 front matter 与 DOC-REGISTRY.md 唯一记录七字段一致",
+    "Git 全差异核对：交付范围内新增 0、修改 1、删除 0、重命名 0，变更类型与本证据 changes 完全相同"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "独立计算 Get-GovernanceGitEntriesSha256：当前 TASK-009 交付指纹为 c108e979e9cd940ba58414d73954352341d43770f88afea910b66e49d2b5e75d，与 TASK-009 state 中上一通过轮 subject_sha256 相同",
+    "当前 HEAD 为 ad35d75d2953279f522266b8788791ae348ffe13，且 git status --porcelain -- TASK-009 allowed_paths 无输出，证明上一通过轮后交付内容未被改写",
+    "docs/09-reports/WP-002-implementation-brief.md 当前 SHA-256 为 af3c19a84cdeddd3c10dda6efa1a6c893bd7fddd62edb372c35081016545587c",
+    "git diff --name-status -M eebc47a3342b9c3812576958b4968d6a3743ceb8 -- TASK-009 写范围输出仅 M docs/09-reports/WP-002-implementation-brief.md；完整 patch 已逐行复核",
+    "docs/05-quality/evidence/TASK-009/20260820T132237695Z-3153cee7-required-validation.evidence.json 绑定 TASK-009/WP-002/BL-002、契约哈希与当前提交，exit_code=0",
+    "TASK-009 最新 Release 输出 SHA-256 重新计算为 0fe47784020c867a71164928fb47557069348b43b475daa2ed888009f5081d74，与验证证据一致；输出为 27 文档、0 错误、0 警告",
+    "内容断言复核确认同时存在双桌面分辨率、无手机端、首次新库动态日期、重置不动态化、RESET、操作前备份、既有 API、CSV/JSON 边界及 activeView/selectedTaskIds 契约",
+    "DOC-REGISTRY.md 中实施简报登记仅出现一次，编号、路径、类型、状态、版本、BL-002 与 ux-architect 均匹配"
+  ],
+  "created_at": "2026-08-20T13:28:36.7731508Z"
+}
