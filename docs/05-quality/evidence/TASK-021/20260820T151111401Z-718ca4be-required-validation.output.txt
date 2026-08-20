@@ -1,0 +1,28 @@
+
+> team-task-gantt@1.0.0 test
+> node --test tests/*.test.js
+
+✔ dashboard exposes seeded data, templates, checklist, and stats (63.8291ms)
+✔ fresh database sample dates are relative to server-local today (42.9675ms)
+✔ reopening an existing database does not rewrite stored dates (40.0573ms)
+✔ structured filters return matching task ids (47.8798ms)
+✔ planned and active task statuses are derived from dates (56.6606ms)
+✔ completed task status survives title and description edits (53.5955ms)
+✔ batch completion preserves every personal assignment progress value (45.6215ms)
+✔ archived status filter can include archived tasks (47.145ms)
+✔ template and checklist workflow works (69.1194ms)
+✔ archive area, trash, and restore workflow works (62.2803ms)
+✔ task delete is a recoverable soft delete (53.0896ms)
+✔ deleted members can be restored from trash (51.6968ms)
+✔ maintenance preview and safer maintenance backups work (68.2238ms)
+✔ SQLite schema and CSV and JSON export formats remain compatible (42.8128ms)
+✔ core assignment behavior still works (56.0404ms)
+✔ gantt assignment adjustment only changes one member assignment (52.3283ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 928.8956
