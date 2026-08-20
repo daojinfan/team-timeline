@@ -1,0 +1,73 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-043",
+  "work_package": "WP-008",
+  "title": "Repair reviewed V2 client usability blockers",
+  "goal": "Apply the three TASK-042 findings to the integrated V2 client without changing approved APIs DOM or scope",
+  "baseline": "BL-003",
+  "profile": "Release",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/app.js"
+  ],
+  "read_paths": [
+    "public"
+  ],
+  "write_paths": [
+    "public/app.js"
+  ],
+  "out_of_scope": [
+    "public/index.html",
+    "public/styles.css",
+    "src/server.js",
+    "tests",
+    "design changes",
+    "AI",
+    "mobile"
+  ],
+  "authoritative_documents": [
+    "REQ-V2-001",
+    "ARC-COMP-004",
+    "QUAL-TRACE-V2-001",
+    "ARC-OVERALL-002",
+    "DEC-002"
+  ],
+  "dependencies": [
+    "TASK-041"
+  ],
+  "acceptance_criteria": [
+    "A plan with at least one drafted test item submits without stale native required-field blocking while an empty draft set remains blocked",
+    "Opening plan detail from workbench presents a visible 420px plan drawer and closing restores the originating V2 view and focus",
+    "An arrived untested plan has no visible main-status label while preserving screen-reader text and statistical exclusion",
+    "All node 26+ tests isolated desktop browser and Release checks pass"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "node.exe",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-20T21:01:03.6249176Z",
+  "repair_of": [
+    "TASK-041"
+  ],
+  "release_controls": {
+    "target_environment": "local dev branch",
+    "execution_window": "current approved V2 repair session after TASK-042 changes-required review",
+    "rollback_plan": "revert the small public/app.js repair commit; keep prior integrated implementation and evidence",
+    "observation_metrics": "three exact browser regressions dual viewport metrics V1 behavior 26+ tests reviewer evidence",
+    "stop_conditions": "scope drift contract change unresolved finding failing browser flow or regression",
+    "post_release_owner": "PROJECT_MANAGER 01a01ef6-d413-7660-bdc5-62bd5873cbf4"
+  }
+}

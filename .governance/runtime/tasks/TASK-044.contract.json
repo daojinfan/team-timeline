@@ -1,0 +1,72 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-044",
+  "work_package": "WP-008",
+  "title": "Review repaired V2 client workflows",
+  "goal": "Independently re-audit the complete V2 client and TASK-043 repairs for two consecutive unchanged-content Release passes",
+  "baseline": "BL-003",
+  "profile": "Release",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-044"
+  ],
+  "read_paths": [
+    "public"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-044"
+  ],
+  "out_of_scope": [
+    "implementation changes",
+    "delegation"
+  ],
+  "authoritative_documents": [
+    "REQ-V2-001",
+    "ARC-COMP-004",
+    "QUAL-TRACE-V2-001",
+    "ARC-OVERALL-002",
+    "DEC-002"
+  ],
+  "dependencies": [
+    "TASK-043"
+  ],
+  "acceptance_criteria": [
+    "Review complete app.js and exact TASK-043 repair diff",
+    "Reproduce all three former blockers as passing using an isolated temporary database and desktop browser",
+    "Record two consecutive unchanged-content Release passes covering full V2 and V1 regressions"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-ProjectPath",
+        ".",
+        "-Level",
+        "Release"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface",
+    "production_release"
+  ],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-20T21:01:03.8187703Z",
+  "release_controls": {
+    "target_environment": "local dev branch",
+    "execution_window": "after TASK-043 completes in the current V2 repair session",
+    "rollback_plan": "reviewer writes evidence only",
+    "observation_metrics": "three former blocker checks dual viewports complete contracts two-pass subject fingerprint",
+    "stop_conditions": "any former blocker remains scope drift regression or unresolved finding",
+    "post_release_owner": "PROJECT_MANAGER 01a01ef6-d413-7660-bdc5-62bd5873cbf4"
+  }
+}
