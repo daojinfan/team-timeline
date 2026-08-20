@@ -1,0 +1,66 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-028",
+  "reviewed_task_ids": [
+    "TASK-027"
+  ],
+  "work_package": "WP-002",
+  "baseline": "BL-002",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-027",
+      "path": "docs/09-reports/V2-detailed-design.proposal",
+      "change_type": "added",
+      "summary": "新增 V2 非规范详细设计候选，最终内容冻结 12 表、10 索引、34 个 /api/v2 端点、UUID task lineage、迁移与 V1 兼容、状态/冲突/验收、六区桌面 DOM、安全、16 项需求追踪及权威化/新基线门。"
+    },
+    {
+      "task_id": "TASK-027",
+      "path": "docs/09-reports/V2-development-plan.proposal",
+      "change_type": "added",
+      "summary": "新增配套的 V2 非规范开发计划候选，冻结正式 V2 文档/新基线/WP-context/Release 启动门、DEV-A/B/C 独占文件与依赖、测试、独立 Release 双轮审核、集成、停止和回滚条件。"
+    }
+  ],
+  "change_summary": "本轮未沿用首轮内容结论，已重新从头核对 TASK-027 启动提交 79dca86441a0a8875c13e72549d4795f4e7eccbd 到当前审核起点 050a9d09ed5ac6a0d729dcd369c8b7612ec64b9c 的全部 21 项 Git 变更、完整运行记录 patch、两份 proposal 最终 839 行及批准上下文。19 项非产品变更为 TASK-027/028 运行状态、台账/工作状态、三轮 TASK-027 验证、三轮 TASK-028 验证及前三轮 review 证据；候选产品交付精确为上述两个 added proposal。交付提交仍为 1582e1f6f2e6b10cbb9d9df2f8e97634c8f2f6bf，050a9d09 只记录首个通过轮。两 proposal 从交付提交到当前 HEAD、从当前 HEAD 到工作树均零变化；src/public/tests/package、governance.json、CURRENT-STATE、DOC/BASELINE-REGISTRY 与 APPROVAL-LOG 无漂移。独立重算 Governance subject=177bb592755ffcc1dfb2d07a5e3930bd6df517f512a9c8a3692852474ef65140，与首个通过轮完全相同。本轮完整复审未发现实现歧义或新阻塞，形成同一最终内容的第二个连续完整通过候选。",
+  "scope_checked": [
+    "governance.json、PROJECT/CURRENT-STATE、WP-002 generated context、TASK-027/028 Release 契约与当前状态、BL-002、角色/路径/依赖、审核历史、首轮 subject/pass streak 和最新 TASK-027/TASK-028 验证证据及输出",
+    "PROJ-CHARTER-001、REQ-001..007、ARC-OVERALL-001、ARC-COMP-001..003、DEC-001 与 WP-002 实施简报全文：V1 原生技术栈、SQLite/API/CSV/JSON、软删除/reset、任务进度独立、五视图与双桌面尺寸边界",
+    "已接受 V2-requirements、V2-overall-design、V2-change 全文及 APR-030 批准范围：16 项场景、轻量计划、来源联系人、型号先规划后补编号、人工任务/验收、实际到样空白、默认 7 日闭区间、选择性平移、六区 IA 和总体到详设批准门",
+    "V2-detailed-design.proposal 最终 655 行和 V2-development-plan.proposal 最终 184 行逐行重读；两者仍明确为非规范候选，不修改活动基线、注册表或产品，也不从 BL-002 直接授权 schema/API 开发",
+    "12 张新增表、10 个显式索引与跨表不变量：字段/长度/日期、CHECK/UNIQUE/FK、来源规范化、计划 ETA/制冷机互斥、至少一 required 测试项、主负责人 assignment、模板版本、成果/验收历史和追加事件",
+    "lineage/reset：每个 V2 task 由 crypto.randomUUID() 生成 canonical UUID v4 且不可修改；submission 固化 lineage/原 ID/标题；sequence/latest/pending/accepted/supersession/completed/查询和事件仅按 plan+lineage，原 ID 只展示审计",
+    "V1 reset 清 sqlite_sequence 并物理删除 task 时，plan-task link 级联、submission.task_id 置 null、成果/review/event/lineage/原 ID/标题保留；同计划复用相同 task id 的新任务获得新 lineage、sequence=1 且不继承旧状态或完成判断",
+    "V1 mutators：未关联记录保持原路径/响应；关联 task 的 soft-delete tombstone、primary assignment/member 409、协作者删除留痕、restore 主负责人检查、purge/reset 先备份、hard-delete 快照、计划 version 和 V1 成功对象兼容均已冻结",
+    "V2 plan-task 四端点 title trim 后 Unicode code point 1..200、description 0..4000，与 submission 标题快照 DDL 和 VALIDATION_ERROR details 一致；创建/更新均为人工完整输入，主负责人和协作者不由系统默认",
+    "34 个唯一 /api/v2 method+path 全量复核：status、来源/联系人/制冷机、计划/测试项/模板/事件/普通 JSON backup、ETA/cryo、人工任务、submission/review 的完整 request/query、canonical data/meta、null/[]、排序/分页和稳定 4xx details",
+    "ETA 两阶段选择：首次 selection=[] 返回全部 eligible 模拟日期且 conflicts=[]；每次勾选携完整 selection 重预览；token/confirm 绑定去重排序 IDs、完整 ETA 输入、version、task/assignment/工时/制冷机事实、eligible/protected 和最终冲突",
+    "ETA 批量算法：一次排除全部 selected 的旧日期与 ISO 周工时后一次加入新贡献，覆盖 selected-selected、同计划未选、其他未归档计划的成员闭区间重叠、周负载 >40h 和制冷机重叠；冲突去重/稳定排序与无重复 ack codes 唯一，confirm 在 BEGIN IMMEDIATE 内重读重算并原子写入",
+    "人工任务冲突：创建与更新 preview-confirm 使用同一规范输入；日期闭区间、成员周负载和制冷机三类提示；更新先排除自身旧 task/assignment/工时再加入新输入，不产生自重叠或双计，冲突只提示且必须人工 acknowledge",
+    "计划列表与状态：服务端本地 today、七级优先级、默认 today..today+7 闭区间、漂移、实际到样未测试 display_status/color/window_bucket=null；include_archived 只扩展 data/total/groups，stats 永远 active-only 且六张卡不含空白到样状态",
+    "submission/review exact-set：活动模板和提交快照项目集合精确一致、空/重复/伪造/缺失拒绝、label/position 仅服务端派生、同 lineage returned supersession、单次 review、URL 协议白名单、本地路径纯文本、accepted/returned 状态事务且个人 progress/note 不变",
+    "迁移/回滚：listen 前 quick_check、已有库 raw backup 与校验、BEGIN IMMEDIATE 增量 DDL、提交后 FK/quick_check、checksum 幂等重开、部分/未来版本失败停止、原子恢复迁移前备份且禁止 reset/down migration 代替回滚",
+    "六区 DOM：六个顶层 panel/toolbar、execution/management 嵌套 V1 五视图、七个 dialog、420px fixed 详情抽屉、焦点/Escape/返焦、720px 内对话框、1280×720 与 1366×768 首屏和局部滚动；无手机/触摸专用布局",
+    "安全和范围：用户文本转义、URL 仅 http/https 且 noopener/noreferrer、local_path 不读取/执行、业务操作者不冒充认证；无 AI、自动任务/成员/验收、登录、云端、扩大监听或二进制附件托管",
+    "V2-REQ-001..016 连续 16/16 追踪到 UI/API/DDL-逻辑/必测项；DEV-A/B/C 独占文件、A/B 同指纹隔离并行、C 等待 PM 集成、各包 Release 双轮审核、停止/回滚/最终验收条件完整",
+    "权威化门：详设通过并 acceptance 后仍须从最终指纹建立正式 V2 REQ/ARC/详细组件/DEC/CR，固定 canonical body 三类指纹，创建并激活预期 BL-003，建立新 WP/context/DEV+Reviewer 契约并使活动新基线 Release 0/0，才可 Plan/Start DEV-A/B",
+    "79dca86441a0a8875c13e72549d4795f4e7eccbd..050a9d09ed5ac6a0d729dcd369c8b7612ec64b9c 的 name-status、summary、numstat、stat、diff-check、运行状态/台账 patch 与两 proposal 全文；21 项中精确分离 19 项治理/证据记录和 2 项候选产品交付"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "TASK-027 最新验证：docs/05-quality/evidence/TASK-027/20260820T181135120Z-a172ede5-required-validation.evidence.json 及 output；task/WP/BL-002/contract_sha256 匹配，Release exit_code=0、27 文档、0 error、0 warning；验证在最终修复工作树上于交付提交前 12 秒完成，证据 git_commit=758b4b5bd61c5f527c87a2300324685f6263fe11",
+    "完整当前差异：git diff --name-status/--summary/--numstat/--stat/--check 79dca86441a0a8875c13e72549d4795f4e7eccbd..050a9d09ed5ac6a0d729dcd369c8b7612ec64b9c；21 项，候选产品精确为两个 added proposal，diff-check exit 0",
+    "产品交付提交：1582e1f6f2e6b10cbb9d9df2f8e97634c8f2f6bf，tree=092ea8d31a36e61ba73f036073ff438b82b9986d，subject=`Complete V2 detailed design contract fixes`；当前 HEAD 050a9d09ed5ac6a0d729dcd369c8b7612ec64b9c 仅记录首个通过轮",
+    "V2-detailed-design.proposal current HEAD/worktree blob=978c983b964597bfb50265195911e70a689e0c58，SHA-256=867b2f24808eddf7a2936e749e93d6f6ac241e54d5ca9871ff7092bbc8cee695",
+    "V2-development-plan.proposal current HEAD/worktree blob=5aa4baf927cf9b815f5da916f3242f162fe371ac，SHA-256=9058e1ffe1e4962e850d586d27e614e81f03af11742425f563e334fb09314f87",
+    "独立 Governance subject SHA-256=177bb592755ffcc1dfb2d07a5e3930bd6df517f512a9c8a3692852474ef65140，与 review-round-3 首个通过轮完全一致",
+    "git diff --exit-code 1582e1f6f2e6b10cbb9d9df2f8e97634c8f2f6bf 050a9d09ed5ac6a0d729dcd369c8b7612ec64b9c -- 两 proposal，以及 git diff --exit-code 050a9d09..工作树 -- 两 proposal：均 exit 0，首轮后交付内容零变化",
+    "git diff --exit-code 79dca86441a0a8875c13e72549d4795f4e7eccbd 050a9d09ed5ac6a0d729dcd369c8b7612ec64b9c -- governance.json/CURRENT-STATE/DOC-REGISTRY/BASELINE-REGISTRY/APPROVAL-LOG/src/public/tests/package：exit 0",
+    "独立静态计数：CREATE TABLE=12、显式 INDEX=10、唯一 /api/v2 method+path=34、V2-REQ=16/16、dialog=7，两 proposal 共 839 行",
+    "JSON/schema：review-round-4.json ConvertFrom-Json 成功，Test-Json -SchemaFile schemas/review-evidence.schema.json=True",
+    "delivery/current diff-check exit 0；新增未跟踪 review-round-4.json 以 git diff --no-index --check -- NUL 检查，无 whitespace error，独立 trailing-whitespace 扫描为 0",
+    "审核者独立运行 powershell.exe .governance/tools/Test-ProjectGovernance.ps1 -ProjectPath . -Level Release：扫描 27 文档，0 错误、0 警告，exit 0"
+  ],
+  "created_at": "2026-08-20T18:23:29.2516775Z"
+}

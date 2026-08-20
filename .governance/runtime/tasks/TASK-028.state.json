@@ -10,7 +10,7 @@
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
   "acceptance_git_commit": "",
-  "start_git_commit": "1582e1f6f2e6b10cbb9d9df2f8e97634c8f2f6bf",
+  "start_git_commit": "050a9d09ed5ac6a0d729dcd369c8b7612ec64b9c",
   "execution_lease": "",
   "execution_lease_owner": "",
   "execution_lease_expires_at": "",
@@ -18,7 +18,7 @@
   "plan_checkpoint_git_commit": "3e32d4aa923847ea419736e70b48f067e52e2d16",
   "plan_rebase_history": [],
   "evidence": [
-    "docs/05-quality/evidence/TASK-028/20260820T181931255Z-0b386d2b-required-validation.evidence.json"
+    "docs/05-quality/evidence/TASK-028/20260820T182513864Z-385853a3-required-validation.evidence.json"
   ],
   "evidence_history": [
     "docs/05-quality/evidence/TASK-028/20260820T173200530Z-590316ac-required-validation.evidence.json",
@@ -26,7 +26,9 @@
     "docs/05-quality/evidence/TASK-028/20260820T180050256Z-188fb4df-required-validation.evidence.json",
     "docs/05-quality/evidence/TASK-028/review-round-2.json",
     "docs/05-quality/evidence/TASK-028/20260820T181931255Z-0b386d2b-required-validation.evidence.json",
-    "docs/05-quality/evidence/TASK-028/review-round-3.json"
+    "docs/05-quality/evidence/TASK-028/review-round-3.json",
+    "docs/05-quality/evidence/TASK-028/20260820T182513864Z-385853a3-required-validation.evidence.json",
+    "docs/05-quality/evidence/TASK-028/review-round-4.json"
   ],
   "review_history": [
     {
@@ -49,6 +51,13 @@
       "result": "passed",
       "round_id": "RR-d399f66cdc8f4ce4b7e37877511a1874",
       "recorded_at": "2026-08-20T18:19:37.8136117Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-028/review-round-4.json",
+      "sha256": "d43bc8d61d5376d81fa3a80001997909236140353fb6953d5d40595489fda772",
+      "result": "passed",
+      "round_id": "RR-f14c83cdf8b947a788f220850c48e219",
+      "recorded_at": "2026-08-20T18:25:20.4197669Z"
     }
   ],
   "review": {
@@ -61,5 +70,5 @@
   },
   "last_error": "",
   "created_at": "2026-08-20T17:07:32.7622129Z",
-  "updated_at": "2026-08-20T18:19:37.9929254Z"
+  "updated_at": "2026-08-20T18:25:20.6137359Z"
 }
