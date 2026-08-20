@@ -19,7 +19,7 @@ last_reviewed: 2026-08-20
 
 # WP-002 桌面端 UX 实施简报
 
-> 本文把已批准的 `REQ-001`～`REQ-007`、`ARC-COMP-001`～`ARC-COMP-003` 和 `DEC-001` 转为实现契约；不新增产品范围，也不替代批准文档。当前基线继续保持原生 HTML/CSS/JavaScript、Node.js 原生 HTTP 与 SQLite。
+> 本简报已登记到 `DOC-REGISTRY.md`，作为 `BL-002` 的实施输入，把已批准的 `REQ-001`～`REQ-007`、`ARC-COMP-001`～`ARC-COMP-003` 和 `DEC-001` 转为实现契约；它不新增产品范围，也不替代任何批准的权威文档。当前基线继续保持原生 HTML/CSS/JavaScript、Node.js 原生 HTTP 与 SQLite。
 
 ## 1. 文件责任与跨文件契约
 
