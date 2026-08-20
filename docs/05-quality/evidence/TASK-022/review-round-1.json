@@ -1,0 +1,48 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-022",
+  "reviewed_task_ids": [
+    "TASK-021"
+  ],
+  "work_package": "WP-005",
+  "baseline": "BL-002",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-021",
+      "path": "tests/api.test.js",
+      "change_type": "modified",
+      "summary": "在维护 reset 回归中增加“相稳定性实验”固定任务日期以及张三、李四两条固定 assignment 日期的存在性和精确值断言；未新增、删除或重命名产品文件，src/server.js 无产品差异。"
+    }
+  ],
+  "change_summary": "已对 TASK-021 启动提交 0de761c0f8ad7b0a8062d79ba679ae6d19c69e14 到交付提交 b3dea99651d8f8bd39f11a528d6beaa88594cfb2 执行完整 Git 差异核对。提交区间包含 TASK-021 的治理运行记录更新，产品差异精确为 modified tests/api.test.js（增加 11 行、删除 0 行）；src/server.js 无差异，当前 src/server.js 与 tests/api.test.js 均与交付提交一致。除逐行审核新增断言外，已完整审核当前 1156 行服务端实现和 492 行 API 回归测试，未发现阻塞性功能、兼容性或范围漂移问题。",
+  "scope_checked": [
+    "TASK-021 与 TASK-022 的 Release 契约、运行状态、WP-005 context、BL-002、依赖、路径边界、Reviewer 绑定及 TASK-021 验证证据",
+    "批准的 REQ-001 至 REQ-007（重点 REQ-006 动态样例与回归要求）、ARC-COMP-003、ARC-OVERALL-001 与 DEC-001 的 SQLite、API、桌面端和原生技术栈边界",
+    "TASK-021 启动提交 0de761c0f8ad7b0a8062d79ba679ae6d19c69e14 到交付提交 b3dea99651d8f8bd39f11a528d6beaa88594cfb2 的完整新增、修改、删除和重命名清单，以及治理记录与产品交付差异的分离",
+    "src/server.js 当前 1156 行全文与 tests/api.test.js 当前 492 行全文；不仅审核新增 11 行，也复核完整服务端行为和 16 项回归覆盖",
+    "todayIsoDate 使用服务器本地年、月、日形成 YYYY-MM-DD，addDays 同样按本地日历运算，不以 UTC 日期切片替代本地日历日",
+    "initDatabase 仅在目标 SQLite 文件首次不存在时把本地 today 作为 seed 锚点；已有数据库重开传入空锚点且 members 已存在时不重写任务或 assignment 日期",
+    "全新数据库四个样例任务分别覆盖历史 completed、当前 active、未来 planned 与另一当前 active；7 条 assignment 随同一锚点偏移，张三、李四、王五恰为三名存在活动任务重叠的成员",
+    "resetSampleData 不传动态锚点，固定恢复四个样例任务与 7 条 assignment；“相稳定性实验”固定为 2026-06-24 至 2026-07-12，张三同任务日期，李四固定为 2026-06-26 至 2026-07-12",
+    "新增 reset assignment 断言与 insertSampleMembersAndTasks 的实际偏移完全匹配：张三使用任务起止日期，李四使用任务开始日加 2 天至同一结束日",
+    "任务编辑时 resolveTaskStatus 以现有 completed 为手工状态回退并保持完成态；通过显式 auto、paused 或 cancelled 可按既有契约重新打开或改变状态",
+    "批量完成只更新任务 status；未提供 default_end_date 或 sync_assignments 时不改写个人 assignment 日期，且任何批量完成路径均不改写个人 progress",
+    "SQLite 六张业务表与 tasks 列契约保持不变，无 schema migration；公共 API 路径、字段和 HTTP 行为未变化",
+    "备份 JSON 键集合、任务 CSV 与成员负载 CSV 表头保持兼容；既有成员/任务导入、归档、软删除、恢复和维护 API 回归均继续通过",
+    "交付区间未修改 package.json、src/server.js 或 public 前端文件，未引入依赖、框架、数据库迁移、移动端、认证、部署或其他范围漂移"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "docs/05-quality/evidence/TASK-021/20260820T151111401Z-718ca4be-required-validation.evidence.json（git_commit=b3dea99651d8f8bd39f11a528d6beaa88594cfb2，npm test 16/16 通过，exit_code=0）",
+    "git diff --name-status --find-renames --find-copies 0de761c0f8ad7b0a8062d79ba679ae6d19c69e14 b3dea99651d8f8bd39f11a528d6beaa88594cfb2 -- src/server.js tests/api.test.js：仅 M tests/api.test.js；git diff --numstat 为 11/0，src/server.js 无差异",
+    "git diff --check 0de761c0f8ad7b0a8062d79ba679ae6d19c69e14 b3dea99651d8f8bd39f11a528d6beaa88594cfb2 -- src/server.js tests/api.test.js：exit 0；git diff --exit-code b3dea99651d8f8bd39f11a528d6beaa88594cfb2 -- 两文件：exit 0",
+    "审核者独立运行 npm.cmd test：16 项测试全部通过、0 失败；node --check src/server.js 与 node --check tests/api.test.js：均 exit 0",
+    "审核者在系统临时目录独立创建全新 SQLite 库并断言 schema、服务器本地 today=2026-08-20、四任务和 7 条 assignment 偏移及状态、三名重叠成员、已有库重开日期保持：全部通过，临时目录已清理",
+    "审核者通过临时本地 HTTP 服务独立验证 /api/backup 键集合、/api/export/tasks.csv 表头、POST /api/maintenance/reset-sample 与 /api/dashboard：全部通过；reset 任务为 2026-06-24 至 2026-07-12，张三 assignment 同期，李四为 2026-06-26 至 2026-07-12",
+    "审核者独立运行 Release 治理校验：扫描 27 份文档，0 错误、0 警告"
+  ],
+  "created_at": "2026-08-20T15:18:55.2852506Z"
+}

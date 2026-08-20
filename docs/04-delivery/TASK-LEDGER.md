@@ -36,8 +36,8 @@ review_policy: independent-required
 
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| WP-005 | TASK-022 | pending | REVIEWER | Review integrated sample data and tests | BL-002 | pending | TASK-021 | pending | docs/05-quality/evidence/TASK-022 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
-| WP-005 | TASK-021 | pending | TESTER | Sequentially validate integrated sample data and tests | BL-002 | pending | TASK-009 | running | src/server.js, tests | required-validation | TASK-022 | pending | pending | Plan 自动登记，等待调度 |
+| WP-005 | TASK-022 | pending | REVIEWER | Review integrated sample data and tests | BL-002 | pending | TASK-021 | completed | docs/05-quality/evidence/TASK-022 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-005 | TASK-021 | pending | TESTER | Sequentially validate integrated sample data and tests | BL-002 | pending | TASK-009 | running | src/server.js, tests | required-validation | TASK-022 | provisional-passed | docs/05-quality/evidence/TASK-022/review-round-1.json | Plan 自动登记，等待调度 |
 | WP-004 | TASK-020 | pending | REVIEWER | Review integrated client interactions | BL-002 | pending | TASK-019 | completed | docs/05-quality/evidence/TASK-020 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-004 | TASK-019 | pending | IMPLEMENTER | Sequentially validate integrated client interactions | BL-002 | pending | TASK-009 | running | public/app.js | required-validation | TASK-020 | passed | docs/05-quality/evidence/TASK-020/review-round-2.json | Plan 自动登记，等待调度 |
 | WP-003 | TASK-018 | pending | REVIEWER | Review integrated desktop shell | BL-002 | pending | TASK-017 | completed | docs/05-quality/evidence/TASK-018 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
