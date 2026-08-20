@@ -1,0 +1,51 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-020",
+  "reviewed_task_ids": [
+    "TASK-019"
+  ],
+  "work_package": "WP-004",
+  "baseline": "BL-002",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-019",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "新增详情抽屉触发控件/稳定选择器记忆、统一 closeDetail 关闭与焦点恢复逻辑，并增加仅在无 dialog[open] 时处理详情抽屉 Escape 的键盘路径；关闭按钮复用同一逻辑。"
+    }
+  ],
+  "change_summary": "本轮从头核对 TASK-019 启动提交 5a1b0d9bc198b7fe0a55b456f0e5c5c07c774846 到交付提交 9109aacf80cc85f3fc54ca9f14d1b7cc3271fcbf 的完整实际差异。提交区间还包含 TASK-019 治理运行状态、TASK-LEDGER 与 WORK-STATUS 记录变化；产品交付差异精确且仅为 public/app.js modified（56 行新增、6 行删除），没有产品文件新增、删除或重命名。当前 public/app.js Git blob c37d4168684240307bd17bdec143d1e8ac07faf5 与交付提交同路径 blob 完全一致，当前 SHA-256 为 3e78254b07dd9af296cbff0304e835dd48d0d1999e8ed12c647a2af8402008a8。对当前完整客户端行为和本次 Escape/焦点改动重新独立审核后，未发现阻塞性正确性、兼容性、桌面边界或设计漂移问题。",
+  "scope_checked": [
+    "TASK-020 Release Reviewer 契约、WP-004 路由、BL-002、TASK-019 启动/交付提交边界、验证证据和审核写入边界",
+    "REQ-001 至 REQ-007、ARC-OVERALL-001、ARC-COMP-002 与 DEC-001 的批准桌面专用、原生技术栈、既有 API/SQLite/CSV/JSON 兼容边界",
+    "public/app.js 当前完整 1937 行与 public/index.html 当前完整 DOM 契约；95 个 HTML ID 无重复，78 个直接 ID 引用均有目标",
+    "甘特、任务、负载、日志、维护五视图的 activeView 切换、各视图唯一专属工具栏、标题/导航态，以及仅任务视图显示批量栏",
+    "版本键 teamTaskGantt.desktopPrefs.v1 的七项偏好：活动视图、刻度、缩放、范围、任务模式、排序、成员栏折叠；逐项白名单与损坏/存储异常回退",
+    "新建任务模态的空闲打开、提交忙碌、成功关闭/重置/刷新/返焦、失败保留字段/显示错误/恢复可操作四态，以及模板直填不引入第二确认",
+    "360px 按需固定详情抽屉、任务/分配入口、统一关闭按钮与 Escape 路径、两个 active ID 清理、详情内容和追加成员/检查清单操作",
+    "单项与批量 completed 的 API 载荷只更新任务状态，个人 progress 独立不被写成 100；低进度非阻断提示、编辑已完成保持和 auto/paused/cancelled 重新打开路径",
+    "智能范围优先包含与今天相交的任务，无相交时按距离并在并列时优先未来任务，日期/ID 稳定排序；真实空数据和筛选/范围空数据使用不同 CTA",
+    "逾期/重叠统计卡可触发筛选、筛选标签可逐项移除、匹配数量反馈、清空条件/查看全部/查看逾期 CTA",
+    "任务单项归档、批量归档和任务软删除的 Toast 撤销路径，以及维护视图中的归档/回收站恢复、日志清理、归档清理与 RESET 强确认/备份契约",
+    "负载周期/成员筛选、日志关键词/类型/日期筛选、维护预览、CSV 导入行级错误与 JSON 备份下载路径",
+    "runBusyAction 与动作级 busy key 的防重复、控件禁用/忙碌文案/最终恢复、创建失败字段保留、拖拽取消或 API 失败时的 UI 恢复",
+    "新增 Escape 监听器在 event.defaultPrevented 或任一 dialog[open] 时不接管按键；仅抽屉可见且 is-open 时关闭，避免干扰 taskDialog/editDialog 的原生 Escape",
+    "closeDetail 先保存返焦目标后清空 detailReturn 状态与 activeAssignmentId/activeTaskId，再重渲染甘特和抽屉；原触发器失联时按当前活动视图中的稳定 data-select-* 选择器重新定位，并以可见首控件、活动 tab、新建按钮逐级兜底",
+    "桌面专用边界与既有 public API/字段、SQLite 数据模型、CSV/JSON 格式、监听范围均未由 TASK-019 改变；未实现手机端内容"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "docs/05-quality/evidence/TASK-019/20260820T145548610Z-62ae2b79-required-validation.evidence.json：交付提交 9109aacf80cc85f3fc54ca9f14d1b7cc3271fcbf 的 node --check public/app.js 验证退出码 0",
+    "审核者本轮独立运行 node --check public/app.js：退出码 0；npm test：16/16 通过，0 失败、0 跳过",
+    "审核者本轮独立运行 git diff --name-status/--numstat/完整 diff：TASK-019 产品差异仅 M public/app.js，56 行新增、6 行删除；git diff --check 对该产品差异退出码 0",
+    "交付/当前内容指纹复核：git rev-parse 9109aacf...:public/app.js 与 git hash-object public/app.js 均为 c37d4168684240307bd17bdec143d1e8ac07faf5；git diff --exit-code 9109aacf... -- public/app.js 退出码 0；当前 SHA-256=3e78254b07dd9af296cbff0304e835dd48d0d1999e8ed12c647a2af8402008a8",
+    "静态 DOM 契约脚本：95 个 ID、0 重复；app.js 78 个直接 #id 引用、0 缺失；五个 data-view 与五个 data-toolbar-view 均恰为 gantt/tasks/load/logs/maintenance；taskDialog/editDialog、detailPane/detailContent/closeDetailBtn 等必需节点齐全",
+    "docs/05-quality/evidence/TASK-018/review-round-1.json 的已批准独立浏览器证据：1280x720 与 1366x768 均无页面水平溢出，五视图/专属工具栏正常，任务模态 720px，详情抽屉 360px 且关闭后不占第三列",
+    "本轮浏览器运行时仍无可用实例，因此未等待或触发 native confirm；桌面尺寸结论透明复用上述历史浏览器证据，本轮 Escape/dialog/返焦行为以当前完整源码、冻结 DOM 与内容指纹独立核验",
+    "审核者本轮独立运行 Release 治理校验：扫描 27 份文档，0 错误、0 警告"
+  ],
+  "created_at": "2026-08-20T15:06:59.8193158Z"
+}
