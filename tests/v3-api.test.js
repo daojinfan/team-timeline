@@ -63,3 +63,26 @@ test("topic, sample, task-chain, assignment and exact-set submission flow", asyn
     assert.equal(bad.payload.error.code, "SAMPLE_SET_MISMATCH");
   } finally { await app.close(); }
 });
+
+test("cryostat preview warns only for overlapping tasks in another active topic", async () => {
+  const app = await fixture();
+  try {
+    const resources = (await app.request("/api/v3/topics")).payload.data;
+    const members = app.database.prepare("SELECT id FROM members WHERE deleted_at IS NULL ORDER BY id").all();
+    const topicA = (await app.request("/api/v3/topics", { method: "POST", body: { source_group_id: resources.groups[0].id, name: "专题 A", purpose: "冷机冲突测试" }, expected: [201] })).payload.data;
+    const topicB = (await app.request("/api/v3/topics", { method: "POST", body: { source_group_id: resources.groups[1].id, name: "专题 B", purpose: "冷机冲突测试" }, expected: [201] })).payload.data;
+    const sampleA = (await app.request(`/api/v3/topics/${topicA.id}/samples`, { method: "POST", body: { planning_label: "A-样品", model: "A", eta_date: "2026-09-01" }, expected: [201] })).payload.data;
+    const sampleB = (await app.request(`/api/v3/topics/${topicB.id}/samples`, { method: "POST", body: { planning_label: "B-样品", model: "B", eta_date: "2026-09-01" }, expected: [201] })).payload.data;
+    const cryostat = resources.cryostats[0];
+    const pendingInput = { title: "专题 A 任务", description: "", sample_ids: [sampleA.id], position: 0, primary_member_id: members[0].id, participant_member_ids: [], member_efforts: [{ member_id: members[0].id, planned_half_hours: 2 }], cryostat_id: null, cryostat_pending: 1, start_date: "2026-09-01", end_date: "2026-09-02", after_arrival: 0 };
+    const pendingPreview = (await app.request(`/api/v3/topics/${topicA.id}/tasks/preview`, { method: "POST", body: pendingInput })).payload.data;
+    const taskA = (await app.request(`/api/v3/topics/${topicA.id}/tasks`, { method: "POST", body: { ...pendingPreview.normalized_input, preview_token: pendingPreview.preview_token, ack: true }, expected: [201] })).payload.data;
+    const taskInput = { title: "专题 B 任务", description: "", sample_ids: [sampleB.id], position: 0, primary_member_id: members[1].id, participant_member_ids: [], member_efforts: [{ member_id: members[1].id, planned_half_hours: 2 }], cryostat_id: cryostat.id, cryostat_pending: 0, start_date: "2026-09-01", end_date: "2026-09-02", after_arrival: 0 };
+    const taskPreview = (await app.request(`/api/v3/topics/${topicB.id}/tasks/preview`, { method: "POST", body: taskInput })).payload.data;
+    await app.request(`/api/v3/topics/${topicB.id}/tasks`, { method: "POST", body: { ...taskPreview.normalized_input, preview_token: taskPreview.preview_token, ack: true }, expected: [201] });
+    const conflict = (await app.request(`/api/v3/topics/${topicA.id}/cryostat/preview`, { method: "POST", body: { new_cryostat_id: cryostat.id, cryostat_pending: 0, task_ids: [taskA.id] } })).payload.data;
+    assert.equal(conflict.conflicts.length, 1);
+    assert.equal(conflict.conflicts[0].type, "CRYOSTAT_DATE_OVERLAP");
+    assert.equal(conflict.conflicts[0].candidate_task_id, taskA.id);
+  } finally { await app.close(); }
+});
