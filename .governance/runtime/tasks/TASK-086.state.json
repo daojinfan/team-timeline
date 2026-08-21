@@ -1,0 +1,43 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-086",
+  "work_package": "WP-009",
+  "contract_sha256": "7673ebd71bdad451329106073e23716c9773d78fd4124074b5e932fc91a4ec9c",
+  "baseline": "BL-004",
+  "state": "superseded",
+  "approval_id": "APR-075",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "99803e879e9cbd7efff9fd169de118cd247ca853",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [],
+  "plan_checkpoint_git_commit": "99803e879e9cbd7efff9fd169de118cd247ca853",
+  "plan_rebase_history": [
+    {
+      "previous_changes": [
+        "tests/import-docx-sample-plan.mjs",
+        "tests/import-live-data.mjs"
+      ],
+      "checkpoint_git_commit": "99803e879e9cbd7efff9fd169de118cd247ca853",
+      "rebased_at": "2026-08-21T09:09:52.9887964Z"
+    }
+  ],
+  "evidence": [],
+  "evidence_history": [],
+  "review_history": [],
+  "review": {
+    "required": true,
+    "reviewer_task_id": "TASK-087",
+    "status": "pending",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
+  },
+  "last_error": "用户确认将 docs/00-index/DOC-REGISTRY.md 纳入本次 V3.1 任务范围，原任务需由新契约恢复",
+  "created_at": "2026-08-21T09:07:54.9507067Z",
+  "updated_at": "2026-08-21T09:32:01.2071055Z"
+}

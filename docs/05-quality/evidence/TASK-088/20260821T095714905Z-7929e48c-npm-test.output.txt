@@ -1,0 +1,42 @@
+
+> team-task-gantt@1.0.0 test
+> node --test tests/*.test.js
+
+✔ dashboard exposes seeded data, templates, checklist, and stats (116.1623ms)
+✔ fresh database sample dates are relative to server-local today (82.5799ms)
+✔ reopening an existing database does not rewrite stored dates (73.3307ms)
+✔ structured filters return matching task ids (101.0852ms)
+✔ planned and active task statuses are derived from dates (80.6409ms)
+✔ completed task status survives title and description edits (92.074ms)
+✔ batch completion preserves every personal assignment progress value (74.3709ms)
+✔ archived status filter can include archived tasks (75.8456ms)
+✔ template and checklist workflow works (88.6949ms)
+✔ archive area, trash, and restore workflow works (83.7135ms)
+✔ task delete is a recoverable soft delete (76.5602ms)
+✔ deleted members can be restored from trash (85.0569ms)
+✔ maintenance preview and safer maintenance backups work (87.0074ms)
+✔ SQLite schema and CSV and JSON export formats remain compatible (71.5057ms)
+✔ core assignment behavior still works (69.2371ms)
+✔ gantt assignment adjustment only changes one member assignment (71.7252ms)
+✔ V2 schema is exactly version 2 with 12 tables and 10 indexes (122.866ms)
+✔ the guarded V2 endpoint surface is the exact frozen set of 34 method-path pairs (0.2969ms)
+✔ a real V1-shaped database is backed up, migrated once, and reopened idempotently (143.2413ms)
+✔ checksum mismatch refuses startup without rewriting the database (157.2022ms)
+✔ resource, plan, test-item, template, event, archive, arrival, and backup APIs preserve canonical contracts (214.597ms)
+✔ manual task preview and confirm preserve progress while ETA and cryostat confirmations bind current facts (139.1359ms)
+✔ manual task cryostat conflicts only include other active plans (128.8077ms)
+✔ V2 plan-task text boundaries are enforced without changing the V1 task endpoint (98.8822ms)
+✔ submission checklist snapshots and manual returned/accepted reviews are authoritative and progress-independent (127.4578ms)
+✔ V1 primary guards, soft-delete restore, and reset preserve V2 lineage history without changing success shapes (174.4303ms)
+✔ V3 schema and endpoint surface are exact and re-open idempotently (124.5895ms)
+✔ V3.1 task details expose topic context and persist structured test intent (143.6982ms)
+✔ topic, sample, task-chain, assignment and exact-set submission flow (196.4015ms)
+✔ cryostat preview warns only for overlapping tasks in another active topic (152.1157ms)
+ℹ tests 30
+ℹ suites 0
+ℹ pass 30
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1420.1259

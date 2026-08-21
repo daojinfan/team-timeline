@@ -5,7 +5,7 @@
   "work_package": "WP-009",
   "contract_sha256": "9245504441f0c1d2bec88fdd57591cf48fec628928bcdd0a5478722c6370d528",
   "baseline": "BL-004",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "APR-071",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -31,14 +31,14 @@
   "review": {
     "required": true,
     "reviewer_task_id": "TASK-080",
-    "status": "passed",
+    "status": "cancelled",
     "evidence": [
-      "docs/05-quality/evidence/TASK-080/review-round-3.json"
+      "docs/05-quality/evidence/TASK-080/review-cancelled-task079-v31.json"
     ],
-    "pass_streak": 2,
-    "subject_sha256": "08dc1a2bbe76c6d9d3c9907dd74a05ca5aaad119a54c76bf14b7eafb1907c6b7"
+    "pass_streak": 0,
+    "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "V3.1 桌面任务详情属于后续范围，旧 UI 交付被新任务 TASK-088 替换，旧审核指纹不再作为当前内容依据。",
   "created_at": "2026-08-21T02:52:56.7513921Z",
-  "updated_at": "2026-08-21T03:56:06.3486620Z"
+  "updated_at": "2026-08-21T09:54:15.0514328Z"
 }

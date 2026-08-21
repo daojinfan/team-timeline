@@ -1,0 +1,621 @@
+{
+  "task_id": "TASK-084",
+  "imported_at": "2026-08-21T08:39:21.111Z",
+  "source_doc": "E:\\oneDrive\\桌面\\祖冲之4.1待制备样品清单(1).docx",
+  "source_doc_sha256": "767b4798e4bfd977429fd6fffe48325260537b816cbe97718892ce943111a07d",
+  "source_group": {
+    "id": 1,
+    "name": "工艺组"
+  },
+  "fallback_member": {
+    "id": 18,
+    "name": "待分配"
+  },
+  "cryostats_used": [
+    "19:祖4",
+    "2:合肥号",
+    "1:重庆号"
+  ],
+  "before_counts": {
+    "topics": 0,
+    "samples": 0,
+    "tasks": 0,
+    "members": 17,
+    "cryostats": 7
+  },
+  "imported_counts": {
+    "topics": 10,
+    "samples": 19,
+    "tasks": 19,
+    "task_samples": 19,
+    "dependencies": 9
+  },
+  "after_counts": {
+    "topics": 10,
+    "samples": 19,
+    "tasks": 19,
+    "task_samples": 19,
+    "dependencies": 9
+  },
+  "backup": {
+    "path": "D:\\Codex\\人员管理系统\\data\\backups\\team_tasks.pre-topic-import-20260821T083921Z.sqlite",
+    "sha256": "c2cf40b309a0630a39e6268309406e23110c872a5785e37df04560764b92fa6a"
+  },
+  "displaced_pre_swap_copy": "D:\\Codex\\人员管理系统\\data\\import-staging\\team_tasks.before-topic-swap-20260821T083921Z.sqlite",
+  "candidate_path": "D:\\Codex\\人员管理系统\\data\\import-staging\\team_tasks.topic-import-20260821T083921Z.sqlite",
+  "candidate_integrity": {
+    "quick_check": "ok",
+    "foreign_key_errors": 0,
+    "v3_checksum": "c81899a0d931a36a1184204e7c60ea8df9b633b9718740412c059b2af6ba9c64"
+  },
+  "final_integrity": {
+    "quick_check": "ok",
+    "foreign_key_errors": 0,
+    "v3_checksum": "c81899a0d931a36a1184204e7c60ea8df9b633b9718740412c059b2af6ba9c64"
+  },
+  "v3_schema_checksum": "c81899a0d931a36a1184204e7c60ea8df9b633b9718740412c059b2af6ba9c64",
+  "topics": [
+    {
+      "topic_no": 1,
+      "topic_id": 1,
+      "name": "应力和翘曲问题",
+      "default_cryostat_id": 19
+    },
+    {
+      "topic_no": 2,
+      "topic_id": 2,
+      "name": "倒焊工艺问题",
+      "default_cryostat_id": 19
+    },
+    {
+      "topic_no": 3,
+      "topic_id": 3,
+      "name": "读取驻波问题",
+      "default_cryostat_id": 19
+    },
+    {
+      "topic_no": 4,
+      "topic_id": 4,
+      "name": "CPW工艺片内片间工艺极限和稳定性+RDL孔周缺胶问题",
+      "default_cryostat_id": 19
+    },
+    {
+      "topic_no": 5,
+      "topic_id": 5,
+      "name": "BGA问题",
+      "default_cryostat_id": 19
+    },
+    {
+      "topic_no": 8,
+      "topic_id": 6,
+      "name": "低损耗约瑟夫森结工艺开发",
+      "default_cryostat_id": 19
+    },
+    {
+      "topic_no": 9,
+      "topic_id": 7,
+      "name": "NbTa膜Q值问题",
+      "default_cryostat_id": 1
+    },
+    {
+      "topic_no": 10,
+      "topic_id": 8,
+      "name": "衬底质控问题",
+      "default_cryostat_id": 19
+    },
+    {
+      "topic_no": 11,
+      "topic_id": 9,
+      "name": "生产过程颗粒度控制问题",
+      "default_cryostat_id": 19
+    },
+    {
+      "topic_no": 12,
+      "topic_id": 10,
+      "name": "Crossover SiO2介质层缺陷问题",
+      "default_cryostat_id": 19
+    }
+  ],
+  "samples": [
+    {
+      "document_no": 1,
+      "sample_id": 1,
+      "topic_no": 1,
+      "topic_id": 1,
+      "planning_label": "z4readout（BGA扇出）样品",
+      "eta_history": [
+        "2026-08-21",
+        "2026-08-21"
+      ],
+      "current_eta_date": "2026-08-21",
+      "cryostat_id": 19,
+      "cryostat_name": "祖4",
+      "completed_in_source": false
+    },
+    {
+      "document_no": 2,
+      "sample_id": 2,
+      "topic_no": 2,
+      "topic_id": 2,
+      "planning_label": "BFC（时间相关性）样品",
+      "eta_history": [
+        "2026-05-21",
+        "2026-05-21"
+      ],
+      "current_eta_date": "2026-05-21",
+      "cryostat_id": 19,
+      "cryostat_name": "祖4",
+      "completed_in_source": true
+    },
+    {
+      "document_no": 3,
+      "sample_id": 3,
+      "topic_no": 2,
+      "topic_id": 2,
+      "planning_label": "BFC（Baseline，无Spacer）样品",
+      "eta_history": [
+        "2026-06-22",
+        "2026-06-29",
+        "2026-07-06",
+        "2026-07-13"
+      ],
+      "current_eta_date": "2026-07-13",
+      "cryostat_id": 19,
+      "cryostat_name": "祖4",
+      "completed_in_source": false
+    },
+    {
+      "document_no": 4,
+      "sample_id": 4,
+      "topic_no": 2,
+      "topic_id": 2,
+      "planning_label": "z4Readout（Wirebonding扇出）（有Spacer）样品",
+      "eta_history": [
+        "2026-06-26",
+        "2026-07-10"
+      ],
+      "current_eta_date": "2026-07-10",
+      "cryostat_id": 19,
+      "cryostat_name": "祖4",
+      "completed_in_source": false
+    },
+    {
+      "document_no": 5,
+      "sample_id": 5,
+      "topic_no": 2,
+      "topic_id": 2,
+      "planning_label": "z4Readout（Wirebonding扇出）（有+无Spacer）样品",
+      "eta_history": [
+        "2026-07-01",
+        "2026-07-14",
+        "2026-07-28"
+      ],
+      "current_eta_date": "2026-07-28",
+      "cryostat_id": 19,
+      "cryostat_name": "祖4",
+      "completed_in_source": false
+    },
+    {
+      "document_no": 6,
+      "sample_id": 6,
+      "topic_no": 2,
+      "topic_id": 2,
+      "planning_label": "BFC（工艺兼容性）样品",
+      "eta_history": [
+        "2026-08-01",
+        "2026-08-15",
+        "2026-09-01"
+      ],
+      "current_eta_date": "2026-09-01",
+      "cryostat_id": 19,
+      "cryostat_name": "祖4",
+      "completed_in_source": false
+    },
+    {
+      "document_no": 7,
+      "sample_id": 7,
+      "topic_no": 3,
+      "topic_id": 3,
+      "planning_label": "BGA_test_V4（芯片端UBM Pad尺寸200μm）样品",
+      "eta_history": [
+        "2026-07-30"
+      ],
+      "current_eta_date": "2026-07-30",
+      "cryostat_id": 19,
+      "cryostat_name": "祖4",
+      "completed_in_source": false
+    },
+    {
+      "document_no": 8,
+      "sample_id": 8,
+      "topic_no": 4,
+      "topic_id": 4,
+      "planning_label": "底片Q值测试片（测试腔+读取腔设计）样品",
+      "eta_history": [
+        "2026-07-22"
+      ],
+      "current_eta_date": "2026-07-22",
+      "cryostat_id": 19,
+      "cryostat_name": "祖4",
+      "completed_in_source": false
+    },
+    {
+      "document_no": 9,
+      "sample_id": 9,
+      "topic_no": 4,
+      "topic_id": 4,
+      "planning_label": "z4readout（Wirebonding扇出）样品",
+      "eta_history": [
+        "2026-09-08"
+      ],
+      "current_eta_date": "2026-09-08",
+      "cryostat_id": 19,
+      "cryostat_name": "祖4",
+      "completed_in_source": false
+    },
+    {
+      "document_no": 10,
+      "sample_id": 10,
+      "topic_no": 4,
+      "topic_id": 4,
+      "planning_label": "z4readout（Wirebonding扇出）样品",
+      "eta_history": [
+        "2026-11-10",
+        "2026-11-10"
+      ],
+      "current_eta_date": "2026-11-10",
+      "cryostat_id": 19,
+      "cryostat_name": "祖4",
+      "completed_in_source": false
+    },
+    {
+      "document_no": 11,
+      "sample_id": 11,
+      "topic_no": 4,
+      "topic_id": 4,
+      "planning_label": "z4readout（BGA扇出）样品",
+      "eta_history": [
+        "2026-11-10"
+      ],
+      "current_eta_date": "2026-11-10",
+      "cryostat_id": 19,
+      "cryostat_name": "祖4",
+      "completed_in_source": false
+    },
+    {
+      "document_no": 12,
+      "sample_id": 12,
+      "topic_no": 5,
+      "topic_id": 5,
+      "planning_label": "Bgapad_test样品",
+      "eta_history": [
+        "2026-09-22"
+      ],
+      "current_eta_date": "2026-09-22",
+      "cryostat_id": 19,
+      "cryostat_name": "祖4",
+      "completed_in_source": false
+    },
+    {
+      "document_no": 13,
+      "sample_id": 13,
+      "topic_no": 8,
+      "topic_id": 6,
+      "planning_label": "P12平面样品",
+      "eta_history": [
+        "2026-07-18",
+        "2026-08-01",
+        "2026-08-15",
+        "2026-09-01"
+      ],
+      "current_eta_date": "2026-09-01",
+      "cryostat_id": 2,
+      "cryostat_name": "合肥号",
+      "completed_in_source": false
+    },
+    {
+      "document_no": 14,
+      "sample_id": 14,
+      "topic_no": 9,
+      "topic_id": 7,
+      "planning_label": "顶片Q值测试片（第一轮）样品",
+      "eta_history": [
+        "2026-05-25"
+      ],
+      "current_eta_date": "2026-05-25",
+      "cryostat_id": 1,
+      "cryostat_name": "重庆号",
+      "completed_in_source": true
+    },
+    {
+      "document_no": 15,
+      "sample_id": 15,
+      "topic_no": 9,
+      "topic_id": 7,
+      "planning_label": "顶片Q值测试片（第二轮）样品",
+      "eta_history": [
+        "2026-07-01"
+      ],
+      "current_eta_date": "2026-07-01",
+      "cryostat_id": 1,
+      "cryostat_name": "重庆号",
+      "completed_in_source": false
+    },
+    {
+      "document_no": 16,
+      "sample_id": 16,
+      "topic_no": 9,
+      "topic_id": 7,
+      "planning_label": "顶片Q值测试片（第三轮）样品",
+      "eta_history": [
+        "2026-08-01"
+      ],
+      "current_eta_date": "2026-08-01",
+      "cryostat_id": 1,
+      "cryostat_name": "重庆号",
+      "completed_in_source": false
+    },
+    {
+      "document_no": 17,
+      "sample_id": 17,
+      "topic_no": 10,
+      "topic_id": 8,
+      "planning_label": "Z4.0正式片",
+      "eta_history": [
+        "2026-08-05"
+      ],
+      "current_eta_date": "2026-08-05",
+      "cryostat_id": 19,
+      "cryostat_name": "祖4",
+      "completed_in_source": false
+    },
+    {
+      "document_no": 18,
+      "sample_id": 18,
+      "topic_no": 11,
+      "topic_id": 9,
+      "planning_label": "Z4.0正式片-图形layer样品",
+      "eta_history": [
+        "2026-07-23",
+        "2026-08-10",
+        "2026-08-24"
+      ],
+      "current_eta_date": "2026-08-24",
+      "cryostat_id": 19,
+      "cryostat_name": "祖4",
+      "completed_in_source": false
+    },
+    {
+      "document_no": 19,
+      "sample_id": 19,
+      "topic_no": 12,
+      "topic_id": 10,
+      "planning_label": "Crossover_monitor样品",
+      "eta_history": [
+        "2026-06-22"
+      ],
+      "current_eta_date": "2026-06-22",
+      "cryostat_id": 19,
+      "cryostat_name": "祖4",
+      "completed_in_source": false
+    }
+  ],
+  "tasks": [
+    {
+      "document_no": 1,
+      "topic_no": 1,
+      "topic_task_id": 1,
+      "v1_task_id": 41,
+      "task_lineage_key": "docx-767b4798e4bfd977-01",
+      "cryostat_id": 19,
+      "cryostat_name": "祖4",
+      "primary_member_id": 18,
+      "predecessor_task_id": null
+    },
+    {
+      "document_no": 2,
+      "topic_no": 2,
+      "topic_task_id": 2,
+      "v1_task_id": 42,
+      "task_lineage_key": "docx-767b4798e4bfd977-02",
+      "cryostat_id": 19,
+      "cryostat_name": "祖4",
+      "primary_member_id": 18,
+      "predecessor_task_id": null
+    },
+    {
+      "document_no": 3,
+      "topic_no": 2,
+      "topic_task_id": 3,
+      "v1_task_id": 43,
+      "task_lineage_key": "docx-767b4798e4bfd977-03",
+      "cryostat_id": 19,
+      "cryostat_name": "祖4",
+      "primary_member_id": 18,
+      "predecessor_task_id": 2
+    },
+    {
+      "document_no": 4,
+      "topic_no": 2,
+      "topic_task_id": 4,
+      "v1_task_id": 44,
+      "task_lineage_key": "docx-767b4798e4bfd977-04",
+      "cryostat_id": 19,
+      "cryostat_name": "祖4",
+      "primary_member_id": 18,
+      "predecessor_task_id": 3
+    },
+    {
+      "document_no": 5,
+      "topic_no": 2,
+      "topic_task_id": 5,
+      "v1_task_id": 45,
+      "task_lineage_key": "docx-767b4798e4bfd977-05",
+      "cryostat_id": 19,
+      "cryostat_name": "祖4",
+      "primary_member_id": 18,
+      "predecessor_task_id": 4
+    },
+    {
+      "document_no": 6,
+      "topic_no": 2,
+      "topic_task_id": 6,
+      "v1_task_id": 46,
+      "task_lineage_key": "docx-767b4798e4bfd977-06",
+      "cryostat_id": 19,
+      "cryostat_name": "祖4",
+      "primary_member_id": 18,
+      "predecessor_task_id": 5
+    },
+    {
+      "document_no": 7,
+      "topic_no": 3,
+      "topic_task_id": 7,
+      "v1_task_id": 47,
+      "task_lineage_key": "docx-767b4798e4bfd977-07",
+      "cryostat_id": 19,
+      "cryostat_name": "祖4",
+      "primary_member_id": 18,
+      "predecessor_task_id": null
+    },
+    {
+      "document_no": 8,
+      "topic_no": 4,
+      "topic_task_id": 8,
+      "v1_task_id": 48,
+      "task_lineage_key": "docx-767b4798e4bfd977-08",
+      "cryostat_id": 19,
+      "cryostat_name": "祖4",
+      "primary_member_id": 18,
+      "predecessor_task_id": null
+    },
+    {
+      "document_no": 9,
+      "topic_no": 4,
+      "topic_task_id": 9,
+      "v1_task_id": 49,
+      "task_lineage_key": "docx-767b4798e4bfd977-09",
+      "cryostat_id": 19,
+      "cryostat_name": "祖4",
+      "primary_member_id": 18,
+      "predecessor_task_id": 8
+    },
+    {
+      "document_no": 10,
+      "topic_no": 4,
+      "topic_task_id": 10,
+      "v1_task_id": 50,
+      "task_lineage_key": "docx-767b4798e4bfd977-10",
+      "cryostat_id": 19,
+      "cryostat_name": "祖4",
+      "primary_member_id": 18,
+      "predecessor_task_id": 9
+    },
+    {
+      "document_no": 11,
+      "topic_no": 4,
+      "topic_task_id": 11,
+      "v1_task_id": 51,
+      "task_lineage_key": "docx-767b4798e4bfd977-11",
+      "cryostat_id": 19,
+      "cryostat_name": "祖4",
+      "primary_member_id": 18,
+      "predecessor_task_id": 10
+    },
+    {
+      "document_no": 12,
+      "topic_no": 5,
+      "topic_task_id": 12,
+      "v1_task_id": 52,
+      "task_lineage_key": "docx-767b4798e4bfd977-12",
+      "cryostat_id": 19,
+      "cryostat_name": "祖4",
+      "primary_member_id": 18,
+      "predecessor_task_id": null
+    },
+    {
+      "document_no": 13,
+      "topic_no": 8,
+      "topic_task_id": 13,
+      "v1_task_id": 53,
+      "task_lineage_key": "docx-767b4798e4bfd977-13",
+      "cryostat_id": 2,
+      "cryostat_name": "合肥号",
+      "primary_member_id": 18,
+      "predecessor_task_id": null
+    },
+    {
+      "document_no": 14,
+      "topic_no": 9,
+      "topic_task_id": 14,
+      "v1_task_id": 54,
+      "task_lineage_key": "docx-767b4798e4bfd977-14",
+      "cryostat_id": 1,
+      "cryostat_name": "重庆号",
+      "primary_member_id": 18,
+      "predecessor_task_id": null
+    },
+    {
+      "document_no": 15,
+      "topic_no": 9,
+      "topic_task_id": 15,
+      "v1_task_id": 55,
+      "task_lineage_key": "docx-767b4798e4bfd977-15",
+      "cryostat_id": 1,
+      "cryostat_name": "重庆号",
+      "primary_member_id": 18,
+      "predecessor_task_id": 14
+    },
+    {
+      "document_no": 16,
+      "topic_no": 9,
+      "topic_task_id": 16,
+      "v1_task_id": 56,
+      "task_lineage_key": "docx-767b4798e4bfd977-16",
+      "cryostat_id": 1,
+      "cryostat_name": "重庆号",
+      "primary_member_id": 18,
+      "predecessor_task_id": 15
+    },
+    {
+      "document_no": 17,
+      "topic_no": 10,
+      "topic_task_id": 17,
+      "v1_task_id": 57,
+      "task_lineage_key": "docx-767b4798e4bfd977-17",
+      "cryostat_id": 19,
+      "cryostat_name": "祖4",
+      "primary_member_id": 18,
+      "predecessor_task_id": null
+    },
+    {
+      "document_no": 18,
+      "topic_no": 11,
+      "topic_task_id": 18,
+      "v1_task_id": 58,
+      "task_lineage_key": "docx-767b4798e4bfd977-18",
+      "cryostat_id": 19,
+      "cryostat_name": "祖4",
+      "primary_member_id": 18,
+      "predecessor_task_id": null
+    },
+    {
+      "document_no": 19,
+      "topic_no": 12,
+      "topic_task_id": 19,
+      "v1_task_id": 59,
+      "task_lineage_key": "docx-767b4798e4bfd977-19",
+      "cryostat_id": 19,
+      "cryostat_name": "祖4",
+      "primary_member_id": 18,
+      "predecessor_task_id": null
+    }
+  ],
+  "idempotency_marker": "767b4798e4bfd977429fd6fffe48325260537b816cbe97718892ce943111a07d",
+  "notes": [
+    "样品编号 formal_identifier/temporary_identifier 保持为空。",
+    "任务负责人暂以待分配占位成员建立，未自动指派具体人员。",
+    "专题 6、7 在源文档总述中出现但无样品明细，本次未自动创建。",
+    "Z4.1 未作为制冷机使用；文档中的 4.1 仅作为研发阶段上下文。"
+  ]
+}

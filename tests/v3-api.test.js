@@ -41,6 +41,30 @@ test("V3 schema and endpoint surface are exact and re-open idempotently", async 
   } finally { await app.close(); }
 });
 
+test("V3.1 task details expose topic context and persist structured test intent", async () => {
+  const app = await fixture();
+  try {
+    const resources = (await app.request("/api/v3/topics")).payload.data;
+    const member = app.database.prepare("SELECT id FROM members WHERE deleted_at IS NULL ORDER BY id LIMIT 1").get();
+    const topic = (await app.request("/api/v3/topics", { method: "POST", body: { source_group_id: resources.groups[0].id, name: "任务详情专题", purpose: "验证低温测控工艺窗口" }, expected: [201] })).payload.data;
+    const sample = (await app.request(`/api/v3/topics/${topic.id}/samples`, { method: "POST", body: { planning_label: "详情样品", model: "QPU-X", eta_date: "2026-09-01" }, expected: [201] })).payload.data;
+    const input = { title: "低温窗口测试", description: "补充说明", test_purpose: "验证不同温区下的 Q 值稳定性", test_items: [{ name: "Q 值测试", acceptance_criteria: "达到目标阈值", is_required: 1 }, { name: "读取链路验证", acceptance_criteria: "链路无异常", is_required: 0 }], sample_ids: [sample.id], position: 0, primary_member_id: member.id, participant_member_ids: [], member_efforts: [{ member_id: member.id, planned_half_hours: 2 }], cryostat_pending: 1, cryostat_id: null, start_date: "2026-09-01", end_date: "2026-09-02", after_arrival: 0 };
+    const preview = (await app.request(`/api/v3/topics/${topic.id}/tasks/preview`, { method: "POST", body: input })).payload.data;
+    const created = (await app.request(`/api/v3/topics/${topic.id}/tasks`, { method: "POST", body: { ...preview.normalized_input, preview_token: preview.preview_token, ack: true }, expected: [201] })).payload.data;
+    assert.equal(created.test_purpose, input.test_purpose);
+    assert.deepEqual(created.test_items.map((item) => item.name), ["Q 值测试", "读取链路验证"]);
+    assert.deepEqual(created.topic, { id: topic.id, name: topic.name, purpose: topic.purpose });
+    assert.deepEqual(created.source_group, { id: resources.groups[0].id, name: resources.groups[0].name });
+    assert.equal(created.cryostat, null);
+    const updatedInput = { ...input, test_purpose: "确认窗口和链路稳定性", test_items: [{ name: "重复性测试", acceptance_criteria: "三轮结果一致", is_required: 1 }], expected_version: created.version };
+    const updatedPreview = (await app.request(`/api/v3/topic-tasks/${created.id}/preview`, { method: "POST", body: updatedInput })).payload.data;
+    const updated = (await app.request(`/api/v3/topic-tasks/${created.id}`, { method: "PUT", body: { ...updatedInput, preview_token: updatedPreview.preview_token, ack: true }, expected: [200] })).payload.data;
+    assert.equal(updated.test_purpose, updatedInput.test_purpose);
+    assert.deepEqual(updated.test_items.map((item) => item.name), ["重复性测试"]);
+    assert.equal(app.database.prepare("SELECT test_purpose FROM v3_topic_tasks WHERE id=?").get(created.id).test_purpose, updatedInput.test_purpose);
+  } finally { await app.close(); }
+});
+
 test("topic, sample, task-chain, assignment and exact-set submission flow", async () => {
   const app = await fixture();
   try {

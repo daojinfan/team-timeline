@@ -49,3 +49,4 @@ last_reviewed: 2026-08-20
 | CR-003 | docs/08-changes/CR-003.md | change-package | approved | 1.0 | BL-004 | human |
 | QUAL-TRACE-V21-001 | docs/05-quality/traceability-v21.md | quality.traceability.v21 | active | 1.0 | BL-004 | human |
 | RPT-V21-DEV-001 | docs/09-reports/V21-development-plan.md | report.development-plan.v21 | active | 1.0 | BL-004 | human |
+| CR-004 | docs/08-changes/CR-004.md | change-package | approved | 1.0 | BL-004 | human |

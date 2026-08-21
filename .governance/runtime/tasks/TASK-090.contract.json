@@ -1,0 +1,84 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-090",
+  "work_package": "WP-009",
+  "title": "在执行中心投影 V3 结构化任务信息",
+  "goal": "将已存储的 V3 专题任务结构化字段按 legacy task_id 映射到执行中心任务卡片和详情，显示专题、来源小组、测试目的、测试项、制冷机及样品 ETA/编号信息。",
+  "baseline": "BL-004",
+  "profile": "Standard",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/app.js"
+  ],
+  "read_paths": [
+    "public/app.js",
+    "src/v3/index.js",
+    "docs/02-product/requirements-v21.md",
+    "docs/03-architecture/components/v21-detailed-design.md"
+  ],
+  "write_paths": [
+    "public/app.js"
+  ],
+  "out_of_scope": [
+    "修改数据库或 API",
+    "AI 自动建任务",
+    "自动分配",
+    "手机端",
+    "远程发布"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-088"
+  ],
+  "acceptance_criteria": [
+    "执行中心任务卡片显示专题、来源小组、制冷机和结构化测试摘要",
+    "任务详情显示测试目的、测试项及关联样品的型号、编号、ETA/到样日期",
+    "没有 V3 关联的旧任务保持原展示且不报错",
+    "V3 数据刷新后执行中心立即重渲染",
+    "客户端语法、现有自动化测试和差异检查通过"
+  ],
+  "validations": [
+    {
+      "id": "client-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "diff-check",
+      "command": "git",
+      "args": [
+        "diff",
+        "--check"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-21T11:12:25.4696904Z"
+}

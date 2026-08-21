@@ -164,6 +164,13 @@ CREATE INDEX idx_v3_events_topic ON v3_topic_events(topic_id,id DESC);
 
 export const V3_SCHEMA_CHECKSUM = createHash("sha256").update(V3_SCHEMA_SQL).digest("hex");
 
+// V3.1 is an additive task-detail migration.  Keeping these fields on the
+// existing task table preserves the schema-3 checksum and all V1/V2 routes.
+const V31_TASK_DETAIL_COLUMNS = Object.freeze([
+  ["test_purpose", "TEXT NOT NULL DEFAULT ''"],
+  ["test_items_json", "TEXT NOT NULL DEFAULT '[]'"]
+]);
+
 class V3Error extends Error {
   constructor(status, code, details = {}, message = code) { super(message); this.status = status; this.code = code; this.details = details; }
 }
@@ -215,6 +222,16 @@ export function validateV3Schema(database) {
   return version;
 }
 
+export function ensureV31TaskDetailSchema(database) {
+  const columns = new Set(database.prepare("PRAGMA table_info(v3_topic_tasks)").all().map((row) => row.name));
+  const missing = V31_TASK_DETAIL_COLUMNS.filter(([name]) => !columns.has(name));
+  if (!missing.length) return false;
+  transaction(database, () => {
+    for (const [name, definition] of missing) database.exec(`ALTER TABLE v3_topic_tasks ADD COLUMN ${name} ${definition}`);
+  });
+  return true;
+}
+
 export function migrateV3Schema(database) {
   const names = new Set(tables(database, "table"));
   if (names.has("app_schema_versions")) {
@@ -222,7 +239,7 @@ export function migrateV3Schema(database) {
     const max = rows.length ? Math.max(...rows.map((r) => r.version)) : 1;
     if (max > 3) throw new Error(`Unsupported schema version: ${max}`);
     const current = rows.find((r) => r.version === 3);
-    if (current) { validateV3Schema(database); return { migrated: false, version: current }; }
+    if (current) { ensureV31TaskDetailSchema(database); validateV3Schema(database); return { migrated: false, version: current }; }
   }
   const indexes = new Set(tables(database, "index"));
   // A legacy V1 migration may have removed app_schema_versions while leaving
@@ -230,6 +247,7 @@ export function migrateV3Schema(database) {
   // instead of treating that state as a partial migration.
   if (V3_TABLES.every((name) => names.has(name)) && V3_INDEXES.every((name) => indexes.has(name))) {
     transaction(database, () => database.prepare("INSERT INTO app_schema_versions(version,name,checksum,applied_at) VALUES(3,'v3-topic-sample-chain',?,?)").run(V3_SCHEMA_CHECKSUM, now()));
+    ensureV31TaskDetailSchema(database);
     return { migrated: true, version: validateV3Schema(database) };
   }
   const partial = [...names].filter((name) => name.startsWith("v3_"));
@@ -238,6 +256,7 @@ export function migrateV3Schema(database) {
     database.exec(V3_SCHEMA_SQL);
     database.prepare("INSERT INTO app_schema_versions(version,name,checksum,applied_at) VALUES(3,'v3-topic-sample-chain',?,?)").run(V3_SCHEMA_CHECKSUM, now());
   });
+  ensureV31TaskDetailSchema(database);
   return { migrated: true, version: validateV3Schema(database) };
 }
 
@@ -251,9 +270,36 @@ function listIds(input, field) { if (input === undefined) return []; if (!Array.
 function sampleRows(database, taskId) { return database.prepare("SELECT s.* FROM v3_samples s JOIN v3_task_samples ts ON ts.sample_id=s.id WHERE ts.topic_task_id=? AND s.archived_at IS NULL ORDER BY s.id").all(taskId); }
 function readiness(database, taskId) { const rows = sampleRows(database, taskId); if (!rows.length || rows.some((r) => r.eta_pending || !r.current_eta_date)) return null; return rows.reduce((max, r) => max > r.current_eta_date ? max : r.current_eta_date, rows[0].current_eta_date); }
 function memberExists(database, memberId) { return Boolean(database.prepare("SELECT 1 FROM members WHERE id=? AND deleted_at IS NULL").get(memberId)); }
+function storedTestItems(value) {
+  if (!value) return [];
+  try {
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+function normalizeTestItems(input, existing = null) {
+  const raw = input === undefined ? storedTestItems(existing?.test_items_json) : input;
+  if (raw == null) return [];
+  if (!Array.isArray(raw)) fail(400, "VALIDATION_ERROR", { field: "test_items", reason: "array required" });
+  return raw.map((item, index) => {
+    const source = typeof item === "string" ? { name: item } : item;
+    if (!source || typeof source !== "object") fail(400, "VALIDATION_ERROR", { field: `test_items[${index}]`, reason: "object required" });
+    return {
+      position: index,
+      name: trim(source.name ?? source.label, `test_items[${index}].name`, 1, 300),
+      acceptance_criteria: trim(source.acceptance_criteria ?? source.acceptance ?? "", `test_items[${index}].acceptance_criteria`, 0, 1000),
+      is_required: bool(source.is_required ?? 1, `test_items[${index}].is_required`),
+      note: trim(source.note ?? "", `test_items[${index}].note`, 0, 1000)
+    };
+  });
+}
 function normalizeTask(database, topicId, payload, existing = null) {
   const title = trim(payload.title ?? existing?.title, "title", 1, 200);
   const description = trim(payload.description ?? existing?.description ?? "", "description", 0, 4000);
+  const testPurpose = trim(payload.test_purpose ?? existing?.test_purpose ?? "", "test_purpose", 0, 4000);
+  const testItems = normalizeTestItems(payload.test_items, existing);
   const sampleIds = listIds(payload.sample_ids ?? (existing ? sampleRows(database, existing.id).map((s) => s.id) : []), "sample_ids");
   if (!sampleIds.length) fail(400, "VALIDATION_ERROR", { field: "sample_ids", reason: "at least one sample required" });
   for (const sampleId of sampleIds) { const sample = ensureSample(database, sampleId); if (sample.topic_id !== topicId) fail(400, "CROSS_TOPIC_REFERENCE", { sample_id: sampleId }); }
@@ -269,7 +315,7 @@ function normalizeTask(database, topicId, payload, existing = null) {
   const start = date(payload.start_date ?? existing?.start_date, "start_date"); const end = date(payload.end_date ?? existing?.end_date, "end_date"); if ((start && !end) || (!start && end) || (start && end && start > end)) fail(400, "VALIDATION_ERROR", { field: "end_date", reason: "valid date range required" });
   const predecessor = payload.predecessor_task_id == null ? null : id(payload.predecessor_task_id, "predecessor_task_id");
   if (predecessor != null) { const predecessorRow = ensureTask(database, predecessor); if (predecessorRow.topic_id !== topicId) fail(400, "CROSS_TOPIC_REFERENCE", { field: "predecessor_task_id" }); if (existing?.id === predecessor || predecessorRow.position >= position) fail(409, "DEPENDENCY_CYCLE", { predecessor_task_id: predecessor, position }); }
-  return { title, description, sample_ids: sampleIds, position, is_required: isRequired, primary_member_id: primary, participant_member_ids: allMembers.filter((m) => m !== primary), member_efforts: efforts, cryostat_id: cryo, cryostat_pending: cryoPending, start_date: start, end_date: end, after_arrival: bool(payload.after_arrival ?? existing?.after_arrival ?? 0, "after_arrival"), predecessor_task_id: predecessor };
+  return { title, description, test_purpose: testPurpose, test_items: testItems, sample_ids: sampleIds, position, is_required: isRequired, primary_member_id: primary, participant_member_ids: allMembers.filter((m) => m !== primary), member_efforts: efforts, cryostat_id: cryo, cryostat_pending: cryoPending, start_date: start, end_date: end, after_arrival: bool(payload.after_arrival ?? existing?.after_arrival ?? 0, "after_arrival"), predecessor_task_id: predecessor };
 }
 function taskConflicts(database, normalized, topicId, existing = null) {
   const conflicts = []; const members = normalized.member_efforts.filter((e) => e.planned_half_hours > 0).map((e) => e.member_id);
@@ -297,7 +343,28 @@ function conflictAck(payload, conflicts) { if (conflicts.length && !payload.ack)
 
 function topicData(database, row) { const samples = database.prepare("SELECT COUNT(*) AS count FROM v3_samples WHERE topic_id=? AND archived_at IS NULL").get(row.id).count; const tasks = database.prepare("SELECT COUNT(*) AS count FROM v3_topic_tasks WHERE topic_id=?").get(row.id).count; return { ...row, sample_count: samples, task_count: tasks }; }
 function listTopics(database, url) { const includeArchived = url.searchParams.get("include_archived") === "1"; const params = []; const where = [includeArchived ? "1=1" : "t.archived_at IS NULL"]; const search = url.searchParams.get("search"); if (search) { where.push("(t.name LIKE ? OR t.purpose LIKE ?)"); params.push(`%${search}%`, `%${search}%`); } const rows = database.prepare(`SELECT t.* FROM v3_topics t WHERE ${where.join(" AND ")} ORDER BY t.updated_at DESC,t.id DESC`).all(...params).map((r) => topicData(database, r)); const active = rows.filter((r) => !r.archived_at); const groups = database.prepare("SELECT id,name,is_active FROM v2_source_groups ORDER BY name COLLATE NOCASE").all(); const cryostats = database.prepare("SELECT id,name,status FROM v2_cryostats ORDER BY name COLLATE NOCASE").all(); return { items: rows, groups, cryostats, stats: { total: active.length, samples: active.reduce((sum, t) => sum + t.sample_count, 0), tasks: active.reduce((sum, t) => sum + t.task_count, 0) }, total: rows.length }; }
-function taskData(database, row) { const samples = sampleRows(database, row.id).map((s) => ({ id: s.id, model: s.model, planning_label: s.planning_label, current_eta_date: s.current_eta_date, eta_pending: s.eta_pending, actual_arrival_date: s.actual_arrival_date })); const efforts = database.prepare("SELECT e.*,m.name FROM v3_task_member_efforts e JOIN members m ON m.id=e.member_id WHERE e.topic_task_id=? ORDER BY e.member_id").all(row.id); const linked = row.task_id == null ? null : database.prepare("SELECT status FROM tasks WHERE id=?").get(row.task_id); const status = linked?.status === "completed" ? "completed" : (row.start_date && row.start_date <= todayIsoDate() ? "active" : "planned"); return { ...row, samples, efforts, total_half_hours: efforts.reduce((sum, e) => sum + e.planned_half_hours, 0), readiness_date: readiness(database, row.id), display_status: status }; }
+function taskData(database, row) {
+  const samples = sampleRows(database, row.id).map((s) => ({ id: s.id, model: s.model, planning_label: s.planning_label, current_eta_date: s.current_eta_date, eta_pending: s.eta_pending, actual_arrival_date: s.actual_arrival_date }));
+  const efforts = database.prepare("SELECT e.*,m.name FROM v3_task_member_efforts e JOIN members m ON m.id=e.member_id WHERE e.topic_task_id=? ORDER BY e.member_id").all(row.id);
+  const linked = row.task_id == null ? null : database.prepare("SELECT status FROM tasks WHERE id=?").get(row.task_id);
+  const context = database.prepare("SELECT tp.id AS topic_id,tp.name AS topic_name,tp.purpose AS topic_purpose,sg.id AS source_group_id,sg.name AS source_group_name,c.id AS cryostat_id,c.name AS cryostat_name FROM v3_topic_tasks tt JOIN v3_topics tp ON tp.id=tt.topic_id JOIN v2_source_groups sg ON sg.id=tp.source_group_id LEFT JOIN v2_cryostats c ON c.id=tt.cryostat_id WHERE tt.id=?").get(row.id);
+  const dependency = database.prepare("SELECT predecessor_task_id FROM v3_task_dependencies WHERE successor_task_id=?").get(row.id);
+  const status = linked?.status === "completed" ? "completed" : (row.start_date && row.start_date <= todayIsoDate() ? "active" : "planned");
+  return {
+    ...row,
+    test_purpose: row.test_purpose || "",
+    test_items: storedTestItems(row.test_items_json),
+    topic: context ? { id: context.topic_id, name: context.topic_name, purpose: context.topic_purpose } : null,
+    source_group: context ? { id: context.source_group_id, name: context.source_group_name } : null,
+    cryostat: context?.cryostat_id ? { id: context.cryostat_id, name: context.cryostat_name } : null,
+    predecessor_task_id: dependency?.predecessor_task_id ?? null,
+    samples,
+    efforts,
+    total_half_hours: efforts.reduce((sum, e) => sum + e.planned_half_hours, 0),
+    readiness_date: readiness(database, row.id),
+    display_status: status
+  };
+}
 function exactSampleSet(database, taskId, supplied) { const actual = sampleRows(database, taskId).map((s) => s.id); const input = listIds(supplied, "sample_ids"); if (actual.length !== input.length || actual.some((v, i) => v !== input[i])) fail(400, "SAMPLE_SET_MISMATCH", { expected: actual, received: input }); return actual; }
 function parseChecklist(database, topicId, payload) { const template = database.prepare("SELECT * FROM v3_acceptance_templates WHERE topic_id=? AND is_active=1").get(topicId); const items = template ? database.prepare("SELECT * FROM v3_acceptance_template_items WHERE template_id=? ORDER BY position").all(template.id) : []; const incoming = payload.template_item_ids; if (!Array.isArray(incoming)) fail(400, "CHECKLIST_ITEM_SET_MISMATCH", { reason: "template_item_ids required" }); const ids = incoming.map((i) => id(i.id, "template_item_ids.id")); const expectedIds = items.map((i) => i.id); if (ids.length !== expectedIds.length || [...ids].sort((a,b)=>a-b).some((v,i)=>v !== [...expectedIds].sort((a,b)=>a-b)[i]) || new Set(ids).size !== ids.length) fail(400, "CHECKLIST_ITEM_SET_MISMATCH", { expected: expectedIds, received: ids }); return items.map((item) => { const got = incoming.find((i) => Number(i.id) === item.id); return { id: item.id, label: item.label, position: item.position, checked: Boolean(got.checked) }; }); }
 
@@ -359,7 +426,7 @@ export async function routeV3Api(req, res, database, url) {
     match = path.match(/^\/api\/v3\/topics\/(\d+)\/legacy-plans\/(preview|confirm)$/); if(match&&method==="POST"){const topic=ensureTopic(database,id(match[1]));const p=await body(req);const planIds=listIds(p.v2_plan_ids,"v2_plan_ids");const plans=planIds.map((planId)=>{const row=database.prepare("SELECT * FROM v2_control_plans WHERE id=?").get(planId);if(!row)fail(404,"NOT_FOUND",{resource:"v2_plan",id:planId});return row;});const snapshot={plans:plans.map((plan)=>({id:plan.id,name:plan.name,purpose:plan.purpose,sample_model:plan.sample_model,current_eta_date:plan.current_eta_date}))};const preview={snapshot,preview_token:token(snapshot,{topic_id:topic.id},[])};if(match[2]==="preview")return response(res,200,preview);if(p.preview_token!==preview.preview_token)fail(409,"STALE_PREVIEW",{});const rows=transaction(database,()=>{for(const plan of plans){database.prepare("INSERT OR IGNORE INTO v3_topic_plan_links(topic_id,v2_plan_id,copy_mode,snapshot_json,copied_by,copied_at) VALUES(?,?,?,?,?,?)").run(topic.id,plan.id,"snapshot",JSON.stringify(plan),actor(p),now());}event(database,topic.id,"legacy_plan_copy",{actor:actor(p),after:snapshot});return database.prepare("SELECT * FROM v3_topic_plan_links WHERE topic_id=? ORDER BY v2_plan_id").all(topic.id);});return response(res,201,rows);}
     match = path.match(/^\/api\/v3\/topics\/(\d+)\/legacy-plans\/(\d+)\/unlink$/); if(match&&method==="POST"){const topic=ensureTopic(database,id(match[1]));const planId=id(match[2],"plan_id");const p=await body(req);const row=transaction(database,()=>{database.prepare("DELETE FROM v3_topic_plan_links WHERE topic_id=? AND v2_plan_id=?").run(topic.id,planId);event(database,topic.id,"legacy_plan_unlink",{actor:actor(p),after:{v2_plan_id:planId}});return {topic_id:topic.id,v2_plan_id:planId};});return response(res,200,row);}
     match = path.match(/^\/api\/v3\/topics\/(\d+)\/tasks(\/preview)?$/); if(match&&method==="GET"&&!match[2]){const topic=ensureTopic(database,id(match[1]));return response(res,200,{items:database.prepare("SELECT * FROM v3_topic_tasks WHERE topic_id=? ORDER BY position,id").all(topic.id).map((r)=>taskData(database,r))});}
-    if(match&&method==="POST"){const topic=ensureTopic(database,id(match[1]));const p=await body(req);const preview=previewTask(database,topic.id,p);if(match[2]||p.preview_only===true)return response(res,200,preview);requirePreview(p,preview.normalized_input,{topicId:topic.id,existingId:null,version:null,readiness:null},preview.conflicts);conflictAck(p,preview.conflicts);const row=transaction(database,()=>{const timestamp=now();const today=todayIsoDate();const start=preview.normalized_input.start_date||today;const end=preview.normalized_input.end_date||start;const v1Result=database.prepare("INSERT INTO tasks(title,description,default_start_date,default_end_date,color,status,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?)").run(preview.normalized_input.title,preview.normalized_input.description,start,end,"#2563eb",start>today?"planned":"active",timestamp,timestamp);const v1TaskId=Number(v1Result.lastInsertRowid);for(const effort of preview.normalized_input.member_efforts)if(effort.planned_half_hours>0)database.prepare("INSERT INTO task_assignments(task_id,member_id,start_date,end_date,progress,note,created_at,updated_at) VALUES(?,?,?,?,0,'',?,?)").run(v1TaskId,effort.member_id,start,end,timestamp,timestamp);const result=database.prepare("INSERT INTO v3_topic_tasks(topic_id,task_id,task_lineage_key,title,description,position,is_required,primary_member_id,cryostat_id,cryostat_pending,start_date,end_date,after_arrival,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)").run(topic.id,v1TaskId,uuid(randomUUID()),preview.normalized_input.title,preview.normalized_input.description,preview.normalized_input.position,preview.normalized_input.is_required,preview.normalized_input.primary_member_id,preview.normalized_input.cryostat_id,preview.normalized_input.cryostat_pending,preview.normalized_input.start_date,preview.normalized_input.end_date,preview.normalized_input.after_arrival,timestamp,timestamp);const taskId=Number(result.lastInsertRowid);for(const sampleId of preview.normalized_input.sample_ids)database.prepare("INSERT INTO v3_task_samples(topic_task_id,sample_id,created_at) VALUES(?,?,?)").run(taskId,sampleId,timestamp);for(const effort of preview.normalized_input.member_efforts)database.prepare("INSERT INTO v3_task_member_efforts(topic_task_id,member_id,planned_half_hours,created_at,updated_at) VALUES(?,?,?,?,?)").run(taskId,effort.member_id,effort.planned_half_hours,timestamp,timestamp);if(preview.normalized_input.predecessor_task_id!=null){const predecessor=ensureTask(database,preview.normalized_input.predecessor_task_id);if(predecessor.topic_id!==topic.id)fail(400,"CROSS_TOPIC_REFERENCE",{});database.prepare("INSERT INTO v3_task_dependencies(topic_id,predecessor_task_id,successor_task_id,created_at) VALUES(?,?,?,?)").run(topic.id,predecessor.id,taskId,timestamp);}event(database,topic.id,"task_create",{actor:actor(p),taskId,after:preview.normalized_input});return database.prepare("SELECT * FROM v3_topic_tasks WHERE id=?").get(taskId);});return response(res,201,taskData(database,row));}
+    if(match&&method==="POST"){const topic=ensureTopic(database,id(match[1]));const p=await body(req);const preview=previewTask(database,topic.id,p);if(match[2]||p.preview_only===true)return response(res,200,preview);requirePreview(p,preview.normalized_input,{topicId:topic.id,existingId:null,version:null,readiness:null},preview.conflicts);conflictAck(p,preview.conflicts);const row=transaction(database,()=>{const timestamp=now();const today=todayIsoDate();const start=preview.normalized_input.start_date||today;const end=preview.normalized_input.end_date||start;const v1Result=database.prepare("INSERT INTO tasks(title,description,default_start_date,default_end_date,color,status,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?)").run(preview.normalized_input.title,preview.normalized_input.description,start,end,"#2563eb",start>today?"planned":"active",timestamp,timestamp);const v1TaskId=Number(v1Result.lastInsertRowid);for(const effort of preview.normalized_input.member_efforts)if(effort.planned_half_hours>0)database.prepare("INSERT INTO task_assignments(task_id,member_id,start_date,end_date,progress,note,created_at,updated_at) VALUES(?,?,?,?,0,'',?,?)").run(v1TaskId,effort.member_id,start,end,timestamp,timestamp);const result=database.prepare("INSERT INTO v3_topic_tasks(topic_id,task_id,task_lineage_key,title,description,test_purpose,test_items_json,position,is_required,primary_member_id,cryostat_id,cryostat_pending,start_date,end_date,after_arrival,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)").run(topic.id,v1TaskId,uuid(randomUUID()),preview.normalized_input.title,preview.normalized_input.description,preview.normalized_input.test_purpose,JSON.stringify(preview.normalized_input.test_items),preview.normalized_input.position,preview.normalized_input.is_required,preview.normalized_input.primary_member_id,preview.normalized_input.cryostat_id,preview.normalized_input.cryostat_pending,preview.normalized_input.start_date,preview.normalized_input.end_date,preview.normalized_input.after_arrival,timestamp,timestamp);const taskId=Number(result.lastInsertRowid);for(const sampleId of preview.normalized_input.sample_ids)database.prepare("INSERT INTO v3_task_samples(topic_task_id,sample_id,created_at) VALUES(?,?,?)").run(taskId,sampleId,timestamp);for(const effort of preview.normalized_input.member_efforts)database.prepare("INSERT INTO v3_task_member_efforts(topic_task_id,member_id,planned_half_hours,created_at,updated_at) VALUES(?,?,?,?,?)").run(taskId,effort.member_id,effort.planned_half_hours,timestamp,timestamp);if(preview.normalized_input.predecessor_task_id!=null){const predecessor=ensureTask(database,preview.normalized_input.predecessor_task_id);if(predecessor.topic_id!==topic.id)fail(400,"CROSS_TOPIC_REFERENCE",{});database.prepare("INSERT INTO v3_task_dependencies(topic_id,predecessor_task_id,successor_task_id,created_at) VALUES(?,?,?,?)").run(topic.id,predecessor.id,taskId,timestamp);}event(database,topic.id,"task_create",{actor:actor(p),taskId,after:preview.normalized_input});return database.prepare("SELECT * FROM v3_topic_tasks WHERE id=?").get(taskId);});return response(res,201,taskData(database,row));}
     match=path.match(/^\/api\/v3\/topic-tasks\/(\d+)\/preview$/);if(match&&method==="POST"){const task=ensureTask(database,id(match[1]));const p=await body(req);expected(task,p);return response(res,200,previewTask(database,task.topic_id,p,task));}
     match=path.match(/^\/api\/v3\/topic-tasks\/(\d+)$/);
     if(match&&method==="PUT"){
@@ -367,7 +434,7 @@ export async function routeV3Api(req, res, database, url) {
       const facts={topicId:task.topic_id,existingId:task.id,version:task.version,readiness:readiness(database,task.id)}; requirePreview(p,preview.normalized_input,facts,preview.conflicts); conflictAck(p,preview.conflicts);
       const row=transaction(database,()=>{
         const stamp=now(); const input=preview.normalized_input;
-        database.prepare("UPDATE v3_topic_tasks SET title=?,description=?,position=?,is_required=?,primary_member_id=?,cryostat_id=?,cryostat_pending=?,start_date=?,end_date=?,after_arrival=?,version=version+1,updated_at=? WHERE id=?").run(input.title,input.description,input.position,input.is_required,input.primary_member_id,input.cryostat_id,input.cryostat_pending,input.start_date,input.end_date,input.after_arrival,stamp,task.id);
+        database.prepare("UPDATE v3_topic_tasks SET title=?,description=?,test_purpose=?,test_items_json=?,position=?,is_required=?,primary_member_id=?,cryostat_id=?,cryostat_pending=?,start_date=?,end_date=?,after_arrival=?,version=version+1,updated_at=? WHERE id=?").run(input.title,input.description,input.test_purpose,JSON.stringify(input.test_items),input.position,input.is_required,input.primary_member_id,input.cryostat_id,input.cryostat_pending,input.start_date,input.end_date,input.after_arrival,stamp,task.id);
         if(task.task_id!=null){
           const start=input.start_date||todayIsoDate(); const end=input.end_date||start;
           database.prepare("UPDATE tasks SET title=?,description=?,default_start_date=?,default_end_date=?,updated_at=? WHERE id=? AND deleted_at IS NULL").run(input.title,input.description,start,end,stamp,task.task_id);

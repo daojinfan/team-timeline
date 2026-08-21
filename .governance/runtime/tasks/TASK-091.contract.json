@@ -1,0 +1,71 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-091",
+  "work_package": "WP-009",
+  "title": "独立审核执行中心 V3 任务投影",
+  "goal": "独立审核 TASK-090 的实际 app.js 变更、结构化字段映射、兼容性和验证证据。",
+  "baseline": "BL-004",
+  "profile": "Standard",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-091"
+  ],
+  "read_paths": [
+    "public/app.js",
+    "src/v3/index.js",
+    "docs/02-product/requirements-v21.md",
+    "docs/03-architecture/components/v21-detailed-design.md"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-091"
+  ],
+  "out_of_scope": [
+    "修改被审核实现",
+    "修改数据库",
+    "远程发布",
+    "创建其他任务"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-090"
+  ],
+  "acceptance_criteria": [
+    "核对 TASK-090 从启动提交到当前工作树的实际变更清单",
+    "复核任务卡片和详情字段映射及无 V3 关联兼容路径",
+    "生成符合 schema 的结构化审核证据"
+  ],
+  "validations": [
+    {
+      "id": "review-client-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "review-npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-21T11:12:25.7786600Z"
+}

@@ -1,0 +1,85 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-089",
+  "reviewed_task_ids": [
+    "TASK-088"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-004",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-088",
+      "path": "src/v3/index.js",
+      "change_type": "modified",
+      "summary": "新增 v3.1 任务详情字段的增量迁移、结构化 test_purpose/test_items 规范化与持久化，并在任务响应中返回专题、来源小组、任务制冷机和前置任务上下文；V3 schema checksum、V1/V2 表和路由保持不变。"
+    },
+    {
+      "task_id": "TASK-088",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "V3 新建任务表单增加测试目的/测试项控件，新增桌面任务详情对话框、上下文摘要、事实区和编辑字段。"
+    },
+    {
+      "task_id": "TASK-088",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "新增任务卡上下文/测试目的展示与任务详情事实区的桌面样式，沿用 v3-dialog 尺寸边界。"
+    },
+    {
+      "task_id": "TASK-088",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "任务卡显示专题/来源小组/制冷机和结构化测试信息；新建、编辑、成员更新均保留这些字段；任务详情支持预览后更新、冲突确认、错误保留、关闭和焦点逻辑。"
+    },
+    {
+      "task_id": "TASK-088",
+      "path": "tests/v3-api.test.js",
+      "change_type": "modified",
+      "summary": "新增 V3.1 任务详情 API round-trip 回归，验证专题上下文、来源小组、制冷机返回以及 test_purpose/test_items 创建和更新。"
+    },
+    {
+      "task_id": "TASK-088",
+      "path": "tests/backfill-v31-task-details.mjs",
+      "change_type": "added",
+      "summary": "新增确定性、可重复的 18 项 V3 任务详情回填：从专题目的和既有描述推导结构化测试信息，事务写入并报告 no-op、绑定计数和外键检查。"
+    },
+    {
+      "task_id": "TASK-088",
+      "path": "docs/08-changes/CR-004.md",
+      "change_type": "added",
+      "summary": "新增 V3.1 变更包，冻结增量字段、上下文投影、桌面详情、18 项回填、迁移前备份及 V1/V2 兼容范围。"
+    },
+    {
+      "task_id": "TASK-088",
+      "path": "docs/00-index/DOC-REGISTRY.md",
+      "change_type": "modified",
+      "summary": "为 CR-004 增加唯一注册表条目。"
+    }
+  ],
+  "change_summary": "本轮从头复核 TASK-088 启动提交 99803e879e9cbd7efff9fd169de118cd247ca853 至当前最终内容的完整差异。实际属于 TASK-088 的最终变更仍严格为上述 8 个路径，均在其 allowed_paths 内；共享工作树的 PM 治理状态变更未归因于 TASK-088，未发现实现越界、删除或重命名。",
+  "scope_checked": [
+    "TASK-089 Release 契约、WP-009/BL-004、TASK-088 start_git_commit、allowed_paths、read_paths 和本轮双轮审核要求",
+    "REQ-V21-001、ARC-OVERALL-003、ARC-COMP-005、DEC-003、CR-004 对 V3.1 任务详情和兼容岛的批准约束",
+    "src/v3/index.js 全量相关路径：V31 字段迁移、校验、topic/source_group/cryostat/task context 投影、任务创建/更新、样品和成员绑定、前置任务、提交/验收及 V1/V2/schema3 兼容",
+    "public/index.html、public/styles.css、public/app.js 全量相关路径：任务卡可读上下文、结构化测试编辑、详情 dialog、错误状态、既有 dialog/Escape/焦点复用和桌面尺寸契约",
+    "tests/v3-api.test.js 与 tests/backfill-v31-task-details.mjs：任务详情 round-trip、幂等回填逻辑、18 项现有任务、样品/专题/制冷机绑定、成果验收和外键回归",
+    "当前 SQLite 事实：v3_topic_tasks=18、v3_topics=10、v3_task_samples=19、非空 test_purpose=18、非空 test_items_json=11、PRAGMA foreign_key_check=0；新增字段存在于 v3_topic_tasks",
+    "迁移前备份 data/backups/team_tasks.pre-v31-task-details-20260821T091554Z.sqlite 存在，服务端增量 ALTER 采用事务且 V3 checksum/table/index exact-set 验证仍通过",
+    "桌面静态 DOM：503 个 id 且无重复、6 个 data-v2-view 标签、6 个 data-v3-panel 区域；详情 dialog 使用 v3-dialog 桌面约束，浏览器视觉权限限制已单独记录",
+    "TASK-088 实际 Git 变更类型、CR-004 注册项和本轮最终变更清单一致性"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "npm test：30 个测试全部通过（0 failed、0 skipped），覆盖 V1/V2 回归、V2 schema/34 端点/迁移、V3 exact schema/端点、V3.1 任务详情 round-trip、样品/任务链/多人分配/成果提交验收和跨专题制冷机冲突。",
+    "node --check src/v3/index.js：通过。",
+    "node --check public/app.js：通过。",
+    "git -c safe.directory='D:/Codex/人员管理系统' diff --check 99803e879e9cbd7efff9fd169de118cd247ca853 -- TASK-088 写范围：通过；仅报告工作树 LF/ignore 权限警告，无 whitespace error。",
+    "Test-ProjectGovernance.ps1 -Level Release：通过，错误数 0、警告数 0。",
+    "静态/API/数据库复核：V3 任务详情响应包含 topic/source_group/cryostat/test_purpose/test_items，创建与 PUT 更新均有测试；现有绑定计数为 18/10/19，foreign_key_check 为 0，pre-v31 备份存在。",
+    "浏览器权限不可用，本轮未执行可视化操作；改以完整 HTML/CSS/客户端静态选择器、任务详情 dialog/焦点绑定及自动化 API/兼容测试作为替代，并将该限制透明记录为环境限制而非实现缺陷。"
+  ],
+  "created_at": "2026-08-21T10:12:29.3407552Z"
+}

@@ -1,0 +1,86 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-081",
+  "work_package": "WP-009",
+  "title": "导入外部数据库中的有效任务数据",
+  "goal": "在当前系统数据库保留两边未删除的 V1 成员、任务、分配、清单、模板与有效操作日志；忽略 deleted_at 非空记录，冲突 ID 重新映射，保留 V2/V3 schema、专题与资源数据，并以备份和候选库验证保证可回滚。",
+  "baseline": "BL-004",
+  "profile": "Release",
+  "role": "INTEGRATOR",
+  "allowed_paths": [
+    "tests/import-live-data.mjs"
+  ],
+  "read_paths": [
+    "tests",
+    "src/server.js",
+    "src/v3",
+    "docs/03-architecture/components/v21-detailed-design.md",
+    "docs/07-decisions/DEC-003.md",
+    "docs/08-changes/CR-003.md"
+  ],
+  "write_paths": [
+    "tests/import-live-data.mjs"
+  ],
+  "out_of_scope": [
+    "修改源数据库文件",
+    "导入任何 deleted_at 非空记录",
+    "修改 V2/V3 schema、API、checksum 或前端",
+    "把旧任务猜测转换为专题、样品或连续任务",
+    "删除当前数据库中未删除的数据"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "源库 quick_check 与 foreign_key_check 通过，源库有效记录计数与导入报告一致",
+    "当前库备份生成并记录 SHA-256，失败可恢复",
+    "两边未删除 V1 数据合并完成，冲突 ID 映射完整，导入后 quick_check 与 foreign_key_check 仍为零错误",
+    "当前 V2/V3 schema、app_schema_versions、专题/样品/资源/验收数据保持不变",
+    "npm test、node 语法检查、导入后 dashboard/API 与有效数据计数通过",
+    "独立 Reviewer 对实际导入脚本、报告、数据库验证证据完成 Release 双轮审核"
+  ],
+  "validations": [
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "import-script-check",
+      "command": "node",
+      "args": [
+        "--check",
+        "tests/import-live-data.mjs"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "data_model_or_migration",
+    "irreversible_operation"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-21T06:52:44.7524685Z",
+  "release_controls": {
+    "target_environment": "本机 D:\\Codex\\人员管理系统 data/team_tasks.sqlite；本地服务 localhost:3000",
+    "execution_window": "停止本地服务后执行备份、候选库验证与数据库切换；完成验证后重启服务",
+    "rollback_plan": "停止服务，保留失败目标库，使用导入前 SQLite 备份恢复 data/team_tasks.sqlite，再重启并验证",
+    "observation_metrics": "源/目标有效记录计数、ID 映射数、quick_check、foreign_key_check、29项测试、dashboard响应、目标库SHA-256",
+    "stop_conditions": "源库或目标库完整性检查失败、存在未处理外键引用、候选库计数不符、V2/V3结构或资源数据变化、服务重启失败",
+    "post_release_owner": "项目经理；用户负责确认业务数据"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-087",
+  "work_package": "WP-009",
+  "contract_sha256": "b134a145864868a10d2177169bdbbf057d0c98614cbde800d5c4cec2ea7f90d3",
+  "baseline": "BL-004",
+  "state": "superseded",
+  "approval_id": "",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [
+    "tests/import-docx-sample-plan.mjs",
+    "tests/import-live-data.mjs"
+  ],
+  "plan_checkpoint_git_commit": "99803e879e9cbd7efff9fd169de118cd247ca853",
+  "plan_rebase_history": [],
+  "evidence": [],
+  "evidence_history": [],
+  "review_history": [],
+  "review": {
+    "required": false,
+    "reviewer_task_id": "",
+    "status": "not-applicable",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
+  },
+  "last_error": "随 TASK-086 作用域扩展一并替换审核契约",
+  "created_at": "2026-08-21T09:08:27.772023Z",
+  "updated_at": "2026-08-21T09:32:11.8154558Z"
+}

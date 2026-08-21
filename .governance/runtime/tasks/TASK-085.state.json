@@ -1,0 +1,36 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-085",
+  "work_package": "WP-009",
+  "contract_sha256": "651a8d044699c2135c28dfc1ca969ed9d31b7cad94fa57512026207c2b2ac723",
+  "baseline": "BL-004",
+  "state": "planned",
+  "approval_id": "",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [
+    "tests/import-live-data.mjs"
+  ],
+  "plan_checkpoint_git_commit": "99803e879e9cbd7efff9fd169de118cd247ca853",
+  "plan_rebase_history": [],
+  "evidence": [],
+  "evidence_history": [],
+  "review_history": [],
+  "review": {
+    "required": false,
+    "reviewer_task_id": "",
+    "status": "not-applicable",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
+  },
+  "last_error": "",
+  "created_at": "2026-08-21T08:29:15.7914894Z",
+  "updated_at": "2026-08-21T08:29:15.7914894Z"
+}

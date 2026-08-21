@@ -33,6 +33,6 @@
     { "work_package": "WP-006", "baseline": "BL-004", "path": "docs/04-delivery/context/WP-006.context.json", "sha256": "fda2eb07292a48dffef9c0bf6af667a4f71b69a0d00a00facb6fcc1f16ac3330" },
     { "work_package": "WP-007", "baseline": "BL-004", "path": "docs/04-delivery/context/WP-007.context.json", "sha256": "0da90e194d476df031b04cd9ad892f7e77515e8194de3dd302ef6abe0b868aa6" },
     { "work_package": "WP-008", "baseline": "BL-004", "path": "docs/04-delivery/context/WP-008.context.json", "sha256": "f64ad7b986deb29d9792efadc22123e8715b156adb33edbd09c1185d5bf25663" },
-    { "work_package": "WP-009", "baseline": "BL-004", "path": "docs/04-delivery/context/WP-009.context.json", "sha256": "5124e1b0de8fde82100017387b256cdee13c407aeb17e50d6494c564553c709f" }
+    { "work_package": "WP-009", "baseline": "BL-004", "path": "docs/04-delivery/context/WP-009.context.json", "sha256": "1f946adf1063c925d58cd38b52d8dbef75a63ca275aae8152fe687c3b9d60c29" }
   ]
 }

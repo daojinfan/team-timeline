@@ -1,0 +1,78 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-085",
+  "work_package": "WP-009",
+  "title": "独立审核祖冲之4.1样品计划导入",
+  "goal": "独立核对 TASK-084 的 DOCX 样品计划解析、来源小组与制冷机映射、SQLite 备份候选库、V3/V2 兼容与实际变更清单；仅写入本审核任务证据。",
+  "baseline": "BL-004",
+  "profile": "Release",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-085"
+  ],
+  "read_paths": [
+    "tests/import-docx-sample-plan.mjs",
+    "src/server.js",
+    "src/v3",
+    "docs/05-quality/evidence",
+    "docs/02-product/requirements-v21.md",
+    "docs/03-architecture/overall-design-v21.md",
+    "docs/03-architecture/components/v21-detailed-design.md",
+    "docs/07-decisions/DEC-003.md",
+    "docs/08-changes/CR-003.md"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-085"
+  ],
+  "out_of_scope": [
+    "修改实现脚本、数据库、源 DOCX、前端或其他治理状态",
+    "代替项目经理执行导入",
+    "只复述测试输出而不检查实际变更清单"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-084"
+  ],
+  "acceptance_criteria": [
+    "独立核对 19 个样品、专题映射、ETA 历史和制冷机匹配结果。",
+    "独立核对备份、quick_check、foreign_key_check、V3 checksum、V1/V2 API 和 npm test 证据。",
+    "审核证据 changes 精确列出 TASK-084 实际脚本及证据变更，结论符合 Release 双轮审核要求。"
+  ],
+  "validations": [
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "data_model_or_migration",
+    "irreversible_operation"
+  ],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-21T08:29:15.7914894Z",
+  "release_controls": {
+    "target_environment": "本机工作区、data/team_tasks.sqlite 导入结果及备份证据",
+    "execution_window": "TASK-084 完成导入与验证后独立复核；审核任务不修改目标数据",
+    "rollback_plan": "发现问题记录 changes-required，由 PM 使用导入前备份恢复并重新验证",
+    "observation_metrics": "实际 Git 变更清单、样品/专题/任务计数、映射、备份 SHA-256、完整性检查、API 与测试证据",
+    "stop_conditions": "变更清单不匹配、导入数据不完整、产生未批准设备/人员、兼容性或回滚证据缺失",
+    "post_release_owner": "项目经理"
+  }
+}

@@ -1,0 +1,306 @@
+{
+  "operation": "merge-live-v1-data",
+  "source_path": "E:\\oneDrive\\桌面\\team_tasks.sqlite",
+  "target_path": "D:\\Codex\\人员管理系统\\data\\team_tasks.sqlite",
+  "candidate_path": "D:\\Codex\\人员管理系统\\data\\import-staging\\team_tasks.candidate-20260821T070633Z.sqlite",
+  "backup_path": "D:\\Codex\\人员管理系统\\data\\backups\\team_tasks.pre-import-20260821T070633Z.sqlite",
+  "source_sha256": "666bdd37665c0866d787c3d750895cd8d474ef79df0004a8daa69c306378fbc6",
+  "backup_sha256": "b5e462e34c3eeb41e865344067a7c39f3fcd44ea211d97b6b3afcfafba4fefaf",
+  "candidate_sha256": "eadfbc5ded90b12b79b0f3f328fa27d46a48b4061a8a52b681edb85cc81a4e2f",
+  "source_before": {
+    "label": "source",
+    "file_sha256": "666bdd37665c0866d787c3d750895cd8d474ef79df0004a8daa69c306378fbc6",
+    "tables": [
+      "members",
+      "task_assignments",
+      "task_change_logs",
+      "task_checklist_items",
+      "task_templates",
+      "tasks"
+    ],
+    "counts": {
+      "members": {
+        "total": 27,
+        "live": 17,
+        "deleted": 10
+      },
+      "tasks": {
+        "total": 43,
+        "live": 36,
+        "deleted": 7
+      },
+      "task_assignments": {
+        "total": 76,
+        "live": 53,
+        "deleted": 23
+      },
+      "task_checklist_items": {
+        "total": 13,
+        "live": 12,
+        "deleted": 1
+      },
+      "task_templates": {
+        "total": 8,
+        "live": 3,
+        "deleted": 5
+      },
+      "task_change_logs": {
+        "total": 235,
+        "live": 235,
+        "deleted": 0
+      }
+    },
+    "log_total": 235,
+    "non_v1_hashes": {},
+    "app_schema_versions": []
+  },
+  "target_before": {
+    "label": "target-before",
+    "file_sha256": "8171688a821c55431e842724baea503dabb5648c99d1b694da35b211e4d2742a",
+    "tables": [
+      "app_schema_versions",
+      "members",
+      "task_assignments",
+      "task_change_logs",
+      "task_checklist_items",
+      "task_templates",
+      "tasks",
+      "v2_acceptance_reviews",
+      "v2_acceptance_template_items",
+      "v2_acceptance_templates",
+      "v2_control_plans",
+      "v2_cryostats",
+      "v2_deliverable_submissions",
+      "v2_plan_events",
+      "v2_plan_tasks",
+      "v2_source_contacts",
+      "v2_source_groups",
+      "v2_test_items",
+      "v3_acceptance_reviews",
+      "v3_acceptance_template_items",
+      "v3_acceptance_templates",
+      "v3_deliverable_submissions",
+      "v3_samples",
+      "v3_submission_samples",
+      "v3_task_dependencies",
+      "v3_task_member_efforts",
+      "v3_task_samples",
+      "v3_topic_events",
+      "v3_topic_plan_links",
+      "v3_topic_tasks",
+      "v3_topics"
+    ],
+    "counts": {
+      "members": {
+        "total": 4,
+        "live": 4,
+        "deleted": 0
+      },
+      "tasks": {
+        "total": 4,
+        "live": 4,
+        "deleted": 0
+      },
+      "task_assignments": {
+        "total": 7,
+        "live": 7,
+        "deleted": 0
+      },
+      "task_checklist_items": {
+        "total": 12,
+        "live": 12,
+        "deleted": 0
+      },
+      "task_templates": {
+        "total": 4,
+        "live": 4,
+        "deleted": 0
+      },
+      "task_change_logs": {
+        "total": 2,
+        "live": 2,
+        "deleted": 0
+      }
+    },
+    "log_total": 2,
+    "non_v1_hashes": {
+      "app_schema_versions": "8d9b5be0f06fffd24d2cfbcb88bf0ebb63c00d1067ae8319fe677b9908198b33",
+      "v2_acceptance_reviews": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v2_acceptance_template_items": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v2_acceptance_templates": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v2_control_plans": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v2_cryostats": "2e4ab8a5edfd52ab2c6ca3085689f0891f4fed1384041f7aabd45eb4d76dbcb8",
+      "v2_deliverable_submissions": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v2_plan_events": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v2_plan_tasks": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v2_source_contacts": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v2_source_groups": "bd815b201eeeef473430cb27d201068214bcbba22e2aa07145bf000b9b211f86",
+      "v2_test_items": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v3_acceptance_reviews": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v3_acceptance_template_items": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v3_acceptance_templates": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v3_deliverable_submissions": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v3_samples": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v3_submission_samples": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v3_task_dependencies": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v3_task_member_efforts": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v3_task_samples": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v3_topic_events": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v3_topic_plan_links": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v3_topic_tasks": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v3_topics": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "app_schema_versions": [
+      {
+        "version": 2,
+        "name": "v2-control-plan",
+        "checksum": "e87fc318d929c1f71cee72bd207c57a63b1a7f5d98bf673656c158bc040be4c4",
+        "applied_at": "2026-08-20T23:09:12.867Z"
+      },
+      {
+        "version": 3,
+        "name": "v3-topic-sample-chain",
+        "checksum": "c81899a0d931a36a1184204e7c60ea8df9b633b9718740412c059b2af6ba9c64",
+        "applied_at": "2026-08-21T06:13:13.020Z"
+      }
+    ]
+  },
+  "candidate_after": {
+    "label": "candidate-after",
+    "file_sha256": "eadfbc5ded90b12b79b0f3f328fa27d46a48b4061a8a52b681edb85cc81a4e2f",
+    "tables": [
+      "app_schema_versions",
+      "members",
+      "task_assignments",
+      "task_change_logs",
+      "task_checklist_items",
+      "task_templates",
+      "tasks",
+      "v2_acceptance_reviews",
+      "v2_acceptance_template_items",
+      "v2_acceptance_templates",
+      "v2_control_plans",
+      "v2_cryostats",
+      "v2_deliverable_submissions",
+      "v2_plan_events",
+      "v2_plan_tasks",
+      "v2_source_contacts",
+      "v2_source_groups",
+      "v2_test_items",
+      "v3_acceptance_reviews",
+      "v3_acceptance_template_items",
+      "v3_acceptance_templates",
+      "v3_deliverable_submissions",
+      "v3_samples",
+      "v3_submission_samples",
+      "v3_task_dependencies",
+      "v3_task_member_efforts",
+      "v3_task_samples",
+      "v3_topic_events",
+      "v3_topic_plan_links",
+      "v3_topic_tasks",
+      "v3_topics"
+    ],
+    "counts": {
+      "members": {
+        "total": 21,
+        "live": 21,
+        "deleted": 0
+      },
+      "tasks": {
+        "total": 40,
+        "live": 40,
+        "deleted": 0
+      },
+      "task_assignments": {
+        "total": 60,
+        "live": 60,
+        "deleted": 0
+      },
+      "task_checklist_items": {
+        "total": 24,
+        "live": 24,
+        "deleted": 0
+      },
+      "task_templates": {
+        "total": 7,
+        "live": 7,
+        "deleted": 0
+      },
+      "task_change_logs": {
+        "total": 200,
+        "live": 200,
+        "deleted": 0
+      }
+    },
+    "log_total": 200,
+    "non_v1_hashes": {
+      "app_schema_versions": "8d9b5be0f06fffd24d2cfbcb88bf0ebb63c00d1067ae8319fe677b9908198b33",
+      "v2_acceptance_reviews": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v2_acceptance_template_items": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v2_acceptance_templates": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v2_control_plans": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v2_cryostats": "2e4ab8a5edfd52ab2c6ca3085689f0891f4fed1384041f7aabd45eb4d76dbcb8",
+      "v2_deliverable_submissions": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v2_plan_events": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v2_plan_tasks": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v2_source_contacts": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v2_source_groups": "bd815b201eeeef473430cb27d201068214bcbba22e2aa07145bf000b9b211f86",
+      "v2_test_items": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v3_acceptance_reviews": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v3_acceptance_template_items": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v3_acceptance_templates": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v3_deliverable_submissions": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v3_samples": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v3_submission_samples": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v3_task_dependencies": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v3_task_member_efforts": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v3_task_samples": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v3_topic_events": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v3_topic_plan_links": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v3_topic_tasks": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "v3_topics": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "app_schema_versions": [
+      {
+        "version": 2,
+        "name": "v2-control-plan",
+        "checksum": "e87fc318d929c1f71cee72bd207c57a63b1a7f5d98bf673656c158bc040be4c4",
+        "applied_at": "2026-08-20T23:09:12.867Z"
+      },
+      {
+        "version": 3,
+        "name": "v3-topic-sample-chain",
+        "checksum": "c81899a0d931a36a1184204e7c60ea8df9b633b9718740412c059b2af6ba9c64",
+        "applied_at": "2026-08-21T06:13:13.020Z"
+      }
+    ]
+  },
+  "merge": {
+    "source_rows": {
+      "members": 17,
+      "tasks": 36,
+      "assignments": 53,
+      "checklists": 12,
+      "templates": 3,
+      "logs_total": 235,
+      "logs_retained": 198,
+      "logs_excluded": 37
+    },
+    "removed_current_deleted_rows": {
+      "members": 0,
+      "tasks": 0,
+      "assignments": 0,
+      "checklists": 0,
+      "templates": 0
+    },
+    "id_maps": {
+      "members": 17,
+      "tasks": 36,
+      "assignments": 53,
+      "templates": 3
+    }
+  },
+  "preserved_non_v1": true,
+  "generated_at": "2026-08-21T07:06:33.485Z"
+}

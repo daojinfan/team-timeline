@@ -1,0 +1,104 @@
+{
+  "database": "D:\\Codex\\人员管理系统\\data\\team_tasks.sqlite",
+  "migrated_at": "2026-08-21T09:16:05.083Z",
+  "task_count": 18,
+  "binding_counts": {
+    "tasks": 18,
+    "topics": 10,
+    "sample_links": 19
+  },
+  "test_items_backfilled": 11,
+  "foreign_key_violations": 0,
+  "tasks": [
+    {
+      "task_id": 1,
+      "test_purpose_source": "topic.purpose",
+      "test_item_count": 3
+    },
+    {
+      "task_id": 2,
+      "test_purpose_source": "topic.purpose",
+      "test_item_count": 0
+    },
+    {
+      "task_id": 3,
+      "test_purpose_source": "topic.purpose",
+      "test_item_count": 0
+    },
+    {
+      "task_id": 4,
+      "test_purpose_source": "topic.purpose",
+      "test_item_count": 2
+    },
+    {
+      "task_id": 5,
+      "test_purpose_source": "topic.purpose",
+      "test_item_count": 2
+    },
+    {
+      "task_id": 6,
+      "test_purpose_source": "topic.purpose",
+      "test_item_count": 0
+    },
+    {
+      "task_id": 7,
+      "test_purpose_source": "topic.purpose",
+      "test_item_count": 1
+    },
+    {
+      "task_id": 8,
+      "test_purpose_source": "topic.purpose",
+      "test_item_count": 1
+    },
+    {
+      "task_id": 9,
+      "test_purpose_source": "topic.purpose",
+      "test_item_count": 1
+    },
+    {
+      "task_id": 10,
+      "test_purpose_source": "topic.purpose",
+      "test_item_count": 5
+    },
+    {
+      "task_id": 11,
+      "test_purpose_source": "topic.purpose",
+      "test_item_count": 0
+    },
+    {
+      "task_id": 12,
+      "test_purpose_source": "topic.purpose",
+      "test_item_count": 1
+    },
+    {
+      "task_id": 13,
+      "test_purpose_source": "topic.purpose",
+      "test_item_count": 1
+    },
+    {
+      "task_id": 14,
+      "test_purpose_source": "topic.purpose",
+      "test_item_count": 1
+    },
+    {
+      "task_id": 15,
+      "test_purpose_source": "topic.purpose",
+      "test_item_count": 1
+    },
+    {
+      "task_id": 16,
+      "test_purpose_source": "topic.purpose",
+      "test_item_count": 0
+    },
+    {
+      "task_id": 17,
+      "test_purpose_source": "topic.purpose",
+      "test_item_count": 0
+    },
+    {
+      "task_id": 18,
+      "test_purpose_source": "topic.purpose",
+      "test_item_count": 0
+    }
+  ]
+}

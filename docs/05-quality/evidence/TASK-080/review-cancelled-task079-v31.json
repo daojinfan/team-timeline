@@ -1,0 +1,23 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-080",
+  "reviewed_task_ids": ["TASK-079"],
+  "work_package": "WP-009",
+  "baseline": "BL-004",
+  "result": "cancelled",
+  "diff_checked": true,
+  "changes": [],
+  "change_summary": "TASK-079 已由项目经理标记为 superseded，后续 V3.1 桌面任务详情交付由 TASK-088 重新覆盖并审核。本记录仅取消 TASK-080 对旧交付的当前审核资格，保留历史审核证据。",
+  "scope_checked": [
+    "TASK-079.state.json：state=superseded，旧交付不再作为当前内容依据。",
+    "TASK-080 为 TASK-079 的独立审核任务，历史审核证据保持不变。",
+    "changes=[]：本次取消记录不新增、修改或删除产品交付内容。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "已核对 TASK-079 superseded 状态及 TASK-080 的历史审核证据路径。",
+    "本记录仅用于治理状态收敛，未修改实现范围。"
+  ],
+  "created_at": "2026-08-21T09:55:00.000Z"
+}

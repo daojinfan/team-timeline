@@ -1,0 +1,84 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-082",
+  "work_package": "WP-009",
+  "title": "审核外部有效任务数据导入",
+  "goal": "独立审查 TASK-081 的有效数据导入脚本、数据库备份与合并结果，确认 deleted_at 非空记录均被排除，未删除数据完整保留，ID映射、V2/V3兼容、完整性、回滚与实际变更清单均有证据。",
+  "baseline": "BL-004",
+  "profile": "Release",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-082"
+  ],
+  "read_paths": [
+    "tests",
+    "src/server.js",
+    "src/v3",
+    "docs/05-quality",
+    "docs/03-architecture/components/v21-detailed-design.md",
+    "docs/07-decisions/DEC-003.md",
+    "docs/08-changes/CR-003.md"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-082"
+  ],
+  "out_of_scope": [
+    "修改任何实现、数据库、源文件或治理状态",
+    "替代项目经理执行导入",
+    "只依赖测试输出而不核对实际数据库变更和备份"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "独立核对源库与目标库有效数据计数、ID映射和排除 deleted_at 记录",
+    "独立核对备份文件、SHA-256、回滚步骤和目标库完整性检查",
+    "独立核对 V2/V3 schema、版本、资源和已有非删除数据未被破坏",
+    "独立重跑 npm test、node 检查、导入后 API/dashboard 验证",
+    "证据 changes 精确列出 TASK-081 实际脚本/报告变更，完成 Release 双轮审核"
+  ],
+  "validations": [
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "server-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "src/server.js"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "data_model_or_migration",
+    "irreversible_operation"
+  ],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-21T06:53:19.6559561Z",
+  "release_controls": {
+    "target_environment": "本机工作区与 data/team_tasks.sqlite 的导入结果及备份目录",
+    "execution_window": "TASK-081 完成候选库与正式库验证后，Reviewer独立复核；不修改目标数据",
+    "rollback_plan": "审核发现问题时记录 changes-required，由PM按导入前备份恢复并重新验证",
+    "observation_metrics": "源/目标有效计数、映射清单、排除计数、quick_check、foreign_key_check、29项测试、API结果、文件指纹",
+    "stop_conditions": "实际变更清单不匹配、deleted记录进入目标库、备份/回滚证据缺失、V2/V3变化或任一验证失败",
+    "post_release_owner": "项目经理"
+  }
+}

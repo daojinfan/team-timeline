@@ -1,0 +1,121 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-086",
+  "work_package": "WP-009",
+  "title": "实现 V3.1 详细任务卡与结构化测试信息",
+  "goal": "在现有 V3 专题任务模型中增加任务测试目的、测试项及专题/来源小组/制冷机的可读关联，回填现有任务并保持 V1/V2 与 schema 3 兼容。",
+  "baseline": "BL-004",
+  "profile": "Release",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "src/v3/index.js",
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "tests/v3-api.test.js",
+    "tests/backfill-v31-task-details.mjs",
+    "docs/08-changes/CR-004.md",
+    "docs/02-product/requirements-v21.md",
+    "docs/03-architecture/overall-design-v21.md",
+    "docs/03-architecture/components/v21-detailed-design.md",
+    "docs/05-quality/traceability-v21.md"
+  ],
+  "read_paths": [
+    "docs/02-product/requirements-v21.md",
+    "docs/03-architecture/overall-design-v21.md",
+    "docs/03-architecture/components/v21-detailed-design.md",
+    "docs/07-decisions/DEC-003.md",
+    "docs/08-changes/CR-003.md",
+    "src/v3/index.js",
+    "public/index.html",
+    "public/app.js",
+    "tests/v3-api.test.js"
+  ],
+  "write_paths": [
+    "src/v3/index.js",
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "tests/v3-api.test.js",
+    "tests/backfill-v31-task-details.mjs",
+    "docs/08-changes/CR-004.md",
+    "docs/02-product/requirements-v21.md",
+    "docs/03-architecture/overall-design-v21.md",
+    "docs/03-architecture/components/v21-detailed-design.md",
+    "docs/05-quality/traceability-v21.md"
+  ],
+  "out_of_scope": [
+    "AI 自动建任务",
+    "自动分配人员",
+    "手机端",
+    "修改 V2 canonical 表/API/checksum",
+    "远程发布"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-081"
+  ],
+  "acceptance_criteria": [
+    "任务 API 返回 topic/source_group/cryostat 关联对象和结构化 test_purpose/test_items",
+    "新建和更新任务可保存测试目的及多个测试项",
+    "现有 18 个任务完成可追溯回填且样品/专题/制冷机绑定不变",
+    "npm test、语法检查、V3/V2 兼容和数据库外键检查通过",
+    "1280x720 与 1366x768 桌面任务详情可读且无横向溢出"
+  ],
+  "validations": [
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "v3-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "src/v3/index.js"
+      ]
+    },
+    {
+      "id": "client-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "data_model_or_migration",
+    "public_interface",
+    "scope",
+    "success_criteria",
+    "overall_architecture"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-21T09:07:54.9507067Z",
+  "release_controls": {
+    "target_environment": "local desktop service at http://localhost:3000",
+    "execution_window": "2026-08-21 local development window",
+    "rollback_plan": "stop the local service; restore the pre-change SQLite backup; revert only the TASK-086 code/data diff",
+    "observation_metrics": "npm test pass count; schema field presence; task API structured fields; binding counts; browser layout at 1280x720 and 1366x768",
+    "stop_conditions": "migration or backfill fails; foreign_key_check nonzero; V1/V2 compatibility fails; task binding counts change unexpectedly; browser overflow appears",
+    "post_release_owner": "human project owner"
+  }
+}
