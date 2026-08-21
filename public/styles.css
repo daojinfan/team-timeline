@@ -2210,8 +2210,8 @@ menu {
   max-width: 100%;
 }
 
-/* V2.1 topic shell. The V3 surface stays desktop-only and is revealed by
-   app.js after the V3 model is available; hidden surfaces never add a column. */
+/* Topic planning shell. The desktop surface is revealed by app.js while
+   compatibility content remains mounted without changing the grid. */
 .v3-action {
   background: #0f766e;
 }

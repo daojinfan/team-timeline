@@ -1930,6 +1930,12 @@ function bindEvents() {
   document.addEventListener("keydown", (event) => {
     if (event.key !== "Escape" || event.defaultPrevented) return;
     if (document.querySelector("dialog[open]")) return;
+    const topicPane = $("#v3TopicDetailPane");
+    if (topicPane && !topicPane.hidden && topicPane.classList.contains("is-open")) {
+      event.preventDefault();
+      if (typeof v3CloseTopicDetail === "function") v3CloseTopicDetail();
+      return;
+    }
     const planPane = $("#planDetailPane");
     if (planPane && !planPane.hidden && planPane.classList.contains("is-open")) {
       event.preventDefault();
@@ -3275,11 +3281,11 @@ loadData()
   .then(loadV2Workspace)
   .catch((error) => showToast(v2ErrorText(error), { type: "error" }));
 
-/* V2.1 topic/sample/task-chain client island.  It deliberately does not
-   replace the V1/V2 state above; switching the model is explicit and all
-   writes still go through human preview/confirm endpoints. */
+/* Topic/sample/task-chain client surface. It keeps the V1/V2 compatibility
+   data and APIs intact; all writes still go through human preview/confirm
+   endpoints. */
 const v3State = {
-  mode: "legacy", activeView: "workbench", topics: [], groups: [], cryostats: [], members: [],
+  mode: "topic", activeView: "workbench", topics: [], groups: [], cryostats: [], members: [],
   topic: null, samples: [], tasks: [], submissions: [], template: null,
   topicDetails: new Map(), activeSampleId: null, activeTaskId: null, activeSubmissionId: null,
   preview: null, taskDraftMembers: [], editMembers: [], returnFocus: new Map(), busy: new Set(),
@@ -3288,7 +3294,7 @@ const v3State = {
 };
 
 function v3ErrorText(error) {
-  return error?.message || error?.details?.reason || "V2.1 操作失败";
+  return error?.message || error?.details?.reason || "专题操作失败";
 }
 
 async function v3Api(path, options = {}) {
@@ -3353,7 +3359,10 @@ function v3CloseTopicDetail({ restoreFocus = true } = {}) {
   pane.classList.remove("is-open");
   v3State.topicDetailReturnFocus = null;
   v3State.topicDetailReturnView = null;
-  if (restoreFocus && returnView && returnView !== v3State.activeView) v3SetView(returnView);
+  if (restoreFocus && returnView && returnView !== v3State.activeView) {
+    setV2View(returnView);
+    v3SetView(returnView);
+  }
   if (restoreFocus && trigger?.isConnected && !trigger.closest("[hidden]")) trigger.focus();
 }
 function v3SetBusy(key, busy) { if (busy) v3State.busy.add(key); else v3State.busy.delete(key); }
@@ -3454,27 +3463,79 @@ async function v3LoadTopic(id) {
 async function v3LoadSubmissions() {
   if (!v3State.topic) return; const result = await v3Api(`/api/v3/topics/${v3State.topic.id}/submissions`); v3State.submissions = result.data?.items || [];
 }
-function v3ShowMode(mode) {
-  v3State.mode = mode; const topic = mode === "topic";
-  $("#v3TopicModeBtn")?.classList.toggle("active", topic); $("#v3TopicModeBtn")?.setAttribute("aria-selected", String(topic));
-  $("#v2LegacyModeBtn")?.classList.toggle("active", !topic); $("#v2LegacyModeBtn")?.setAttribute("aria-selected", String(!topic)); $("#v3NewTopicBtn").hidden = !topic;
-  $$('[data-v2-panel], [data-v2-toolbar-view]').forEach((node) => { if (topic) node.hidden = true; });
-  if (!topic) {
-    $$('[data-v3-panel], [data-v3-toolbar-view]').forEach((node) => { node.hidden = true; });
-    setV2View(v2State.activeV2View || "workbench"); return;
+function v3SyncPanels(view = v3State.activeView) {
+  const topic = v3State.mode === "topic";
+  const main = document.querySelector("main.page");
+  main?.classList.toggle("v3-topic-mode", topic);
+  $("#v3TopicModeBtn")?.classList.toggle("active", topic);
+  $("#v3TopicModeBtn")?.setAttribute("aria-selected", String(topic));
+  $("#v2LegacyModeBtn")?.classList.toggle("active", !topic);
+  $("#v2LegacyModeBtn")?.setAttribute("aria-selected", String(!topic));
+
+  // Legacy V1/V2 content remains mounted for compatibility, but the topic
+  // route presents its own primary surface inside the same six work areas.
+  const toggleLegacy = (node, hidden) => {
+    if (hidden) {
+      if (!Object.prototype.hasOwnProperty.call(node.dataset, "v3WasHidden")) node.dataset.v3WasHidden = String(node.hidden);
+      node.hidden = true;
+    } else if (Object.prototype.hasOwnProperty.call(node.dataset, "v3WasHidden")) {
+      node.hidden = node.dataset.v3WasHidden === "true";
+      delete node.dataset.v3WasHidden;
+    }
+  };
+  $$('[data-v3-legacy-content]').forEach((node) => toggleLegacy(node, topic));
+  $$('[data-v3-legacy-toolbar]').forEach((node) => {
+    if (topic) toggleLegacy(node, true);
+    else {
+      delete node.dataset.v3WasHidden;
+      node.hidden = node.dataset.v2ToolbarView !== view;
+    }
+  });
+  $$('[data-v3-toolbar-view]').forEach((node) => { node.hidden = !topic || node.dataset.v3ToolbarView !== view; });
+  $("[data-v3-legacy-plan-action]")?.toggleAttribute("hidden", topic);
+  $$('[data-v3-panel]').forEach((node) => {
+    node.hidden = !topic || node.dataset.v3Panel !== view;
+  });
+  const topicDetailPane = $("#v3TopicDetailPane");
+  if (topicDetailPane && (!topic || view !== "plans")) {
+    topicDetailPane.hidden = true;
+    topicDetailPane.classList.remove("is-open");
+    v3State.topicDetailReturnFocus = null;
+    v3State.topicDetailReturnView = null;
   }
-  v3SetView(v3State.activeView); Promise.all([v3LoadMembers(), v3LoadTopics()]).catch((error) => showToast(v3ErrorText(error), { type: "error" }));
+  // The execution area intentionally keeps the V1 gantt/tasks/load visible;
+  // this context strip only adds the selected topic breadcrumb.
+  if (topic && view === "execution") $("#v3ExecutionContext")?.removeAttribute("hidden");
+  $("#v3NewTopicBtn") && ($("#v3NewTopicBtn").hidden = !topic || !["workbench", "plans"].includes(view));
+  $("#newPlanBtn") && ($("#newPlanBtn").hidden = topic);
+  if (view === "plans") $("#v3ModelNav")?.removeAttribute("hidden");
+  document.title = `${$("[data-v2-view].active")?.textContent?.trim() || "工作台"} · 小组任务管理与甘特图系统`;
 }
+
+function v3ShowMode(mode) {
+  v3State.mode = mode === "legacy" ? "legacy" : "topic";
+  const targetView = v3State.mode === "legacy"
+    ? "plans"
+    : (v2State.activeV2View === "plans" ? "plans" : (v2State.activeV2View || "workbench"));
+  if (v2State.activeV2View !== targetView) setV2View(targetView);
+  v3SetView(targetView);
+  if (v3State.mode === "topic") Promise.all([v3LoadMembers(), v3LoadTopics()]).catch((error) => showToast(v3ErrorText(error), { type: "error" }));
+}
+
 function v3SetView(view) {
   if (!["workbench", "plans", "assignment", "execution", "acceptance", "management"].includes(view)) view = "workbench";
   v3State.activeView = view;
-  $$('[data-v3-toolbar-view]').forEach((node) => { node.hidden = node.dataset.v3ToolbarView !== view; });
-  $$('[data-v3-panel]').forEach((node) => { if (node.id === "v3ExecutionContext") node.hidden = view !== "execution"; else node.hidden = node.dataset.v3Panel !== view; });
+  if (v3State.mode === "topic" && view === "management" && v2State.managementView !== "maintenance") {
+    v2State.managementView = "maintenance";
+    state.activeView = "maintenance";
+    saveV2Preferences();
+    renderViewState();
+  }
+  v3SyncPanels(view);
   if (view === "plans" && v3State.topic) v3RenderTopic();
   if (view === "assignment") v3RenderAssignment();
   if (view === "acceptance") v3RenderAcceptance();
   if (view === "management") v3RenderManagement();
-  document.title = `V2.1 ${({ workbench: "专题工作台", plans: "专题详情", assignment: "人工分配", execution: "执行", acceptance: "成果验收", management: "维护" }[view])}`;
 }
 
 function v3RenderAssignment() {
@@ -3490,21 +3551,8 @@ function v3RenderAcceptance() {
 function v3RenderManagement() {
   const count = $("#v3ActiveCryostatCount"); if (count) count.textContent = v3State.cryostats.filter((c) => c.status === "active").length;
   const members = $("#v3ActiveMemberCount"); if (members) members.textContent = v3State.members.length;
-  const badge = $("#v3MigrationBadge"); if (badge) { badge.textContent = "Schema 3 已就绪"; badge.className = "v3-status-badge is-success"; }
-  const text = $("#v3MigrationStatusText"); if (text) text.textContent = "V1/V2 保持原接口，V3 以独立专题/样品/任务链兼容岛运行。";
-}
-
-// V2 keeps its legacy panels nested by work area.  V3 panels are a separate
-// compatibility island, so detach them to the page level before the first
-// model switch; otherwise a hidden V2 ancestor would also hide the V3 view.
-function v3DetachPanels() {
-  const main = document.querySelector("main.page"); const anchor = $("#workbenchToolbar");
-  if (!main || !anchor) return;
-  ["v3WorkbenchView", "v3TopicView", "v3AssignmentView", "v3ExecutionContext", "v3AcceptanceView", "v3ManagementPanel", "v3TopicDetailPane"].forEach((id) => {
-    const node = $(`#${id}`);
-    if (!node || node.parentElement === main) return;
-    main.insertBefore(node, anchor);
-  });
+  const badge = $("#v3MigrationBadge"); if (badge) { badge.textContent = "数据版本已就绪"; badge.className = "v3-status-badge is-success"; }
+  const text = $("#v3MigrationStatusText"); if (text) text.textContent = "历史接口保持不变，专题、样品与任务链独立维护。";
 }
 
 function v3OpenTopicDialog(trigger) {
@@ -3537,24 +3585,32 @@ async function v3SaveEta(event) { event.preventDefault(); try { if (!v3State.pre
 function v3OpenCryostat(taskId, trigger) { const task = v3State.tasks.find((t) => t.id === Number(taskId)); if (!task) return; v3State.activeTaskId = task.id; $("#v3CryostatSelect").value = task.cryostat_id || ""; $("#v3CryostatPending").checked = Boolean(task.cryostat_pending); v3State.preview = null; v3FormError("#v3CryostatFormError"); v3Open($("#v3CryostatDialog"), trigger); }
 async function v3PreviewCryostat() { try { const body = { new_cryostat_id: $("#v3CryostatPending").checked ? null : Number($("#v3CryostatSelect").value) || null, cryostat_pending: $("#v3CryostatPending").checked ? 1 : 0, task_ids: [v3State.activeTaskId] }; const result = (await v3Api(`/api/v3/topics/${v3State.topic.id}/cryostat/preview`, v3Json("POST", body))).data; v3State.preview = result; $("#v3CryostatPreview").innerHTML = `<h3 id="v3CryostatPreviewTitle">冲突预览</h3><p>${result.conflicts?.length ? result.conflicts.map((c) => v3Esc(c.type)).join("、") : "未发现冲突，可人工确认保存。"}</p>`; } catch (error) { v3FormError("#v3CryostatFormError", error); } }
 async function v3SaveCryostat(event) { event.preventDefault(); try { if (!v3State.preview) await v3PreviewCryostat(); const body = { new_cryostat_id: $("#v3CryostatPending").checked ? null : Number($("#v3CryostatSelect").value) || null, cryostat_pending: $("#v3CryostatPending").checked ? 1 : 0, task_ids: [v3State.activeTaskId], preview_token: v3State.preview.preview_token, actor: "本地用户" }; await v3Api(`/api/v3/topics/${v3State.topic.id}/cryostat/confirm`, v3Json("POST", body)); v3Close($("#v3CryostatDialog")); await v3LoadTopic(v3State.topic.id); showToast("任务制冷机已更新"); } catch (error) { v3FormError("#v3CryostatFormError", error); } }
-function v3OpenSubmission(taskId, trigger) { const task = v3State.tasks.find((t) => t.id === Number(taskId)); if (!task) return; v3State.activeTaskId = task.id; $("#v3SubmissionSampleItems").innerHTML = task.samples.map((s) => `<span>${v3Esc(s.planning_label)} · ${v3Esc(s.model)}</span>`).join(""); const items = v3State.template?.items || []; $("#v3SubmissionChecklistInput").innerHTML = items.map((item) => `<label><input type="checkbox" data-v3-submit-check value="${item.id}" checked> ${v3Esc(item.label)}</label>`).join("") || "<p>暂无验收模板条目，请先在 V2.1 维护中建立模板。</p>"; $("#v3SubmissionDescription").value = ""; $("#v3SubmissionResourceValue").value = ""; v3FormError("#v3SubmissionFormError"); v3Open($("#v3SubmissionDialog"), trigger); }
-async function v3SaveSubmission(event) { event.preventDefault(); try { const task = v3State.tasks.find((t) => t.id === v3State.activeTaskId); if (!task) return; const resource = $("#v3SubmissionResourceValue").value.trim(); const kind = $("#v3SubmissionResourceKind").value; const resourceUrl = kind === "local_path" && !/^file:/i.test(resource) ? `file://${resource.replace(/^[/\\]+/, "")}` : resource; const body = { sample_ids: task.samples.map((s) => s.id), description: $("#v3SubmissionDescription").value.trim(), resource_url: resourceUrl, submitted_by: $("#v3SubmissionSubmitter").value.trim() || "本地用户", template_item_ids: $$('[data-v3-submit-check]').map((node) => ({ id: Number(node.value), checked: node.checked })) }; await v3Api(`/api/v3/tasks/${task.id}/submissions`, v3Json("POST", body)); v3Close($("#v3SubmissionDialog")); await v3LoadTopic(v3State.topic.id); v3SetView("acceptance"); showToast("成果已提交，等待人工验收"); } catch (error) { v3FormError("#v3SubmissionFormError", error); } }
+function v3OpenSubmission(taskId, trigger) { const task = v3State.tasks.find((t) => t.id === Number(taskId)); if (!task) return; v3State.activeTaskId = task.id; $("#v3SubmissionSampleItems").innerHTML = task.samples.map((s) => `<span>${v3Esc(s.planning_label)} · ${v3Esc(s.model)}</span>`).join(""); const items = v3State.template?.items || []; $("#v3SubmissionChecklistInput").innerHTML = items.map((item) => `<label><input type="checkbox" data-v3-submit-check value="${item.id}" checked> ${v3Esc(item.label)}</label>`).join("") || "<p>暂无验收模板条目，请先在资源维护中建立模板。</p>"; $("#v3SubmissionDescription").value = ""; $("#v3SubmissionResourceValue").value = ""; v3FormError("#v3SubmissionFormError"); v3Open($("#v3SubmissionDialog"), trigger); }
+async function v3SaveSubmission(event) { event.preventDefault(); try { const task = v3State.tasks.find((t) => t.id === v3State.activeTaskId); if (!task) return; const resource = $("#v3SubmissionResourceValue").value.trim(); const kind = $("#v3SubmissionResourceKind").value; const resourceUrl = kind === "local_path" && !/^file:/i.test(resource) ? `file://${resource.replace(/^[/\\]+/, "")}` : resource; const body = { sample_ids: task.samples.map((s) => s.id), description: $("#v3SubmissionDescription").value.trim(), resource_url: resourceUrl, submitted_by: $("#v3SubmissionSubmitter").value.trim() || "本地用户", template_item_ids: $$('[data-v3-submit-check]').map((node) => ({ id: Number(node.value), checked: node.checked })) }; await v3Api(`/api/v3/tasks/${task.id}/submissions`, v3Json("POST", body)); v3Close($("#v3SubmissionDialog")); await v3LoadTopic(v3State.topic.id); setV2View("acceptance"); v3SetView("acceptance"); showToast("成果已提交，等待人工验收"); } catch (error) { v3FormError("#v3SubmissionFormError", error); } }
 function v3OpenReview(submissionId, trigger) { const submission = v3State.submissions.find((row) => row.id === Number(submissionId)); if (!submission) return; v3State.activeSubmissionId = submission.id; let checklist = []; try { checklist = JSON.parse(submission.checklist_snapshot_json || "[]"); } catch {} $("#v3ReviewChecklist").innerHTML = checklist.map((item) => `<label><input type="checkbox" data-v3-review-check value="${item.id}"${item.checked ? " checked" : ""}> ${v3Esc(item.label)}</label>`).join(""); $("#v3ReviewSampleSnapshot").innerHTML = `<p>任务样品集合已按提交快照冻结。</p>`; $("#v3ReviewDecision").value = ""; $("#v3ReviewComment").value = ""; v3FormError("#v3ReviewFormError"); v3Open($("#v3ReviewDialog"), trigger); }
 async function v3SaveReview(event) { event.preventDefault(); try { const decision = $("#v3ReviewDecision").value; if (!decision) throw new Error("请选择验收结论"); const body = { decision, reviewer: $("#v3ReviewerLabel").value.trim() || "本地用户", reason: $("#v3ReviewComment").value.trim(), checked_items: $$('[data-v3-review-check]').map((node) => ({ id: Number(node.value), passed: node.checked })) }; await v3Api(`/api/v3/submissions/${v3State.activeSubmissionId}/review`, v3Json("POST", body)); v3Close($("#v3ReviewDialog")); await v3LoadTopic(v3State.topic.id); showToast(decision === "accepted" ? "成果已通过" : "成果已退回"); } catch (error) { v3FormError("#v3ReviewFormError", error); } }
 async function v3OpenLegacy(trigger) { const plans = (await v2Api("/api/v2/plans?limit=200")).data || []; $("#v3LegacyPlanSelect").innerHTML = `<option value="">请选择计划</option>` + plans.map((p) => `<option value="${p.id}">${v3Esc(p.name)}</option>`).join(""); v3FormError("#v3LegacyFormError"); v3Open($("#v3LegacyDialog"), trigger); }
 async function v3PreviewLegacy() { try { const planId = Number($("#v3LegacyPlanSelect").value); if (!v3State.topic || !planId) throw new Error("请选择专题和旧计划"); v3State.preview = (await v3Api(`/api/v3/topics/${v3State.topic.id}/legacy-plans/preview`, v3Json("POST", { v2_plan_ids: [planId] }))).data; $("#v3LegacyPreview").innerHTML = `<h3 id="v3LegacyPreviewTitle">复制预览</h3><pre>${v3Esc(JSON.stringify(v3State.preview.snapshot, null, 2))}</pre>`; } catch (error) { v3FormError("#v3LegacyFormError", error); } }
 async function v3SaveLegacy(event) { event.preventDefault(); try { if (!$("#v3LegacyAcknowledge").checked) throw new Error("请确认旧计划与专题独立维护"); if (!v3State.preview) await v3PreviewLegacy(); const planId = Number($("#v3LegacyPlanSelect").value); await v3Api(`/api/v3/topics/${v3State.topic.id}/legacy-plans/confirm`, v3Json("POST", { v2_plan_ids: [planId], preview_token: v3State.preview.preview_token, actor: "本地用户" })); v3Close($("#v3LegacyDialog")); showToast("旧计划已复制为历史引用"); } catch (error) { v3FormError("#v3LegacyFormError", error); } }
-async function v3PreviewMigration() { try { const [status, backup] = await Promise.all([v3Api("/api/v3/status"), v3Api("/api/v3/backup")]); $("#v3MigrationChecks").innerHTML = `<li>Schema ${status.data.schema_version} · ${v3Esc(status.data.checksum)}</li><li>V3 表 ${status.data.tables}、索引 ${status.data.indexes}、端点 ${status.data.endpoints}</li><li>备份接口可用：${v3Esc(backup.data.created_at)}</li>`; } catch (error) { v3FormError("#v3MigrationFormError", error); } }
+async function v3PreviewMigration() { try { const [status, backup] = await Promise.all([v3Api("/api/v3/status"), v3Api("/api/v3/backup")]); $("#v3MigrationChecks").innerHTML = `<li>数据版本 ${status.data.schema_version} · ${v3Esc(status.data.checksum)}</li><li>专题表 ${status.data.tables}、索引 ${status.data.indexes}、端点 ${status.data.endpoints}</li><li>备份接口可用：${v3Esc(backup.data.created_at)}</li>`; } catch (error) { v3FormError("#v3MigrationFormError", error); } }
 
 function v3BindDialog(id, closeId, cancelId) { const dialog = $(id); if (!dialog) return; [closeId, cancelId].forEach((button) => $(button)?.addEventListener("click", () => v3Close(dialog))); dialog.addEventListener("cancel", (event) => { event.preventDefault(); v3Close(dialog); }); }
 function bindV3Events() {
   if (window.__v3Bound) return; window.__v3Bound = true;
   $("#v3TopicModeBtn")?.addEventListener("click", () => v3ShowMode("topic")); $("#v2LegacyModeBtn")?.addEventListener("click", () => v3ShowMode("legacy"));
   $$('[data-v2-view]').forEach((tab) => tab.addEventListener("click", () => {
-    if (v3State.mode !== "topic") return;
-    $$('[data-v2-panel], [data-v2-toolbar-view]').forEach((node) => { node.hidden = true; });
-    v3SetView(tab.dataset.v2View || "workbench");
+    const view = tab.dataset.v2View || "workbench";
+    if (v3State.mode === "legacy" && view !== "plans") v3ShowMode("topic");
+    if (v3State.mode === "topic") v3SetView(view);
   }));
+  $("#dataMenuBtn")?.addEventListener("click", () => {
+    if (v3State.mode === "legacy") v3State.mode = "topic";
+    v3SetView("management");
+  });
+  $("#refreshBtn")?.addEventListener("click", () => {
+    if (v3State.mode !== "topic") return;
+    Promise.all([v3LoadMembers(), v3LoadTopics()]).catch((error) => showToast(v3ErrorText(error), { type: "error" }));
+  });
   $("#v3NewTopicBtn")?.addEventListener("click", (event) => v3OpenTopicDialog(event.currentTarget));
   $("#v3TopicSearchInput")?.addEventListener("input", (event) => { v3State.search = event.target.value.trim(); window.clearTimeout(v3State.searchTimer); v3State.searchTimer = window.setTimeout(() => v3LoadTopics().catch((e) => showToast(v3ErrorText(e), { type: "error" })), 220); });
   $("#v3TopicSourceGroup")?.addEventListener("change", (event) => v3FillContacts(event.target.value));
@@ -3563,17 +3619,23 @@ function bindV3Events() {
   $$('[data-v3-topic-view]').forEach((tab) => tab.addEventListener("click", () => { $$('[data-v3-topic-view]').forEach((item) => { item.classList.toggle("active", item === tab); item.setAttribute("aria-selected", String(item === tab)); }); $$('[data-v3-topic-panel]').forEach((panel) => { panel.hidden = panel.dataset.v3TopicPanel !== tab.dataset.v3TopicView; panel.classList.toggle("active", !panel.hidden); }); }));
   $("#v3TopicForm")?.addEventListener("submit", v3SaveTopic); $("#v3SampleForm")?.addEventListener("submit", v3SaveSample); $("#v3TaskForm")?.addEventListener("submit", v3SaveTask); $("#v3MemberForm")?.addEventListener("submit", v3SaveMembers); $("#v3EtaForm")?.addEventListener("submit", v3SaveEta); $("#v3CryostatForm")?.addEventListener("submit", v3SaveCryostat); $("#v3SubmissionForm")?.addEventListener("submit", v3SaveSubmission); $("#v3ReviewForm")?.addEventListener("submit", v3SaveReview); $("#v3LegacyForm")?.addEventListener("submit", v3SaveLegacy);
   $("#v3PreviewTaskBtn")?.addEventListener("click", v3PreviewTask); $("#v3PreviewEtaBtn")?.addEventListener("click", v3PreviewEta); $("#v3PreviewCryostatBtn")?.addEventListener("click", v3PreviewCryostat); $("#v3PreviewLegacyBtn")?.addEventListener("click", v3PreviewLegacy); $("#v3PreviewMigrationBtn")?.addEventListener("click", v3PreviewMigration);
-  $("#v3AssignmentTopicFilter")?.addEventListener("change", async (event) => { const id = Number(event.target.value); if (id) { await v3LoadTopic(id); v3SetView("assignment"); } }); $("#v3AcceptanceTopicFilter")?.addEventListener("change", async (event) => { const id = Number(event.target.value); if (id) await v3LoadTopic(id); v3RenderAcceptance(); }); $("#v3AcceptanceStatusFilter")?.addEventListener("change", (event) => { v3State.acceptanceStatus = event.target.value; v3RenderAcceptance(); });
+  $("#v3AssignmentTopicFilter")?.addEventListener("change", async (event) => { const id = Number(event.target.value); if (id) { await v3LoadTopic(id); setV2View("assignment"); v3SetView("assignment"); } }); $("#v3AcceptanceTopicFilter")?.addEventListener("change", async (event) => { const id = Number(event.target.value); if (id) await v3LoadTopic(id); v3RenderAcceptance(); }); $("#v3AcceptanceStatusFilter")?.addEventListener("change", (event) => { v3State.acceptanceStatus = event.target.value; v3RenderAcceptance(); });
   const dialogs = [["#v3TopicDialog", "#v3CloseTopicDialogBtn", "#v3CancelTopicBtn"], ["#v3SampleDialog", "#v3CloseSampleDialogBtn", "#v3CancelSampleBtn"], ["#v3TaskDialog", "#v3CloseTaskDialogBtn", "#v3CancelTaskBtn"], ["#v3MemberDialog", "#v3CloseMemberDialogBtn", "#v3CancelMemberBtn"], ["#v3EtaDialog", "#v3CloseEtaDialogBtn", "#v3CancelEtaBtn"], ["#v3CryostatDialog", "#v3CloseCryostatDialogBtn", "#v3CancelCryostatBtn"], ["#v3SubmissionDialog", "#v3CloseSubmissionDialogBtn", "#v3CancelSubmissionBtn"], ["#v3ReviewDialog", "#v3CloseReviewDialogBtn", "#v3CancelReviewBtn"], ["#v3LegacyDialog", "#v3CloseLegacyDialogBtn", "#v3CancelLegacyBtn"], ["#v3MigrationDialog", "#v3CloseMigrationDialogBtn", "#v3CancelMigrationBtn"]]; dialogs.forEach((item) => v3BindDialog(...item));
   $("#v3CloseTopicDetailBtn")?.addEventListener("click", () => v3CloseTopicDetail());
-  document.addEventListener("keydown", (event) => { if (event.key !== "Escape") return; const openDialog = document.querySelector("dialog[open]"); if (openDialog) return; const pane = $("#v3TopicDetailPane"); if (pane && !pane.hidden) v3CloseTopicDetail(); });
+  document.addEventListener("keydown", (event) => { if (event.key !== "Escape" || event.defaultPrevented) return; const openDialog = document.querySelector("dialog[open]"); if (openDialog) return; const pane = $("#v3TopicDetailPane"); if (pane && !pane.hidden) v3CloseTopicDetail(); });
+  document.body.addEventListener("keydown", (event) => {
+    const row = event.target.closest?.("[data-v3-open-topic]");
+    if (!row || !["Enter", " "].includes(event.key)) return;
+    event.preventDefault();
+    row.click();
+  });
   document.body.addEventListener("click", async (event) => { const action = (selector) => event.target.closest(selector); try {
-    if (action("[data-v3-open-topic]")) { const trigger = action("[data-v3-open-topic]"), returnView = v3State.activeView; const id = Number(trigger.dataset.v3OpenTopic); await v3LoadTopic(id); v3SetView("plans"); v3OpenTopicDetail(trigger, returnView); return; }
+    if (action("[data-v3-open-topic]")) { const trigger = action("[data-v3-open-topic]"), returnView = v3State.activeView; const id = Number(trigger.dataset.v3OpenTopic); await v3LoadTopic(id); if (returnView !== "plans") setV2View("plans"); v3SetView("plans"); v3OpenTopicDetail(trigger, returnView); return; }
     if (action("[data-v3-clear-topic-filters]")) { v3State.status = ""; v3State.source = ""; $("#v3TopicStatusFilter").value = ""; $("#v3TopicSourceFilter").value = ""; v3RenderTopics(); return; }
     if (action("[data-v3-open-topic-dialog]")) return v3OpenTopicDialog(action("[data-v3-open-topic-dialog]"));
     if (action("[data-v3-open-sample-dialog]")) return v3OpenSampleDialog(action("[data-v3-open-sample-dialog]"));
     if (action("[data-v3-open-task-dialog]")) return v3OpenTaskDialog(action("[data-v3-open-task-dialog]"));
-    if (action("[data-v3-open-member]")) { v3SetView("assignment"); return v3OpenMemberDialog(action("[data-v3-open-member]").dataset.v3OpenMember, action("[data-v3-open-member]")); }
+    if (action("[data-v3-open-member]")) { setV2View("assignment"); v3SetView("assignment"); return v3OpenMemberDialog(action("[data-v3-open-member]").dataset.v3OpenMember, action("[data-v3-open-member]")); }
     if (action("[data-v3-open-eta]")) return v3OpenEta(action("[data-v3-open-eta]").dataset.v3OpenEta, action("[data-v3-open-eta]"));
     if (action("[data-v3-open-cryostat]")) return v3OpenCryostat(action("[data-v3-open-cryostat]").dataset.v3OpenCryostat, action("[data-v3-open-cryostat]"));
     if (action("[data-v3-open-submission]")) return v3OpenSubmission(action("[data-v3-open-submission]").dataset.v3OpenSubmission, action("[data-v3-open-submission]"));
@@ -3584,5 +3646,4 @@ function bindV3Events() {
 }
 
 bindV3Events();
-v3ShowMode("legacy");
-v3DetachPanels();
+v3ShowMode("topic");
