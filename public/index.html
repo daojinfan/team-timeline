@@ -14,6 +14,7 @@
       </div>
       <div class="topbar-actions" aria-label="全局操作">
         <button id="newPlanBtn" class="primary-action" type="button" data-open-plan-dialog>＋ 新建计划</button>
+        <button id="v3NewTopicBtn" class="primary-action v3-action" type="button" data-v3-open-topic-dialog hidden aria-controls="v3TopicDialog">＋ 新建专题</button>
         <button id="newTaskBtn" class="primary-action" type="button" hidden>＋ 新建任务</button>
         <button id="dataMenuBtn" class="ghost-button" type="button" aria-controls="maintenanceView">数据与维护</button>
         <button id="refreshBtn" class="icon-button" type="button" title="刷新" aria-label="刷新">↻</button>
@@ -32,6 +33,11 @@
         </div>
       </nav>
 
+      <div id="v3ModelNav" class="v3-model-nav" role="tablist" aria-label="专题数据模型">
+        <button id="v3TopicModeBtn" type="button" role="tab" aria-selected="false" aria-controls="v3TopicView" data-v3-model="topic">V2.1 专题</button>
+        <button id="v2LegacyModeBtn" class="active" type="button" role="tab" aria-selected="true" aria-controls="planList" data-v3-model="legacy">历史 V2 计划</button>
+      </div>
+
       <div id="workbenchToolbar" class="v2-toolbar" data-v2-toolbar-view="workbench" aria-label="工作台工具栏">
         <div class="v2-filter-row">
           <label class="v2-search-control">搜索计划<input id="planSearchInput" type="search" placeholder="计划、型号或标签"></label>
@@ -45,8 +51,19 @@
         </div>
       </div>
 
+      <div id="v3WorkbenchToolbar" class="v3-toolbar" data-v3-toolbar-view="workbench" aria-label="专题工作台工具栏" hidden>
+        <div class="v3-filter-row">
+          <label class="v3-search-control">搜索专题<input id="v3TopicSearchInput" type="search" placeholder="专题、样品或任务"></label>
+          <label>专题状态<select id="v3TopicStatusFilter"><option value="">全部状态</option><option value="testing">测试中</option><option value="delayed">延期</option><option value="arriving_within_window">规定时间内到来</option><option value="arriving_outside_window">规定时间外到来</option><option value="time_pending">ETA 待确认</option><option value="completed">已完成</option></select></label>
+          <label>来源小组<select id="v3TopicSourceFilter"><option value="">全部来源</option></select></label>
+          <label>分组<select id="v3TopicGroupBy"><option value="none">不分组</option><option value="source_group">来源小组</option><option value="status">专题状态</option><option value="cryostat">任务制冷机</option></select></label>
+          <label class="v3-window-control">关注窗口<input id="v3WindowDays" type="number" min="0" max="365" value="7"><span>天</span></label>
+          <label class="inline v3-archive-toggle"><input id="v3IncludeArchived" type="checkbox"> 显示归档</label>
+        </div>
+      </div>
+
       <div id="plansToolbar" class="v2-toolbar" data-v2-toolbar-view="plans" hidden>
-        <div class="toolbar-summary"><strong>测控计划</strong><span>按型号提前规划，样品编号可在到样后补录。</span></div>
+        <div class="toolbar-summary"><strong>专题与测控计划</strong><span>V2.1 专题保留样品池与连续任务链；历史 V2 计划继续兼容。</span></div>
         <button class="primary-action" type="button" data-open-plan-dialog>新建测控计划</button>
       </div>
 
@@ -111,6 +128,25 @@
           <template id="planTrueEmptyStateTemplate"><div class="v2-empty-state"><h3>还没有测控计划</h3><p>从样品型号开始规划测试项、资源和人工任务。</p><button type="button" data-open-plan-dialog>新建第一个计划</button></div></template>
           <template id="planFilterEmptyStateTemplate"><div class="v2-empty-state"><h3>没有匹配计划</h3><p>当前筛选条件下没有结果。</p><button class="ghost-button" type="button" data-clear-plan-filters>清空筛选</button></div></template>
         </section>
+
+        <section id="v3WorkbenchView" class="v3-panel" data-v3-panel="workbench" role="region" aria-labelledby="v3WorkbenchTitle" hidden>
+          <div id="v3TopicStats" class="v3-topic-stats" aria-label="专题与样品状态统计">
+            <button class="v3-stat-card is-testing" type="button" data-v3-stat="testing"><span>测试中专题</span><strong>—</strong><small>活动任务</small></button>
+            <button class="v3-stat-card is-delayed" type="button" data-v3-stat="delayed"><span>延期样品</span><strong>—</strong><small>需要人工关注</small></button>
+            <button class="v3-stat-card is-within" type="button" data-v3-stat="arriving_within_window"><span>窗口内到样</span><strong>—</strong><small>未来 7 天</small></button>
+            <button class="v3-stat-card is-outside" type="button" data-v3-stat="arriving_outside_window"><span>窗口外到样</span><strong>—</strong><small>远期 ETA</small></button>
+            <button class="v3-stat-card is-pending" type="button" data-v3-stat="time_pending"><span>ETA 待确认</span><strong>—</strong><small>需人工补充</small></button>
+            <button class="v3-stat-card is-completed" type="button" data-v3-stat="completed"><span>已完成专题</span><strong>—</strong><small>必做任务已验收</small></button>
+          </div>
+          <section class="v3-surface" aria-labelledby="v3WorkbenchTitle">
+            <header class="v3-section-heading"><div><span class="eyebrow">专题总览</span><h2 id="v3WorkbenchTitle">V2.1 专题</h2></div><strong id="v3TopicResultCount" aria-live="polite">0 个专题</strong></header>
+            <div id="v3TopicOverviewList" class="v3-topic-list" aria-live="polite">
+              <div class="v3-empty-state"><h3>还没有专题</h3><p>从来源小组和样品型号开始建立专题，再由人确认任务链和成员。</p><button class="primary-action" type="button" data-v3-open-topic-dialog>新建第一个专题</button></div>
+            </div>
+            <template id="v3TopicTrueEmptyTemplate"><div class="v3-empty-state"><h3>还没有专题</h3><p>专题用于承载样品池、连续任务链与人工验收。</p><button class="primary-action" type="button" data-v3-open-topic-dialog>新建第一个专题</button></div></template>
+            <template id="v3TopicFilterEmptyTemplate"><div class="v3-empty-state"><h3>没有匹配专题</h3><p>当前筛选条件下没有结果。</p><button class="ghost-button" type="button" data-v3-clear-topic-filters>清空筛选</button></div></template>
+          </section>
+        </section>
       </section>
 
       <section id="plansView" class="v2-panel" data-v2-panel="plans" role="tabpanel" aria-label="测控计划" hidden>
@@ -119,6 +155,27 @@
           <header class="detail-pane-header"><div><span class="eyebrow">测控计划</span><strong id="planDetailTitle">计划详情</strong></div><button id="closePlanDetailBtn" class="icon-button" type="button" aria-label="关闭计划详情">×</button></header>
           <div id="planDetailContent" class="detail-content"><div class="detail-empty">从列表中选择计划查看详情。</div><section aria-labelledby="testItemListTitle"><h3 id="testItemListTitle">结构化测试项</h3><div id="testItemList" class="v2-detail-list"></div></section><section aria-labelledby="planHistoryListTitle"><h3 id="planHistoryListTitle">确认与变更历史</h3><div id="planHistoryList" class="v2-detail-list"></div></section></div>
         </aside>
+        <section id="v3TopicView" class="v3-panel v3-topic-workspace" data-v3-panel="plans" role="region" aria-labelledby="v3TopicViewTitle" hidden>
+          <header class="v3-section-heading v3-topic-heading"><div><span class="eyebrow">专题工作区</span><h2 id="v3TopicViewTitle">专题概览</h2></div><div class="v3-heading-actions"><span id="v3TopicBreadcrumb" class="v3-breadcrumb">来源小组 / 专题</span><button class="primary-action" type="button" data-v3-open-topic-dialog>新建专题</button></div></header>
+          <nav id="v3TopicSubnav" class="v3-subnav" role="tablist" aria-label="专题内容"><button class="active" type="button" role="tab" aria-selected="true" aria-controls="v3TopicOverviewPanel" data-v3-topic-view="overview">概览</button><button type="button" role="tab" aria-selected="false" aria-controls="v3SamplePoolPanel" data-v3-topic-view="samples">样品池</button><button type="button" role="tab" aria-selected="false" aria-controls="v3TaskChainPanel" data-v3-topic-view="chain">任务链</button></nav>
+          <div id="v3TopicOverviewPanel" class="v3-topic-panel active" data-v3-topic-panel="overview" role="tabpanel" aria-labelledby="v3TopicOverviewPanelTitle">
+            <h3 id="v3TopicOverviewPanelTitle" class="visually-hidden">专题概览</h3>
+            <div class="v3-topic-overview-grid">
+              <article class="v3-card v3-topic-summary-card"><span class="eyebrow">当前专题</span><h3 id="v3TopicName">请选择专题</h3><p id="v3TopicPurpose">选择专题后查看来源、样品和任务链摘要。</p><dl class="v3-fact-list"><div><dt>来源小组</dt><dd id="v3TopicSource">—</dd></div><div><dt>样品</dt><dd id="v3TopicSampleSummary">—</dd></div><div><dt>任务链</dt><dd id="v3TopicTaskSummary">—</dd></div><div><dt>默认制冷机</dt><dd id="v3TopicDefaultCryostat">—</dd></div></dl></article>
+              <article class="v3-card"><div class="v3-card-heading"><div><span class="eyebrow">专题列表</span><h3 id="v3TopicListTitle">全部专题</h3></div><span id="v3TopicListCount" class="v3-muted">0</span></div><div id="v3TopicList" class="v3-topic-list"><div class="v3-empty-state compact"><p>专题列表将在这里显示。</p></div></div></article>
+            </div>
+          </div>
+          <div id="v3SamplePoolPanel" class="v3-topic-panel" data-v3-topic-panel="samples" role="tabpanel" aria-labelledby="v3SamplePoolTitle" hidden>
+            <section id="v3SamplePool" class="v3-card"><header class="v3-card-heading"><div><span class="eyebrow">专题样品池</span><h3 id="v3SamplePoolTitle">样品</h3></div><div class="v3-heading-actions"><span id="v3SampleCount" class="v3-muted">0 个样品</span><button class="ghost-button" type="button" data-v3-open-sample-dialog>新增样品</button></div></header><p class="v3-inline-note">样品可参与同一专题的多个任务；编号可在到样后补录，实际到样不会自动启动任务。</p><div id="v3SampleList" class="v3-sample-list"><div class="v3-empty-state compact"><h3>样品池为空</h3><p>先记录规划标签和型号，后续再补编号。</p></div></div></section>
+          </div>
+          <div id="v3TaskChainPanel" class="v3-topic-panel" data-v3-topic-panel="chain" role="tabpanel" aria-labelledby="v3TaskChainTitle" hidden>
+            <section id="v3TaskChain" class="v3-card"><header class="v3-card-heading"><div><span class="eyebrow">线性 finish-to-start</span><h3 id="v3TaskChainTitle">连续任务链</h3></div><div class="v3-heading-actions"><span id="v3TaskChainCount" class="v3-muted">0 个任务</span><button class="ghost-button" type="button" data-v3-open-task-dialog>人工添加任务</button></div></header><p class="v3-inline-note">任务顺序、样品集合、人员和日期均需预览后由人确认；系统不自动创建或分配。</p><ol id="v3TaskChainList" class="v3-task-chain-list"><li class="v3-empty-state compact"><h3>任务链为空</h3><p>从第一个任务开始，逐步建立前后关系。</p></li></ol></section>
+          </div>
+        </section>
+        <aside id="v3TopicDetailPane" class="v3-topic-detail-pane" aria-labelledby="v3TopicDetailTitle" hidden>
+          <header class="detail-pane-header"><div><span class="eyebrow">V2.1 专题</span><strong id="v3TopicDetailTitle">专题详情</strong></div><button id="v3CloseTopicDetailBtn" class="icon-button" type="button" aria-label="关闭专题详情">×</button></header>
+          <div id="v3TopicDetailContent" class="detail-content"><div class="detail-empty">从专题列表中选择一项查看详情。</div><section aria-labelledby="v3TopicSampleDetailTitle"><h3 id="v3TopicSampleDetailTitle">样品摘要</h3><div id="v3TopicSampleDetailList" class="v3-detail-list"></div></section><section aria-labelledby="v3TopicTaskDetailTitle"><h3 id="v3TopicTaskDetailTitle">任务链摘要</h3><div id="v3TopicTaskDetailList" class="v3-detail-list"></div></section></div>
+        </aside>
       </section>
 
       <section id="assignmentView" class="v2-panel" data-v2-panel="assignment" role="tabpanel" aria-label="人工分配" hidden>
@@ -126,6 +183,11 @@
         <section class="v2-surface"><div id="assignmentTaskList" class="v2-plan-list"><div class="v2-empty-state"><h3>请选择测控计划</h3><p>选择计划后，可为测试项人工创建任务并明确分配负责人。</p></div></div></section>
         <template id="assignmentNoTestItemsTemplate"><div class="v2-empty-state"><h3>计划还没有测试项</h3><p>先编辑计划并添加至少一个结构化测试项。</p><button type="button" data-open-plan-dialog>编辑计划</button></div></template>
         <template id="assignmentNoTasksTemplate"><div class="v2-empty-state"><h3>还没有人员任务</h3><p>从测试项出发，由人明确创建并分配任务。</p><button type="button" data-open-assignment-dialog>人工创建任务</button></div></template>
+        <section id="v3AssignmentView" class="v3-panel" data-v3-panel="assignment" role="region" aria-labelledby="v3AssignmentTitle" hidden>
+          <header class="v3-section-heading"><div><span class="eyebrow">V2.1 人工责任</span><h2 id="v3AssignmentTitle">任务成员与工时</h2></div><div class="v3-heading-actions"><label class="v3-inline-select">专题<select id="v3AssignmentTopicFilter"><option value="">请选择专题</option></select></label><button class="primary-action" type="button" data-v3-open-task-dialog>创建链任务</button></div></header>
+          <div id="v3AssignmentConflictSummary" class="v3-conflict-summary" role="status">选择专题或任务后显示日期、成员负载和制冷机冲突；冲突只提示，最终决定由人作出。</div>
+          <div class="v3-assignment-grid"><section class="v3-card"><header class="v3-card-heading"><div><span class="eyebrow">任务清单</span><h3>专题任务</h3></div><span id="v3AssignmentTaskCount" class="v3-muted">0 个任务</span></header><div id="v3AssignmentTaskList" class="v3-task-list"><div class="v3-empty-state compact"><p>选择专题后显示任务。</p></div></div></section><section class="v3-card"><header class="v3-card-heading"><div><span class="eyebrow">共同负责</span><h3 id="v3AssignmentMemberTitle">成员与预计工时</h3></div><button class="ghost-button" type="button" data-v3-open-member-dialog>编辑成员</button></header><div id="v3TaskMemberList" class="v3-member-hours-list"><div class="v3-empty-state compact"><p>选择任务后显示成员集合。</p></div></div><div id="v3MemberLoadPreview" class="v3-preview"><h4>负载预览</h4><p>每人预计工时按 0.5 小时递增；不会覆盖个人进度和备注。</p></div></section></div>
+        </section>
       </section>
 
       <section id="executionView" class="v2-panel" data-v2-panel="execution" role="tabpanel" aria-label="执行" hidden>
@@ -141,11 +203,16 @@
             <section id="loadView" class="view" aria-labelledby="loadViewTitle"><div class="view-heading"><h2 id="loadViewTitle">成员负载</h2><p>按所选周期查看每位成员的任务压力。</p></div><div id="loadTable" class="table-wrap"></div></section>
           </section>
         </section>
+        <div id="v3ExecutionContext" class="v3-execution-context" data-v3-panel="execution" hidden><span class="eyebrow">V2.1 执行上下文</span><strong id="v3ExecutionBreadcrumb">来源小组 / 专题 / 任务</strong><span id="v3ExecutionSampleHint">样品以标签显示，任务日期和制冷机以任务事实为准。</span></div>
       </section>
 
       <section id="acceptanceView" class="v2-panel" data-v2-panel="acceptance" role="tabpanel" aria-label="成果验收" hidden>
         <section class="v2-surface" aria-labelledby="submissionListTitle"><header class="v2-section-heading"><div><span class="eyebrow">人工闭环</span><h2 id="submissionListTitle">成果与验收</h2></div><span class="v2-muted">引用信息与清单快照，不托管附件</span></header><div id="submissionList" class="v2-plan-list"></div><div id="acceptanceEmptyState" class="v2-empty-state"><h3>没有待验收成果</h3><p>成果提交后会在这里等待人工通过或退回。</p></div></section>
         <template id="acceptanceFilterEmptyTemplate"><div class="v2-empty-state"><h3>筛选无结果</h3><p>当前计划或成果状态下没有匹配记录。</p><button class="ghost-button" type="button" data-clear-submission-filters>清空筛选</button></div></template>
+        <section id="v3AcceptanceView" class="v3-panel" data-v3-panel="acceptance" role="region" aria-labelledby="v3AcceptanceTitle" hidden>
+          <header class="v3-section-heading"><div><span class="eyebrow">V2.1 任务成果</span><h2 id="v3AcceptanceTitle">成果与样品集合验收</h2></div><div class="v3-heading-actions"><label class="v3-inline-select">专题<select id="v3AcceptanceTopicFilter"><option value="">全部专题</option></select></label><label class="v3-inline-select">状态<select id="v3AcceptanceStatusFilter"><option value="">全部状态</option><option value="submitted">待验收</option><option value="accepted">已通过</option><option value="returned">已退回</option></select></label></div></header>
+          <div class="v3-acceptance-grid"><section class="v3-card"><header class="v3-card-heading"><div><span class="eyebrow">待处理成果</span><h3>任务提交</h3></div><span id="v3SubmissionCount" class="v3-muted">0 项</span></header><div id="v3SubmissionList" class="v3-submission-list"><div class="v3-empty-state compact"><h3 id="v3AcceptanceEmptyTitle">没有待验收成果</h3><p id="v3AcceptanceEmptyText">任务提交后会在这里等待人工通过或退回。</p></div></div></section><section class="v3-card"><header class="v3-card-heading"><div><span class="eyebrow">快照</span><h3 id="v3SubmissionDetailTitle">任务样品集合</h3></div><span id="v3SubmissionDetailStatus" class="v3-muted">未选择</span></header><div id="v3SubmissionSamples" class="v3-snapshot-list"><div class="v3-empty-state compact"><p>选择成果查看提交时的完整样品集合和清单。</p></div></div><div id="v3SubmissionChecklist" class="v3-checklist-snapshot"></div></section></div>
+        </section>
       </section>
 
       <section id="managementView" class="v2-panel" data-v2-panel="management" role="tabpanel" aria-label="管理" hidden>
@@ -237,9 +304,107 @@
                 <div id="trashList" class="recovery-list"></div>
               </article>
           </div>
+          <section id="v3ManagementPanel" class="v3-panel v3-management-panel" data-v3-panel="management" role="region" aria-labelledby="v3ManagementTitle" hidden>
+            <header class="v3-section-heading"><div><span class="eyebrow">V2.1 数据边界</span><h2 id="v3ManagementTitle">专题迁移与资源状态</h2></div><span class="v3-muted">V3 独立兼容岛</span></header>
+            <div class="v3-management-grid"><article id="v3MigrationStatus" class="v3-card"><span class="eyebrow">迁移状态</span><h3>Schema 3</h3><p id="v3MigrationStatusText">正在读取 V3 schema、checksum 和备份状态。</p><div class="v3-status-line"><span id="v3MigrationBadge" class="v3-status-badge is-pending">待读取</span><span id="v3MigrationBackupText">迁移前备份：—</span></div><button class="ghost-button" type="button" data-v3-open-migration-preview>预览迁移</button></article><article id="v3LegacyPlanPanel" class="v3-card"><span class="eyebrow">兼容计划</span><h3>复制为专题</h3><p>旧 V2 测控计划保持原接口和数据；复制前预览样品、任务顺序与历史引用。</p><div id="v3LegacyPlanList" class="v3-legacy-list"><div class="v3-empty-state compact"><p>暂无可复制的旧计划。</p></div></div><button class="ghost-button" type="button" data-v3-open-legacy-dialog>查看复制预览</button></article><article id="v3ResourceState" class="v3-card"><span class="eyebrow">任务资源</span><h3>制冷机与成员</h3><p>专题默认制冷机只用于新建任务；冲突和工时以任务成员关系为准。</p><div id="v3ResourceSummary" class="v3-resource-summary"><span>活动制冷机 <strong id="v3ActiveCryostatCount">—</strong></span><span>活动成员 <strong id="v3ActiveMemberCount">—</strong></span></div></article></div>
+          </section>
         </section>
       </section>
     </main>
+
+    <dialog id="v3TopicDialog" class="v3-dialog" aria-labelledby="v3TopicDialogTitle">
+      <form id="v3TopicForm" class="v3-dialog-form">
+        <header class="dialog-header"><div><span class="eyebrow">V2.1 专题</span><h2 id="v3TopicDialogTitle">新建专题</h2><p>专题承载样品池与连续任务链；任务和人员仍由人明确创建。</p></div><button id="v3CloseTopicDialogBtn" class="icon-button dialog-close" type="button" aria-label="关闭专题对话框">×</button></header>
+        <div id="v3TopicFormError" class="form-error" role="alert" hidden></div>
+        <div class="v3-dialog-body">
+          <fieldset class="dialog-section"><legend>专题基本信息</legend><label>来源小组<select id="v3TopicSourceGroup" name="source_group_id" required><option value="">请选择来源小组</option></select></label><label>专题名称<input id="v3TopicNameInput" name="name" maxlength="200" required autocomplete="off" autofocus placeholder="例如：QPU-A 连续测控专题"></label><label class="dialog-section-wide">目的<textarea id="v3TopicPurposeInput" name="purpose" rows="3" maxlength="4000" required placeholder="说明专题目标与预期结果"></textarea></label></fieldset>
+          <fieldset class="dialog-section"><legend>联系人与默认资源</legend><label>对方负责人<select id="v3TopicContact" name="counterpart_contact_id"><option value="">稍后补充</option></select></label><label>我方对接人<input id="v3TopicLiaison" name="local_liaison_name" maxlength="100" placeholder="业务记录，未经身份认证"></label><label>默认制冷机<select id="v3TopicDefaultCryostatInput" name="default_cryostat_id"><option value="">不设默认值</option></select></label><p class="v3-inline-note">默认制冷机只用于创建任务；冲突和修改以任务级事实为准。</p></fieldset>
+          <section class="v3-preview v3-dialog-section-wide" aria-labelledby="v3TopicPreviewTitle"><h3 id="v3TopicPreviewTitle">确认边界</h3><p>专题创建不会自动生成任务、样品或人员分配；后续操作均需单独预览确认。</p></section>
+        </div>
+        <footer class="dialog-actions"><button id="v3CancelTopicBtn" class="ghost-button" type="button">取消</button><button id="v3SaveTopicBtn" type="submit" data-busy-text="正在保存…">保存专题</button></footer>
+      </form>
+    </dialog>
+
+    <dialog id="v3SampleDialog" class="v3-dialog" aria-labelledby="v3SampleDialogTitle">
+      <form id="v3SampleForm" class="v3-dialog-form">
+        <header class="dialog-header"><div><span class="eyebrow">专题样品池</span><h2 id="v3SampleDialogTitle">新增样品</h2><p>型号或规划标签可以先记录；编号和实际到样可后补。</p></div><button id="v3CloseSampleDialogBtn" class="icon-button dialog-close" type="button" aria-label="关闭样品对话框">×</button></header>
+        <div id="v3SampleFormError" class="form-error" role="alert" hidden></div>
+        <div class="v3-dialog-body"><fieldset class="dialog-section"><legend>样品身份</legend><label>规划标签<input id="v3SampleLabel" name="planning_label" maxlength="200" required placeholder="例如：第一批样品 A"></label><label>样品型号<input id="v3SampleModel" name="model" maxlength="200" required placeholder="编号未知时只填型号"></label><div class="two-cols"><label>编号<input id="v3SampleIdentifier" name="identifier" maxlength="200" placeholder="可到样后补录"></label><label>编号类型<select id="v3SampleIdentifierKind" name="identifier_kind"><option value="">未填写</option><option value="temporary">临时编号</option><option value="formal">正式编号</option></select></label></div></fieldset><fieldset class="dialog-section"><legend>到样事实</legend><label>初始 ETA<input id="v3SampleInitialEta" name="initial_eta_date" type="date"></label><label>当前 ETA<input id="v3SampleCurrentEta" name="current_eta_date" type="date"></label><label class="inline"><input id="v3SampleEtaPending" name="eta_pending" type="checkbox"> ETA 待确认</label><label>实际到样<input id="v3SampleArrivalDate" name="actual_arrival_date" type="date"></label></fieldset></div>
+        <footer class="dialog-actions"><button id="v3CancelSampleBtn" class="ghost-button" type="button">取消</button><button id="v3SaveSampleBtn" type="submit" data-busy-text="正在保存…">保存样品</button></footer>
+      </form>
+    </dialog>
+
+    <dialog id="v3TaskDialog" class="v3-dialog" aria-labelledby="v3TaskDialogTitle">
+      <form id="v3TaskForm" class="v3-dialog-form">
+        <header class="dialog-header"><div><span class="eyebrow">线性任务链</span><h2 id="v3TaskDialogTitle">新增链任务</h2><p>任务顺序、样品集合、日期、制冷机和成员均在预览后人工确认。</p></div><button id="v3CloseTaskDialogBtn" class="icon-button dialog-close" type="button" aria-label="关闭链任务对话框">×</button></header>
+        <div id="v3TaskFormError" class="form-error" role="alert" hidden></div>
+        <div class="v3-dialog-body"><fieldset class="dialog-section"><legend>任务与依赖</legend><label>任务名称<input id="v3TaskTitle" name="title" maxlength="200" required autofocus placeholder="例如：低温谱测量"></label><label>描述<textarea id="v3TaskDescription" name="description" rows="3" maxlength="4000"></textarea></label><label>前置任务<select id="v3TaskPredecessor" name="predecessor_lineage_key"><option value="">链头（无前置）</option></select></label><label class="inline"><input id="v3TaskRequired" name="is_required" type="checkbox" checked> 必做任务</label></fieldset><fieldset class="dialog-section"><legend>样品集合</legend><p class="v3-inline-note">同一专题样品可参与多个任务；跨专题样品不可选择。</p><div id="v3TaskSamples" class="v3-check-list"><div class="v3-empty-state compact"><p>暂无可选样品。</p></div></div></fieldset><fieldset class="dialog-section"><legend>排期与制冷机</legend><div class="two-cols"><label>开始日期<input id="v3TaskStartDate" name="start_date" type="date" required></label><label>结束日期<input id="v3TaskEndDate" name="end_date" type="date" required></label></div><label>制冷机<select id="v3TaskCryostat" name="cryostat_id"><option value="">请选择制冷机</option></select></label><label class="inline"><input id="v3TaskCryostatPending" name="cryostat_pending" type="checkbox"> 制冷机待定</label></fieldset><section id="v3TaskPreview" class="v3-preview v3-dialog-section-wide" aria-labelledby="v3TaskPreviewTitle"><h3 id="v3TaskPreviewTitle">创建预览</h3><p>填写任务、样品和日期后显示链约束、负载与制冷机冲突。</p></section></div>
+        <footer class="dialog-actions"><button id="v3CancelTaskBtn" class="ghost-button" type="button">取消</button><button id="v3PreviewTaskBtn" class="ghost-button" type="button">预览影响</button><button id="v3SaveTaskBtn" type="submit" data-busy-text="正在确认…">确认创建</button></footer>
+      </form>
+    </dialog>
+
+    <dialog id="v3MemberDialog" class="v3-dialog" aria-labelledby="v3MemberDialogTitle">
+      <form id="v3MemberForm" class="v3-dialog-form">
+        <header class="dialog-header"><div><span class="eyebrow">任务成员</span><h2 id="v3MemberDialogTitle">编辑共同责任</h2><p>每人对整个任务负责；预计工时按 0.5 小时递增，个人进度和备注独立保留。</p></div><button id="v3CloseMemberDialogBtn" class="icon-button dialog-close" type="button" aria-label="关闭成员对话框">×</button></header>
+        <div id="v3MemberFormError" class="form-error" role="alert" hidden></div>
+        <div class="v3-dialog-body"><fieldset class="dialog-section dialog-section-wide"><legend>成员 exact-set</legend><div id="v3MemberChoices" class="v3-member-choice-grid"><div class="v3-empty-state compact"><p>暂无可用成员。</p></div></div></fieldset><fieldset class="dialog-section"><legend>协调负责人</legend><label>协调人<select id="v3CoordinatorMember" name="coordinator_member_id"><option value="">不指定</option></select></label><p class="v3-inline-note">协调人不是唯一负责人，所有已选成员仍对完整任务负责。</p></fieldset><fieldset class="dialog-section"><legend>预计工时</legend><div id="v3MemberHoursInputs" class="v3-member-hours-inputs"><div class="v3-empty-state compact"><p>选择成员后填写每人工时。</p></div></div></fieldset><section id="v3MemberPreview" class="v3-preview v3-dialog-section-wide" aria-labelledby="v3MemberPreviewTitle"><h3 id="v3MemberPreviewTitle">成员与负载预览</h3><p>确认前排除旧成员贡献并重新计算日期重叠、周负载和制冷机冲突。</p></section></div>
+        <footer class="dialog-actions"><button id="v3CancelMemberBtn" class="ghost-button" type="button">取消</button><button id="v3PreviewMemberBtn" class="ghost-button" type="button">预览冲突</button><button id="v3SaveMemberBtn" type="submit" data-busy-text="正在确认…">确认成员</button></footer>
+      </form>
+    </dialog>
+
+    <dialog id="v3EtaDialog" class="v3-dialog" aria-labelledby="v3EtaDialogTitle">
+      <form id="v3EtaForm" class="v3-dialog-form">
+        <header class="dialog-header"><div><span class="eyebrow">样品 ETA</span><h2 id="v3EtaDialogTitle">修订样品预计到样</h2><p>多样品任务就绪日取需到样样品 ETA 最大值；默认不平移任务。</p></div><button id="v3CloseEtaDialogBtn" class="icon-button dialog-close" type="button" aria-label="关闭样品 ETA 对话框">×</button></header>
+        <div id="v3EtaFormError" class="form-error" role="alert" hidden></div>
+        <div class="v3-dialog-body v3-dialog-body-single"><div class="two-cols"><label>新的当前 ETA<input id="v3EtaDate" name="current_eta_date" type="date" autofocus></label><label class="inline v3-dialog-checkbox"><input id="v3EtaPending" name="eta_pending" type="checkbox"> ETA 待确认</label></div><section id="v3EtaImpactPreview" class="v3-preview" aria-labelledby="v3EtaImpactTitle"><h3 id="v3EtaImpactTitle">影响预览</h3><p>选择样品后显示预计就绪日、候选任务和保护任务。</p></section><section aria-labelledby="v3EtaCandidateTitle"><h3 id="v3EtaCandidateTitle">可选择平移的关联任务</h3><div id="v3EtaCandidateTasks" class="v3-check-list"></div></section><section aria-labelledby="v3EtaProtectedTitle"><h3 id="v3EtaProtectedTitle">保持不变的任务</h3><div id="v3EtaProtectedTasks" class="v3-detail-list"></div></section></div>
+        <footer class="dialog-actions"><button id="v3CancelEtaBtn" class="ghost-button" type="button">取消</button><button id="v3PreviewEtaBtn" class="ghost-button" type="button">重新预览</button><button id="v3SaveEtaBtn" type="submit" data-busy-text="正在确认…">确认修订</button></footer>
+      </form>
+    </dialog>
+
+    <dialog id="v3CryostatDialog" class="v3-dialog" aria-labelledby="v3CryostatDialogTitle">
+      <form id="v3CryostatForm" class="v3-dialog-form">
+        <header class="dialog-header"><div><span class="eyebrow">任务资源</span><h2 id="v3CryostatDialogTitle">修订任务制冷机</h2><p>制冷机属于任务事实；保存前显示跨专题活动任务冲突。</p></div><button id="v3CloseCryostatDialogBtn" class="icon-button dialog-close" type="button" aria-label="关闭任务制冷机对话框">×</button></header>
+        <div id="v3CryostatFormError" class="form-error" role="alert" hidden></div>
+        <div class="v3-dialog-body v3-dialog-body-single"><label>任务制冷机<select id="v3CryostatSelect" name="cryostat_id"><option value="">请选择制冷机</option></select></label><label class="inline"><input id="v3CryostatPending" name="cryostat_pending" type="checkbox"> 制冷机待定</label><section id="v3CryostatPreview" class="v3-preview" aria-labelledby="v3CryostatPreviewTitle"><h3 id="v3CryostatPreviewTitle">冲突预览</h3><p>选择制冷机后显示日期重叠和需要人工确认的影响。</p></section></div>
+        <footer class="dialog-actions"><button id="v3CancelCryostatBtn" class="ghost-button" type="button">取消</button><button id="v3PreviewCryostatBtn" class="ghost-button" type="button">预览冲突</button><button id="v3SaveCryostatBtn" type="submit" data-busy-text="正在确认…">确认修订</button></footer>
+      </form>
+    </dialog>
+
+    <dialog id="v3SubmissionDialog" class="v3-dialog" aria-labelledby="v3SubmissionDialogTitle">
+      <form id="v3SubmissionForm" class="v3-dialog-form">
+        <header class="dialog-header"><div><span class="eyebrow">任务成果</span><h2 id="v3SubmissionDialogTitle">提交成果</h2><p>提交时快照任务完整样品集合和验收清单；只保存 URL 或本地路径文本。</p></div><button id="v3CloseSubmissionDialogBtn" class="icon-button dialog-close" type="button" aria-label="关闭成果提交对话框">×</button></header>
+        <div id="v3SubmissionFormError" class="form-error" role="alert" hidden></div>
+        <div class="v3-dialog-body v3-dialog-body-single"><section id="v3SubmissionSampleSnapshot" class="v3-snapshot-list" aria-labelledby="v3SubmissionSnapshotTitle"><h3 id="v3SubmissionSnapshotTitle">样品集合快照</h3><div id="v3SubmissionSampleItems"><div class="v3-empty-state compact"><p>当前任务样品集合将在这里显示。</p></div></div></section><label>成果说明<textarea id="v3SubmissionDescription" name="description" rows="4" maxlength="4000" required autofocus></textarea></label><label>提交人<input id="v3SubmissionSubmitter" name="submitter_label" maxlength="100" placeholder="本地用户（业务记录，未经身份认证）"></label><div class="two-cols"><label>引用类型<select id="v3SubmissionResourceKind" name="resource_kind"><option value="url">HTTP/HTTPS URL</option><option value="local_path">本地路径文本</option></select></label><label>引用值<input id="v3SubmissionResourceValue" name="resource_value" maxlength="2000" required placeholder="https://… 或本地路径"></label></div><fieldset class="dialog-section"><legend>验收清单快照</legend><div id="v3SubmissionChecklistInput" class="v3-check-list"></div></fieldset></div>
+        <footer class="dialog-actions"><button id="v3CancelSubmissionBtn" class="ghost-button" type="button">取消</button><button id="v3SaveSubmissionBtn" type="submit" data-busy-text="正在提交…">提交成果</button></footer>
+      </form>
+    </dialog>
+
+    <dialog id="v3ReviewDialog" class="v3-dialog" aria-labelledby="v3ReviewDialogTitle">
+      <form id="v3ReviewForm" class="v3-dialog-form">
+        <header class="dialog-header"><div><span class="eyebrow">人工验收</span><h2 id="v3ReviewDialogTitle">验收任务成果</h2><p>通过或退回由人确认；个人进度、备注和其他任务不被自动改写。</p></div><button id="v3CloseReviewDialogBtn" class="icon-button dialog-close" type="button" aria-label="关闭成果验收对话框">×</button></header>
+        <div id="v3ReviewFormError" class="form-error" role="alert" hidden></div>
+        <div class="v3-dialog-body v3-dialog-body-single"><div id="v3ReviewSampleSnapshot" class="v3-snapshot-list"><div class="v3-empty-state compact"><p>当前成果的样品集合快照。</p></div></div><label>验收结论<select id="v3ReviewDecision" name="decision" required autofocus><option value="">请选择结论</option><option value="accepted">通过</option><option value="returned">退回</option></select></label><label>验收人<input id="v3ReviewerLabel" name="reviewer_label" maxlength="100" placeholder="本地用户（业务记录，未经身份认证）"></label><label>意见<textarea id="v3ReviewComment" name="comment" rows="4" maxlength="4000" placeholder="退回时必须填写意见"></textarea></label><fieldset class="dialog-section"><legend>逐项验收</legend><div id="v3ReviewChecklist" class="v3-check-list"></div></fieldset></div>
+        <footer class="dialog-actions"><button id="v3CancelReviewBtn" class="ghost-button" type="button">取消</button><button id="v3SaveReviewBtn" type="submit" data-busy-text="正在记录…">确认验收结论</button></footer>
+      </form>
+    </dialog>
+
+    <dialog id="v3LegacyDialog" class="v3-dialog" aria-labelledby="v3LegacyDialogTitle">
+      <form id="v3LegacyForm" class="v3-dialog-form">
+        <header class="dialog-header"><div><span class="eyebrow">兼容迁移</span><h2 id="v3LegacyDialogTitle">复制旧计划为专题</h2><p>旧 V2 计划不会被改写；转换只在预览确认后建立一次性历史引用。</p></div><button id="v3CloseLegacyDialogBtn" class="icon-button dialog-close" type="button" aria-label="关闭旧计划复制对话框">×</button></header>
+        <div id="v3LegacyFormError" class="form-error" role="alert" hidden></div>
+        <div class="v3-dialog-body v3-dialog-body-single"><label>旧 V2 计划<select id="v3LegacyPlanSelect" name="legacy_plan_id"><option value="">请选择计划</option></select></label><section id="v3LegacyPreview" class="v3-preview" aria-labelledby="v3LegacyPreviewTitle"><h3 id="v3LegacyPreviewTitle">复制预览</h3><p>预览样品、历史成果、任务顺序缺口与制冷机映射；系统不会猜测顺序或自动创建任务。</p></section><label class="inline"><input id="v3LegacyAcknowledge" name="acknowledge" type="checkbox" required> 我确认旧计划与新专题将独立维护</label></div>
+        <footer class="dialog-actions"><button id="v3CancelLegacyBtn" class="ghost-button" type="button">取消</button><button id="v3PreviewLegacyBtn" class="ghost-button" type="button">重新预览</button><button id="v3SaveLegacyBtn" type="submit" data-busy-text="正在复制…">确认复制</button></footer>
+      </form>
+    </dialog>
+
+    <dialog id="v3MigrationDialog" class="v3-dialog" aria-labelledby="v3MigrationDialogTitle">
+      <form id="v3MigrationForm" class="v3-dialog-form">
+        <header class="dialog-header"><div><span class="eyebrow">Schema 3</span><h2 id="v3MigrationDialogTitle">V3 迁移预览</h2><p>迁移前备份、事务、checksum 和失败回滚状态必须全部通过。</p></div><button id="v3CloseMigrationDialogBtn" class="icon-button dialog-close" type="button" aria-label="关闭 V3 迁移对话框">×</button></header>
+        <div id="v3MigrationFormError" class="form-error" role="alert" hidden></div>
+        <div class="v3-dialog-body v3-dialog-body-single"><section id="v3MigrationPreview" class="v3-preview" aria-labelledby="v3MigrationPreviewTitle"><h3 id="v3MigrationPreviewTitle">迁移检查</h3><ul id="v3MigrationChecks" class="v3-check-list"><li>正在读取 V1/V2 schema、备份和 checksum…</li></ul></section><label class="inline"><input id="v3MigrationAcknowledge" name="acknowledge" type="checkbox" required> 我确认迁移不会自动转换旧计划</label></div>
+        <footer class="dialog-actions"><button id="v3CancelMigrationBtn" class="ghost-button" type="button">取消</button><button id="v3PreviewMigrationBtn" class="ghost-button" type="button">重新检查</button><button id="v3SaveMigrationBtn" type="submit" data-busy-text="正在迁移…">确认迁移</button></footer>
+      </form>
+    </dialog>
 
     <dialog id="planDialog" class="v2-dialog" aria-labelledby="planDialogTitle">
       <form id="planForm" class="v2-dialog-form">
@@ -447,6 +612,6 @@
     </dialog>
 
     <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
-    <script src="/app.js" type="module"></script>
+    <script src="/app.js?v=v26" type="module"></script>
   </body>
 </html>

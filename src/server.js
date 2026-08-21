@@ -5,6 +5,7 @@ import { createHash, randomUUID } from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { DatabaseSync } from "node:sqlite";
+import { migrateV3Schema, routeV3Api, V3_ENDPOINTS } from "./v3/index.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -417,6 +418,8 @@ export const V2_ENDPOINTS = Object.freeze([
   "POST /api/v2/submissions/:id/review"
 ]);
 
+export { V3_ENDPOINTS };
+
 const V2_ENDPOINT_MATCHERS = V2_ENDPOINTS.map((entry) => {
   const [method, template] = entry.split(" ");
   const pattern = template.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/:[^/]+/g, "[^/]+");
@@ -643,11 +646,11 @@ function assertV1Schema(database) {
   }
 }
 
-async function createPreV2Backup(database, customPath) {
+async function createPreV2Backup(database, customPath, label = "pre-v2") {
   const backupDir = path.join(path.dirname(customPath), "backups");
   await mkdir(backupDir, { recursive: true });
   const stamp = nowIso().replaceAll(":", "-").replaceAll(".", "-");
-  const backupPath = path.join(backupDir, `team_tasks.pre-v2-${stamp}.sqlite`);
+  const backupPath = path.join(backupDir, `team_tasks.${label}-${stamp}.sqlite`);
   const escaped = backupPath.replaceAll("'", "''");
   database.exec(`VACUUM INTO '${escaped}'`);
   const backup = new DatabaseSync(backupPath, { readOnly: true });
@@ -659,13 +662,24 @@ async function createPreV2Backup(database, customPath) {
   return backupPath;
 }
 
+async function createPreV3Backup(database, customPath) {
+  const backupDir = path.join(path.dirname(customPath), "backups");
+  await mkdir(backupDir, { recursive: true });
+  const stamp = nowIso().replaceAll(":", "-").replaceAll(".", "-");
+  const backupPath = path.join(backupDir, `team_tasks.pre-v3-${stamp}.sqlite`);
+  database.exec(`VACUUM INTO '${backupPath.replaceAll("'", "''")}'`);
+  const backup = new DatabaseSync(backupPath, { readOnly: true });
+  try { assertDatabaseHealthy(backup); } finally { backup.close(); }
+  return backupPath;
+}
+
 function migrateV2Schema(database) {
   const names = new Set(databaseObjectNames(database, "table"));
   const hasVersionTable = names.has("app_schema_versions");
   if (hasVersionTable) {
     const rows = database.prepare("SELECT version, name, checksum, applied_at FROM app_schema_versions ORDER BY version").all();
     const maxVersion = rows.length ? Math.max(...rows.map((row) => row.version)) : 1;
-    if (maxVersion > 2) throw new Error(`Unsupported schema version: ${maxVersion}`);
+    if (maxVersion > 3) throw new Error(`Unsupported schema version: ${maxVersion}`);
     const version2 = rows.find((row) => row.version === 2);
     if (version2) {
       if (version2.name !== "v2-control-plan" || version2.checksum !== V2_SCHEMA_CHECKSUM) throw new Error("V2 schema checksum mismatch");
@@ -778,6 +792,8 @@ export async function initDatabase(customPath = dbPath) {
   try {
     database.exec("PRAGMA foreign_keys = ON");
     assertDatabaseHealthy(database);
+    let hadVersion2 = false;
+    let preV2BackupPath = null;
     if (isNewDatabase) {
       createSchema(database);
     } else {
@@ -785,9 +801,17 @@ export async function initDatabase(customPath = dbPath) {
       const version2 = hasTable(database, "app_schema_versions")
         ? database.prepare("SELECT checksum FROM app_schema_versions WHERE version = 2").get()
         : null;
-      if (!version2) await createPreV2Backup(database, customPath);
+      hadVersion2 = Boolean(version2);
+      if (!version2) preV2BackupPath = await createPreV2Backup(database, customPath, "pre-v2-pre-v3");
     }
     migrateV2Schema(database);
+    if (!isNewDatabase && !database.prepare("SELECT 1 FROM app_schema_versions WHERE version = 3").get()) {
+      // A pure V1 database already has a pre-v2-pre-v3 VACUUM INTO backup;
+      // a V2 database needs its own explicit pre-v3 snapshot.
+      if (hadVersion2) await createPreV3Backup(database, customPath);
+      else if (!preV2BackupPath) await createPreV3Backup(database, customPath);
+    }
+    migrateV3Schema(database);
     seedIfEmpty(database, isNewDatabase ? todayIsoDate() : null);
     validateV2Schema(database);
     return database;
@@ -3103,7 +3127,8 @@ async function routeV2Api(req, res, url) {
 }
 
 async function routeApi(req, res, url) {
-  if (url.pathname.startsWith("/api/v2")) return routeV2Api(req, res, url);
+  if (url.pathname === "/api/v3" || url.pathname.startsWith("/api/v3/")) return routeV3Api(req, res, db, url);
+  if (url.pathname === "/api/v2" || url.pathname.startsWith("/api/v2/")) return routeV2Api(req, res, url);
   try {
     if (req.method === "GET" && url.pathname === "/api/members") return sendJson(res, 200, listMembers());
     if (req.method === "POST" && url.pathname === "/api/members") return sendJson(res, 201, createMember(await parseBody(req)));
