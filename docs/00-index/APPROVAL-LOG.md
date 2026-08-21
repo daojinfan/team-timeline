@@ -133,6 +133,34 @@ notes: null
 TASK 的 `execution` 与 `acceptance` 批准必须包含 `confirmation_id`。AI 不得自行编造该值；应使用宿主会话提供的用户消息标识或外部审批记录标识。本地脚本只能验证引用格式和绑定关系，身份真实性由宿主或审批系统保证。
 
 批准只覆盖记录中的对象、范围、环境和期限。范围变化、批准到期或对象内容变化后必须重新批准。
+
+## APR-059
+
+approval_id: APR-059
+status: approved
+approval_type: baseline
+approved_items:
+  - BL-004
+  - REQ-V21-001
+  - ARC-OVERALL-003
+  - ARC-COMP-005
+  - DEC-003
+  - CR-003
+  - DEL-WORK-001
+scope:
+  - V2.1 专题、样品池、线性连续任务链、任务级制冷机、多人工时、成果验收及 V3 兼容实现
+plan_sha256: null
+approver: human
+confirmation_id: CONF-01a01ef6-d413-7660-bdc5-62bd5873cbf4:V21-DETAILED-DESIGN
+approved_at: 2026-08-21T00:00:00+08:00
+expires_at: null
+baseline: BL-004
+related_change: CR-003
+related_work_packages:
+  - WP-009
+approval_text: 可以
+evidence: codex-thread:01a01ef6-d413-7660-bdc5-62bd5873cbf4
+notes: 用户确认 V2.1 详细设计并授权进入开发；旧 V1/V2 兼容边界保持不变。
 ## APR-004
 
 approval_id: APR-004

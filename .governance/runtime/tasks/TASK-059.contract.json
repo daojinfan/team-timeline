@@ -1,0 +1,83 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-059",
+  "work_package": "WP-009",
+  "title": "Implement V2.1 V3 server domain and API",
+  "goal": "Implement schema 3, V3 topic/sample/linear-task/member/ETA/cryostat/submission/review APIs while preserving V1 and V2 compatibility.",
+  "baseline": "BL-004",
+  "profile": "Release",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "src/server.js",
+    "src/v3",
+    "tests/v3-api.test.js"
+  ],
+  "read_paths": [
+    "src/server.js",
+    "tests",
+    "docs/02-product/requirements-v21.md",
+    "docs/03-architecture/overall-design-v21.md",
+    "docs/03-architecture/components/v21-detailed-design.md",
+    "docs/07-decisions/DEC-003.md",
+    "docs/08-changes/CR-003.md"
+  ],
+  "write_paths": [
+    "src/server.js",
+    "src/v3",
+    "tests/v3-api.test.js"
+  ],
+  "out_of_scope": [
+    "修改 V2 canonical schema/API/checksum",
+    "AI 自动建任务",
+    "自动分配",
+    "手机端",
+    "登录",
+    "云部署"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "CR-003",
+    "QUAL-TRACE-V21-001",
+    "RPT-V21-DEV-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "V3 schema migration is additive and idempotent",
+    "V3 route exact-set and errors are tested",
+    "V1/V2 API and checksum remain compatible",
+    "npm test and V3 regression pass"
+  ],
+  "validations": [
+    {
+      "id": "v3-server-tests",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "overall_architecture",
+    "public_interface",
+    "data_model_or_migration"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-21T00:17:14.5794097Z",
+  "release_controls": {
+    "target_environment": "本地 Windows Node.js SQLite 服务，临时副本数据库",
+    "execution_window": "开发阶段每次提交前与集成阶段",
+    "rollback_plan": "停止服务，保留失败库，恢复迁移前 SQLite 备份并回退服务端交付提交",
+    "observation_metrics": "npm test、schema checksum、foreign_key_check、quick_check、V1/V2 golden 响应",
+    "stop_conditions": "V2 checksum/API变化、迁移失败、兼容回归失败或发现未批准的数据语义变化",
+    "post_release_owner": "项目负责人"
+  }
+}

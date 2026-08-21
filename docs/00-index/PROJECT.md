@@ -36,7 +36,7 @@ last_reviewed: 2026-08-20
 - 工作包状态：docs/04-delivery/WORK-STATUS.md
 - 团队运行规则：rules/TEAM-MODE.md
 - 团队任务台账：docs/04-delivery/TASK-LEDGER.md
-- 当前基线：BL-001
+- 当前基线：BL-004
 - 机器可读状态：governance.json
 
 每次任务先读取本入口，再读取当前状态和权威文档。旧报告、聊天消息、自动生成的摘要和已被替代的文档都不能作为当前执行指令。

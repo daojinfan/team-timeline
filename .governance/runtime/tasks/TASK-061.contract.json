@@ -1,0 +1,79 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-061",
+  "work_package": "WP-009",
+  "title": "Implement V2.1 topic desktop shell",
+  "goal": "Implement V2.1 topic overview, sample pool, linear task chain and acceptance desktop shell without changing V1/V2 IDs.",
+  "baseline": "BL-004",
+  "profile": "Release",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/index.html",
+    "public/styles.css"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "docs/02-product/requirements-v21.md",
+    "docs/03-architecture/overall-design-v21.md",
+    "docs/03-architecture/components/v21-detailed-design.md",
+    "docs/07-decisions/DEC-003.md"
+  ],
+  "write_paths": [
+    "public/index.html",
+    "public/styles.css"
+  ],
+  "out_of_scope": [
+    "修改 public/app.js",
+    "修改服务端",
+    "手机端",
+    "移动媒体查询"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "QUAL-TRACE-V21-001",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "All V1/V2 IDs remain unique and present",
+    "V3 topic DOM/ARIA contract exists",
+    "Six desktop zones and 420px drawer/720px dialog fit both target sizes",
+    "No page horizontal overflow and no mobile breakpoint"
+  ],
+  "validations": [
+    {
+      "id": "v3-shell-static",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "overall_architecture",
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-21T00:17:38.6101119Z",
+  "release_controls": {
+    "target_environment": "本地桌面浏览器与静态 DOM 检查",
+    "execution_window": "开发阶段每次交付前",
+    "rollback_plan": "回退 index.html/styles.css 独立交付提交",
+    "observation_metrics": "ID/ARIA exact-set、tag balance、scrollWidth、1280x720/1366x768 布局",
+    "stop_conditions": "V1/V2 ID缺失、ARIA断链、页面横溢出、出现移动端或范围外入口",
+    "post_release_owner": "项目负责人"
+  }
+}

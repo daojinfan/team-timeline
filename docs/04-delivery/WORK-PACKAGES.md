@@ -27,6 +27,7 @@ last_reviewed: 2026-08-20
 | WP-006 | 实现 V2 服务端、增量迁移与 API 回归 | BL-003 | WP-002 | schema/迁移/API/V1 回归与 Release 双轮审核 | IMPLEMENTER |
 | WP-007 | 实现 V2 六区桌面外壳与样式 | BL-003 | WP-002 | DOM 契约、无溢出和双分辨率浏览器双轮审核 | IMPLEMENTER |
 | WP-008 | 集成 V2 客户端交互与完整人工闭环 | BL-003 | WP-006、WP-007 | 关键交互、错误路径、焦点、V1 回归与双轮审核 | INTEGRATOR |
+| WP-009 | 实现 V2.1 专题、样品池与连续任务链 | BL-004 | WP-006、WP-007、WP-008 | schema 3、/api/v3、专题桌面闭环、V1/V2 兼容与 Release 双轮审核 | IMPLEMENTER |
 
 执行状态统一记录在 `WORK-STATUS.md`，避免日常状态变化改写已经批准的工作包契约。
 每个活动工作包还必须有 `context/WP-NNN.context.json`，声明所需权威文档、读取模式、适用基线和验证。上下文路由随基线锁定；已经 `accepted` 或 `superseded` 的历史工作包可以保留旧路由。生成的 `.governance/context/*.generated.md` 只是临时输入，不是项目事实。
@@ -107,4 +108,14 @@ last_reviewed: 2026-08-20
 - 依赖：WP-006 与 WP-007 已验证并由 PM 完成中间集成门。
 - 验收：六区切换、状态/颜色、窗口筛选、ETA/制冷机两阶段确认、冲突确认、人工成果/验收、错误保留、键盘焦点及 V1 五视图均通过；独立 Reviewer 对同一指纹连续两轮通过。
 - 回滚：回退 `app.js` 独立交付提交；若服务端已迁移真实库，同时按 WP-006 回滚数据库。
+- 任务档位：Release。
+
+## WP-009 契约
+
+- 目标：在保持 V1/V2 兼容的前提下实现 V2.1 专题、样品池、线性连续任务链、任务级制冷机、多人工时和成果验收。
+- 允许修改：`src/server.js`、`src/v3/`、`tests/`、`public/index.html`、`public/styles.css`、`public/app.js`。
+- 范围外：修改 V2 canonical 表/API/checksum、AI 自动建任务、自动分配、手机端、登录、云同步和二进制附件。
+- 依赖：BL-004、REQ-V21-001、ARC-OVERALL-003、ARC-COMP-005、DEC-003、CR-003。
+- 验收：schema 3 增量迁移、V3 API exact set、V1/V2 golden 兼容、专题/样品/任务链/多人/ETA/制冷机/成果验收闭环、1280×720 与 1366×768 双分辨率；实现任务各自独立 Reviewer 连续两轮通过。
+- 回滚：停止服务，保留失败库，使用迁移前 SQLite 备份恢复；代码按交付提交回退。
 - 任务档位：Release。

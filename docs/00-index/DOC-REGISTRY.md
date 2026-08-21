@@ -42,3 +42,10 @@ last_reviewed: 2026-08-20
 | DEC-002 | docs/07-decisions/DEC-002.md | architecture.decision.v2-control-plan | active | 1.0 | BL-003 | human |
 | CR-002 | docs/08-changes/CR-002.md | change-package | approved | 1.0 | BL-003 | human |
 | QUAL-TRACE-V2-001 | docs/05-quality/traceability-v2.md | quality.traceability.v2 | active | 1.0 | BL-003 | human |
+| REQ-V21-001 | docs/02-product/requirements-v21.md | product.requirements.v21 | active | 1.0 | BL-004 | human |
+| ARC-OVERALL-003 | docs/03-architecture/overall-design-v21.md | architecture.overall.v21 | active | 1.0 | BL-004 | human |
+| ARC-COMP-005 | docs/03-architecture/components/v21-detailed-design.md | architecture.component.v21-detailed-design | active | 1.0 | BL-004 | human |
+| DEC-003 | docs/07-decisions/DEC-003.md | architecture.decision.v21 | active | 1.0 | BL-004 | human |
+| CR-003 | docs/08-changes/CR-003.md | change-package | approved | 1.0 | BL-004 | human |
+| QUAL-TRACE-V21-001 | docs/05-quality/traceability-v21.md | quality.traceability.v21 | active | 1.0 | BL-004 | human |
+| RPT-V21-DEV-001 | docs/09-reports/V21-development-plan.md | report.development-plan.v21 | active | 1.0 | BL-004 | human |

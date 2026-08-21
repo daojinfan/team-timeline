@@ -1,0 +1,73 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-060",
+  "work_package": "WP-009",
+  "title": "Review V2.1 V3 server domain and API",
+  "goal": "Independently review TASK-059 server/schema/API delivery against V2.1 contract and compatibility gates.",
+  "baseline": "BL-004",
+  "profile": "Release",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-060"
+  ],
+  "read_paths": [
+    "src/server.js",
+    "src/v3",
+    "tests/v3-api.test.js",
+    "docs/02-product/requirements-v21.md",
+    "docs/03-architecture/overall-design-v21.md",
+    "docs/03-architecture/components/v21-detailed-design.md",
+    "docs/07-decisions/DEC-003.md",
+    "docs/08-changes/CR-003.md"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-060"
+  ],
+  "out_of_scope": [
+    "修改实现文件",
+    "修改治理状态以外的产品文件"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-059"
+  ],
+  "acceptance_criteria": [
+    "Review evidence lists actual scoped changes",
+    "Two independent Release review rounds can be completed",
+    "Schema/API/compatibility and rollback evidence are checked"
+  ],
+  "validations": [
+    {
+      "id": "v3-server-review",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-21T00:17:26.2803143Z",
+  "release_controls": {
+    "target_environment": "本地 Windows Node.js SQLite 临时副本",
+    "execution_window": "TASK-059 每轮交付后",
+    "rollback_plan": "删除未登记证据并由 PM 重新安排修复轮次",
+    "observation_metrics": "diff 指纹、npm test、schema/API exact-set、迁移诊断",
+    "stop_conditions": "发现 schema/API 漂移、旧兼容回归失败或证据与实际 diff 不一致",
+    "post_release_owner": "项目负责人"
+  }
+}

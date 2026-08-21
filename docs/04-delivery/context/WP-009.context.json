@@ -1,0 +1,41 @@
+{
+  "$schema": "schemas/work-package-context.schema.json",
+  "schema_version": 1,
+  "work_package": "WP-009",
+  "baseline": "BL-004",
+  "scope": [
+    "src/server.js",
+    "src/v3",
+    "tests",
+    "public",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/05-quality",
+    "docs/07-decisions",
+    "docs/08-changes",
+    "docs/09-reports",
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js"
+  ],
+  "required_documents": [
+    { "doc_id": "REQ-V21-001", "mode": "full" },
+    { "doc_id": "ARC-OVERALL-003", "mode": "full" },
+    { "doc_id": "ARC-COMP-005", "mode": "full" },
+    { "doc_id": "DEC-003", "mode": "full" },
+    { "doc_id": "CR-003", "mode": "full" },
+    { "doc_id": "RPT-V21-DEV-001", "mode": "full" },
+    { "doc_id": "QUAL-TRACE-V21-001", "mode": "full" },
+    { "doc_id": "REQ-BASE-001", "mode": "summary" },
+    { "doc_id": "ARC-OVERALL-001", "mode": "summary" },
+    { "doc_id": "DEL-WORK-001", "mode": "full" }
+  ],
+  "decisions": ["DEC-003"],
+  "validation": [
+    "npm test",
+    "node --check src/server.js",
+    "node --check public/app.js",
+    "git diff --check",
+    "Test-ProjectGovernance.ps1 -Level Release"
+  ]
+}

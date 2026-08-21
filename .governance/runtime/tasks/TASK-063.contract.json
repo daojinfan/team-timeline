@@ -1,0 +1,82 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-063",
+  "work_package": "WP-009",
+  "title": "Implement V2.1 client topic workflows",
+  "goal": "Implement V3 client state, topic/sample/task-chain interactions, preview confirmations, multi-member efforts and deliverable acceptance without changing V1/V2 state semantics.",
+  "baseline": "BL-004",
+  "profile": "Release",
+  "role": "INTEGRATOR",
+  "allowed_paths": [
+    "public/app.js"
+  ],
+  "read_paths": [
+    "public/app.js",
+    "public/index.html",
+    "public/styles.css",
+    "src/server.js",
+    "docs/02-product/requirements-v21.md",
+    "docs/03-architecture/overall-design-v21.md",
+    "docs/03-architecture/components/v21-detailed-design.md",
+    "docs/05-quality/traceability-v21.md",
+    "docs/07-decisions/DEC-003.md"
+  ],
+  "write_paths": [
+    "public/app.js"
+  ],
+  "out_of_scope": [
+    "修改 HTML/CSS",
+    "修改服务端",
+    "AI 自动建任务",
+    "自动分配",
+    "手机端"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-059",
+    "TASK-061"
+  ],
+  "acceptance_criteria": [
+    "V3 state and renderer are isolated from V2 plan state",
+    "Topic/sample/task-chain preview-confirm and stale/error paths work",
+    "Member hours, ETA, task cryostat, deliverables and acceptance work",
+    "V1 five views remain functional and focus/Escape regressions pass"
+  ],
+  "validations": [
+    {
+      "id": "v3-client-tests",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface",
+    "overall_architecture"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-21T00:19:25.6260642Z",
+  "release_controls": {
+    "target_environment": "本地桌面浏览器、Node.js SQLite 临时副本",
+    "execution_window": "TASK-059 与 TASK-061 验证后",
+    "rollback_plan": "回退 public/app.js 独立提交；若迁移已运行则按 DEV-A 备份回滚",
+    "observation_metrics": "node check、npm test、API request errors、focus/Escape、1280x720/1366x768 scrollWidth",
+    "stop_conditions": "V1/V2 客户端语义破坏、DOM 契约漂移、浏览器关键流失败或出现 AI/移动端范围扩张",
+    "post_release_owner": "项目负责人"
+  }
+}

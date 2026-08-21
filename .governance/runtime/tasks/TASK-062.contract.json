@@ -1,0 +1,68 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-062",
+  "work_package": "WP-009",
+  "title": "Review V2.1 topic desktop shell",
+  "goal": "Independently review TASK-061 DOM/CSS shell and two desktop sizes.",
+  "baseline": "BL-004",
+  "profile": "Release",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-062"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "docs/03-architecture/components/v21-detailed-design.md",
+    "docs/05-quality/traceability-v21.md"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-062"
+  ],
+  "out_of_scope": [
+    "修改 public 或治理规范文件"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-061"
+  ],
+  "acceptance_criteria": [
+    "Review evidence covers IDs, ARIA, focus/dialog/drawer, no overflow and two sizes",
+    "Two independent Release review rounds can be completed"
+  ],
+  "validations": [
+    {
+      "id": "v3-shell-review",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-21T00:18:51.8806929Z",
+  "release_controls": {
+    "target_environment": "本地桌面浏览器与静态检查",
+    "execution_window": "TASK-061 每轮交付后",
+    "rollback_plan": "保留失败证据并由 PM 重新安排修复轮次",
+    "observation_metrics": "DOM 指纹、截图/scrollWidth、ARIA 目标",
+    "stop_conditions": "关键 DOM、尺寸或范围不符合详设",
+    "post_release_owner": "项目负责人"
+  }
+}

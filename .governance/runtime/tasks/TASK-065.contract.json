@@ -1,0 +1,87 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-065",
+  "work_package": "WP-009",
+  "title": "Integrate V2.1 and run compatibility acceptance",
+  "goal": "Run integrated V1/V2/V3 API, migration, browser and rollback acceptance without changing implementation ownership files.",
+  "baseline": "BL-004",
+  "profile": "Release",
+  "role": "INTEGRATOR",
+  "allowed_paths": [
+    "tests/v3-integration.test.js",
+    "tests/compat"
+  ],
+  "read_paths": [
+    "src/server.js",
+    "src/v3",
+    "tests",
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "docs/02-product/requirements-v21.md",
+    "docs/03-architecture/overall-design-v21.md",
+    "docs/03-architecture/components/v21-detailed-design.md",
+    "docs/05-quality/traceability-v21.md",
+    "docs/09-reports/V21-development-plan.md"
+  ],
+  "write_paths": [
+    "tests/v3-integration.test.js",
+    "tests/compat"
+  ],
+  "out_of_scope": [
+    "修改 src/server.js",
+    "修改 public 实现",
+    "修改 V2 canonical docs",
+    "AI/手机端/登录/云部署"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-059",
+    "TASK-061",
+    "TASK-063"
+  ],
+  "acceptance_criteria": [
+    "V1/V2/V3 full regression passes",
+    "Real V2 copy migration, backup and rollback are evidenced",
+    "Topic/sample/linear-chain/members/ETA/cryostat/submission/review desktop paths pass at both sizes",
+    "Release governance and diff checks pass"
+  ],
+  "validations": [
+    {
+      "id": "v3-integration-tests",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "data_model_or_migration",
+    "public_interface",
+    "production_release"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-21T00:20:19.4489095Z",
+  "release_controls": {
+    "target_environment": "隔离临时 SQLite、副本服务和桌面浏览器",
+    "execution_window": "TASK-059/TASK-061/TASK-063 各自审核通过后",
+    "rollback_plan": "删除失败临时库，停止隔离服务；真实迁移按备份恢复，不改生产数据",
+    "observation_metrics": "npm test、golden API、schema checksum、foreign_key_check、quick_check、console/request errors、scrollWidth",
+    "stop_conditions": "任一旧回归失败、真实迁移无法回滚、浏览器关键路径失败或产品指纹变化",
+    "post_release_owner": "项目负责人"
+  }
+}

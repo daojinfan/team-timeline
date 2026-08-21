@@ -1,56 +1,62 @@
 {
-  "$schema": "schemas/governed-work-state.schema.json",
-  "schema_version": 2,
-  "task_id": "TASK-038",
-  "work_package": "WP-006",
-  "contract_sha256": "8b0bb677c4773a308fd654a54ada2e7ca7dceac0bb4b72bd75d8e5f633cc8d84",
-  "baseline": "BL-003",
-  "state": "verified",
-  "approval_id": "APR-052",
-  "acceptance_subject_sha256": "",
-  "acceptance_evidence_sha256": "",
-  "acceptance_git_commit": "",
-  "start_git_commit": "1eb28c4c59dd357b532ba7c35d80da21ad4cbcbf",
-  "execution_lease": "",
-  "execution_lease_owner": "",
-  "execution_lease_expires_at": "",
-  "preexisting_changes": [],
-  "plan_checkpoint_git_commit": "6f32b0a73fd957cd4f8961a0a9ab7e2944341a5b",
-  "plan_rebase_history": [],
-  "evidence": [
-    "docs/05-quality/evidence/TASK-038/20260820T202020466Z-9b189d18-required-validation.evidence.json"
-  ],
-  "evidence_history": [
-    "docs/05-quality/evidence/TASK-038/20260820T201542619Z-495efac5-required-validation.evidence.json",
-    "docs/05-quality/evidence/TASK-038/review-round-1.json",
-    "docs/05-quality/evidence/TASK-038/20260820T202020466Z-9b189d18-required-validation.evidence.json",
-    "docs/05-quality/evidence/TASK-038/review-round-2.json"
-  ],
-  "review_history": [
-    {
-      "path": "docs/05-quality/evidence/TASK-038/review-round-1.json",
-      "sha256": "a0634bcd05f62ad4d0d867ef2f3ba84e1dd9150d2bb4dbabcb945cefc8ac4b4b",
-      "result": "passed",
-      "round_id": "RR-72a0521cbfc94f90beedeb517e804c77",
-      "recorded_at": "2026-08-20T20:15:56.734076Z"
-    },
-    {
-      "path": "docs/05-quality/evidence/TASK-038/review-round-2.json",
-      "sha256": "255ca2b36b0fb9823612d301db322cba2bf9b1ec91bf928e3789485901129050",
-      "result": "passed",
-      "round_id": "RR-864a6fe39bbf4ef3a730624aa6497c7e",
-      "recorded_at": "2026-08-20T20:20:38.7342780Z"
-    }
-  ],
-  "review": {
-    "required": false,
-    "reviewer_task_id": "",
-    "status": "not-applicable",
-    "evidence": [],
-    "pass_streak": 0,
-    "subject_sha256": ""
-  },
-  "last_error": "",
-  "created_at": "2026-08-20T20:09:28.3058437Z",
-  "updated_at": "2026-08-20T20:20:38.9907367Z"
+    "$schema":  "schemas/governed-work-state.schema.json",
+    "schema_version":  2,
+    "task_id":  "TASK-038",
+    "work_package":  "WP-006",
+    "contract_sha256":  "8b0bb677c4773a308fd654a54ada2e7ca7dceac0bb4b72bd75d8e5f633cc8d84",
+    "baseline":  "BL-003",
+    "state":  "superseded",
+    "approval_id":  "APR-052",
+    "acceptance_subject_sha256":  "",
+    "acceptance_evidence_sha256":  "",
+    "acceptance_git_commit":  "",
+    "start_git_commit":  "1eb28c4c59dd357b532ba7c35d80da21ad4cbcbf",
+    "execution_lease":  "",
+    "execution_lease_owner":  "",
+    "execution_lease_expires_at":  "",
+    "preexisting_changes":  [
+
+                            ],
+    "plan_checkpoint_git_commit":  "6f32b0a73fd957cd4f8961a0a9ab7e2944341a5b",
+    "plan_rebase_history":  [
+
+                            ],
+    "evidence":  [
+                     "docs/05-quality/evidence/TASK-038/20260820T202020466Z-9b189d18-required-validation.evidence.json"
+                 ],
+    "evidence_history":  [
+                             "docs/05-quality/evidence/TASK-038/20260820T201542619Z-495efac5-required-validation.evidence.json",
+                             "docs/05-quality/evidence/TASK-038/review-round-1.json",
+                             "docs/05-quality/evidence/TASK-038/20260820T202020466Z-9b189d18-required-validation.evidence.json",
+                             "docs/05-quality/evidence/TASK-038/review-round-2.json"
+                         ],
+    "review_history":  [
+                           {
+                               "path":  "docs/05-quality/evidence/TASK-038/review-round-1.json",
+                               "sha256":  "a0634bcd05f62ad4d0d867ef2f3ba84e1dd9150d2bb4dbabcb945cefc8ac4b4b",
+                               "result":  "passed",
+                               "round_id":  "RR-72a0521cbfc94f90beedeb517e804c77",
+                               "recorded_at":  "2026-08-20T20:15:56.734076Z"
+                           },
+                           {
+                               "path":  "docs/05-quality/evidence/TASK-038/review-round-2.json",
+                               "sha256":  "255ca2b36b0fb9823612d301db322cba2bf9b1ec91bf928e3789485901129050",
+                               "result":  "passed",
+                               "round_id":  "RR-864a6fe39bbf4ef3a730624aa6497c7e",
+                               "recorded_at":  "2026-08-20T20:20:38.7342780Z"
+                           }
+                       ],
+    "review":  {
+                   "required":  false,
+                   "reviewer_task_id":  "",
+                   "status":  "not-applicable",
+                   "evidence":  [
+
+                                ],
+                   "pass_streak":  0,
+                   "subject_sha256":  ""
+               },
+    "last_error":  "BL-003 V2 execution history superseded when BL-004 V2.1 baseline activated; evidence retained as historical.",
+    "created_at":  "2026-08-20T20:09:28.3058437Z",
+    "updated_at":  "2026-08-21T00:09:04.2731521Z"
 }
