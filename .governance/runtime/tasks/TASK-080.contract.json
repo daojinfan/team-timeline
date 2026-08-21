@@ -1,0 +1,79 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-080",
+  "work_package": "WP-009",
+  "title": "Independently review unified desktop experience",
+  "goal": "Independently review the exact TASK-079 frontend diff, approved unified information architecture, compatibility boundaries, keyboard flow, and desktop behavior in two complete Standard review rounds.",
+  "baseline": "BL-004",
+  "profile": "Standard",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-080"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "docs/02-product/requirements-v21.md",
+    "docs/03-architecture/overall-design-v21.md",
+    "docs/03-architecture/components/v21-detailed-design.md",
+    "docs/07-decisions/DEC-003.md",
+    "docs/08-changes/CR-003.md",
+    "docs/05-quality/evidence/TASK-079",
+    "docs/05-quality/evidence/TASK-078"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-080"
+  ],
+  "out_of_scope": [
+    "修改产品实现",
+    "修改批准设计或数据接口",
+    "用自动测试代替实际差异与浏览器审查"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-079"
+  ],
+  "acceptance_criteria": [
+    "实际变更清单与TASK-079启动提交后的净差异一致",
+    "从头审核统一六区导航、专题与历史入口、执行与管理复用、焦点和空态",
+    "独立完成1280x720与1366x768浏览器关键流",
+    "Standard两轮内容指纹一致且无未解决finding"
+  ],
+  "validations": [
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface"
+  ],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-21T02:52:57.0246327Z"
+}

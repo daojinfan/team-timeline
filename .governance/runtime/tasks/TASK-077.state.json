@@ -5,7 +5,7 @@
   "work_package": "WP-009",
   "contract_sha256": "1d35e699323547ec5ce6d088cd918e386a325144a7ae3dc68197e86ce7e4268a",
   "baseline": "BL-004",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "APR-069",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -27,14 +27,14 @@
   "review": {
     "required": true,
     "reviewer_task_id": "TASK-078",
-    "status": "passed",
+    "status": "cancelled",
     "evidence": [
-      "docs/05-quality/evidence/TASK-078/review-round-2.json"
+      "docs/05-quality/evidence/TASK-078/review-cancelled-20260821T032500Z.json"
     ],
-    "pass_streak": 2,
-    "subject_sha256": "6cfb8ca55811e79ea60315b8c1363b380504140034aca1c29328ee5176fb96a4"
+    "pass_streak": 0,
+    "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "TASK-079 unifies the user-visible topic and legacy interfaces after TASK-077 review; prior server and compatibility evidence are retained while its frontend delivery fingerprint is replaced.",
   "created_at": "2026-08-21T02:11:02.4748253Z",
-  "updated_at": "2026-08-21T02:33:11.8090782Z"
+  "updated_at": "2026-08-21T03:23:36.6422929Z"
 }

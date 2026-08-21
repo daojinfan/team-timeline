@@ -1,0 +1,55 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-080",
+  "reviewed_task_ids": ["TASK-079"],
+  "work_package": "WP-009",
+  "baseline": "BL-004",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-079",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "统一六区桌面壳、专题/历史计划局部入口、专题对话框和详情抽屉 DOM。"
+    },
+    {
+      "task_id": "TASK-079",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "统一专题工作台、双桌面尺寸及局部滚动的视觉布局。"
+    },
+    {
+      "task_id": "TASK-079",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "统一专题/历史计划状态同步、六区互斥、抽屉返焦、执行/维护复用，并中和普通界面的内部版本术语。"
+    }
+  ],
+  "change_summary": "从 TASK-079 启动提交 0684801 到当前最终提交 6e3103a 的完整实际净差异仍精确为上述三个 public 文件 modified（app.js +111/-47、index.html +33/-34、styles.css +2/-2）。本轮独立重读权威需求、架构、决策、变更包、两个任务契约和三个最终前端文件；round2 通过内容未变化，round1 版本术语修复保持有效，无新 finding。",
+  "scope_checked": [
+    "TASK-079/TASK-080 contracts 与 TASK-080 current lease/state",
+    "REQ-V21-001..016、ARC-OVERALL-003、ARC-COMP-005、DEC-003、CR-003、RPT-V21-DEV-001",
+    "0684801..6e3103a 完整 Git 差异、当前 index.html/styles.css/app.js 全量前端契约",
+    "默认统一专题工作台、六区单一导航、专题/历史计划局部切换和离开历史自动恢复专题",
+    "人工分配、成果验收、执行甘特图/任务/负载、资源维护和全局维护入口",
+    "专题创建、来源小组/制冷机资源、720px 对话框、420px 抽屉、Enter/Escape 与返焦",
+    "普通可见文案版本术语、V1/V2/V3/Schema/模式扫描、空态和嵌套兼容面板",
+    "1280x720 与 1366x768 页面级横向溢出、六 tab 单行和弹层边界",
+    "V1/V2/V3 schema/API/迁移/任务链/多人/成果验收兼容回归及 DOM/ARIA 静态契约"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "npm test：29/29 passed；覆盖 V1 基线、V2 12表/10索引/34接口与迁移、V3 schema/API、专题样品任务链、多人 exact-set、成果验收及跨专题制冷机冲突。",
+    "node --check public/app.js、src/server.js、src/v3/index.js：通过；git diff --check 0684801..6e3103a（三个 public 文件）：通过。",
+    "HTML/ARIA 静态检查：488 IDs/488 unique/0 duplicate；76 aria/for references/0 missing；styles.css 中 @media/@container=0；dialog 元素 19。",
+    "隔离临时 DB Chrome 浏览器 1280x720：首次加载即 topic workbench；document/body scrollWidth=1265<=1280；六 tab 均 top=87/bottom=121；普通可见文本无 V1/V2/V3/Schema/模式术语；单一 workbench 主面板和专题工具栏。",
+    "1280x720 关键流：新建专题成功；v3TopicDialog=720x541.5 且焦点为 v3TopicNameInput；专题详情抽屉=420px，Enter 打开、Escape 关闭并返焦专题行；plans 仅局部切换专题/历史计划，legacy→assignment 自动恢复专题；execution 甘特/任务/负载逐项互斥；acceptance 仅专题主面板；management 进入资源维护且无版本术语；resourceDialog=720x399.2。",
+    "1280x720 资源维护实际文案：制冷机备注均为“默认制冷机”；迁移卡为“数据结构已就绪 · 完整性 ok · 关联异常 0 / 读取完整 JSON 备份”；版本术语扫描为空。",
+    "隔离临时 DB Chrome 浏览器 1366x768：document/body scrollWidth=1351<=1366；六 tab 均 top=87/bottom=121；v3TopicDialog=720x541.5、detail drawer=420x740；Escape/返焦通过；普通可见文本术语扫描为空；browser error/warn 日志为空。",
+    "round2 与本轮最终产品指纹一致：subject_sha256=08dc1a2bbe76c6d9d3c9907dd74a05ca5aaad119a54c76bf14b7eafb1907c6b7；HEAD=6e3103af3fb5e697c4432f29a0d17c903b8959a1；tree=f0b05cf131841176ef0ce4cc1b8023d3c2bed693。",
+    "最终 blobs/SHA-256：public/app.js 9165d4dfb53d232d0bf95f42c80a7e5b46952392 / 8fb19e65fe892ba937b988c59443dfed6d66c3ae9abc03ef125407383dabc17e；public/index.html 9ede6fc2a080be8a9bd360517c7920a33bf33cae / 42253587c565dbc4ce3357047149a8d64b4790729eed82d3f8e25a5d3ec8e043；public/styles.css c208aff548807dfe45aed02331f5d01f82d3b3b3 / f52706e01296316e6f56ad8d7ecb3ac1e274546edca3de5802103e6c9ddcbad6。"
+  ],
+  "created_at": "2026-08-21T03:54:34.9979286Z"
+}

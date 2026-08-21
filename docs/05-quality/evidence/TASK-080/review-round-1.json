@@ -1,0 +1,52 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-080",
+  "reviewed_task_ids": ["TASK-079"],
+  "work_package": "WP-009",
+  "baseline": "BL-004",
+  "result": "changes-required",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-079",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "统一六区桌面壳、专题/历史子页、专题对话框与详情抽屉 DOM。"
+    },
+    {
+      "task_id": "TASK-079",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "统一专题工作台及桌面尺寸的视觉样式与布局。"
+    },
+    {
+      "task_id": "TASK-079",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "统一 topic/legacy 模式、视图互斥、抽屉返焦及 V1/V2/V3 客户端状态同步。"
+    }
+  ],
+  "change_summary": "0684801..64f146b 的实际净差异仅包含上述三个 public 文件；三文件最终内容指纹已记录。统一专题流、历史计划兼容入口、执行/维护复用、720px 对话框、420px 抽屉和双尺寸桌面流已独立复核，但普通资源维护界面仍暴露版本分裂术语，首轮不能通过。",
+  "scope_checked": [
+    "REQ-V21-001..016、ARC-OVERALL-003、ARC-COMP-005、DEC-003、CR-003",
+    "TASK-079 contract 与 0684801..64f146b 实际 Git 差异",
+    "统一 topic 默认工作台、六区导航、专题/历史计划子页及离开历史自动回到专题",
+    "执行甘特图/任务/负载复用、资源维护与全局维护入口",
+    "专题创建、来源小组/制冷机资源、720px 对话框、420px 抽屉 Escape/返焦",
+    "1280x720 与 1366x768 页面级横向溢出、六 tab 对齐、无移动媒体断点",
+    "V1/V2/V3 回归测试、DOM ID/ARIA 引用与 JavaScript 语法"
+  ],
+  "findings": [
+    "阻断（普通界面版本术语）：独立浏览器在资源维护页实际看到“V3 默认制冷机 编辑”（3 个制冷机卡片）、“Schema v2 · ok · 外键异常 0”及“读取 V2 JSON 备份”。这违反 REQ-V21-016 及统一专题桌面壳“普通界面无版本术语”的用户侧约束，向用户暴露 V2/V3/Schema 分裂。最小修复边界是仅中和显示文案而不改变兼容接口：public/app.js 的 renderV2ResourceAdmin 不应原样显示 cryostat.note 内部版本标记，迁移状态改为中性“数据校验 …/读取完整 JSON 备份”（保留 /api/v2/backup 路径）；必要时同步替换 public/index.html 的 schema 占位文案。修复后需重跑本轮双尺寸与版本术语扫描。"
+  ],
+  "validation_evidence": [
+    "npm test: 29/29 passed（含 V1/V2/V3 schema、34 API、迁移、任务链、成员、提交验收与制冷机冲突回归）。",
+    "node --check public/app.js、node --check src/server.js、node --check src/v3/index.js：通过；git diff --check 0684801..64f146b（public 三文件）：通过。",
+    "HTML 静态检查：488 IDs/488 unique/0 duplicate，76 aria/for references/0 missing；无 @media/@container 移动断点。",
+    "隔离临时 DB 浏览器 1280x720：document/body scrollWidth=1265<=1280；六 tab 同行；topic workbench 仅 workbenchView/v3WorkbenchView（嵌套）可见；专题创建成功；v3TopicDialog width=720；详情抽屉 width=420、Escape 后关闭且焦点返回触发专题行；plans topic↔历史计划及 legacy→assignment 自动恢复 topic；execution 甘特/任务/负载互斥切换；资源维护及 resourceDialog width=720。",
+    "隔离临时 DB 浏览器 1366x768：document/body scrollWidth=1351<=1366；六 tab 同行；topic workbench、720px topicDialog、420px detail drawer 与 Escape/返焦均通过；浏览器 error/warn 日志为空。",
+    "TASK-079 final commit=64f146b9acab484a270a9c926560a6f11737c71e；tree=101c4b70f5d1d9affe3fb3572db897718e833720；delivery subject=64f146b9acab484a270a9c926560a6f11737c71e。 blobs/SHA-256: public/index.html 9ede6fc2a080be8a9bd360517c7920a33bf33cae / 42253587c565dbc4ce3357047149a8d64b4790729eed82d3f8e25a5d3ec8e043; public/styles.css c208aff548807dfe45aed02331f5d01f82d3b3b3 / f52706e01296316e6f56ad8d7ecb3ac1e274546edca3de5802103e6c9ddcbad6; public/app.js 44d2d56bde1fed5f2d1dd482a6f50886fd6043e6 / 075981bb0eaaf4525dc70b677eea169e6a95c185777eb18efd50f37da32485b6。"
+  ],
+  "created_at": "2026-08-21T03:36:24.9490563Z"
+}

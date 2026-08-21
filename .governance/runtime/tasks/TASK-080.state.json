@@ -1,0 +1,80 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-080",
+  "work_package": "WP-009",
+  "contract_sha256": "0177521eb335b225bf2c9c1ffbd5500b47e6018d9bfeebfe98640f92d638bc2c",
+  "baseline": "BL-004",
+  "state": "verified",
+  "approval_id": "APR-072",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "6e3103af3fb5e697c4432f29a0d17c903b8959a1",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [],
+  "plan_checkpoint_git_commit": "6e3103af3fb5e697c4432f29a0d17c903b8959a1",
+  "plan_rebase_history": [
+    {
+      "previous_changes": [],
+      "checkpoint_git_commit": "64f146b9acab484a270a9c926560a6f11737c71e",
+      "rebased_at": "2026-08-21T03:24:48.4881375Z"
+    },
+    {
+      "previous_changes": [],
+      "checkpoint_git_commit": "6e3103af3fb5e697c4432f29a0d17c903b8959a1",
+      "rebased_at": "2026-08-21T03:41:15.7825429Z"
+    }
+  ],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-080/20260821T035552695Z-88a15d8b-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-080/20260821T035552695Z-88a15d8b-app-syntax.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-080/20260821T033837209Z-3c869189-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-080/20260821T033837209Z-3c869189-app-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-080/review-round-1.json",
+    "docs/05-quality/evidence/TASK-080/20260821T034907945Z-558e3691-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-080/20260821T034907945Z-558e3691-app-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-080/review-round-2.json",
+    "docs/05-quality/evidence/TASK-080/20260821T035552695Z-88a15d8b-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-080/20260821T035552695Z-88a15d8b-app-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-080/review-round-3.json"
+  ],
+  "review_history": [
+    {
+      "path": "docs/05-quality/evidence/TASK-080/review-round-1.json",
+      "sha256": "09d02d25ab58eb1e8cf4512f045c7d6300bbfa3cf7423b31bf429a1e4c8dcc0b",
+      "result": "changes-required",
+      "round_id": "RR-8c00b133c14948b4bd4db056a71e9444",
+      "recorded_at": "2026-08-21T03:38:44.6862404Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-080/review-round-2.json",
+      "sha256": "33f97b19223600c45d539680aea4d4b3b71c71e4981cc200432e6009ff677305",
+      "result": "passed",
+      "round_id": "RR-5e222e665b8a4b24a3bd97e6c384996e",
+      "recorded_at": "2026-08-21T03:49:22.1874595Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-080/review-round-3.json",
+      "sha256": "ad47629aa58053c8d9a4ae49454895cea95bc48543d9d76cfb32b588dc86ed21",
+      "result": "passed",
+      "round_id": "RR-0b734f8b34c54f11900db4894f14b5ba",
+      "recorded_at": "2026-08-21T03:56:06.1777282Z"
+    }
+  ],
+  "review": {
+    "required": false,
+    "reviewer_task_id": "",
+    "status": "not-applicable",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
+  },
+  "last_error": "",
+  "created_at": "2026-08-21T02:52:57.0246327Z",
+  "updated_at": "2026-08-21T03:56:06.4268066Z"
+}

@@ -1,0 +1,84 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-079",
+  "work_package": "WP-009",
+  "title": "Unify topic and legacy workflows into one desktop experience",
+  "goal": "Remove the user-visible version mode split and present topic planning, samples, continuous tasks, human assignment, gantt execution, acceptance, resources, and legacy plan compatibility in one six-area desktop shell without changing V1/V2/V3 APIs or data.",
+  "baseline": "BL-004",
+  "profile": "Standard",
+  "role": "INTEGRATOR",
+  "allowed_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "docs/02-product/requirements-v21.md",
+    "docs/03-architecture/overall-design-v21.md",
+    "docs/03-architecture/components/v21-detailed-design.md",
+    "docs/07-decisions/DEC-003.md",
+    "docs/08-changes/CR-003.md",
+    "docs/05-quality/evidence/TASK-078"
+  ],
+  "write_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js"
+  ],
+  "out_of_scope": [
+    "修改V1/V2/V3数据库、schema、API或迁移",
+    "AI自动建任务或自动分配",
+    "手机端",
+    "删除历史数据兼容入口"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "不再显示版本或模式切换，启动即进入统一专题工作台",
+    "六个顶层区域使用单一导航且每次仅一个工具栏和主面板可见",
+    "专题规划同时提供专题概览、样品池、任务链和历史计划兼容入口",
+    "执行中心可访问连续任务上下文、甘特图、任务列表和负载",
+    "管理区可访问资源维护、操作日志、数据维护和历史计划迁移",
+    "V1/V2/V3数据与API保持不变，人工分配、成果验收、焦点与错误保留无回归",
+    "1280x720与1366x768无页面横向溢出"
+  ],
+  "validations": [
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-21T02:52:56.7513921Z"
+}

@@ -1,0 +1,27 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-078",
+  "reviewed_task_ids": [
+    "TASK-077"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-004",
+  "result": "cancelled",
+  "diff_checked": true,
+  "changes": [],
+  "change_summary": "TASK-077 已由项目经理通过治理工具合法标记为 superseded。TASK-079 统一用户侧专题与历史界面，替代 TASK-077 的用户侧前端交付指纹；TASK-077 的历史服务端代码、V1/V2 兼容验证及两轮独立审核证据均保留。本证据仅取消 TASK-078 对已被替代交付的审核资格，不撤销、改写或否定历史审核结论，不声明任何新的产品文件变更。",
+  "scope_checked": [
+    "TASK-077.state.json：state=superseded，last_error 明确说明 TASK-079 替代用户侧前端指纹，review 历史 pass_streak=2 的历史记录保留。",
+    "TASK-078.state.json 与契约：ROLE=REVIEWER，唯一审核写入目录为 docs/05-quality/evidence/TASK-078；round1/round2 通过证据和验证证据保持不可变。",
+    "TASK-079 的替代关系与当前治理状态：取消原因限定为用户侧统一界面替代，不扩展为对服务端、V1/V2 兼容或历史验证的否定。",
+    "本取消记录的 changes=[]：当前没有由 TASK-078 产生的新增/修改/删除/重命名产品交付，旧 TASK-077 交付与审核证据均未修改。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "新增 JSON 通过 ConvertFrom-Json 与 schemas/review-evidence.schema.json 校验。",
+    "已核对 TASK-077 superseded 状态、TASK-079 替代说明、TASK-078 round1/round2 历史证据路径及不可变内容；本次不执行 RecordReview、不修改治理状态。",
+    "git diff --check 仅针对新增取消证据通过；产品、TASK 状态、台账及其他治理文件未写入。"
+  ],
+  "created_at": "2026-08-21T03:25:00.000Z"
+}
