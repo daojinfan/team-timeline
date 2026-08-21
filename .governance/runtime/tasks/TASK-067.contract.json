@@ -1,0 +1,94 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-067",
+  "work_package": "WP-010",
+  "title": "Recover and integrate V2.1 topic-sample-chain delivery",
+  "goal": "Integrate the recovered V3 server, desktop shell, and client behavior under one auditable task while preserving V1/V2 and the approved V2.1 scope.",
+  "baseline": "BL-004",
+  "profile": "Release",
+  "role": "INTEGRATOR",
+  "allowed_paths": [
+    "src/server.js",
+    "src/v3",
+    "tests/v3-api.test.js",
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js"
+  ],
+  "read_paths": [
+    "src/server.js",
+    "src/v3",
+    "tests",
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "docs/02-product/requirements-v21.md",
+    "docs/03-architecture/overall-design-v21.md",
+    "docs/03-architecture/components/v21-detailed-design.md",
+    "docs/07-decisions/DEC-003.md",
+    "docs/08-changes/CR-003.md"
+  ],
+  "write_paths": [
+    "src/server.js",
+    "src/v3",
+    "tests/v3-api.test.js",
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js"
+  ],
+  "out_of_scope": [
+    "修改 V2 canonical schema/API/checksum",
+    "AI 自动建任务",
+    "自动分配",
+    "手机端",
+    "登录",
+    "云同步"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "CR-003",
+    "QUAL-TRACE-V21-001",
+    "RPT-V21-DEV-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "V3 schema migration is additive, idempotent, and backed up",
+    "V3 exact endpoint and error contracts are tested",
+    "V1/V2 compatibility and desktop shell remain intact",
+    "Topic, sample, linear task, multi-member effort, ETA, cryostat, submission and acceptance flows work without AI or automatic assignment"
+  ],
+  "validations": [
+    {
+      "id": "v21-tests",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "overall_architecture",
+    "public_interface",
+    "data_model_or_migration",
+    "scope"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-21T00:45:34.6396759Z",
+  "release_controls": {
+    "target_environment": "本地 Windows Node.js SQLite 服务与临时浏览器/临时数据库",
+    "execution_window": "V2.1 集成开发与提交前验证",
+    "rollback_plan": "停止服务，保留失败库，恢复迁移前备份并回退集成提交",
+    "observation_metrics": "npm test、node check、schema checksum、foreign_key_check、quick_check、V1/V2 golden、DOM/ARIA/双尺寸",
+    "stop_conditions": "V1/V2 checksum或API变化、迁移失败、布局越界、未批准的自动建任务或自动分配",
+    "post_release_owner": "项目负责人"
+  }
+}

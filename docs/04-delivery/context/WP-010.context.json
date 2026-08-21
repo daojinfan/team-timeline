@@ -1,0 +1,72 @@
+{
+  "$schema": "schemas/work-package-context.schema.json",
+  "schema_version": 1,
+  "work_package": "WP-010",
+  "baseline": "BL-004",
+  "scope": [
+    "src/server.js",
+    "src/v3",
+    "tests/v3-api.test.js",
+    "tests",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/07-decisions",
+    "docs/08-changes",
+    "docs/05-quality",
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "恢复并集成 V2.1 服务端、桌面壳与客户端专题工作流",
+    "保持 V1/V2 兼容，不引入 AI/自动分配/手机端"
+  ],
+  "required_documents": [
+    {
+      "doc_id": "REQ-V21-001",
+      "mode": "full"
+    },
+    {
+      "doc_id": "ARC-OVERALL-003",
+      "mode": "full"
+    },
+    {
+      "doc_id": "ARC-COMP-005",
+      "mode": "full"
+    },
+    {
+      "doc_id": "DEC-003",
+      "mode": "full"
+    },
+    {
+      "doc_id": "CR-003",
+      "mode": "full"
+    },
+    {
+      "doc_id": "QUAL-TRACE-V21-001",
+      "mode": "full"
+    },
+    {
+      "doc_id": "RPT-V21-DEV-001",
+      "mode": "full"
+    },
+    {
+      "doc_id": "REQ-BASE-001",
+      "mode": "summary"
+    },
+    {
+      "doc_id": "ARC-OVERALL-001",
+      "mode": "summary"
+    },
+    {
+      "doc_id": "DEL-WORK-001",
+      "mode": "summary"
+    }
+  ],
+  "decisions": [
+    "DEC-003"
+  ],
+  "validation": [
+    "npm test",
+    "node --check src/server.js src/v3/index.js public/app.js",
+    "DOM/ARIA/双桌面分辨率"
+  ]
+}

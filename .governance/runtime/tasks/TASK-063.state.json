@@ -5,7 +5,7 @@
   "work_package": "WP-009",
   "contract_sha256": "5ad6cb1730ab8c8dc24688aa34326b31f7c4da366edd19e652a0e51b6f773351",
   "baseline": "BL-004",
-  "state": "planned",
+  "state": "superseded",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -14,30 +14,36 @@
   "execution_lease": "",
   "execution_lease_owner": "",
   "execution_lease_expires_at": "",
-  "preexisting_changes": [
-    "docs/00-index/BASELINE-REGISTRY.md",
-    "docs/00-index/CURRENT-STATE.md",
-    "docs/00-index/DOC-REGISTRY.md",
-    "docs/00-index/PROJECT.md",
-    "docs/04-delivery/WORK-PACKAGES.md",
-    "docs/04-delivery/context/WP-006.context.json",
-    "docs/04-delivery/context/WP-007.context.json",
-    "docs/04-delivery/context/WP-008.context.json",
-    "governance.json",
-    ".governance/baseline-activation.lock",
-    "baselines/BL-004/activation.json",
-    "baselines/BL-004/manifest.json",
-    "docs/02-product/requirements-v21.md",
-    "docs/03-architecture/components/v21-detailed-design.md",
-    "docs/03-architecture/overall-design-v21.md",
-    "docs/04-delivery/context/WP-009.context.json",
-    "docs/05-quality/traceability-v21.md",
-    "docs/07-decisions/DEC-003.md",
-    "docs/08-changes/CR-003.md",
-    "docs/09-reports/V21-development-plan.md"
+  "preexisting_changes": [],
+  "plan_checkpoint_git_commit": "e1638f5c89f3be2efe66a481c6d09ebee7aa0c9b",
+  "plan_rebase_history": [
+    {
+      "previous_changes": [
+        "docs/00-index/BASELINE-REGISTRY.md",
+        "docs/00-index/CURRENT-STATE.md",
+        "docs/00-index/DOC-REGISTRY.md",
+        "docs/00-index/PROJECT.md",
+        "docs/04-delivery/WORK-PACKAGES.md",
+        "docs/04-delivery/context/WP-006.context.json",
+        "docs/04-delivery/context/WP-007.context.json",
+        "docs/04-delivery/context/WP-008.context.json",
+        "governance.json",
+        ".governance/baseline-activation.lock",
+        "baselines/BL-004/activation.json",
+        "baselines/BL-004/manifest.json",
+        "docs/02-product/requirements-v21.md",
+        "docs/03-architecture/components/v21-detailed-design.md",
+        "docs/03-architecture/overall-design-v21.md",
+        "docs/04-delivery/context/WP-009.context.json",
+        "docs/05-quality/traceability-v21.md",
+        "docs/07-decisions/DEC-003.md",
+        "docs/08-changes/CR-003.md",
+        "docs/09-reports/V21-development-plan.md"
+      ],
+      "checkpoint_git_commit": "e1638f5c89f3be2efe66a481c6d09ebee7aa0c9b",
+      "rebased_at": "2026-08-21T00:24:26.3799017Z"
+    }
   ],
-  "plan_checkpoint_git_commit": "c352de7cb2597a94d44b2ed305113467a34d9c64",
-  "plan_rebase_history": [],
   "evidence": [],
   "evidence_history": [],
   "review_history": [],
@@ -49,7 +55,7 @@
     "pass_streak": 0,
     "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "Dependency tasks replaced by consolidated V2.1 integration task.",
   "created_at": "2026-08-21T00:19:25.6260642Z",
-  "updated_at": "2026-08-21T00:22:10.7998442Z"
+  "updated_at": "2026-08-21T00:42:07.4836297Z"
 }
