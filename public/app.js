@@ -1166,6 +1166,22 @@ function openTaskEditor(id) {
   $("#editDialog").showModal();
 }
 
+async function openExecutionTaskEditor(id, trigger) {
+  const task = state.tasks.find((item) => item.id === Number(id));
+  const v3Task = executionV3Task(task);
+  if (!v3Task) return openTaskEditor(id);
+  const topicId = Number(v3Task.topic_id);
+  if (!Number.isFinite(topicId)) return openTaskEditor(id);
+  try {
+    if (!v3State.topic || Number(v3State.topic.id) !== topicId) await v3LoadTopic(topicId);
+    setV2View("execution");
+    v3SetView("execution");
+    v3OpenTaskDetail(v3Task.id, trigger);
+  } catch (error) {
+    showToast(v3ErrorText(error), { type: "error" });
+  }
+}
+
 function openAssignmentEditor(id) {
   const assignment = state.assignments.find((item) => item.id === Number(id));
   if (!assignment) return;
@@ -1873,7 +1889,10 @@ function bindEvents() {
     }
 
     if (action("[data-edit-member]")) return openMemberEditor(action("[data-edit-member]").dataset.editMember);
-    if (action("[data-edit-task]")) return openTaskEditor(action("[data-edit-task]").dataset.editTask);
+    if (action("[data-edit-task]")) {
+      const trigger = action("[data-edit-task]");
+      return openExecutionTaskEditor(trigger.dataset.editTask, trigger);
+    }
     if (action("[data-edit-assignment]")) return openAssignmentEditor(action("[data-edit-assignment]").dataset.editAssignment);
     if (action("[data-select-assignment]")) {
       const trigger = action("[data-select-assignment]");
