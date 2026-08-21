@@ -2933,6 +2933,19 @@ menu {
   font-size: 12px;
 }
 
+.v3-inline-editor {
+  display: grid;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 10px;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  background: var(--soft);
+}
+
+.v3-inline-editor .form-actions { align-items: center; }
+.v3-preview-result { margin-top: 8px; }
+
 .v3-task-detail-facts div {
   min-width: 0;
   padding: 8px;
