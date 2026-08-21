@@ -36,8 +36,8 @@ review_policy: independent-required
 
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| WP-011 | TASK-076 | pending | REVIEWER | Independently review final V2.1 repaired delivery | BL-004 | pending | TASK-075 | pending | docs/05-quality/evidence/TASK-076 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
-| WP-011 | TASK-075 | pending | INTEGRATOR | Lock final V2.1 repaired delivery | BL-004 | pending | n/a | pending | src/server.js, src/v3, tests/v3-api.test.js, public/index.html, public/styles.css, public/app.js | required-validation | TASK-076 | pending | pending | Plan 自动登记，等待调度 |
+| WP-011 | TASK-076 | pending | REVIEWER | Independently review final V2.1 repaired delivery | BL-004 | pending | TASK-075 | replaced | docs/05-quality/evidence/TASK-076 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-011 | TASK-075 | pending | INTEGRATOR | Lock final V2.1 repaired delivery | BL-004 | pending | n/a | replaced | src/server.js, src/v3, tests/v3-api.test.js, public/index.html, public/styles.css, public/app.js | required-validation | TASK-076 | pending | pending | Plan 自动登记，等待调度 |
 | WP-010 | TASK-072 | pending | REVIEWER | Independently review final V2.1 repaired delivery | BL-004 | pending | TASK-071, TASK-070 | replaced | docs/05-quality/evidence/TASK-072 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-010 | TASK-071 | pending | INTEGRATOR | Finalize reviewed V2.1 topic-sample-chain delivery | BL-004 | pending | TASK-069, TASK-070 | replaced | src/server.js, src/v3, tests/v3-api.test.js, public/index.html, public/styles.css, public/app.js | required-validation | TASK-072 | pending | pending | Plan 自动登记，等待调度 |
 | WP-009 | TASK-070 | pending | REVIEWER | Independently review recovered V2.1 integrated delivery | BL-004 | pending | TASK-069 | replaced | docs/05-quality/evidence/TASK-070 | review-tests | n/a | n/a | n/a | Plan 自动登记，等待调度 |

@@ -5,7 +5,7 @@
   "work_package": "WP-011",
   "contract_sha256": "8a7ea4e7434b2c23d43a88140606c3f5276dd04f7a1167a2d5e5eb117f11f71b",
   "baseline": "BL-004",
-  "state": "planned",
+  "state": "superseded",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -37,7 +37,7 @@
     "pass_streak": 0,
     "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "最终修复任务改回批准的WP-009活动路由，当前计划保留为历史治理记录。",
   "created_at": "2026-08-21T02:05:09.6501178Z",
-  "updated_at": "2026-08-21T02:05:09.6501178Z"
+  "updated_at": "2026-08-21T02:09:47.4633742Z"
 }
