@@ -27,10 +27,8 @@
   "review": {
     "required": true,
     "reviewer_task_id": "TASK-032",
-    "status": "changes-required",
-    "evidence": [
-      "docs/05-quality/evidence/TASK-032/review-round-1.json"
-    ],
+    "status": "cancelled",
+    "evidence": [],
     "pass_streak": 0,
     "subject_sha256": ""
   },

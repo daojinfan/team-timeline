@@ -1,0 +1,63 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-070",
+  "reviewed_task_ids": [
+    "TASK-069"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-004",
+  "result": "changes-required",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-069",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "修复 V3 模式切换时隐藏旧版面板，避免 legacy/topic 往返后同时显示两套工作区。"
+    },
+    {
+      "task_id": "TASK-069",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "更新客户端脚本缓存版本至 v27。"
+    },
+    {
+      "task_id": "TASK-069",
+      "path": "src/v3/index.js",
+      "change_type": "modified",
+      "summary": "增加制冷机预览的跨专题日期冲突、选择任务版本和 preview token 绑定。"
+    },
+    {
+      "task_id": "TASK-069",
+      "path": "tests/v3-api.test.js",
+      "change_type": "modified",
+      "summary": "增加制冷机跨专题冲突预览与确认回归测试。"
+    }
+  ],
+  "change_summary": "TASK-070 启动提交 6b92f33644c0702c8c25afee594e523fad883c15 到最终交付提交 bc74f456f1cec9575dd324fc600919c970909d34 的实际产品差异精确为上述四个 modified 文件；最终 HEAD 与交付提交一致，subject='Add V2.1 cryostat conflict preview'。TASK-069 的完整集成范围仍为 public/app.js、public/index.html、public/styles.css、src/server.js、src/v3/index.js、tests/v3-api.test.js，未发现额外产品路径写入。当前四文件 blob/SHA-256：public/app.js 0baa1b68a56f7547ef0b46599670ee6db24f8c77/a9bf6cddb8e887e775e27beec58ffe7100e6f06befbf02d939d28bb47e25cb86；public/index.html b601b283430e8a2fe23b1785bd60109469963569/0df33c56cf8e518cbdad1cb14363bc99a3614b4faf0f45fd9360cd1e2b3e7d08；src/v3/index.js abb4415d4130bf8cb08d958b42385d770c1a208f/9f4b2303bc77bd70d9a7d6a90d6bb6db9f492d9a4f8ecb26ec8e0331bc7c095a；tests/v3-api.test.js 1a4bfa1b20c6d6394d330383e71217c8b1fdb575/470454a769ba0ec28df0aa6851c699a332b159f26f48b8080d890487e62e6846。",
+  "scope_checked": [
+    "从头读取 BL-004 的 REQ-V21、ARC-OVERALL-003、ARC-COMP-005、DEC-003、CR-003、V1 基线兼容文档，TASK-069/TASK-070 Release 契约与状态及 TASK-069 验证证据。",
+    "核对 6b92f336..bc74f456 的完整实际产品差异、当前 src/server.js、src/v3、tests/v3-api.test.js、public/index.html、public/styles.css、public/app.js；当前产品工作树无未提交产品差异。",
+    "独立复核 V3 SQLite schema/API/migration、V1/V2 兼容、preview-confirm token/version/ack、任务/样品/成员关系、成果提交与人工验收、归档/lineage、34 路由及现有回归测试。",
+    "独立复核桌面六区 DOM、ARIA 引用、V1 ID 保留、720px dialog/420px drawer、1280x720 与 1366x768 页面边界、无移动媒体查询和模式隔离。",
+    "使用临时 SQLite 与临时端口完成浏览器/API 场景，未访问或修改 data/team_tasks.sqlite；发现的阻断项按事实记录于 findings。"
+  ],
+  "findings": [
+    "[P1][六区导航] public/app.js 的 bindV3Events 未将 #v2Nav [data-v2-view] 在 topic 模式映射到 v3SetView；独立浏览器在 V3 Topic 模式点击六个顶层 tab 后，唯一可见 panel/toolbar 始终为 v3WorkbenchView/v3WorkbenchToolbar，plans、assignment、execution、acceptance、management 均不可达，违反六区可操作性契约。最小修复：在 topic 模式绑定同一六 tab 到 v3SetView，并保留 legacy 模式的 setV2View。",
+    "[P1][专题详情抽屉] #v3TopicDetailPane 在 index.html 初始 hidden，客户端点击 [data-v3-open-topic] 只执行 v3LoadTopic 与 v3SetView(\"plans\")，没有取消 hidden、填充详情、设置 is-open 或返焦；临时库浏览器实证 pane 仍 hidden=true、display:none、width=0，420px 按需抽屉契约未实现。最小修复：从专题行打开并填充该 pane，设置 420px 可见状态、唯一焦点与来源视图返回。",
+    "[P1][必做任务语义] index.html 提供 #v3TaskRequired，但 v3TaskBody() 未发送 is_required，v3_topic_tasks DDL 没有对应字段或约束，v3TopicStatus() 以所有任务而非必做任务计算完成且没有专题验收完成状态；无法实现“全部必做任务验收通过”的冻结语义，也存在 UI 勾选与 API 真值不一致。最小修复：增加必做字段/API 响应与专题状态机，并补 required-only 验收测试。",
+    "[P1][任务链更新] PUT /api/v3/topic-tasks/:task_id 的事务只更新任务、样品和成员 effort，未替换 v3_task_dependencies；独立临时 API 创建 task2→task1 后将 predecessor_task_id 置 null 并确认成功，依赖行仍存在，编辑/重排无法保持线性任务链真值。最小修复：在同一确认事务中删除当前 successor 依赖并按 normalized predecessor 重建，补增删链回归。",
+    "[P1][更新自冲突] taskConflicts() 的 V1 成员日期查询使用 V3 existingId 与 V1 tasks.id 比较；同一 V3 任务更新会把自己的 V1 assignment 当作 MEMBER_DATE_OVERLAP。独立临时 API 对同一任务仅改日期时返回自身 task_id/member_id/date 冲突。最小修复：传递并排除现有关联的 V1 task_id（同时保留 V3 排除），补无变更更新回归。"
+  ],
+  "validation_evidence": [
+    "npm test：29 tests、29 pass、0 fail；node --check src/server.js、src/v3/index.js、public/app.js 均 exit 0。",
+    "git diff --check 6b92f33644c0702c8c25afee594e523fad883c15..bc74f456f1cec9575dd324fc600919c970909d34（产品路径）exit 0；最终 HEAD=bc74f456f1cec9575dd324fc600919c970909d34，tree=aa3d7ee05c5775e442d425fc29132442b4b3bc33。",
+    "静态 DOM/ARIA：488 IDs、488 unique、duplicate groups=0；aria-controls/aria-labelledby/for 缺失引用=0；dialog open/close=19/19；当前 CSS @media/@container=0；起始提交 ID 488 与当前 ID 488，缺失起始 ID=0。",
+    "双尺寸浏览器（临时数据库）：1280x720 document/body scrollWidth=1280，六 tabs top=87,bottom=121，V3 dialog width=720、top=89.25、bottom=630.75，V3 drawer 初始 hidden；1366x768 scrollWidth=1366，dialog width=720、top=113.25、bottom=654.75，六 tabs 同行无页面横溢出。",
+    "临时浏览器模式隔离实证：legacy 往返后 V3 panels/toolbars 均隐藏且仅一个 V2 panel/toolbar 可见；但反向 V3 六 tab 点击结果始终为 workbench，详见 finding。",
+    "临时 API 实证：task2 predecessor_task_id 从 task1 更新为 null 后响应 200 但 v3_task_dependencies 仍保留旧行；同一 V3 任务更新日期返回自身 V1 task_id 的 MEMBER_DATE_OVERLAP；两项均可重复。",
+    "静态契约审查：V3 endpoint/schema 与既有 V1/V2 API/CSV/JSON 兼容测试通过，未发现 AI、自动分配、自动验收、手机端媒体查询或真实数据库写入。"
+  ],
+  "created_at": "2026-08-21T02:05:00.000Z"
+}

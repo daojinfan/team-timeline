@@ -5,23 +5,35 @@
   "work_package": "WP-009",
   "contract_sha256": "2d9b49a695300111926b2d0ac98d03c9739e70e9be38749f29f09edf01663681",
   "baseline": "BL-004",
-  "state": "planned",
-  "approval_id": "",
+  "state": "superseded",
+  "approval_id": "APR-063",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
   "acceptance_git_commit": "",
-  "start_git_commit": "",
+  "start_git_commit": "085757bfb741a663d24e89f6e3c8db4daa8fbe89",
   "execution_lease": "",
   "execution_lease_owner": "",
   "execution_lease_expires_at": "",
-  "preexisting_changes": [
-    "docs/04-delivery/WORK-PACKAGES.md",
-    "docs/04-delivery/context/WP-010.context.json"
+  "preexisting_changes": [],
+  "plan_checkpoint_git_commit": "085757bfb741a663d24e89f6e3c8db4daa8fbe89",
+  "plan_rebase_history": [
+    {
+      "previous_changes": [
+        "docs/04-delivery/WORK-PACKAGES.md",
+        "docs/04-delivery/context/WP-010.context.json"
+      ],
+      "checkpoint_git_commit": "085757bfb741a663d24e89f6e3c8db4daa8fbe89",
+      "rebased_at": "2026-08-21T00:51:09.0630455Z"
+    }
   ],
-  "plan_checkpoint_git_commit": "f6dbdfed61de8e54f63047b0468f4194bd4cb29f",
-  "plan_rebase_history": [],
-  "evidence": [],
-  "evidence_history": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-069/20260821T012654094Z-d9addc60-v21-tests.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-069/20260821T012148278Z-32b3caaa-v21-tests.evidence.json",
+    "docs/05-quality/evidence/TASK-069/20260821T012541801Z-283368a6-v21-tests.evidence.json",
+    "docs/05-quality/evidence/TASK-069/20260821T012654094Z-d9addc60-v21-tests.evidence.json"
+  ],
   "review_history": [],
   "review": {
     "required": true,
@@ -31,7 +43,7 @@
     "pass_streak": 0,
     "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "独立审核发现五项阻断后已修复，原TASK-069验证快照不再代表最终内容；用户已指示直接执行，由新的集成交付任务完整验证与审核。",
   "created_at": "2026-08-21T00:50:23.5506Z",
-  "updated_at": "2026-08-21T00:50:48.8050540Z"
+  "updated_at": "2026-08-21T01:57:58.3876812Z"
 }

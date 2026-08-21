@@ -28,6 +28,8 @@ last_reviewed: 2026-08-20
 | WP-007 | 实现 V2 六区桌面外壳与样式 | BL-003 | WP-002 | DOM 契约、无溢出和双分辨率浏览器双轮审核 | IMPLEMENTER |
 | WP-008 | 集成 V2 客户端交互与完整人工闭环 | BL-003 | WP-006、WP-007 | 关键交互、错误路径、焦点、V1 回归与双轮审核 | INTEGRATOR |
 | WP-009 | 实现 V2.1 专题、样品池与连续任务链 | BL-004 | WP-006、WP-007、WP-008 | schema 3、/api/v3、专题桌面闭环、V1/V2 兼容与 Release 双轮审核 | IMPLEMENTER |
+| WP-010 | 修复 V2.1 审核阻断并完成最终发布 | BL-004 | WP-009 历史交付 | 五项阻断闭环、V1/V2 兼容、双分辨率与 Release 双轮审核 | PM |
+| WP-011 | 锁定 V2.1 最终修复差异并完成发布审核 | BL-004 | WP-010 历史计划 | 五项阻断闭环、V1/V2 兼容、双分辨率与 Release 双轮审核 | PM |
 
 执行状态统一记录在 `WORK-STATUS.md`，避免日常状态变化改写已经批准的工作包契约。
 每个活动工作包还必须有 `context/WP-NNN.context.json`，声明所需权威文档、读取模式、适用基线和验证。上下文路由随基线锁定；已经 `accepted` 或 `superseded` 的历史工作包可以保留旧路由。生成的 `.governance/context/*.generated.md` 只是临时输入，不是项目事实。
@@ -118,4 +120,24 @@ last_reviewed: 2026-08-20
 - 依赖：BL-004、REQ-V21-001、ARC-OVERALL-003、ARC-COMP-005、DEC-003、CR-003。
 - 验收：schema 3 增量迁移、V3 API exact set、V1/V2 golden 兼容、专题/样品/任务链/多人/ETA/制冷机/成果验收闭环、1280×720 与 1366×768 双分辨率；实现任务各自独立 Reviewer 连续两轮通过。
 - 回滚：停止服务，保留失败库，使用迁移前 SQLite 备份恢复；代码按交付提交回退。
+
+## WP-010 契约
+
+- 目标：在 WP-009 的 V2.1 专题、样品池、连续任务链实现上，完成独立审核发现的导航、抽屉、必做任务、依赖更新和自冲突修复，并完成最终 Release 审核。
+- 允许修改：`src/server.js`、`src/v3/`、`tests/`、`public/index.html`、`public/styles.css`、`public/app.js`。
+- 范围外：修改 V2 canonical 表/API/checksum、AI 自动建任务、自动分配、手机端、登录、云同步和二进制附件。
+- 依赖：BL-004、REQ-V21-001、ARC-OVERALL-003、ARC-COMP-005、DEC-003、CR-003；WP-009 的实现与审核历史作为修复输入。
+- 验收：五项独立审核阻断全部闭环；V3 schema/API、V1/V2 兼容、专题/样品/任务链/多人/ETA/制冷机/成果验收、六区桌面交互及 1280×720/1366×768 双分辨率全部通过；独立 Reviewer 连续两轮通过。
+- 回滚：停止服务，保留失败库，使用迁移前 SQLite 备份恢复；代码按最终交付提交回退。
+- 任务档位：Release。
+
+## WP-011 契约
+
+- 目标：锁定当前 V2.1 最终修复差异，完成完整验证、独立审核和提交。
+- 允许修改：`src/server.js`、`src/v3/`、`tests/`、`public/index.html`、`public/styles.css`、`public/app.js`。
+- 范围外：修改 V2 canonical 表/API/checksum、AI 自动建任务、自动分配、手机端、登录、云同步和二进制附件。
+- 依赖：BL-004、V2.1 已批准设计；WP-010 仅作为历史计划记录。
+- 验收：五项审核阻断全部闭环，V1/V2/V3、六区桌面交互、双分辨率与 Release 双轮审核通过。
+- 回滚：停止服务，保留失败库，恢复迁移前 SQLite 备份并回退最终提交。
+- 任务档位：Release。
 - 任务档位：Release。
