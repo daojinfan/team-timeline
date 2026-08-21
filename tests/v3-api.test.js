@@ -53,6 +53,21 @@ test("topic, sample, task-chain, assignment and exact-set submission flow", asyn
     const preview = (await app.request(`/api/v3/topics/${topic.id}/tasks/preview`, { method: "POST", body: taskInput })).payload.data;
     const task = (await app.request(`/api/v3/topics/${topic.id}/tasks`, { method: "POST", body: { ...preview.normalized_input, preview_token: preview.preview_token, ack: true, actor: "本地用户" }, expected: [201] })).payload.data;
     assert.equal(task.samples.length, 1);
+    assert.equal(task.is_required, 1);
+    const selfPreview = (await app.request(`/api/v3/topic-tasks/${task.id}/preview`, { method: "POST", body: { ...taskInput, expected_version: task.version } })).payload.data;
+    assert.equal(selfPreview.conflicts.some((item) => item.type === "MEMBER_DATE_OVERLAP" && item.topic_id == null && item.task_id === task.task_id), false);
+
+    const optionalInput = { ...taskInput, title: "可选复测", position: 1, is_required: 0 };
+    const optionalPreview = (await app.request(`/api/v3/topics/${topic.id}/tasks/preview`, { method: "POST", body: optionalInput })).payload.data;
+    const optionalTask = (await app.request(`/api/v3/topics/${topic.id}/tasks`, { method: "POST", body: { ...optionalPreview.normalized_input, preview_token: optionalPreview.preview_token, ack: true, actor: "本地用户" }, expected: [201] })).payload.data;
+    assert.equal(optionalTask.is_required, 0);
+    const dependencyInput = { ...optionalInput, predecessor_task_id: task.id, expected_version: optionalTask.version };
+    const dependencyPreview = (await app.request(`/api/v3/topic-tasks/${optionalTask.id}/preview`, { method: "POST", body: dependencyInput })).payload.data;
+    const updatedOptionalTask = (await app.request(`/api/v3/topic-tasks/${optionalTask.id}`, { method: "PUT", body: { ...dependencyInput, preview_token: dependencyPreview.preview_token, ack: true, actor: "本地用户" } })).payload.data;
+    assert.equal(updatedOptionalTask.is_required, 0);
+    const dependency = app.database.prepare("SELECT predecessor_task_id,successor_task_id FROM v3_task_dependencies WHERE successor_task_id=?").get(optionalTask.id);
+    assert.equal(dependency.predecessor_task_id, task.id);
+    assert.equal(dependency.successor_task_id, optionalTask.id);
     const template = (await app.request(`/api/v3/topics/${topic.id}/acceptance-template`, { method: "PUT", body: { name: "默认", items: [{ position: 0, label: "检查" }] } })).payload.data;
     const item = template.items[0];
     const submission = (await app.request(`/api/v3/tasks/${task.id}/submissions`, { method: "POST", body: { sample_ids: [sample.id], description: "结果", resource_url: "file:///result.txt", submitted_by: "本地用户", template_item_ids: [{ id: item.id, checked: true }] }, expected: [201] })).payload.data;
