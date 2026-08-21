@@ -2344,10 +2344,13 @@ function renderV2ResourceAdmin() {
   const cryostat = $("#cryostatAdmin");
   if (cryostat) cryostat.innerHTML = `
     <span class="eyebrow">设备资源</span><h2>制冷机</h2><p>停用不会删除既有计划历史。</p>
-    <div class="v2-detail-list">${v2State.cryostats.map((item) => `<div><strong>${escapeHtml(item.name)}</strong> · ${item.status === "active" ? "启用" : "停用"}<br><span>${escapeHtml(item.note || "无备注")}</span> <button class="small-button" type="button" data-edit-resource="cryostat" data-resource-id="${item.id}">编辑</button></div>`).join("") || "<div>尚未维护制冷机</div>"}</div>
+    <div class="v2-detail-list">${v2State.cryostats.map((item) => {
+      const visibleNote = String(item.note || "").replace(/^V\d+(?:\.\d+)?\s*/i, "").trim() || "无备注";
+      return `<div><strong>${escapeHtml(item.name)}</strong> · ${item.status === "active" ? "启用" : "停用"}<br><span>${escapeHtml(visibleNote)}</span> <button class="small-button" type="button" data-edit-resource="cryostat" data-resource-id="${item.id}">编辑</button></div>`;
+    }).join("") || "<div>尚未维护制冷机</div>"}</div>
     <button class="ghost-button" type="button" data-open-resource-dialog="cryostat">新增制冷机</button>`;
   const status = $("#migrationStatus");
-  if (status) status.innerHTML = `<span class="eyebrow">数据状态</span><h2>迁移与备份</h2><p>Schema v${escapeHtml(v2State.status?.schema_version ?? "—")} · ${escapeHtml(v2State.status?.quick_check || "未读取")} · 外键异常 ${escapeHtml(v2State.status?.foreign_key_violations ?? "—")}</p><a class="ghost-link" href="/api/v2/backup">读取 V2 JSON 备份</a>`;
+  if (status) status.innerHTML = `<span class="eyebrow">数据状态</span><h2>迁移与备份</h2><p>数据结构已就绪 · 完整性 ${escapeHtml(v2State.status?.quick_check || "未读取")} · 关联异常 ${escapeHtml(v2State.status?.foreign_key_violations ?? "—")}</p><a class="ghost-link" href="/api/v2/backup">读取完整 JSON 备份</a>`;
 }
 
 function rememberV2PlanTrigger(trigger, planId) {
