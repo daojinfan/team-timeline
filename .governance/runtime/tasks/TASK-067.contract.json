@@ -2,7 +2,7 @@
   "$schema": "schemas/governed-work.schema.json",
   "schema_version": 2,
   "task_id": "TASK-067",
-  "work_package": "WP-010",
+  "work_package": "WP-009",
   "title": "Recover and integrate V2.1 topic-sample-chain delivery",
   "goal": "Integrate the recovered V3 server, desktop shell, and client behavior under one auditable task while preserving V1/V2 and the approved V2.1 scope.",
   "baseline": "BL-004",

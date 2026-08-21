@@ -1,0 +1,84 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-070",
+  "work_package": "WP-009",
+  "title": "Independently review recovered V2.1 integrated delivery",
+  "goal": "Review the exact V2.1 integrated product diff, server migration/API, client behavior, desktop shell, compatibility and release evidence.",
+  "baseline": "BL-004",
+  "profile": "Release",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-070"
+  ],
+  "read_paths": [
+    "src/server.js",
+    "src/v3",
+    "tests",
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "docs/02-product/requirements-v21.md",
+    "docs/03-architecture/overall-design-v21.md",
+    "docs/03-architecture/components/v21-detailed-design.md",
+    "docs/07-decisions/DEC-003.md",
+    "docs/08-changes/CR-003.md",
+    "docs/05-quality/evidence/TASK-069"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-070"
+  ],
+  "out_of_scope": [
+    "修改实现代码",
+    "修改批准的设计",
+    "自审通过未验证内容"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-069"
+  ],
+  "acceptance_criteria": [
+    "实际 Git 变更清单与 TASK-069 交付一致",
+    "V3 schema/API/migration and V1/V2 compatibility are independently checked",
+    "Desktop V3 topic/sample/task/assignment/acceptance UI meets frozen DOM and desktop dimensions",
+    "Release evidence has no unresolved finding"
+  ],
+  "validations": [
+    {
+      "id": "review-tests",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface",
+    "data_model_or_migration",
+    "quality_gate_exception",
+    "production_release"
+  ],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-21T00:50:38.1419052Z",
+  "release_controls": {
+    "target_environment": "本地 Windows Node.js SQLite 服务与临时浏览器/临时数据库",
+    "execution_window": "TASK-069 完成后独立审核两轮",
+    "rollback_plan": "仅写审核证据，不修改产品；发现问题则 changes-required",
+    "observation_metrics": "npm test、node check、schema exact-set、DOM/ARIA、git diff、双分辨率",
+    "stop_conditions": "发现越界、契约漂移、V1/V2回归或未批准自动化语义",
+    "post_release_owner": "项目负责人"
+  }
+}

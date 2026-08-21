@@ -36,8 +36,10 @@ review_policy: independent-required
 
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| WP-010 | TASK-068 | pending | REVIEWER | Independently review V2.1 integrated delivery | BL-004 | pending | TASK-067 | pending | docs/05-quality/evidence/TASK-068 | review-tests | n/a | n/a | n/a | Plan 自动登记，等待调度 |
-| WP-010 | TASK-067 | pending | INTEGRATOR | Recover and integrate V2.1 topic-sample-chain delivery | BL-004 | pending | n/a | pending | src/server.js, src/v3, tests/v3-api.test.js, public/index.html, public/styles.css, public/app.js | v21-tests | TASK-068 | pending | pending | Plan 自动登记，等待调度 |
+| WP-009 | TASK-070 | pending | REVIEWER | Independently review recovered V2.1 integrated delivery | BL-004 | pending | TASK-069 | pending | docs/05-quality/evidence/TASK-070 | review-tests | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-009 | TASK-069 | pending | INTEGRATOR | Recover and integrate V2.1 topic-sample-chain delivery | BL-004 | pending | n/a | pending | src/server.js, src/v3, tests/v3-api.test.js, public/index.html, public/styles.css, public/app.js | v21-tests | TASK-070 | pending | pending | Plan 自动登记，等待调度 |
+| WP-009 | TASK-068 | pending | REVIEWER | Independently review V2.1 integrated delivery | BL-004 | pending | TASK-067 | replaced | docs/05-quality/evidence/TASK-068 | review-tests | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-009 | TASK-067 | pending | INTEGRATOR | Recover and integrate V2.1 topic-sample-chain delivery | BL-004 | pending | n/a | replaced | src/server.js, src/v3, tests/v3-api.test.js, public/index.html, public/styles.css, public/app.js | v21-tests | TASK-068 | pending | pending | Plan 自动登记，等待调度 |
 | WP-009 | TASK-066 | pending | REVIEWER | Review V2.1 integrated acceptance | BL-004 | pending | TASK-065 | replaced | docs/05-quality/evidence/TASK-066 | v3-integration-review | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-009 | TASK-065 | pending | INTEGRATOR | Integrate V2.1 and run compatibility acceptance | BL-004 | pending | TASK-059, TASK-061, TASK-063 | replaced | tests/v3-integration.test.js, tests/compat | v3-integration-tests | TASK-066 | pending | pending | Plan 自动登记，等待调度 |
 | WP-009 | TASK-064 | pending | REVIEWER | Review V2.1 client topic workflows | BL-004 | pending | TASK-063 | replaced | docs/05-quality/evidence/TASK-064 | v3-client-review | n/a | n/a | n/a | Plan 自动登记，等待调度 |

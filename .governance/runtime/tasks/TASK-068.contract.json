@@ -2,7 +2,7 @@
   "$schema": "schemas/governed-work.schema.json",
   "schema_version": 2,
   "task_id": "TASK-068",
-  "work_package": "WP-010",
+  "work_package": "WP-009",
   "title": "Independently review V2.1 integrated delivery",
   "goal": "Review the exact V2.1 integrated product diff, server migration/API, client behavior, desktop shell, compatibility and release evidence.",
   "baseline": "BL-004",
