@@ -3427,7 +3427,10 @@ function v3ShowMode(mode) {
   $("#v3TopicModeBtn")?.classList.toggle("active", topic); $("#v3TopicModeBtn")?.setAttribute("aria-selected", String(topic));
   $("#v2LegacyModeBtn")?.classList.toggle("active", !topic); $("#v2LegacyModeBtn")?.setAttribute("aria-selected", String(!topic)); $("#v3NewTopicBtn").hidden = !topic;
   $$('[data-v2-panel], [data-v2-toolbar-view]').forEach((node) => { if (topic) node.hidden = true; });
-  if (!topic) { setV2View(v2State.activeV2View || "workbench"); return; }
+  if (!topic) {
+    $$('[data-v3-panel], [data-v3-toolbar-view]').forEach((node) => { node.hidden = true; });
+    setV2View(v2State.activeV2View || "workbench"); return;
+  }
   v3SetView(v3State.activeView); Promise.all([v3LoadMembers(), v3LoadTopics()]).catch((error) => showToast(v3ErrorText(error), { type: "error" }));
 }
 function v3SetView(view) {
