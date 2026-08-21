@@ -2,7 +2,7 @@
   "$schema": "schemas/governed-work.schema.json",
   "schema_version": 2,
   "task_id": "TASK-076",
-  "work_package": "WP-011",
+  "work_package": "WP-009",
   "title": "Independently review final V2.1 repaired delivery",
   "goal": "Independently review the exact final V2.1 product diff, all five repaired blockers, migration/API compatibility, desktop interaction and release evidence in two full rounds.",
   "baseline": "BL-004",

@@ -1,0 +1,58 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-078",
+  "reviewed_task_ids": [
+    "TASK-077"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-004",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-077",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "复核 V3 顶层导航、专题抽屉返焦、必做任务请求体与模式隔离实现。"
+    },
+    {
+      "task_id": "TASK-077",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "复核 V1/V2 兼容 ID、V3 六区 DOM、ARIA 目标和缓存版本。"
+    },
+    {
+      "task_id": "TASK-077",
+      "path": "src/v3/index.js",
+      "change_type": "modified",
+      "summary": "复核 V3 schema/API、必做字段、依赖事务更新、assignment 排除与同步。"
+    },
+    {
+      "task_id": "TASK-077",
+      "path": "tests/v3-api.test.js",
+      "change_type": "modified",
+      "summary": "复核五项修复的 API 回归断言及 29 项完整测试。"
+    }
+  ],
+  "change_summary": "本轮从头重算 TASK-077 启动提交 47dab366b2b948c17a93fbf20edb447c4dd70b1f 到 9ed10aef419db2c7e97f329b8bd97f6c7a747235 的实际变更，仍精确为四个 modified 文件，numstat 分别为 public/app.js 48/11、public/index.html 1/1、src/v3/index.js 30/8、tests/v3-api.test.js 15/0；期间交付内容零变化。四文件 blob 与 SHA-256 均与 round1 相同：6c712c1fc646893bfe9171e1ecf953848e6fe25f/7823417855f175ce6bca3b909612ad1076330a726ecb62c92ea8d68dae4b8490、fa7ac28d1ecb2f277e0e19bbc19a94aaf3e2cf64/11a184b2d425a2307b85c45abeac1bbd736bf3a181fd92bcf950f4e2e4fd9d03、14e9a8bb1dff8de3f567dd16e3304f7647a4315c/626985319445ab323359dc4ca409f343e1ca173de46b6d6fe24acc0506b7b0d7、2093c9283005e8a3cfa61cf82ea97a3e6f8e8c76/e29a1761134527a0079c80b91424a52bd5b32a9dc7f305319e60ea0e2cee592f。当前 review subject SHA-256=6cfb8ca55811e79ea60315b8c1363b380504140034aca1c29328ee5176fb96a4，与 round1 连续通过指纹一致；交付 tree=7bb501270dd520cd94f63cbb9c92bdf062f66e27、subject='fix(v21): close topic workflow review blockers'。",
+  "scope_checked": [
+    "再次完整读取 REQ-V21-001、ARC-OVERALL-003、ARC-COMP-005、DEC-003、CR-003、RPT-V21-DEV-001、V1/V2 兼容基线，以及 TASK-077/TASK-078 契约、状态和 round1 证据。",
+    "独立核对当前最终 public 三文件、src/server.js、src/v3/index.js、tests 全文和 47dab366..9ed10ae 全量差异；确认当前产品路径、blob、SHA-256、Git subject 与 round1 相同。",
+    "重新覆盖 V3 13 表/14 索引/schema 3 checksum/34 endpoints、V2 12 表/10 索引/checksum/34 路由、V1 API/CSV/JSON/备份、增量迁移、幂等重开、quick_check 和 foreign_key_check。",
+    "重新独立复核专题、样品池、线性任务链、多人责任、成果快照/人工验收、无 AI/自动建任务/自动分配/手机端，以及 V1/V2 legacy 往返隔离。",
+    "重新独立复测五项修复与双尺寸桌面交互，不依赖 round1 的测试输出或结论。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "本轮 npm test：29 tests、29 pass、0 fail；node --check src/server.js、src/v3/index.js、public/app.js 通过；git diff --check 47dab366..9ed10ae 交付路径通过。",
+    "round2 临时端口 55279/SQLite task078-browser-round2-20260821：/api/v3/status 返回 schema_version=3、tables=13、indexes=14、endpoints=34、checksum=c81899a0d931a36a1184204e7c60ea8df9b633b9718740412c059b2af6ba9c64、v2_compat=true；/api/v2/status 返回 schema_version=2、checksum=e87fc318d929c1f71cee72bd207c57a63b1a7f5d98bf673656c158bc040be4c4、quick_check=ok、foreign_key_violations=0。",
+    "round2 API 矩阵：is_required=1/0 创建响应保持对应值；PUT predecessor 更新后 SQLite 依赖唯一行 predecessor_task_id=1、successor_task_id=2；同任务 preview 的 ownV1Conflict=false，未把关联 V1 task_id=5 当作自身日期冲突；其他 V3 任务冲突仍被保留。",
+    "round2 完成矩阵：必做任务成果人工 accepted 后，工作台专题行显示“已完成”；同专题可选任务保持未验收，个人 assignment/progress/note 未被验收覆盖。",
+    "1280x720 round2：scrollWidth=1280；六 tab 同 top=87/bottom=121；dialog width=720、height=541.5、top=89.25/bottom=630.75、焦点 v3TopicNameInput；topic drawer width=420、fixed、open 后焦点关闭按钮，Escape 后隐藏且返焦专题行。",
+    "1366x768 round2：scrollWidth=1366；六 tab 同 top=87/bottom=121；dialog width=720、top=113.25/bottom=654.75，页面无横向溢出。",
+    "round2 模式与 panel 矩阵：workbench→v3WorkbenchView、plans→v3TopicView、assignment→v3AssignmentView、execution→v3ExecutionContext、acceptance→v3AcceptanceView、management→v3ManagementPanel；每次唯一可见 V3 panel，legacy 返回后仅 V2 workbench panel/toolbar 可见。",
+    "round2 静态检查：488 IDs/488 unique/0 duplicate、ARIA controls/labels/for 缺失目标 0、19 dialogs、@media/@container 0、导航绑定/抽屉打开/必做请求体符号均存在；真实 data/team_tasks.sqlite 未访问。"
+  ],
+  "created_at": "2026-08-21T02:37:00.000Z"
+}

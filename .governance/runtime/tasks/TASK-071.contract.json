@@ -2,7 +2,7 @@
   "$schema": "schemas/governed-work.schema.json",
   "schema_version": 2,
   "task_id": "TASK-071",
-  "work_package": "WP-010",
+  "work_package": "WP-009",
   "title": "Finalize reviewed V2.1 topic-sample-chain delivery",
   "goal": "Integrate the five independent-review repairs into the final V2.1 server and desktop client while preserving V1/V2 and all approved no-AI manual-assignment semantics.",
   "baseline": "BL-004",

@@ -1,0 +1,96 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-077",
+  "work_package": "WP-009",
+  "title": "Finalize V2.1 repaired topic-sample-chain delivery",
+  "goal": "Lock the final V2.1 repair diff and complete full validation while preserving V1/V2 and approved no-AI manual-assignment semantics.",
+  "baseline": "BL-004",
+  "profile": "Release",
+  "role": "INTEGRATOR",
+  "allowed_paths": [
+    "src/server.js",
+    "src/v3",
+    "tests/v3-api.test.js",
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js"
+  ],
+  "read_paths": [
+    "src/server.js",
+    "src/v3",
+    "tests",
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "docs/02-product/requirements-v21.md",
+    "docs/03-architecture/overall-design-v21.md",
+    "docs/03-architecture/components/v21-detailed-design.md",
+    "docs/07-decisions/DEC-003.md",
+    "docs/08-changes/CR-003.md",
+    "docs/05-quality/evidence/TASK-070"
+  ],
+  "write_paths": [
+    "src/server.js",
+    "src/v3",
+    "tests/v3-api.test.js",
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js"
+  ],
+  "out_of_scope": [
+    "修改 V2 canonical schema/API/checksum",
+    "AI 自动建任务",
+    "自动分配",
+    "手机端",
+    "登录",
+    "云同步"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "六个V2.1顶层区均可达且互斥",
+    "420px专题抽屉可见并具备关闭返焦",
+    "必做/可选任务字段贯通schema/API/UI且专题完成只依赖必做任务",
+    "前置任务更新持久化依赖且编辑不误报自身V1分配冲突",
+    "V1/V2兼容、迁移、人工分配、ETA、制冷机、成果验收回归全部通过"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "scope",
+    "overall_architecture",
+    "public_interface",
+    "data_model_or_migration"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-21T02:11:02.4748253Z",
+  "release_controls": {
+    "target_environment": "本地 Windows Node.js SQLite 服务与临时浏览器/临时数据库",
+    "execution_window": "V2.1 审核修复、集成与提交前验证",
+    "rollback_plan": "停止服务，保留失败库，恢复迁移前 SQLite 备份并回退最终集成提交",
+    "observation_metrics": "npm test、node check、schema checksum、foreign_key_check、quick_check、V1/V2 golden、DOM/ARIA、1280x720与1366x768浏览器验证",
+    "stop_conditions": "V1/V2 checksum或API变化、迁移失败、六区不可达、抽屉隐藏、未批准的自动建任务或自动分配",
+    "post_release_owner": "项目负责人"
+  }
+}

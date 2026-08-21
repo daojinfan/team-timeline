@@ -1,0 +1,56 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-078",
+  "work_package": "WP-009",
+  "contract_sha256": "478a5fdf11f39e48c797c1547277730d3e084cc5bf87c9cf3ac7dec286de5688",
+  "baseline": "BL-004",
+  "state": "verified",
+  "approval_id": "APR-070",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "9ed10aef419db2c7e97f329b8bd97f6c7a747235",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [],
+  "plan_checkpoint_git_commit": "47dab366b2b948c17a93fbf20edb447c4dd70b1f",
+  "plan_rebase_history": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-078/20260821T023258027Z-68c85fe8-required-validation.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-078/20260821T022659659Z-cecf12c7-required-validation.evidence.json",
+    "docs/05-quality/evidence/TASK-078/review-round-1.json",
+    "docs/05-quality/evidence/TASK-078/20260821T023258027Z-68c85fe8-required-validation.evidence.json",
+    "docs/05-quality/evidence/TASK-078/review-round-2.json"
+  ],
+  "review_history": [
+    {
+      "path": "docs/05-quality/evidence/TASK-078/review-round-1.json",
+      "sha256": "f39be7acf6abc2bc30b75a2a08af126b58c6b35a9ca3bb867691a92c92831613",
+      "result": "passed",
+      "round_id": "RR-bae400903b364adbabcecfc806b53dd4",
+      "recorded_at": "2026-08-21T02:27:14.8140099Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-078/review-round-2.json",
+      "sha256": "2eb5ae80eea3362a2c3fcad59b2bed73faaaef614d820fe7587435eefd1ba77d",
+      "result": "passed",
+      "round_id": "RR-53971167379f4ba58dfb112a49daa271",
+      "recorded_at": "2026-08-21T02:33:11.6195528Z"
+    }
+  ],
+  "review": {
+    "required": false,
+    "reviewer_task_id": "",
+    "status": "not-applicable",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
+  },
+  "last_error": "",
+  "created_at": "2026-08-21T02:11:02.7665112Z",
+  "updated_at": "2026-08-21T02:33:11.9050250Z"
+}

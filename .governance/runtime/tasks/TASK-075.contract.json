@@ -2,7 +2,7 @@
   "$schema": "schemas/governed-work.schema.json",
   "schema_version": 2,
   "task_id": "TASK-075",
-  "work_package": "WP-011",
+  "work_package": "WP-009",
   "title": "Lock final V2.1 repaired delivery",
   "goal": "Lock the current V2.1 repair diff and complete full validation while preserving V1/V2 and approved no-AI manual-assignment semantics.",
   "baseline": "BL-004",

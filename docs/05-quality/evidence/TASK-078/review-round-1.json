@@ -1,0 +1,59 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-078",
+  "reviewed_task_ids": [
+    "TASK-077"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-004",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-077",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "完成 V3 六区导航绑定、专题详情抽屉开关与返焦、必做字段提交及五项客户端修复闭环。"
+    },
+    {
+      "task_id": "TASK-077",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "保留 V1/V2 ID 并更新最终 V2.1 客户端缓存版本。"
+    },
+    {
+      "task_id": "TASK-077",
+      "path": "src/v3/index.js",
+      "change_type": "modified",
+      "summary": "贯通 is_required、任务依赖更新、V1 自关联排除、成员 assignment 同步及 V3 事务约束。"
+    },
+    {
+      "task_id": "TASK-077",
+      "path": "tests/v3-api.test.js",
+      "change_type": "modified",
+      "summary": "增加必做/可选任务、依赖持久化与自冲突排除回归断言。"
+    }
+  ],
+  "change_summary": "TASK-077 启动提交 47dab366b2b948c17a93fbf20edb447c4dd70b1f 到交付提交 9ed10aef419db2c7e97f329b8bd97f6c7a747235 的实际差异精确为上述四个 modified 文件：public/app.js 48/11、public/index.html 1/1、src/v3/index.js 30/8、tests/v3-api.test.js 15/0。最终 HEAD 与交付提交一致，tree=7bb501270dd520cd94f63cbb9c92bdf062f66e27，subject='fix(v21): close topic workflow review blockers'。当前交付内容指纹：public/app.js blob=6c712c1fc646893bfe9171e1ecf953848e6fe25f/SHA-256=7823417855f175ce6bca3b909612ad1076330a726ecb62c92ea8d68dae4b8490；public/index.html blob=fa7ac28d1ecb2f277e0e19bbc19a94aaf3e2cf64/SHA-256=11a184b2d425a2307b85c45abeac1bbd736bf3a181fd92bcf950f4e2e4fd9d03；src/v3/index.js blob=14e9a8bb1dff8de3f567dd16e3304f7647a4315c/SHA-256=626985319445ab323359dc4ca409f343e1ca173de46b6d6fe24acc0506b7b0d7；tests/v3-api.test.js blob=2093c9283005e8a3cfa61cf82ea97a3e6f8e8c76/SHA-256=e29a1761134527a0079c80b91424a52bd5b32a9dc7f305319e60ea0e2cee592f。",
+  "scope_checked": [
+    "从头读取 REQ-V21-001、ARC-OVERALL-003、ARC-COMP-005、DEC-003、CR-003、RPT-V21-DEV-001、V1 基线兼容契约及 TASK-077/TASK-078 Release 契约、状态和 TASK-077 验证证据。",
+    "完整核对 47dab366..9ed10ae 的 Git 实际差异及当前 public/index.html、public/styles.css、public/app.js、src/server.js、src/v3/index.js、tests/v3-api.test.js；产品工作树与 9ed10ae 交付内容一致。",
+    "独立复核 13 张 V3 表、14 个 V3 索引、schema version 3/checksum、34 个 /api/v3 method-path、V2 12 表/10 索引/checksum/34 /api/v2 路由及 V1 API/CSV/JSON/备份兼容；迁移为增量、事务化、幂等并保留 V1/V2 兼容岛。",
+    "独立复核六区导航、专题概览/样品池/任务链、人工分配、执行、成果验收、资源维护、V1/V2 ID、ARIA 引用、对话框与抽屉焦点闭环；静态检查无重复 ID、缺失 ARIA 目标或移动媒体查询。",
+    "独立复测五项修复：六个顶层 tab 均可切换到唯一 V3 panel；专题行打开真实 420px fixed drawer 并可 Escape 关闭返焦；必做/可选字段贯通 UI/API/schema 且专题完成仅依赖必做任务；PUT 任务更新持久化前置依赖；同任务更新排除其自身 V1 assignment 冲突。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "npm test：29 tests、29 pass、0 fail；node --check src/server.js、src/v3/index.js、public/app.js 均 exit 0；git diff --check 47dab366..9ed10ae（交付路径）exit 0。",
+    "临时端口 55278 与临时 SQLite task078-browser-20260821：GET /api/v3/status 返回 schema_version=3、tables=13、indexes=14、endpoints=34、checksum=c81899a0d931a36a1184204e7c60ea8df9b633b9718740412c059b2af6ba9c64、v2_compat=true；GET /api/v2/status 返回 schema_version=2、checksum=e87fc318d929c1f71cee72bd207c57a63b1a7f5d98bf673656c158bc040be4c4、quick_check=ok、foreign_key_violations=0。",
+    "V3 API 临时场景：创建 is_required=1 任务响应保留 is_required=1；创建 is_required=0 任务响应保留 is_required=0；同专题 predecessor 更新后 SQLite v3_task_dependencies 保存 predecessor_task_id=1/successor_task_id=2；同任务日期预览的 MEMBER_DATE_OVERLAP 结果不包含该任务关联的 V1 task_id=5（只列其他 V3 任务），确认事务完成。",
+    "V3 完成语义临时场景：必做任务成果提交并人工 accepted 后，专题行可见主状态为“已完成”，同专题可选任务仍未验收，证明完成统计只依赖必做任务；个人 assignment 数据未被验收覆盖。",
+    "1280x720：document scrollWidth=1280、六 tab 均 top=87/bottom=121；专题 dialog width=720、height=541.5、top=89.25/bottom=630.75、首焦点 v3TopicNameInput；专题详情 drawer hidden=false、is-open、position=fixed、width=420、焦点 v3CloseTopicDetailBtn，Escape 后 hidden=true、唯一可见 panel 回到 v3WorkbenchView 且返焦专题行。",
+    "1366x768：document scrollWidth=1366、六 tab 均 top=87/bottom=121；专题 dialog width=720、top=113.25/bottom=654.75；drawer width=420 fixed，页面无横向溢出。",
+    "模式隔离：V3 模式依次点击 workbench/plans/assignment/execution/acceptance/management 后可见 panel 分别为 v3WorkbenchView/v3TopicView/v3AssignmentView/v3ExecutionContext/v3AcceptanceView/v3ManagementPanel；任一时刻仅一个 V3 panel 可见。切回 legacy 后 V3 panel/toolbar 全部隐藏，仅 workbenchView/workbenchToolbar 可见。",
+    "静态 DOM/ARIA：public/index.html 488 IDs、488 unique、重复 0；aria-controls/aria-labelledby/for 目标缺失 0；dialog 元素 19；CSS @media/@container 0；保留 V1/V2 起始 ID 无缺失。",
+    "临时库未接触 data/team_tasks.sqlite；无 AI、自动建任务、自动分配、自动验收、手机端或附件托管入口。"
+  ],
+  "created_at": "2026-08-21T02:24:00.000Z"
+}
