@@ -1,0 +1,43 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-091",
+  "reviewed_task_ids": [
+    "TASK-090"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-004",
+  "result": "changes-required",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-090",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "新增以 V1 task.id 映射 V3 topic task.task_id 的执行中心索引，在任务卡片、列表和任务/个人分配详情中投影专题、来源小组、任务制冷机、测试目的、测试项及样品摘要；V3 专题刷新后重建索引并重渲染执行任务和详情，无 V3 关联时返回空投影保持旧展示。"
+    }
+  ],
+  "change_summary": "已从 TASK-090 启动提交 b2d2c0dac93a8a672d66e3c0e603ad6eb07a6926 全量核对当前工作树。实际交付差异仅 public/app.js modified，新增 88 行、删除 0 行，与 TASK-090 唯一 write/allowed path 一致；src/v3/index.js 在该区间无差异，未发现新增、删除或重命名的其他 TASK-090 文件。整体映射、刷新和旧任务回退成立，但样品型号展示存在一个可复现的事实错误。",
+  "scope_checked": [
+    "TASK-090 与 TASK-091 的 Standard 契约、WP-009、BL-004、启动提交、路径边界和 Reviewer 绑定",
+    "REQ-V21-003/005/007/008/015/016 对样品型号与编号、任务制冷机、ETA/到样、V1/V2 兼容岛和桌面执行中心的要求",
+    "ARC-OVERALL-003 的事实归属与执行中心复用设计，以及 ARC-COMP-005 的 V3 task_id 可选关联、样品多对多和桌面兼容契约",
+    "public/app.js 的 v3ExecutionTaskIndex、v3ExecutionContextEnabled、executionV3Task/executionV3Context、卡片/列表/任务详情/个人分配详情投影和 V3 刷新重渲染路径",
+    "src/v3/index.js 的 taskData 响应：task_id、topic、source_group、cryostat、test_purpose、test_items、samples，以及样品列表的型号、正式/临时编号、ETA 和到样日期字段",
+    "无 V3 关联的 V1/V2 任务：executionV3Task 返回 null、executionV3Context 返回空字符串，不改变原任务卡和详情结构",
+    "TASK-090 从 start_git_commit 到当前工作树的完整 Git 变更类型、行数和 diff-check"
+  ],
+  "findings": [
+    "[阻塞/展示准确性] public/app.js:660：executionV3SampleText 只有在 sample.model 与展示标签不相等时才显示型号；当合法数据的 planning_label 与 model 同值时，会错误显示“型号待补”。例如 planning_label='QPU-X'、model='QPU-X' 的静态复现结果为 model='型号待补'。这违反 TASK-090 验收中任务详情必须准确显示关联样品型号的要求。请将“型号是否存在”与“是否等于规划标签”解耦（非空 model 始终显示），并补充 planning_label===model 的回归检查。"
+  ],
+  "validation_evidence": [
+    "node --check public/app.js：通过。",
+    "node --check src/v3/index.js：通过（只读兼容核对）。",
+    "npm test：30 个测试全部通过，0 failed、0 skipped；覆盖 V1/V2 API、schema/迁移、V3 schema/端点、结构化任务详情、样品/任务链/成果验收和制冷机冲突。",
+    "git -c safe.directory='D:/Codex/人员管理系统' diff --check b2d2c0dac93a8a672d66e3c0e603ad6eb07a6926 -- public/app.js：通过，仅有 LF/ignore 权限警告，无 whitespace error。",
+    "git diff --numstat：public/app.js 为 88 insertions、0 deletions；src/v3/index.js 无 TASK-090 区间差异。",
+    "静态边界复现：planning_label='QPU-X' 且 model='QPU-X' 时，当前 line 660 分支计算得到“型号待补”，确认 finding 可复现。",
+    "Test-ProjectGovernance.ps1 -Level Release：通过，错误数 0、警告数 0。"
+  ],
+  "created_at": "2026-08-21T13:49:29.8470219Z"
+}

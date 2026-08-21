@@ -1,0 +1,43 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-091",
+  "reviewed_task_ids": [
+    "TASK-090"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-004",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-090",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "建立 V1 task.id 到 V3 topic task.task_id 的执行中心上下文索引，在卡片、列表、任务详情和个人分配详情中显示专题、来源小组、任务制冷机、测试目的、测试项及样品摘要；合并完整样品事实以显示型号、正式/临时编号、ETA 与到样日期，V3 刷新后重建索引并重渲染，无 V3 关联时维持原展示。"
+    }
+  ],
+  "change_summary": "本轮从 TASK-090 启动提交 b2d2c0dac93a8a672d66e3c0e603ad6eb07a6926 重新全量审查最终内容。实际差异仍仅 public/app.js modified（88 insertions、0 deletions），与 TASK-090 唯一 write/allowed path 一致；src/v3/index.js 无交付区间差异。第一轮指出的 planning_label 与 model 同值时误报“型号待补”已修正，当前非空 model 无条件按真实型号展示。",
+  "scope_checked": [
+    "TASK-090/TASK-091 契约、WP-009、BL-004、启动提交、实际 diff、路径边界和第一轮 changes-required 历史",
+    "REQ-V21-003/005/007/008/015/016 对样品型号编号、任务制冷机、ETA/到样、兼容岛和桌面执行中心的要求",
+    "ARC-OVERALL-003 与 ARC-COMP-005 的事实归属、V3 task_id 可选关联、V1/V2 API/schema 冻结和桌面复用边界",
+    "public/app.js 的 v3ExecutionTaskIndex、模式开关、V1 task.id 映射、topic/source_group/cryostat/test_purpose/test_items/samples 字段投影和 HTML 转义",
+    "卡片模式、列表模式、任务详情、个人分配详情的结构化展示及无 V3 关联返回空投影的旧任务兼容路径",
+    "v3LoadTopics 与 v3LoadTopic 在数据刷新后合并完整样品事实、重建执行索引并立即调用 renderTasks/renderDetail",
+    "src/v3/index.js 的 taskData 与样品列表响应字段可满足专题、来源、制冷机、测试意图、型号、编号、ETA 和到样日期投影",
+    "planning_label===model、缺少编号、ETA pending、已到样和无 V3 关联的静态分支",
+    "TASK-090 从 start_git_commit 到当前工作树的最终 Git 变更类型、行数和差异检查"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "node --check public/app.js：通过；最终 SHA-256 为 7d280acffc2708ea7698e69fdbb4ae6aae09913dba2b455d149fab046498b49d。",
+    "node --check src/v3/index.js：通过（只读 API 字段兼容复核）。",
+    "npm test：30 个测试全部通过，0 failed、0 skipped；V1/V2 API/schema/迁移、V3 schema/端点、结构化任务详情、样品/任务链/成果验收和制冷机冲突均保持通过。",
+    "git -c safe.directory='D:/Codex/人员管理系统' diff --check b2d2c0dac93a8a672d66e3c0e603ad6eb07a6926 -- public/app.js：通过，仅有 LF/ignore 权限警告，无 whitespace error。",
+    "git diff --numstat：最终实际变更为 public/app.js 88 insertions、0 deletions，src/v3/index.js 无 TASK-090 区间差异。",
+    "修复场景静态复现：planning_label='QPU-X'、model='QPU-X' 时，当前逻辑返回 label='QPU-X'、model='型号 QPU-X'，不再误显示型号待补。",
+    "Test-ProjectGovernance.ps1 -Level Release：通过，错误数 0、警告数 0。"
+  ],
+  "created_at": "2026-08-21T13:54:02.7019221Z"
+}

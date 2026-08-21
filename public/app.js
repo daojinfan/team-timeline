@@ -1,6 +1,8 @@
 ﻿const state = {
   members: [],
   tasks: [],
+  v3ExecutionTaskIndex: new Map(),
+  v3ExecutionContextEnabled: false,
   assignments: [],
   logs: [],
   templates: [],
@@ -648,6 +650,61 @@ function taskListEmptyState() {
     : `<div class="empty empty-action"><strong>还没有任务</strong><button type="button" data-open-task-dialog>新建任务</button></div>`;
 }
 
+function executionV3Task(task) {
+  if (!state.v3ExecutionContextEnabled) return null;
+  return state.v3ExecutionTaskIndex.get(Number(task.id)) || null;
+}
+
+function executionV3SampleText(sample, { detail = false } = {}) {
+  const label = sample.planning_label || sample.model || "未命名样品";
+  const model = sample.model ? `型号 ${sample.model}` : "型号待补";
+  const identifier = sample.formal_identifier || sample.temporary_identifier ? `编号 ${sample.formal_identifier || sample.temporary_identifier}` : "编号待补";
+  const eta = sample.eta_pending ? "ETA 待确认" : `ETA ${sample.current_eta_date || "待补"}`;
+  const arrival = sample.actual_arrival_date ? ` · 到样 ${sample.actual_arrival_date}` : "";
+  return detail
+    ? `${escapeHtml(label)} · ${escapeHtml(model)} · ${escapeHtml(identifier)} · ${escapeHtml(eta)}${escapeHtml(arrival)}`
+    : `${escapeHtml(label)} · ${escapeHtml(eta)}`;
+}
+
+function executionV3Context(task, { detail = false } = {}) {
+  const v3Task = executionV3Task(task);
+  if (!v3Task) return "";
+  const topic = v3Task.topic || {};
+  const sourceGroup = v3Task.source_group || {};
+  const cryostat = v3Task.cryostat || {};
+  const testItems = Array.isArray(v3Task.test_items)
+    ? v3Task.test_items.map((item) => item?.name || item?.label || item?.title).filter(Boolean)
+    : [];
+  const samples = Array.isArray(v3Task.samples) ? v3Task.samples : [];
+  const purpose = v3Task.test_purpose || "测试目的待补充";
+  const items = testItems.length ? testItems.join("、") : "测试项待补充";
+  const sampleSummary = samples.length ? samples.map((sample) => executionV3SampleText(sample, { detail })).join("；") : "暂无关联样品";
+  const cryostatLabel = v3Task.cryostat_pending ? "待确认" : (cryostat.name || "待确认");
+  if (detail) {
+    return `
+      <section class="v3-task-context-summary" aria-label="专题任务结构化信息">
+        <span>专题：${escapeHtml(topic.name || "待补充")}</span>
+        <span>来源小组：${escapeHtml(sourceGroup.name || "待补充")}</span>
+        <span>制冷机：${escapeHtml(cryostatLabel)}</span>
+      </section>
+      <p class="v3-task-purpose-line"><strong>测试目的：</strong>${escapeHtml(purpose)}</p>
+      <p class="meta"><strong>测试项：</strong>${escapeHtml(items)}</p>
+      <div class="v3-task-context-summary" aria-label="关联样品">
+        <span>样品：${sampleSummary}</span>
+      </div>
+    `;
+  }
+  return `
+    <div class="v3-task-context-line" aria-label="专题任务结构化信息">
+      <span>专题：${escapeHtml(topic.name || "待补充")}</span>
+      <span>来源：${escapeHtml(sourceGroup.name || "待补充")}</span>
+      <span>制冷机：${escapeHtml(cryostatLabel)}</span>
+    </div>
+    <p class="v3-task-purpose-line"><strong>测试目的：</strong>${escapeHtml(purpose)}</p>
+    <small class="meta"><strong>测试项：</strong>${escapeHtml(items)} · <strong>样品：</strong>${sampleSummary}</small>
+  `;
+}
+
 function renderTasks() {
   const tasks = sortedVisibleTasks();
   const container = $("#taskCards");
@@ -673,6 +730,7 @@ function renderTasks() {
             <div>
               <strong>${escapeHtml(task.title)}</strong>
               <small>${escapeHtml(task.description || "无描述")} · 清单 ${checklistSummary(task)}${task.status !== "completed" && taskHasIncompleteProgress(task) ? " · 完成时个人进度保持不变" : ""}</small>
+              ${executionV3Context(task)}
             </div>
           </div>
           <div>${task.default_start_date}<br><span>${task.default_end_date}</span></div>
@@ -700,6 +758,7 @@ function renderTasks() {
       <p class="meta">${escapeHtml(task.description || "无描述")}</p>
       <p class="meta">${task.default_start_date} 至 ${task.default_end_date} <span class="status ${task.status}">${statusLabels[task.status] || task.status}</span></p>
       <p class="meta">检查清单：${checklistSummary(task)}</p>
+      ${executionV3Context(task)}
       ${taskCompletionHint(task)}
       <div class="assignment-list">
         ${task.assignments.map((assignment) => `
@@ -907,6 +966,7 @@ function renderDetail() {
       <section class="detail-card">
         <h2>${escapeHtml(assignment.task_title)}</h2>
         <p class="meta">${escapeHtml(assignment.task_description || "无描述")}</p>
+        ${task ? executionV3Context(task, { detail: true }) : ""}
         <dl>
           <dt>成员</dt><dd>${escapeHtml(assignment.member_name)}</dd>
           <dt>状态</dt><dd>${statusLabels[assignment.task_status]}</dd>
@@ -934,6 +994,7 @@ function renderDetail() {
       <section class="detail-card">
         <h2>${escapeHtml(task.title)}</h2>
         <p class="meta">${escapeHtml(task.description || "无描述")}</p>
+        ${executionV3Context(task, { detail: true })}
         <dl>
           <dt>默认时间</dt><dd>${task.default_start_date} 至 ${task.default_end_date}</dd>
           <dt>状态</dt><dd>${statusLabels[task.status]}</dd>
@@ -3321,6 +3382,25 @@ function v3Esc(value) { return escapeHtml(value ?? ""); }
 function v3Group(id) { return v3State.groups.find((item) => Number(item.id) === Number(id)); }
 function v3Cryostat(id) { return v3State.cryostats.find((item) => Number(item.id) === Number(id)); }
 function v3Member(id) { return v3State.members.find((item) => Number(item.id) === Number(id)); }
+function v3RebuildExecutionTaskIndex() {
+  state.v3ExecutionTaskIndex.clear();
+  v3State.topicDetails.forEach((detail) => {
+    const samplesById = new Map((detail.samples || []).map((sample) => [Number(sample.id), sample]));
+    (detail.tasks || []).forEach((task) => {
+      const legacyTaskId = Number(task.task_id);
+      if (!Number.isFinite(legacyTaskId)) return;
+      const topic = task.topic || detail.topic || {};
+      const samples = (task.samples || []).map((sample) => ({ ...(samplesById.get(Number(sample.id)) || {}), ...sample }));
+      state.v3ExecutionTaskIndex.set(legacyTaskId, {
+        ...task,
+        topic,
+        source_group: task.source_group || v3Group(topic.source_group_id) || {},
+        cryostat: task.cryostat || v3Cryostat(task.cryostat_id) || {},
+        samples
+      });
+    });
+  });
+}
 function v3Open(dialog, trigger = document.activeElement) {
   if (!dialog) return;
   v3State.returnFocus.set(dialog.id, trigger instanceof HTMLElement ? trigger : null);
@@ -3404,6 +3484,9 @@ async function v3LoadTopics() {
       v3State.topicDetails.set(topic.id, { topic, samples: samples.data?.items || [], tasks: tasks.data?.items || [] });
     } catch { v3State.topicDetails.set(topic.id, { topic, samples: [], tasks: [] }); }
   }));
+  v3RebuildExecutionTaskIndex();
+  renderTasks();
+  renderDetail();
   v3RenderTopics();
   v3FillResourceSelects();
 }
@@ -3461,6 +3544,10 @@ async function v3LoadTopic(id) {
   if (!v3State.members.length) await v3LoadMembers();
   const [topic, samples, tasks, template] = await Promise.all([v3Api(`/api/v3/topics/${id}`), v3Api(`/api/v3/topics/${id}/samples`), v3Api(`/api/v3/topics/${id}/tasks`), v3Api(`/api/v3/topics/${id}/acceptance-template`)]);
   v3State.topic = topic.data; v3State.samples = samples.data?.items || []; v3State.tasks = tasks.data?.items || []; v3State.template = template.data || null;
+  v3State.topicDetails.set(v3State.topic.id, { topic: v3State.topic, samples: v3State.samples, tasks: v3State.tasks });
+  v3RebuildExecutionTaskIndex();
+  renderTasks();
+  renderDetail();
   await v3LoadSubmissions(); v3RenderTopic();
 }
 async function v3LoadSubmissions() {
@@ -3517,6 +3604,7 @@ function v3SyncPanels(view = v3State.activeView) {
 
 function v3ShowMode(mode) {
   v3State.mode = mode === "legacy" ? "legacy" : "topic";
+  state.v3ExecutionContextEnabled = v3State.mode === "topic";
   const targetView = v3State.mode === "legacy"
     ? "plans"
     : (v2State.activeV2View === "plans" ? "plans" : (v2State.activeV2View || "workbench"));

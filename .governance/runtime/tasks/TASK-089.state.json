@@ -45,7 +45,8 @@
     "docs/05-quality/evidence/TASK-089/20260821T101002674Z-3c511951-review-npm-test.evidence.json",
     "docs/05-quality/evidence/TASK-089/20260821T101002674Z-3c511951-review-v3-syntax.evidence.json",
     "docs/05-quality/evidence/TASK-089/20260821T101002674Z-3c511951-review-client-syntax.evidence.json",
-    "docs/05-quality/evidence/TASK-089/review-round-2.json"
+    "docs/05-quality/evidence/TASK-089/review-round-2.json",
+    "docs/05-quality/evidence/TASK-089/review-cancelled-task088-execution-projection.json"
   ],
   "review_history": [
     {
@@ -61,6 +62,13 @@
       "result": "passed",
       "round_id": "RR-d9c5087968d645c990765f5d3f865c7b",
       "recorded_at": "2026-08-21T10:14:01.7982538Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-089/review-cancelled-task088-execution-projection.json",
+      "sha256": "3cdb2eabe8e2e4898b301512d002ecc10bf57af2511cae5697244b886ab40bc7",
+      "result": "cancelled",
+      "round_id": "RR-3b6554b87a6c40fdaf18478e07748d73",
+      "recorded_at": "2026-08-21T13:42:28.9642807Z"
     }
   ],
   "review": {
@@ -73,5 +81,5 @@
   },
   "last_error": "",
   "created_at": "2026-08-21T09:43:28.1304263Z",
-  "updated_at": "2026-08-21T10:14:02.1633341Z"
+  "updated_at": "2026-08-21T13:42:29.1211884Z"
 }

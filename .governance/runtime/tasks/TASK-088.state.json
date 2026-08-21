@@ -5,7 +5,7 @@
   "work_package": "WP-009",
   "contract_sha256": "ece71282475c7725e4725f6a9be5d0797541a9470c3696b4bf6db7e32277c4d4",
   "baseline": "BL-004",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "APR-076",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -56,14 +56,14 @@
   "review": {
     "required": true,
     "reviewer_task_id": "TASK-089",
-    "status": "passed",
+    "status": "cancelled",
     "evidence": [
-      "docs/05-quality/evidence/TASK-089/review-round-2.json"
+      "docs/05-quality/evidence/TASK-089/review-cancelled-task088-execution-projection.json"
     ],
-    "pass_streak": 2,
-    "subject_sha256": "69eb51a77820e714ed868c09b4e7b49edf4ad327d033c73ca6a9935762c9d2f7"
+    "pass_streak": 0,
+    "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "TASK-090 在同一 V3.1 客户端交付上补齐执行中心结构化任务投影；TASK-088 未验收，保留其历史证据并由本次交付替代当前审核对象。",
   "created_at": "2026-08-21T09:43:08.8819143Z",
-  "updated_at": "2026-08-21T10:14:02.0713872Z"
+  "updated_at": "2026-08-21T13:42:29.0210974Z"
 }

@@ -5,34 +5,75 @@
   "work_package": "WP-009",
   "contract_sha256": "22f4af85ab71c3d956f93716d55e48058023fbe4a3685b50143dafc54ec0f589",
   "baseline": "BL-004",
-  "state": "planned",
+  "state": "verified",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
   "acceptance_git_commit": "",
-  "start_git_commit": "",
+  "start_git_commit": "b2d2c0dac93a8a672d66e3c0e603ad6eb07a6926",
   "execution_lease": "",
   "execution_lease_owner": "",
   "execution_lease_expires_at": "",
-  "preexisting_changes": [
-    "baselines/BL-004/manifest.json",
-    "docs/00-index/DOC-REGISTRY.md",
-    "docs/04-delivery/context/WP-009.context.json",
-    "public/app.js",
-    "public/index.html",
-    "public/styles.css",
-    "src/v3/index.js",
-    "tests/v3-api.test.js",
-    "docs/08-changes/CR-004.md",
-    "tests/backfill-v31-task-details.mjs",
-    "tests/import-docx-sample-plan.mjs",
-    "tests/import-live-data.mjs"
+  "preexisting_changes": [],
+  "plan_checkpoint_git_commit": "b2d2c0dac93a8a672d66e3c0e603ad6eb07a6926",
+  "plan_rebase_history": [
+    {
+      "previous_changes": [
+        "baselines/BL-004/manifest.json",
+        "docs/00-index/DOC-REGISTRY.md",
+        "docs/04-delivery/context/WP-009.context.json",
+        "public/app.js",
+        "public/index.html",
+        "public/styles.css",
+        "src/v3/index.js",
+        "tests/v3-api.test.js",
+        "docs/08-changes/CR-004.md",
+        "tests/backfill-v31-task-details.mjs",
+        "tests/import-docx-sample-plan.mjs",
+        "tests/import-live-data.mjs"
+      ],
+      "checkpoint_git_commit": "b2d2c0dac93a8a672d66e3c0e603ad6eb07a6926",
+      "rebased_at": "2026-08-21T13:46:10.4282912Z"
+    }
   ],
-  "plan_checkpoint_git_commit": "99803e879e9cbd7efff9fd169de118cd247ca853",
-  "plan_rebase_history": [],
-  "evidence": [],
-  "evidence_history": [],
-  "review_history": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-091/20260821T135800887Z-3108d286-review-client-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-091/20260821T135800887Z-3108d286-review-npm-test.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-091/20260821T134706217Z-a981e214-review-client-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-091/20260821T134706217Z-a981e214-review-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-091/review-round-1.json",
+    "docs/05-quality/evidence/TASK-091/20260821T135447918Z-0dffb535-review-client-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-091/20260821T135447918Z-0dffb535-review-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-091/review-round-2.json",
+    "docs/05-quality/evidence/TASK-091/20260821T135800887Z-3108d286-review-client-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-091/20260821T135800887Z-3108d286-review-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-091/review-round-3.json"
+  ],
+  "review_history": [
+    {
+      "path": "docs/05-quality/evidence/TASK-091/review-round-1.json",
+      "sha256": "4fc764252a4e893e6ac845037e7089b30eb639d9ec348fcd70d4454228ec0954",
+      "result": "changes-required",
+      "round_id": "RR-348545fdf8b2465cb7b9cbe792c8bd03",
+      "recorded_at": "2026-08-21T13:50:41.2944731Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-091/review-round-2.json",
+      "sha256": "fd61b997d34f3e43295237ee4cae25d74e3ddbcf6d19cb885c6b4b99a7bbf3e3",
+      "result": "passed",
+      "round_id": "RR-410215ebe08c4ca78877b1bd09020119",
+      "recorded_at": "2026-08-21T13:55:03.5502663Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-091/review-round-3.json",
+      "sha256": "3337e6e70271e0124e68add3ebed2a1754d9505264b940123dd7032d8e286c50",
+      "result": "passed",
+      "round_id": "RR-a3c5cb7d00ca463b938b99567cf1837c",
+      "recorded_at": "2026-08-21T13:58:16.2529871Z"
+    }
+  ],
   "review": {
     "required": false,
     "reviewer_task_id": "",
@@ -42,6 +83,6 @@
     "subject_sha256": ""
   },
   "last_error": "",
-  "created_at": "2026-08-21T11:12:25.7786600Z",
-  "updated_at": "2026-08-21T11:12:25.7786600Z"
+  "created_at": "2026-08-21T11:12:25.77866Z",
+  "updated_at": "2026-08-21T13:58:16.5897469Z"
 }

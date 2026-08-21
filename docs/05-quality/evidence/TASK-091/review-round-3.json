@@ -1,0 +1,47 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-091",
+  "reviewed_task_ids": [
+    "TASK-090"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-004",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-090",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "新增执行中心 V3 上下文索引，以 V1 task.id 对应 V3 topic task.task_id；在任务卡片、列表、任务详情和个人分配详情中投影专题、来源小组、任务制冷机、测试目的、测试项和样品信息，并在 V3 专题/任务刷新后重建索引和重渲染；无 V3 关联时保持既有 V1/V2 展示。"
+    }
+  ],
+  "change_summary": "作为 Standard 第二个连续通过候选轮，本轮重新从 TASK-090 启动提交 b2d2c0dac93a8a672d66e3c0e603ad6eb07a6926 全量审查同一最终内容，而非只复查上一轮问题。实际变更精确为 public/app.js modified（88 insertions、0 deletions），src/v3/index.js 无交付区间差异，没有其他新增、删除或重命名；最终 app.js SHA-256 与上一通过轮一致。",
+  "scope_checked": [
+    "TASK-090/TASK-091 Standard 契约、WP-009、BL-004、start_git_commit、allowed/write/read paths、Reviewer 绑定和连续通过要求",
+    "REQ-V21-001、ARC-OVERALL-003 与 ARC-COMP-005 对专题、样品、任务事实归属、task_id 兼容关联、执行中心复用和 V1/V2 冻结边界的要求",
+    "public/app.js 完整最终差异：state 索引/开关、executionV3Task、executionV3SampleText、executionV3Context、四处渲染接入、索引重建、刷新与模式切换",
+    "卡片模式投影专题、来源小组、任务制冷机、测试目的、测试项和样品 ETA 摘要",
+    "列表模式投影与卡片模式相同的结构化上下文，且原任务时间、成员、状态和操作保持不变",
+    "任务详情和个人分配详情投影测试目的、测试项，以及样品规划标签、型号、正式/临时编号、ETA pending/日期和实际到样日期",
+    "v3LoadTopics/v3LoadTopic 合并完整样品列表事实、按 legacy task_id 重建索引并立即调用 renderTasks/renderDetail 的刷新路径",
+    "executionV3Task 未命中、V3 接口暂不可用或旧任务无关联时 executionV3Context 返回空字符串的兼容回退",
+    "topic/source_group/cryostat/purpose/test item/sample 各动态字段的 escapeHtml 转义与静态 HTML 分隔符边界",
+    "planning_label===model、正式编号、临时编号、无编号、ETA pending、ETA 缺失、已到样等显示分支",
+    "src/v3/index.js 的 taskData 与 topic samples 响应可提供投影所需 task_id、上下文、结构化测试信息和完整样品事实",
+    "TASK-090 最终 Git 变更类型、行数、内容哈希和差异检查"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "node --check public/app.js：通过；最终 SHA-256=7d280acffc2708ea7698e69fdbb4ae6aae09913dba2b455d149fab046498b49d，与上一通过轮一致。",
+    "node --check src/v3/index.js：通过（只读 API 字段复核）。",
+    "npm test：30 个测试全部通过，0 failed、0 skipped；V1/V2 回归、schema/迁移、V3 schema/端点、结构化任务详情、样品/任务链/成果验收和制冷机冲突全部保持通过。",
+    "git -c safe.directory='D:/Codex/人员管理系统' diff --check b2d2c0dac93a8a672d66e3c0e603ad6eb07a6926 -- public/app.js：通过；仅有 LF/ignore 权限警告，无 whitespace error。",
+    "git diff --numstat：public/app.js 为 88 insertions、0 deletions；src/v3/index.js 无 TASK-090 区间差异。",
+    "样品分支静态复核：规划标签/型号同为 QPU-X 时显示“型号 QPU-X”；正式编号 F-1、临时编号 T-2、ETA 日期、ETA 待确认、到样日期和无编号/无 ETA 占位均按真实分支输出。",
+    "HTML 安全静态复核：专题、来源小组、制冷机、测试目的、测试项与所有样品文本在插入模板前经 escapeHtml，已转义 sampleSummary 仅与静态分隔符组合。",
+    "Test-ProjectGovernance.ps1 -Level Release：通过，错误数 0、警告数 0。"
+  ],
+  "created_at": "2026-08-21T13:56:54.3520846Z"
+}

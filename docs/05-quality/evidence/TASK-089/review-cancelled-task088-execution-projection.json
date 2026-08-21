@@ -1,0 +1,32 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-089",
+  "reviewed_task_ids": ["TASK-088"],
+  "work_package": "WP-009",
+  "baseline": "BL-004",
+  "result": "cancelled",
+  "diff_checked": true,
+  "changes": [
+    { "task_id": "TASK-088", "path": "docs/00-index/DOC-REGISTRY.md", "change_type": "modified", "summary": "登记 V3.1 结构化任务详情变更。" },
+    { "task_id": "TASK-088", "path": "public/app.js", "change_type": "modified", "summary": "实现 V3 专题任务客户端状态、详情和执行中心关联所依赖的展示逻辑。" },
+    { "task_id": "TASK-088", "path": "public/index.html", "change_type": "modified", "summary": "增加 V3 专题任务详情与结构化字段的桌面控件。" },
+    { "task_id": "TASK-088", "path": "public/styles.css", "change_type": "modified", "summary": "增加 V3 专题任务详情和结构化信息的桌面样式。" },
+    { "task_id": "TASK-088", "path": "src/v3/index.js", "change_type": "modified", "summary": "提供专题任务测试目的、测试项及上下文关联数据。" },
+    { "task_id": "TASK-088", "path": "tests/v3-api.test.js", "change_type": "modified", "summary": "覆盖 V3.1 任务结构化字段与回归契约。" },
+    { "task_id": "TASK-088", "path": "docs/08-changes/CR-004.md", "change_type": "added", "summary": "记录 V3.1 结构化任务详情变更包。" },
+    { "task_id": "TASK-088", "path": "tests/backfill-v31-task-details.mjs", "change_type": "added", "summary": "提供 V3.1 任务详情回填脚本。" }
+  ],
+  "change_summary": "TASK-088 未验收，已由 TASK-090 的执行中心结构化任务投影修复替代当前交付对象；保留本轮历史实现与审核证据，不再继续其旧审核周期。",
+  "scope_checked": [
+    "TASK-088.state.json 已标记为 superseded，未执行 Accept。",
+    "TASK-089 仅记录取消旧审核周期，不修改 TASK-088 实现文件。",
+    "变更清单与 TASK-088 从启动提交到当前工作树的实际非治理变更一致。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "已核对 TASK-088 的实际 Git 变更路径、类型和写入范围。",
+    "已核对 TASK-088 未验收且由 TASK-090 继续承接执行中心修复。"
+  ],
+  "created_at": "2026-08-21T13:40:00.000Z"
+}
