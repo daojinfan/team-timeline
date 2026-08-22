@@ -6,20 +6,37 @@
   "contract_sha256": "fab56d8d2d0a47c5ac0124f3608f2ab39979ecfe7f065eaf4996f8280345c00c",
   "baseline": "BL-005",
   "state": "planned",
-  "approval_id": "",
+  "approval_id": "APR-087",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
   "acceptance_git_commit": "",
-  "start_git_commit": "",
+  "start_git_commit": "080b138a420733296f6e166534f85e17fdf90dbf",
   "execution_lease": "",
   "execution_lease_owner": "",
   "execution_lease_expires_at": "",
   "preexisting_changes": [],
-  "plan_checkpoint_git_commit": "52e9bb04cee5f8a43830079548cdbe6c1a8341f1",
-  "plan_rebase_history": [],
+  "plan_checkpoint_git_commit": "080b138a420733296f6e166534f85e17fdf90dbf",
+  "plan_rebase_history": [
+    {
+      "previous_changes": [],
+      "checkpoint_git_commit": "080b138a420733296f6e166534f85e17fdf90dbf",
+      "rebased_at": "2026-08-22T04:14:11.1885518Z"
+    }
+  ],
   "evidence": [],
-  "evidence_history": [],
-  "review_history": [],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-107/20260822T042011123Z-75113bda-reviewer-diff-check.evidence.json",
+    "docs/05-quality/evidence/TASK-107/review-round-1.json"
+  ],
+  "review_history": [
+    {
+      "path": "docs/05-quality/evidence/TASK-107/review-round-1.json",
+      "sha256": "f57843e1bbc071e3f656c918871521aaf2f732b41d526197563430cbf413c018",
+      "result": "changes-required",
+      "round_id": "RR-614c2d0b72d64b7b8d2ebc92bc31e1cf",
+      "recorded_at": "2026-08-22T04:21:32.8271782Z"
+    }
+  ],
   "review": {
     "required": false,
     "reviewer_task_id": "",
@@ -30,5 +47,5 @@
   },
   "last_error": "",
   "created_at": "2026-08-22T03:59:17.1902358Z",
-  "updated_at": "2026-08-22T03:59:17.1902358Z"
+  "updated_at": "2026-08-22T04:23:43.3426932Z"
 }

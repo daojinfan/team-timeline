@@ -1,0 +1,52 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-107",
+  "reviewed_task_ids": ["TASK-106"],
+  "work_package": "WP-009",
+  "baseline": "BL-005",
+  "result": "changes-required",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-106",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "样品保存请求增加 initial_eta_date；任务排序失败时重读专题服务端任务顺序并提示人工确认，重读失败时保留原快照并提示刷新。"
+    },
+    {
+      "task_id": "TASK-106",
+      "path": "src/v3/index.js",
+      "change_type": "modified",
+      "summary": "专题 PUT 持久化 source_group_id 并校验联系人归属；样品 POST/PUT 持久化 initial_eta_date。"
+    },
+    {
+      "task_id": "TASK-106",
+      "path": "tests/v3-api.test.js",
+      "change_type": "modified",
+      "summary": "新增来源小组迁移、联系人跨组拒绝、旧联系人调用兼容和样品 initial ETA POST/PUT 回归覆盖。"
+    }
+  ],
+  "change_summary": "9a75e0e..HEAD 的 substantive TASK-106 变更共 3 个 write_paths 内路径：public/app.js、src/v3/index.js、tests/v3-api.test.js，均为 modified；治理运行状态、台账、审批日志及 TASK-106 自动验证证据路径按 TASK-106 write scope 与审核契约规则排除。实现差异覆盖 source_group_id 与联系人归属、initial_eta_date、排序失败重读；V4 其余工作区逻辑未在本次提交变更。",
+  "scope_checked": [
+    "TASK-106 Release contract、WP-009、BL-005 与 TASK-107 review contract",
+    "REQ-V4-005～014、ARC-OVERALL-V4-001、ARC-COMP-V4-001、QUAL-TRACE-V4-001：专题编辑、样品 ETA/到样/版本、排序失败服务端事实、同步与桌面边界",
+    "src/v3/index.js 的 PUT /api/v3/topics/:id、samples POST/PUT、ETA confirm、V3_SCHEMA_SQL、V3_SCHEMA_CHECKSUM 和 V3_ENDPOINTS",
+    "public/app.js 的 v3SaveTopic、v3SaveSample、v3MoveTask 及 TASK-104 已有 V4 状态/分组/统一编辑逻辑",
+    "tests/v3-api.test.js 新增来源/initial ETA 回归及既有 V1/V2/V3 测试套件"
+  ],
+  "findings": [
+    "changes-required：来源小组迁移时，public/app.js:3716 在编辑专题且联系人下拉为空时会回退发送 v3State.topic.source_contact_id，而不是发送显式 null。若专题从来源 A/联系人 A 改到来源 B 并暂不选择联系人，请求会携带 source_group_id=B、source_contact_id=A；src/v3/index.js:396 的新归属校验按设计返回 VALIDATION_ERROR，导致 UI 无法保存“换来源小组、联系人稍后补充”这一合法编辑路径。应在用户明确清空联系人时发送 null，并仅在未改变来源小组时保留旧联系人。"
+  ],
+  "validation_evidence": [
+    "git diff --name-status 9a75e0e..HEAD：9 个实际路径，4 modified governance/ledger、2 added TASK-106 evidence、public/app.js modified、src/v3/index.js modified、tests/v3-api.test.js modified；git diff --stat：146 insertions(+), 16 deletions(-)。",
+    "node --check public/app.js：exit 0。",
+    "node --check src/v3/index.js：exit 0。",
+    "npm test：exit 0，31 tests passed，0 failed；新增来源小组/联系人归属与 initial ETA 回归通过。",
+    "git diff --check（工作树及 9a75e0e..HEAD）：exit 0；工作树检查仅报告 docs/00-index/APPROVAL-LOG.md 的 LF/CRLF 转换提示。",
+    "V3_SCHEMA_SQL、V3_SCHEMA_CHECKSUM、V3_ENDPOINTS 在 9a75e0e..HEAD 未变化；V3 schema/checksum/endpoint surface 及 V1/V2 兼容测试通过。",
+    "排序失败分支静态核对：v3MoveTask catch 先 await v3LoadTopic(topic.id) 重读服务端任务，成功提示“已重新读取服务端顺序，请确认当前事实”，重读失败才恢复 previous 快照并提示手动刷新。",
+    "浏览器关键路径本轮未能建立 in-app browser 连接（浏览器绑定不可用）；因此未提供实时 DOM/双分辨率截图证据，V4 前端差异仅涉及样品 payload 与排序错误处理，未改动既有布局/状态/分组/统一编辑渲染。"
+  ],
+  "created_at": "2026-08-22T05:25:00+08:00"
+}

@@ -37,7 +37,7 @@ review_policy: independent-required
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | WP-009 | TASK-107 | pending | REVIEWER | 独立审核 V4 范围扩展修复实现 | BL-005 | pending | TASK-106 | pending | docs/05-quality/evidence/TASK-107 | reviewer-diff-check | n/a | n/a | n/a | Plan 自动登记，等待调度 |
-| WP-009 | TASK-106 | pending | IMPLEMENTER | 修复 V4 评审发现的来源小组、初始 ETA 与排序失败一致性 | BL-005 | pending | n/a | running | public/index.html, public/styles.css, public/app.js, src/v3/index.js, tests/v3-api.test.js | required-validation | TASK-107 | pending | pending | Plan 自动登记，等待调度 |
+| WP-009 | TASK-106 | pending | IMPLEMENTER | 修复 V4 评审发现的来源小组、初始 ETA 与排序失败一致性 | BL-005 | pending | n/a | running | public/index.html, public/styles.css, public/app.js, src/v3/index.js, tests/v3-api.test.js | required-validation | TASK-107 | pending |  | Plan 自动登记，等待调度 |
 | WP-009 | TASK-105 | pending | REVIEWER | 独立审核 V4 专题工作区与执行中心同步实现 | BL-005 | pending | TASK-104 | completed | docs/05-quality/evidence/TASK-105 | reviewer-diff-check | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-009 | TASK-104 | pending | IMPLEMENTER | 实现 V4 专题唯一工作区与执行中心同步体验 | BL-005 | pending | n/a | needs-attention | public/index.html, public/styles.css, public/app.js | required-validation | TASK-105 | changes-required | docs/05-quality/evidence/TASK-105/review-round-1.json | Plan 自动登记，等待调度 |
 | WP-009 | TASK-103 | pending | REVIEWER | 独立复审 V4 专题模块信息架构设计 | BL-004 | pending | TASK-102 | replaced | docs/05-quality/evidence/TASK-103 | v4-design-review-governance | n/a | n/a | n/a | Plan 自动登记，等待调度 |
