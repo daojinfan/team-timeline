@@ -1,0 +1,56 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-113",
+  "reviewed_task_ids": ["TASK-112"],
+  "work_package": "WP-009",
+  "baseline": "BL-005",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-112",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "最终工作台实现从共享 V3 专题事实生成管理摘要、筛选联动、待处理队列和历史/预测事件；历史 topic_task_id 被归一为 taskId，actionKind 分流到专题/执行/分配/验收，并在进入任务时设置 v3State.activeTaskId。"
+    },
+    {
+      "task_id": "TASK-112",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "最终页面提供六类摘要卡、制冷机与只看待处理筛选、待处理事项队列、近期/未来事件时间线和可展开的专题样品/任务明细。"
+    },
+    {
+      "task_id": "TASK-112",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "最终样式提供队列与时间线语义状态色、固定表格和换行/最小宽度约束，并在 1280px 断点下收缩为无页面级横向溢出的桌面布局。"
+    },
+    {
+      "task_id": "TASK-112",
+      "path": "tests/v4-workbench.test.js",
+      "change_type": "added",
+      "summary": "最终静态回归覆盖工作台资源与入口、actionKind 路由、topic_task_id/activeTaskId、时间窗口/16 条截取、状态芯片、筛选控件和桌面边界。"
+    }
+  ],
+  "change_summary": "从 TASK-112 启动提交 efedac37f4f775ea3529bdd35147ef269e29a6b2 到最终实现 HEAD 8f487ad250f12844e567ef25b20c8a27a913812e 的 scoped manifest 未变化：public/app.js (M)、public/index.html (M)、public/styles.css (M)、tests/v4-workbench.test.js (A)，4 files changed, 361 insertions(+), 15 deletions(-)。本轮确认 HEAD 与 8f487ad 起点在四个实现路径无新增差异；治理运行状态、审批/台账、自动验证和既有审核 evidence 均按 TASK-112 write scope 排除。",
+  "scope_checked": [
+    "efedac37..HEAD 的完整实际 scoped manifest，以及最终实现与 8f487ad 起点之间无实现差异的确认",
+    "工作台摘要六类事实、摘要卡联动、来源/状态/制冷机/onlyPending/archive/window 筛选与专题列表过滤",
+    "待处理队列字段和按钮 actionKind：样品事项进入专题，测试中进入执行中心，未分配进入人工分配，已提交进入成果验收",
+    "历史 V3 events 的 topic_task_id 映射、submission/acceptance 验收动作、任务事件 activeTaskId、预测 ETA/延期/任务节点，以及未来窗口优先、近 14 天回溯和 16 条截取顺序",
+    "可展开专题样品/任务明细、状态语义芯片（含实际到样尚未测试的无主语义）、专题规划/人工分配/执行中心/成果验收共享刷新和 V3 事实兼容",
+    "CSS 语义颜色、fixed table、min-width:0、overflow-wrap 与 1280px 响应断点对桌面布局的静态防溢出约束；实现差异未涉及 API/schema/database/src/v3"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "git diff --name-status efedac37f4f775ea3529bdd35147ef269e29a6b2..HEAD -- public/index.html public/app.js public/styles.css tests/v4-workbench.test.js 输出 public/app.js=M、public/index.html=M、public/styles.css=M、tests/v4-workbench.test.js=A；scoped stat 为 4 files changed, 361 insertions(+), 15 deletions(-)。",
+    "git diff --name-status 8f487ad250f12844e567ef25b20c8a27a913812e..HEAD -- public/index.html public/app.js public/styles.css tests/v4-workbench.test.js 无输出，确认最终实现内容未在上一轮后变化。",
+    "node --check public/app.js 通过（exit 0）。",
+    "npm test 通过：36 tests、36 pass、0 fail、0 skipped。",
+    "git diff --check efedac37f4f775ea3529bdd35147ef269e29a6b2..HEAD -- public/index.html public/app.js public/styles.css tests/v4-workbench.test.js 通过（exit 0）。",
+    "静态源码确认 event.taskId || event.topic_task_id、submission/acceptance actionKind、三处 v3State.activeTaskId = taskId、recentCutoff=14、futureLimit=addDays(today, windowDays)、upcoming+recent 后 slice(0,16)、v3StatusMarkup(task.display_status) 和 1280px CSS 断点均存在。",
+    "浏览器环境不可用，未执行 1280×720/1366×768 实机交互或横向溢出检查；已记录该限制并以源码、CSS 边界约束和自动化回归替代。"
+  ],
+  "created_at": "2026-08-22T16:10:00+08:00"
+}

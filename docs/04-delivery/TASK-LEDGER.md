@@ -37,7 +37,7 @@ review_policy: independent-required
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | WP-009 | TASK-113 | pending | REVIEWER | 独立审核 V4 工作台总览原型 | BL-005 | pending | TASK-112 | completed | docs/05-quality/evidence/TASK-113 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
-| WP-009 | TASK-112 | pending | IMPLEMENTER | 重设计 V4 工作台总览原型 | BL-005 | pending | n/a | running | public/index.html, public/app.js, public/styles.css, tests/v4-workbench.test.js | required-validation | TASK-113 | changes-required | docs/05-quality/evidence/TASK-113/review-round-2.json | Plan 自动登记，等待调度 |
+| WP-009 | TASK-112 | pending | IMPLEMENTER | 重设计 V4 工作台总览原型 | BL-005 | pending | n/a | running | public/index.html, public/app.js, public/styles.css, tests/v4-workbench.test.js | required-validation | TASK-113 | passed | docs/05-quality/evidence/TASK-113/review-round-4.json | Plan 自动登记，等待调度 |
 | WP-009 | TASK-111 | pending | REVIEWER | 独立审核 V4 颜色对比度修复（重启） | BL-005 | pending | TASK-110 | completed | docs/05-quality/evidence/TASK-111 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-009 | TASK-110 | pending | IMPLEMENTER | 修复专题列表与 V3 组件颜色对比度（重启） | BL-005 | pending | n/a | completed | public/styles.css, tests/v4-ui-contrast.test.js | required-validation | TASK-111 | passed | docs/05-quality/evidence/TASK-111/review-round-3.json | Plan 自动登记，等待调度 |
 | WP-009 | TASK-109 | pending | REVIEWER | 独立审核 V4 颜色对比度修复 | BL-005 | pending | TASK-108 | replaced | docs/05-quality/evidence/TASK-109 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |

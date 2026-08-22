@@ -1,0 +1,56 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-113",
+  "reviewed_task_ids": ["TASK-112"],
+  "work_package": "WP-009",
+  "baseline": "BL-005",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-112",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "实现工作台专题事实汇总、六类管理摘要、待处理队列与事件时间线；将历史事件的 topic_task_id 归一为 taskId，按事件类型生成 topic/execution/assignment/acceptance actionKind，设置进入任务时的 v3State.activeTaskId，并以未来窗口优先、近 14 天回溯和最多 16 条截取渲染事件。"
+    },
+    {
+      "task_id": "TASK-112",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "增加工作台管理摘要六卡、待处理队列、近期/未来事件时间线、制冷机与只看待处理筛选，以及可展开专题样品/任务明细和进入专题入口。"
+    },
+    {
+      "task_id": "TASK-112",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "增加摘要、队列、时间线、展开明细的桌面布局；使用固定表格、min-width:0、overflow-wrap 和 1280px 断点限制密集内容横向溢出，并为队列状态提供语义颜色。"
+    },
+    {
+      "task_id": "TASK-112",
+      "path": "tests/v4-workbench.test.js",
+      "change_type": "added",
+      "summary": "新增静态回归断言，覆盖工作台入口/资源端点、行动分流、topic_task_id 映射、activeTaskId、时间窗口与 16 条时间线、状态表达和桌面布局。"
+    }
+  ],
+  "change_summary": "从 TASK-112 启动提交 efedac37f4f775ea3529bdd35147ef269e29a6b2 到当前 HEAD 8f487ad250f12844e567ef25b20c8a27a913812e 的完整 scoped manifest 为 public/app.js (M)、public/index.html (M)、public/styles.css (M)、tests/v4-workbench.test.js (A)，统计为 4 files changed, 361 insertions(+), 15 deletions(-)。84c46b5/8f487ad 后的最终实现已包含前两轮事件路由、任务上下文选择和时间线窗口修复；.governance、docs/04-delivery 台账/状态及自动验证或前轮 evidence 路径属于系统路径，按 TASK-112 write scope 排除，不列入 changes。",
+  "scope_checked": [
+    "TASK-112 Release 契约、TASK-113 REVIEWER 契约、WP-009/BL-005 以及 efedac37..HEAD 的全部实际 scoped 差异和最终 84c46b5/8f487ad 内容",
+    "工作台六类管理摘要、摘要卡焦点联动、onlyPending/source/status/cryostat/archive/window 筛选及专题列表的状态过滤",
+    "待处理队列的来源小组、专题、样品/型号、任务、ETA、制冷机、负责人和 actionKind；topic/execution/assignment/acceptance 分别进入专题、执行中心、人工分配和成果验收",
+    "历史 V3 events 的 topic_task_id 归一、submission/acceptance 事件的验收动作、任务事件的 activeTaskId 上下文、预测 sample ETA/延期/task start/task end 节点、未来窗口与近 14 天排序及 16 条截取",
+    "可展开专题明细中的来源/专题/样品 ETA/到样、任务语义状态芯片/制冷机/负责人和进入专题入口；专题规划、人工分配、执行中心、成果验收及共享 V3 事实刷新兼容",
+    "CSS 状态颜色、固定表格、最小宽度/换行、1280px 响应断点对 1280×720 与 1366×768 桌面边界的静态约束；未发现 API/schema/database/src/v3 变更"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "git diff --name-status efedac37f4f775ea3529bdd35147ef269e29a6b2..HEAD -- public/index.html public/app.js public/styles.css tests/v4-workbench.test.js：public/app.js=M、public/index.html=M、public/styles.css=M、tests/v4-workbench.test.js=A；scoped stat：4 files changed, 361 insertions(+), 15 deletions(-)。",
+    "node --check public/app.js 通过（exit 0）。",
+    "npm test 通过：36 tests、36 pass、0 fail、0 skipped；包含新增工作台静态回归及既有 V1/V2/V3 回归。",
+    "git diff --check efedac37f4f775ea3529bdd35147ef269e29a6b2..HEAD -- public/index.html public/app.js public/styles.css tests/v4-workbench.test.js 通过（exit 0）。",
+    "静态源码复核确认历史事件使用 event.taskId || event.topic_task_id，按事件类型生成 actionKind；执行/验收动作设置 v3State.activeTaskId；时间线以 today/futureLimit 与 recentCutoff=14 天筛选，upcoming 优先后 recent，最终 slice(0,16)。",
+    "静态源码复核确认六类队列动作各自带 data-v3-workbench-action，任务明细使用 v3StatusMarkup，专题展开表格呈现样品/任务事实，CSS 提供语义状态色、min-width:0、overflow-wrap、fixed table 与 @media(max-width:1280px)。",
+    "浏览器环境不可用，未执行 1280×720/1366×768 实机交互和横向溢出检查；已以源码、CSS 边界约束和完整自动化回归记录该限制。"
+  ],
+  "created_at": "2026-08-22T16:06:27+08:00"
+}
