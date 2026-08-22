@@ -1,0 +1,45 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-111",
+  "reviewed_task_ids": ["TASK-110"],
+  "work_package": "WP-009",
+  "baseline": "BL-005",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-110",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "最终样式变更包含 V2 completed 深色前景、V3 状态芯片六主状态及别名、迁移成功徽标、专题/人工分配按钮基础规则，以及 ce964cc 添加的 hover/focus-visible/disabled 后代文字覆盖。"
+    },
+    {
+      "task_id": "TASK-110",
+      "path": "tests/v4-ui-contrast.test.js",
+      "change_type": "added",
+      "summary": "最终新增静态测试验证按钮交互态后代文字从 muted-on-soft 缺陷切换为 text-on-soft，并验证 V3 状态映射、V2 completed 和主状态 WCAG AA 对比度。"
+    }
+  ],
+  "change_summary": "最终第二轮的复核基准为 TASK-110 启动提交 14310fe8044fd0edf5162d5f58f4ec4a419885e3，HEAD 为 7144e32；scoped manifest 稳定为 public/styles.css (M，76 行新增) 和 tests/v4-ui-contrast.test.js (A，76 行新增)。TASK-111 本轮起点 ce964cc7548c52a04362e0da095c9a913132d718 与 HEAD 之间没有 scoped diff，确认同一最终内容未漂移。完整 Git 差异中治理状态、审批/台账和自动验证/前轮 evidence 路径不在 TASK-110 write scope，未列入 changes。",
+  "scope_checked": [
+    "14310fe..HEAD 的完整 TASK-110 CSS 与静态测试内容，以及 ce964cc..HEAD 的最终内容一致性",
+    "专题列表 button.v3-topic-row 与人工分配 button.v3-task-card 的默认、hover、focus-visible、disabled 背景/前景和后代 span/small 级联；全局 focus outline、disabled opacity/cursor 语义未被覆盖",
+    "V3 testing、delayed、arriving_within_window、arriving_outside_window、time_pending、completed 六主状态及 active、planned、paused、cancelled、submitted、accepted、returned 别名",
+    "迁移成功 v3-status-badge.is-success 与 V2 completed v2-status-chip[data-status=completed] 的前景、背景和后续 CSS 选择器覆盖",
+    "关键小字号 text-on-soft 对比度、颜色以外的状态文字以及 1280×720/1366×768 桌面边界的静态影响",
+    "V4 静态测试、npm 全量回归、JavaScript 语法检查和最终 Git 空白检查"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "限定 diff --name-status 14310fe..HEAD 输出 public/styles.css=M、tests/v4-ui-contrast.test.js=A；限定 stat 为 2 files changed, 152 insertions(+)。ce964cc..HEAD 在两项实现路径上无输出。",
+    "ce964cc 引入的 hover/focus-visible 后代 --text 规则与 disabled 后代 --text 规则均位于基础 --muted 规则之后，选择器覆盖正确；新增测试明确断言 text-on-soft >=4.5，而 muted-on-soft 4.42 仅作为失败基线。",
+    "独立计算 text-on-soft（#18212c/#eef2f6）为 16.24:1；六主状态分别为 5.17:1、4.83:1、6.79:1、4.76:1、5.70:1、4.60:1；迁移成功徽标为 5.02:1，均达到 4.5:1。",
+    "node --check public/app.js 通过（exit 0）。",
+    "npm test 通过：33 tests、33 pass、0 fail、0 skipped；包含 V4 交互态和状态芯片静态回归。",
+    "node --test tests/v4-ui-contrast.test.js 通过：2 tests、2 pass、0 fail。",
+    "git -c safe.directory='D:/Codex/人员管理系统' diff --check 14310fe..HEAD 通过（exit 0）。",
+    "浏览器工具在当前环境不可用，未执行 1280×720/1366×768 实机截图或溢出检查；以 CSS cascade、静态对比度、状态文本映射和完整自动化测试作为替代证据。"
+  ],
+  "created_at": "2026-08-22T15:00:55+08:00"
+}

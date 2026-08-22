@@ -5,22 +5,34 @@
   "work_package": "WP-009",
   "contract_sha256": "a8a2ef862f177b9c4172a206db46d347d2b726c21c9969b9dc37be032a35fedc",
   "baseline": "BL-005",
-  "state": "planned",
+  "state": "verified",
   "approval_id": "APR-091",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
   "acceptance_git_commit": "",
-  "start_git_commit": "7144e3238794a5b92418e34f672ec0b60efe0193",
+  "start_git_commit": "ce964cc7548c52a04362e0da095c9a913132d718",
   "execution_lease": "",
   "execution_lease_owner": "",
   "execution_lease_expires_at": "",
   "preexisting_changes": [],
-  "plan_checkpoint_git_commit": "fc99fba48f01026f6451f2871d175db81e27d489",
-  "plan_rebase_history": [],
-  "evidence": [],
+  "plan_checkpoint_git_commit": "ce964cc7548c52a04362e0da095c9a913132d718",
+  "plan_rebase_history": [
+    {
+      "previous_changes": [],
+      "checkpoint_git_commit": "ce964cc7548c52a04362e0da095c9a913132d718",
+      "rebased_at": "2026-08-22T06:56:39.5296197Z"
+    }
+  ],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-111/20260822T070145416Z-e85766b8-required-validation.evidence.json"
+  ],
   "evidence_history": [
     "docs/05-quality/evidence/TASK-111/20260822T064559277Z-b11f05a8-required-validation.evidence.json",
-    "docs/05-quality/evidence/TASK-111/review-round-1.json"
+    "docs/05-quality/evidence/TASK-111/review-round-1.json",
+    "docs/05-quality/evidence/TASK-111/20260822T065918345Z-bcc73d6d-required-validation.evidence.json",
+    "docs/05-quality/evidence/TASK-111/review-round-2.json",
+    "docs/05-quality/evidence/TASK-111/20260822T070145416Z-e85766b8-required-validation.evidence.json",
+    "docs/05-quality/evidence/TASK-111/review-round-3.json"
   ],
   "review_history": [
     {
@@ -29,6 +41,20 @@
       "result": "changes-required",
       "round_id": "RR-52b223908bfe407ab142b603e5e7f91a",
       "recorded_at": "2026-08-22T06:46:15.3211332Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-111/review-round-2.json",
+      "sha256": "d5514cf09084461f2342b44bac087d81c60143c3b829af5a7986f30ac3a9f85a",
+      "result": "passed",
+      "round_id": "RR-89cba02d5aa04ccf8c46d04548c5e419",
+      "recorded_at": "2026-08-22T06:59:36.4307822Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-111/review-round-3.json",
+      "sha256": "8e9585e7b9468f30cee1e265ee18842a73ca0a0717460c3e05ba613537c466c5",
+      "result": "passed",
+      "round_id": "RR-a5a36b91ef874c9dbde849b52e3de443",
+      "recorded_at": "2026-08-22T07:01:56.3805981Z"
     }
   ],
   "review": {
@@ -41,5 +67,5 @@
   },
   "last_error": "",
   "created_at": "2026-08-22T06:32:33.0012134Z",
-  "updated_at": "2026-08-22T06:56:09.5465460Z"
+  "updated_at": "2026-08-22T07:01:56.6971649Z"
 }

@@ -1,0 +1,47 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-111",
+  "reviewed_task_ids": ["TASK-110"],
+  "work_package": "WP-009",
+  "baseline": "BL-005",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-110",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "最终 CSS 包含 V2 completed 深色前景、V3 主状态/别名芯片、成功徽标、专题/人工分配按钮默认状态，以及 ce964cc 补充的 hover/focus-visible/disabled 后代 span/small 使用 --text 的交互态覆盖。"
+    },
+    {
+      "task_id": "TASK-110",
+      "path": "tests/v4-ui-contrast.test.js",
+      "change_type": "added",
+      "summary": "静态测试覆盖按钮交互态后代规则，并计算 muted-on-soft 基线与 text-on-soft 修复值，同时继续覆盖 V3 六主状态及别名、V2 completed 和迁移成功徽标。"
+    }
+  ],
+  "change_summary": "按 TASK-110 启动提交 14310fe8044fd0edf5162d5f58f4ec4a419885e3 到最终 HEAD 7144e32 复核，完整 scoped manifest 为 public/styles.css (M，76 lines added) 与 tests/v4-ui-contrast.test.js (A，76 lines added)。第二轮启动提交 ce964cc7548c52a04362e0da095c9a913132d718 已包含本轮修复；ce964cc..HEAD 无实现漂移，故本证据锁定同一最终内容。完整 Git 差异中的治理状态、审批/台账、TASK-110 自动验证和前轮 TASK-111 证据路径不属于 TASK-110 write scope，已排除 changes。",
+  "scope_checked": [
+    "TASK-110 14310fe..HEAD 的全部实际 CSS/静态测试差异，以及 ce964cc fix commit 引入的最终交互态规则和断言",
+    "专题列表 compact button 与人工分配 v3-task-card 的默认 surface、hover、focus-visible、disabled 背景/前景、后代 span/small cascade、全局 focus outline、disabled cursor/opacity",
+    "V3 testing、delayed、arriving_within_window、arriving_outside_window、time_pending、completed 六主状态及 active、planned、paused、cancelled、submitted、accepted、returned 别名芯片",
+    "V2 completed 芯片前景/背景级联、迁移成功徽标 is-success 的前景/背景及既有状态文字语义",
+    "关键小字号 text-on-soft、颜色不是唯一状态信息、交互态可读性和桌面 1280×720/1366×768 静态边界影响",
+    "新增静态对比度测试与全量 npm/V3/V2/V1 回归，及最终差异空白检查"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "git -c safe.directory='D:/Codex/人员管理系统' diff --name-status 14310fe..HEAD -- public/styles.css tests/v4-ui-contrast.test.js 输出 M public/styles.css、A tests/v4-ui-contrast.test.js；scoped numstat 为 public/styles.css 76/0、tests/v4-ui-contrast.test.js 76/0。",
+    "git -c safe.directory='D:/Codex/人员管理系统' diff --name-status ce964cc..HEAD -- public/styles.css tests/v4-ui-contrast.test.js 无输出，证明第二轮复核未发生最终内容漂移。",
+    "ce964cc 的实际修复差异增加 hover/focus-visible 后代 span/small 的 --text 规则、disabled 后代的 --text 规则，并新增 muted-on-soft 与 text-on-soft 对比度断言；静态 cascade 检查确认这些规则位于基础后代颜色规则之后且选择器 specificity 足以覆盖。",
+    "text-on-soft（#18212c on #eef2f6）对比度为 16.24:1，已超过 4.5:1；原 muted-on-soft（#667085 on #eef2f6）为 4.42:1，仅保留为测试中的已知基线，不再用于 hover/focus/disabled 后代。",
+    "主状态芯片独立计算为 testing 5.17:1、delayed 4.83:1、arriving_within_window 6.79:1、arriving_outside_window 4.76:1、time_pending 5.70:1、completed 4.60:1；迁移成功徽标白字/绿色背景 5.02:1，均达到 4.5:1。",
+    "node --check public/app.js 通过（exit 0）。",
+    "npm test 通过：33 tests、33 pass、0 fail、0 skipped；包含新增 V4 交互态和状态芯片静态测试。",
+    "node --test tests/v4-ui-contrast.test.js 通过：2 tests、2 pass、0 fail。",
+    "git -c safe.directory='D:/Codex/人员管理系统' diff --check 14310fe..HEAD 通过（exit 0）。",
+    "浏览器不可用，未能实机执行 1280×720 与 1366×768 交互/横向溢出检查；已通过 CSS cascade、对比度计算、焦点/禁用规则静态审查和完整回归测试记录限制。"
+  ],
+  "created_at": "2026-08-22T14:59:00+08:00"
+}
