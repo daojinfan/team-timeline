@@ -1,0 +1,89 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-106",
+  "work_package": "WP-009",
+  "title": "修复 V4 评审发现的来源小组、初始 ETA 与排序失败一致性",
+  "goal": "在 BL-005 与 CONF-V4-SCOPE-20260822-01 授权的范围扩展内，替代 TASK-104 完成三项修复：让专题编辑的来源小组在既有 V3 PUT 合约内持久化，让样品编辑维护 initial_eta_date，让任务排序失败重新读取服务端顺序并请求人工确认；保持 V3 schema/checksum、现有 endpoint surface、V2/V1 兼容，不引入 AI、手机端或自动分配。",
+  "baseline": "BL-005",
+  "profile": "Release",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "src/v3/index.js",
+    "tests/v3-api.test.js"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "src/v3/index.js",
+    "tests/v3-api.test.js",
+    "tests"
+  ],
+  "write_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "src/v3/index.js",
+    "tests/v3-api.test.js"
+  ],
+  "out_of_scope": [
+    "src/server.js",
+    "V3 schema、checksum 与 endpoint surface 变更",
+    "V2 canonical 表/API、数据库迁移",
+    "AI 自动建任务、自动分配、手机端、登录、云同步、附件存储"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "专题编辑修改来源小组后通过既有 PUT /api/v3/topics/:id 保存并在重新读取专题时反映，source_contact_id 仍遵守来源小组约束。",
+    "样品编辑保存 initial_eta_date、current_eta_date、eta_pending、编号和到样事实，ETA 预览/确认与版本冲突链路保持有效。",
+    "任务排序请求失败时重新读取专题任务顺序，提示人工确认服务端当前事实，不把过期客户端顺序当作最终事实；成功排序仍按 ordered_task_ids 保存。",
+    "TASK-104 已实现的专题唯一工作区、状态/颜色、分组、全量编辑、跨入口同步和桌面边界不回归。",
+    "现有 V1/V2/V3 API/schema/checksum 与测试回归保持通过，新增 V3 回归覆盖来源小组和初始 ETA 持久化。"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-22T03:59:02.4144697Z",
+  "release_controls": {
+    "target_environment": "本地 Windows 桌面浏览器与 V3 测试环境，D:\\Codex\\人员管理系统，dev 分支",
+    "execution_window": "范围扩展修复窗口；完成 V3 回归、客户端静态检查与双分辨率复核后再请求审核",
+    "rollback_plan": "回退 TASK-106 实现提交；不修改数据库 schema 或 checksum，不删除现有业务数据",
+    "observation_metrics": "npm test、node --check public/app.js、node --check src/v3/index.js、git diff --check、V3 API 回归、排序失败错误路径与双分辨率关键路径",
+    "stop_conditions": "发现 endpoint surface/schema/checksum/V2 canonical 变化、数据丢失、来源小组跨组联系人约束破坏、排序失败未重载服务端事实或范围再次超出 public/src/v3/tests",
+    "post_release_owner": "项目经理（协调工作树）"
+  }
+}

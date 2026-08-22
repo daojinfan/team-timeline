@@ -1,0 +1,80 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-107",
+  "work_package": "WP-009",
+  "title": "独立审核 V4 范围扩展修复实现",
+  "goal": "独立审核 TASK-106 的 V4 范围扩展修复，确认来源小组持久化、initial_eta_date、排序失败服务端重载与既有 V4/ V3 兼容边界均符合批准范围，并对最终内容完成 Release 两轮全量审核。",
+  "baseline": "BL-005",
+  "profile": "Release",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-107"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "src/v3/index.js",
+    "tests/v3-api.test.js",
+    "tests"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-107"
+  ],
+  "out_of_scope": [
+    "修改 public、src、tests、数据库、任务台账或治理状态"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-106"
+  ],
+  "acceptance_criteria": [
+    "逐项检查 TASK-106 从启动提交到当前工作树的实际差异，列出新增、修改、删除或重命名路径与内容摘要。",
+    "核对来源小组 PUT 持久化、source_contact 约束、initial_eta_date 版本链、排序失败服务端重载及既有 V4 主路径。",
+    "核对 V3 schema/checksum/endpoint surface、V2/V1 兼容、自动化回归、双分辨率和错误路径，不能只依赖测试输出。",
+    "Release 档位完成同一最终内容两轮全量审核并保存结构化证据。"
+  ],
+  "validations": [
+    {
+      "id": "reviewer-diff-check",
+      "command": "git",
+      "args": [
+        "diff",
+        "--check"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "production_release"
+  ],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-22T03:59:17.1902358Z",
+  "release_controls": {
+    "target_environment": "本地协调工作树，审核 TASK-106 范围扩展修复",
+    "execution_window": "TASK-106 完成实现与验证后执行两轮审核",
+    "rollback_plan": "仅移除 TASK-107 审核证据，不修改 TASK-106 实现",
+    "observation_metrics": "实际差异清单、V4/V3 验收映射、npm test、静态检查与 Release 治理结果",
+    "stop_conditions": "发现实现越界、V3 contract/schema/checksum 变化、数据一致性错误、错误路径未保留事实或治理校验失败",
+    "post_release_owner": "项目经理（协调工作树）"
+  }
+}
