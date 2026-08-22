@@ -39,6 +39,10 @@ test('workbench reuses V3 topic resources and renders safe, actionable projectio
   assert.match(app, /v3State\.cryostat/);
   assert.match(app, /v3StatusMarkup\(task\.display_status\)/);
   assert.match(app, /\["pending_eta", "recent_arrival", "delayed", "testing", "unassigned", "submitted"\]/);
+  assert.match(app, /event\.taskId \|\| event\.topic_task_id/);
+  assert.match(app, /v3State\.activeTaskId = taskId/);
+  assert.match(app, /recentCutoff = v3DaysAgoIso\(14\)/);
+  assert.match(app, /futureLimit = addDays\(today, v3State\.windowDays\)/);
 });
 
 test('workbench layout constrains dense desktop content', () => {
