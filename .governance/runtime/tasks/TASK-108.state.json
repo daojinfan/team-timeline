@@ -5,20 +5,30 @@
   "work_package": "WP-009",
   "contract_sha256": "4f7670a728f211d82333c230b6c58faffb7e7d894799abf7e68f0feb0c5424d7",
   "baseline": "BL-005",
-  "state": "planned",
-  "approval_id": "",
+  "state": "needs-decision",
+  "approval_id": "APR-088",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
   "acceptance_git_commit": "",
-  "start_git_commit": "",
+  "start_git_commit": "51e90b97a9df544c0b3701a809ac91c758aec86d",
   "execution_lease": "",
   "execution_lease_owner": "",
   "execution_lease_expires_at": "",
   "preexisting_changes": [],
-  "plan_checkpoint_git_commit": "d166fd406196c97128ef66a418e243625ca26347",
-  "plan_rebase_history": [],
-  "evidence": [],
-  "evidence_history": [],
+  "plan_checkpoint_git_commit": "51e90b97a9df544c0b3701a809ac91c758aec86d",
+  "plan_rebase_history": [
+    {
+      "previous_changes": [],
+      "checkpoint_git_commit": "51e90b97a9df544c0b3701a809ac91c758aec86d",
+      "rebased_at": "2026-08-22T06:17:05.377591Z"
+    }
+  ],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-108/20260822T062108290Z-b09d1770-required-validation.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-108/20260822T062108290Z-b09d1770-required-validation.evidence.json"
+  ],
   "review_history": [],
   "review": {
     "required": true,
@@ -28,7 +38,7 @@
     "pass_streak": 0,
     "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "旧交付 TASK-106 的 Release 独立审核已冻结 public/styles.css 内容指纹；本任务在未完成 TASK-106 acceptance 前修改同一写入范围，治理校验检测到旧审核证据与当前工作树不一致。需先获得 TASK-106 acceptance，再重新规划 CSS 修复。",
   "created_at": "2026-08-22T06:15:23.9165048Z",
-  "updated_at": "2026-08-22T06:15:49.9979444Z"
+  "updated_at": "2026-08-22T06:23:57.2200306Z"
 }
