@@ -10,9 +10,15 @@ const backupDir = path.join(root, "data", "backups");
 const backupPath = path.join(backupDir, "team_tasks.sqlite.pre-web-reconcile-20260822-01.sqlite");
 const snapshotPath = path.join(backupDir, "web-reconcile-before-20260822-01.json");
 const rehearsalPath = path.join(backupDir, "team_tasks.sqlite.rollback-rehearsal-20260822-01.sqlite");
+const unassignedBackupPath = path.join(backupDir, "team_tasks.sqlite.pre-unassigned-topic-20260822-01.sqlite");
+const unassignedSnapshotPath = path.join(backupDir, "unassigned-topic-before-20260822-01.json");
+const unassignedRehearsalPath = path.join(backupDir, "team_tasks.sqlite.rollback-rehearsal-unassigned-topic-20260822-01.sqlite");
 const sourceGroupId = 1;
 const sourceGroupName = "工艺组";
 const actor = "web-data-reconcile-20260822-01";
+const unassignedActor = "unassigned-topic-migration-20260822-01";
+const unassignedTopicName = "无专题";
+const unassignedTopicPurpose = "暂存尚未归入正式专题的历史任务；任务编号和已有排期保留，专题归属及 V3 详情可后续补全。";
 const selectedTopicIds = [1, 2, 3, 4, 6];
 const selectedSampleIds = [1, 4, 5, 7, 8, 9, 10, 11, 13];
 const archivedTopicIds = [5, 7, 8, 9, 10];
@@ -323,15 +329,236 @@ async function rehearseRollback() {
   } finally { db.close(); }
 }
 
-const mode = process.argv.includes("--apply") ? "apply" : process.argv.includes("--verify") ? "verify" : process.argv.includes("--rollback-rehearsal") ? "rollback-rehearsal" : null;
+function unassignedTaskRows(db) {
+  return rows(db, `SELECT t.* FROM tasks t
+    WHERE t.deleted_at IS NULL
+      AND NOT EXISTS (SELECT 1 FROM v3_topic_tasks tt WHERE tt.task_id=t.id)
+    ORDER BY t.id`);
+}
+
+function normalizedDate(value) {
+  return /^\d{4}-\d{2}-\d{2}$/.test(String(value || "")) ? String(value) : null;
+}
+
+function normalizedTestItems(value) {
+  if (!value) return "[]";
+  try {
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed) ? JSON.stringify(parsed) : "[]";
+  } catch { return "[]"; }
+}
+
+function unassignedCryostat(db, title) {
+  const text = String(title || "").toLowerCase();
+  const aliases = [
+    ["上海祖三", "上海祖三号"], ["上海祖三号", "上海祖三号"],
+    ["祖4制冷机", "祖4"], ["z4.1", "z4.1"], ["祖4", "祖4"],
+    ["杭州号", "杭州号"], ["上海号", "上海号"], ["重庆号", "重庆号"], ["合肥号", "合肥号"]
+  ];
+  for (const [alias, name] of aliases) {
+    if (!text.includes(alias.toLowerCase())) continue;
+    const row = one(db, "SELECT id FROM v2_cryostats WHERE normalized_name=? AND status='active'", name.toLowerCase());
+    if (row) return row.id;
+  }
+  return null;
+}
+
+function unassignedTopicRows(db) {
+  return rows(db, "SELECT id,source_group_id,name,purpose,default_cryostat_id,archived_at,version FROM v3_topics WHERE name=? ORDER BY id", unassignedTopicName);
+}
+
+function unassignedExistingFacts(db) {
+  return {
+    topics: rows(db, "SELECT id,source_group_id,name,purpose,default_cryostat_id,archived_at,version FROM v3_topics ORDER BY id"),
+    topicTasks: rows(db, "SELECT id,topic_id,task_id,task_lineage_key,title,description,position,is_required,primary_member_id,cryostat_id,cryostat_pending,start_date,end_date,after_arrival,status_source,version FROM v3_topic_tasks ORDER BY id")
+  };
+}
+
+function buildUnassignedSnapshot(db, databaseSha256) {
+  const taskRows = unassignedTaskRows(db);
+  const counts = {};
+  for (const table of ["v3_topics", "v3_samples", "v3_topic_tasks", "v3_task_samples", "v3_task_member_efforts", "v3_deliverable_submissions"]) {
+    counts[table] = one(db, `SELECT COUNT(*) AS count FROM ${table}`).count;
+  }
+  return {
+    schema_version: 1,
+    created_at: isoNow(),
+    database_sha256: databaseSha256,
+    source_group_id: sourceGroupId,
+    source_group_name: sourceGroupName,
+    topic_name: unassignedTopicName,
+    task_ids: taskRows.map((task) => task.id),
+    task_count: taskRows.length,
+    task_facts: taskRows.map((task) => ({ id: task.id, title: task.title, description: task.description, default_start_date: task.default_start_date, default_end_date: task.default_end_date, status: task.status })),
+    topic_rows_before: unassignedTopicRows(db),
+    v3_counts_before: counts,
+    existing_facts_before: unassignedExistingFacts(db)
+  };
+}
+
+async function ensureUnassignedBackupAndSnapshot() {
+  await mkdir(backupDir, { recursive: true });
+  if (existsSync(unassignedBackupPath) || existsSync(unassignedSnapshotPath)) throw new Error("无专题迁移备份或快照已存在，拒绝重复写入；如需重做请先使用备份回滚并由项目经理确认。");
+  if (!existsSync(dbPath)) throw new Error(`数据库不存在：${dbPath}`);
+  await copyFile(dbPath, unassignedBackupPath);
+  const beforeHash = await fileSha256(dbPath);
+  const backupHash = await fileSha256(unassignedBackupPath);
+  if (beforeHash !== backupHash) throw new Error("无专题迁移执行前备份哈希不一致。");
+  const db = new DatabaseSync(dbPath, { readOnly: true });
+  try {
+    db.exec("PRAGMA foreign_keys=ON");
+    const snapshot = buildUnassignedSnapshot(db, beforeHash);
+    if (!snapshot.task_count) throw new Error("执行前未发现无专题任务，拒绝创建空迁移。");
+    await writeFile(unassignedSnapshotPath, JSON.stringify(snapshot, null, 2) + "\n", "utf8");
+    return snapshot;
+  } finally { db.close(); }
+}
+
+function ensureUnassignedTopic(db, stamp) {
+  const group = one(db, "SELECT id,name FROM v2_source_groups WHERE id=? AND is_active=1", sourceGroupId);
+  if (!group || group.name !== sourceGroupName) throw new Error("来源小组 ID 1 不是工艺组，拒绝创建无专题。");
+  const matches = unassignedTopicRows(db);
+  if (matches.length > 1) throw new Error(`已存在多个“${unassignedTopicName}”专题，拒绝自动合并。`);
+  if (matches.length === 1) {
+    if (matches[0].source_group_id !== sourceGroupId) throw new Error(`“${unassignedTopicName}”专题来源小组不是工艺组。`);
+    db.prepare("UPDATE v3_topics SET purpose=?,archived_at=NULL,version=version+1,updated_at=? WHERE id=?").run(unassignedTopicPurpose, stamp, matches[0].id);
+    return matches[0].id;
+  }
+  const result = db.prepare("INSERT INTO v3_topics(source_group_id,name,purpose,default_cryostat_id,archived_at,version,created_at,updated_at) VALUES(?,?,?,NULL,NULL,1,?,?)").run(sourceGroupId, unassignedTopicName, unassignedTopicPurpose, stamp, stamp);
+  return Number(result.lastInsertRowid);
+}
+
+function unassignedMembers(db, taskId) {
+  const members = rows(db, `SELECT DISTINCT a.member_id FROM task_assignments a
+    JOIN members m ON m.id=a.member_id
+    WHERE a.task_id=? AND a.deleted_at IS NULL AND m.deleted_at IS NULL
+    ORDER BY a.member_id`, taskId).map((row) => row.member_id);
+  return members.length ? members : [18];
+}
+
+function applyUnassignedData(db, stamp, taskIds) {
+  const topicId = ensureUnassignedTopic(db, stamp);
+  let position = one(db, "SELECT COALESCE(MAX(position)+1,0) AS next_position FROM v3_topic_tasks WHERE topic_id=?", topicId).next_position;
+  const insertTask = db.prepare(`INSERT INTO v3_topic_tasks(topic_id,task_id,task_lineage_key,title,description,test_purpose,test_items_json,position,is_required,primary_member_id,cryostat_id,cryostat_pending,start_date,end_date,after_arrival,status_source,version,created_at,updated_at)
+    VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`);
+  const insertEffort = db.prepare("INSERT INTO v3_task_member_efforts(topic_task_id,member_id,planned_half_hours,created_at,updated_at) VALUES(?,?,?,?,?)");
+  const insertEvent = db.prepare("INSERT INTO v3_topic_events(topic_id,topic_task_id,event_type,actor,after_json,created_at) VALUES(?,?,?,?,?,?)");
+  for (const task of unassignedTaskRows(db)) {
+    if (taskIds && !taskIds.includes(task.id)) continue;
+    if (one(db, "SELECT id FROM v3_topic_tasks WHERE task_id=?", task.id)) throw new Error(`canonical 任务 ${task.id} 已被其他专题绑定。`);
+    const members = unassignedMembers(db, task.id);
+    const primary = members[0];
+    const cryostatId = unassignedCryostat(db, task.title);
+    const start = normalizedDate(task.default_start_date);
+    const end = normalizedDate(task.default_end_date);
+    const result = insertTask.run(topicId, task.id, `unassigned-legacy-${task.id}`, String(task.title || ""), String(task.description || ""), String(task.test_purpose || ""), normalizedTestItems(task.test_items_json), position, 1, primary, cryostatId, cryostatId == null ? 1 : 0, start, end, 0, "manual", 1, stamp, stamp);
+    const topicTaskId = Number(result.lastInsertRowid);
+    for (const memberId of members) insertEffort.run(topicTaskId, memberId, 0, stamp, stamp);
+    insertEvent.run(topicId, topicTaskId, "data_bind_unassigned_task", unassignedActor, JSON.stringify({ canonical_task_id: task.id, title: task.title, sample_count: 0, test_purpose_preserved: Boolean(task.test_purpose), test_items_preserved: Boolean(task.test_items_json) }), stamp);
+    position += 1;
+  }
+  return topicId;
+}
+
+function expectedUnassignedSnapshot() {
+  if (!existsSync(unassignedSnapshotPath)) throw new Error(`缺少无专题迁移执行前快照：${unassignedSnapshotPath}`);
+  return JSON.parse(readFileSync(unassignedSnapshotPath, "utf8"));
+}
+
+function assertUnassignedExistingFacts(db, snapshot) {
+  const topicIds = snapshot.existing_facts_before.topics.map((row) => row.id);
+  const taskIds = snapshot.existing_facts_before.topicTasks.map((row) => row.id);
+  const topicMarks = topicIds.length ? topicIds.map(() => "?").join(",") : "NULL";
+  const taskMarks = taskIds.length ? taskIds.map(() => "?").join(",") : "NULL";
+  const facts = {
+    topics: rows(db, `SELECT id,source_group_id,name,purpose,default_cryostat_id,archived_at,version FROM v3_topics WHERE id IN (${topicMarks}) ORDER BY id`, ...topicIds),
+    topicTasks: rows(db, `SELECT id,topic_id,task_id,task_lineage_key,title,description,position,is_required,primary_member_id,cryostat_id,cryostat_pending,start_date,end_date,after_arrival,status_source,version FROM v3_topic_tasks WHERE id IN (${taskMarks}) ORDER BY id`, ...taskIds)
+  };
+  if (digest(facts) !== digest(snapshot.existing_facts_before)) throw new Error("无专题迁移意外修改了既有 V3 专题或任务事实。");
+}
+
+async function verifyUnassigned() {
+  if (!existsSync(unassignedBackupPath)) throw new Error(`缺少无专题迁移 SQLite 备份：${unassignedBackupPath}`);
+  const before = expectedUnassignedSnapshot();
+  const db = new DatabaseSync(dbPath, { readOnly: true });
+  try {
+    db.exec("PRAGMA foreign_keys=ON");
+    const integrity = one(db, "PRAGMA integrity_check").integrity_check;
+    if (integrity !== "ok") throw new Error(`SQLite integrity_check=${integrity}`);
+    const foreignKeys = db.prepare("PRAGMA foreign_key_check").all();
+    if (foreignKeys.length) throw new Error(`SQLite foreign_key_check 返回 ${foreignKeys.length} 条记录。`);
+    const topics = unassignedTopicRows(db).filter((row) => row.source_group_id === sourceGroupId && row.archived_at == null);
+    if (topics.length !== 1) throw new Error(`“${unassignedTopicName}”专题数量异常：${topics.length}`);
+    const topicId = topics[0].id;
+    const taskIds = before.task_ids;
+    const linked = rows(db, `SELECT task_id FROM v3_topic_tasks WHERE topic_id=? AND task_id IN (${taskIds.map(() => "?").join(",")}) ORDER BY task_id`, topicId, ...taskIds).map((row) => row.task_id);
+    if (JSON.stringify(linked) !== JSON.stringify(taskIds)) throw new Error(`无专题任务未完整绑定：期望 ${taskIds.length}，实际 ${linked.length}。`);
+    const unbound = one(db, "SELECT COUNT(*) AS count FROM tasks t WHERE t.deleted_at IS NULL AND NOT EXISTS (SELECT 1 FROM v3_topic_tasks tt WHERE tt.task_id=t.id)").count;
+    if (unbound !== 0) throw new Error(`迁移后仍有 ${unbound} 个未绑定任务。`);
+    const taskCount = one(db, "SELECT COUNT(*) AS count FROM v3_topic_tasks WHERE topic_id=?", topicId).count;
+    if (taskCount !== taskIds.length) throw new Error(`无专题任务数异常：${taskCount}。`);
+    for (const task of before.task_facts) {
+      const current = one(db, "SELECT id,title,description,default_start_date,default_end_date,status,deleted_at FROM tasks WHERE id=?", task.id);
+      if (!current || current.title !== task.title || current.description !== task.description || current.default_start_date !== task.default_start_date || current.default_end_date !== task.default_end_date || current.status !== task.status || current.deleted_at !== null) throw new Error(`canonical 任务 ${task.id} 的原始字段被改变。`);
+    }
+    assertUnassignedExistingFacts(db, before);
+    const orphanSamples = one(db, "SELECT COUNT(*) AS count FROM v3_task_samples ts LEFT JOIN v3_topic_tasks tt ON tt.id=ts.topic_task_id LEFT JOIN v3_samples s ON s.id=ts.sample_id WHERE tt.id IS NULL OR s.id IS NULL").count;
+    const orphanEfforts = one(db, "SELECT COUNT(*) AS count FROM v3_task_member_efforts e LEFT JOIN v3_topic_tasks tt ON tt.id=e.topic_task_id LEFT JOIN members m ON m.id=e.member_id WHERE tt.id IS NULL OR m.id IS NULL").count;
+    const orphanDeps = one(db, "SELECT COUNT(*) AS count FROM v3_task_dependencies d LEFT JOIN v3_topic_tasks p ON p.id=d.predecessor_task_id LEFT JOIN v3_topic_tasks s ON s.id=d.successor_task_id WHERE p.id IS NULL OR s.id IS NULL").count;
+    if (orphanSamples || orphanEfforts || orphanDeps) throw new Error(`V3 孤儿关系：samples=${orphanSamples}, efforts=${orphanEfforts}, deps=${orphanDeps}`);
+    return { integrity, foreign_key_errors: foreignKeys.length, topic_id: topicId, topic_name: unassignedTopicName, migrated_task_count: taskIds.length, migrated_task_ids: taskIds, remaining_unbound_tasks: unbound, task_count: taskCount, orphan_samples: orphanSamples, orphan_efforts: orphanEfforts, orphan_dependencies: orphanDeps, existing_v3_facts_unchanged: true };
+  } finally { db.close(); }
+}
+
+async function rehearseUnassignedRollback() {
+  if (!existsSync(unassignedBackupPath)) throw new Error(`缺少无专题迁移备份：${unassignedBackupPath}`);
+  if (existsSync(unassignedRehearsalPath)) throw new Error(`无专题回滚演练文件已存在：${unassignedRehearsalPath}`);
+  await copyFile(unassignedBackupPath, unassignedRehearsalPath);
+  const db = new DatabaseSync(unassignedRehearsalPath, { readOnly: true });
+  try {
+    const before = expectedUnassignedSnapshot();
+    const integrity = one(db, "PRAGMA integrity_check").integrity_check;
+    if (integrity !== "ok") throw new Error(`回滚演练 integrity_check=${integrity}`);
+    const unbound = one(db, "SELECT COUNT(*) AS count FROM tasks t WHERE t.deleted_at IS NULL AND NOT EXISTS (SELECT 1 FROM v3_topic_tasks tt WHERE tt.task_id=t.id)").count;
+    const counts = {};
+    for (const table of Object.keys(before.v3_counts_before)) counts[table] = one(db, `SELECT COUNT(*) AS count FROM ${table}`).count;
+    if (unbound !== before.task_count || digest(counts) !== digest(before.v3_counts_before)) throw new Error("无专题回滚演练未恢复执行前快照。");
+    return { integrity, unbound_tasks: unbound, counts };
+  } finally { db.close(); }
+}
+
+async function applyUnassigned() {
+  const snapshot = await ensureUnassignedBackupAndSnapshot();
+  const db = new DatabaseSync(dbPath);
+  const stamp = isoNow();
+  try {
+    db.exec("PRAGMA foreign_keys=ON");
+    db.exec("BEGIN IMMEDIATE");
+    const current = unassignedTaskRows(db);
+    if (current.length !== snapshot.task_count || current.some((task, index) => task.id !== snapshot.task_ids[index])) throw new Error("迁移开始前未绑定任务集合已发生变化，拒绝写入。");
+    const topicId = applyUnassignedData(db, stamp, snapshot.task_ids);
+    db.exec("COMMIT");
+    const result = await verifyUnassigned();
+    const rollback = await rehearseUnassignedRollback();
+    console.log(JSON.stringify({ mode: "bind-unassigned", backup: unassignedBackupPath, snapshot: unassignedSnapshotPath, topic_id: topicId, before_task_count: snapshot.task_count, result, rollback }, null, 2));
+  } catch (error) {
+    try { db.exec("ROLLBACK"); } catch {}
+    throw error;
+  } finally { db.close(); }
+}
+
+const mode = process.argv.includes("--apply") ? "apply" : process.argv.includes("--verify") ? "verify" : process.argv.includes("--rollback-rehearsal") ? "rollback-rehearsal" : process.argv.includes("--bind-unassigned") ? "bind-unassigned" : process.argv.includes("--verify-unassigned") ? "verify-unassigned" : process.argv.includes("--rollback-rehearsal-unassigned") ? "rollback-rehearsal-unassigned" : null;
 if (!mode) {
-  console.error("用法：node scripts/reconcile-web-data.mjs --apply|--verify|--rollback-rehearsal");
+  console.error("用法：node scripts/reconcile-web-data.mjs --apply|--verify|--rollback-rehearsal|--bind-unassigned|--verify-unassigned|--rollback-rehearsal-unassigned");
   process.exitCode = 2;
 } else {
   try {
     if (mode === "apply") await apply();
     else if (mode === "verify") console.log(JSON.stringify({ mode, result: await verify() }, null, 2));
-    else await rehearseRollback();
+    else if (mode === "rollback-rehearsal") await rehearseRollback();
+    else if (mode === "bind-unassigned") await applyUnassigned();
+    else if (mode === "verify-unassigned") console.log(JSON.stringify({ mode, result: await verifyUnassigned() }, null, 2));
+    else console.log(JSON.stringify({ mode, result: await rehearseUnassignedRollback() }, null, 2));
   } catch (error) {
     console.error(JSON.stringify({ mode, error: error instanceof Error ? error.message : String(error) }, null, 2));
     process.exitCode = 1;

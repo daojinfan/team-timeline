@@ -1,0 +1,21 @@
+{
+  "$schema": "schemas/validation-evidence.schema.json",
+  "schema_version": 1,
+  "task_id": "TASK-118",
+  "work_package": "WP-010",
+  "baseline": "BL-005",
+  "contract_sha256": "952ee2ff40cf8e9e39725bba5c9523d7ac2d8cbe49a94c9f0050b47ce4e5366f",
+  "git_commit": "156a9d3ae3416e8aee4efd38fd332a43ec8a1b02",
+  "validation_id": "unassigned-topic-verify",
+  "command": "node",
+  "args": [
+    "scripts/reconcile-web-data.mjs",
+    "--verify-unassigned"
+  ],
+  "started_at": "2026-08-22T15:44:05.0061132Z",
+  "finished_at": "2026-08-22T15:44:05.1758241Z",
+  "exit_code": 0,
+  "redactions_applied": 0,
+  "output_path": "docs/05-quality/evidence/TASK-118/20260822T154404999Z-bd731c44-unassigned-topic-verify.output.txt",
+  "output_sha256": "9ee503e9e4fb8367f1b48d448bf3d4b0345d1e2cf401a78ce7627412f71468ee"
+}

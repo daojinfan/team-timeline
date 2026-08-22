@@ -37,7 +37,7 @@ review_policy: independent-required
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | WP-010 | TASK-119 | pending | REVIEWER | 审核无专题任务迁移结果 | BL-005 | pending | TASK-118 | pending | docs/05-quality/evidence/TASK-119 | unassigned-topic-review | n/a | n/a | n/a | Plan 自动登记，等待调度 |
-| WP-010 | TASK-118 | pending | IMPLEMENTER | 将无专题任务归入无专题专题 | BL-005 | pending | TASK-114 | pending | scripts/reconcile-web-data.mjs, data/team_tasks.sqlite, data/backups, docs/05-quality/evidence/TASK-118 | unassigned-topic-verify | TASK-119 | pending | pending | Plan 自动登记，等待调度 |
+| WP-010 | TASK-118 | pending | IMPLEMENTER | 将无专题任务归入无专题专题 | BL-005 | pending | TASK-114 | running | scripts/reconcile-web-data.mjs, data/team_tasks.sqlite, data/backups, docs/05-quality/evidence/TASK-118 | unassigned-topic-verify | TASK-119 | pending | pending | Plan 自动登记，等待调度 |
 | WP-009 | TASK-117 | pending | REVIEWER | 审核专题规划入口修正 | BL-005 | pending | TASK-116 | pending | docs/05-quality/evidence/TASK-117 | topic-planning-review, npm-test | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-009 | TASK-116 | pending | IMPLEMENTER | 修正专题规划空内容入口 | BL-005 | pending | n/a | pending | public/app.js, tests/v4-workbench.test.js | topic-planning-empty-fix, npm-test, git-diff-check | TASK-117 | pending | pending | Plan 自动登记，等待调度 |
 | WP-010 | TASK-115 | pending | REVIEWER | 审核 Web 工艺组数据收敛结果 | BL-005 | pending | TASK-114 | pending | docs/05-quality/evidence/TASK-115 | web-data-reconcile-review-check | n/a | n/a | n/a | Plan 自动登记，等待调度 |
