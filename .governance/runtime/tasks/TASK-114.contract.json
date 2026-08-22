@@ -1,0 +1,99 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-114",
+  "work_package": "WP-010",
+  "title": "按 Web 字段表收敛工艺组专题样品与任务数据",
+  "goal": "根据专题任务 Web 字段整理表重整当前 Web 工艺组数据，保留 5 个专题、9 个样品和 9 个测试任务，归档多余工艺组数据，其他来源小组不变。",
+  "baseline": "BL-005",
+  "profile": "Release",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "scripts/reconcile-web-data.mjs",
+    "data/team_tasks.sqlite",
+    "data/backups",
+    "outputs/专题信息补全模板-20260822/专题任务Web字段整理表.xlsx",
+    "docs/08-changes/CR-006.md",
+    "docs/04-delivery/WORK-PACKAGES.md",
+    "docs/04-delivery/WORK-STATUS.md",
+    "docs/00-index/CURRENT-STATE.md",
+    "docs/00-index/APPROVAL-LOG.md",
+    "docs/05-quality/evidence/TASK-114"
+  ],
+  "read_paths": [
+    "scripts/reconcile-web-data.mjs",
+    "data/team_tasks.sqlite",
+    "outputs/专题信息补全模板-20260822/专题任务Web字段整理表.xlsx",
+    "docs/08-changes/CR-006.md",
+    "docs/04-delivery/WORK-PACKAGES.md",
+    "docs/04-delivery/WORK-STATUS.md",
+    "docs/00-index/CURRENT-STATE.md"
+  ],
+  "write_paths": [
+    "scripts/reconcile-web-data.mjs",
+    "data/team_tasks.sqlite",
+    "data/backups",
+    "outputs/专题信息补全模板-20260822/专题任务Web字段整理表.xlsx",
+    "docs/08-changes/CR-006.md",
+    "docs/04-delivery/WORK-PACKAGES.md",
+    "docs/04-delivery/WORK-STATUS.md",
+    "docs/00-index/CURRENT-STATE.md",
+    "docs/00-index/APPROVAL-LOG.md",
+    "docs/05-quality/evidence/TASK-114"
+  ],
+  "out_of_scope": [
+    "其他来源小组数据",
+    "V2 schema/API",
+    "src/代码逻辑",
+    "物理删除备份",
+    "手机端",
+    "AI 自动建任务"
+  ],
+  "authoritative_documents": [
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-006",
+    "DEL-WORK-001",
+    "DEC-004"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "执行前创建可恢复的 SQLite 备份",
+    "只保留 Excel 对应的 5 个工艺组专题",
+    "只保留 Excel 对应的 9 个工艺组样品",
+    "只保留 Excel 对应的 9 个工艺组测试任务",
+    "其他来源小组数据保持不变",
+    "V3 外键和样品任务关系无孤儿",
+    "SQLite integrity_check 通过",
+    "回滚演练可将数据库恢复到执行前快照"
+  ],
+  "validations": [
+    {
+      "id": "web-data-reconcile-verify",
+      "command": "node",
+      "args": [
+        "scripts/reconcile-web-data.mjs",
+        "--verify"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "data_model_or_migration",
+    "irreversible_operation",
+    "scope",
+    "success_criteria"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-22T12:42:27.6143055Z",
+  "release_controls": {
+    "target_environment": "本地 Web 应用 data/team_tasks.sqlite；不发布远程环境",
+    "execution_window": "停止本地服务后执行一次事务，执行后立即验证",
+    "rollback_plan": "停止服务并使用执行前 data/backups/ 下的 SQLite 备份原子恢复，保留失败库供审计",
+    "observation_metrics": "工艺组专题/样品/任务计数、外键孤儿计数、其他来源小组摘要、PRAGMA integrity_check",
+    "stop_conditions": "备份失败、事务失败、外键孤儿非零、其他来源小组发生变化、验证失败",
+    "post_release_owner": "项目经理"
+  }
+}

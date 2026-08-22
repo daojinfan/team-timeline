@@ -36,6 +36,8 @@ review_policy: independent-required
 
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| WP-010 | TASK-115 | pending | REVIEWER | 审核 Web 工艺组数据收敛结果 | BL-005 | pending | TASK-114 | pending | docs/05-quality/evidence/TASK-115 | web-data-reconcile-review-check | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-010 | TASK-114 | pending | IMPLEMENTER | 按 Web 字段表收敛工艺组专题样品与任务数据 | BL-005 | pending | n/a | pending | scripts/reconcile-web-data.mjs, data/team_tasks.sqlite, data/backups, outputs/专题信息补全模板-20260822/专题任务Web字段整理表.xlsx, docs/08-changes/CR-006.md, docs/04-delivery/WORK-PACKAGES.md, docs/04-delivery/WORK-STATUS.md, docs/00-index/CURRENT-STATE.md, docs/00-index/APPROVAL-LOG.md, docs/05-quality/evidence/TASK-114 | web-data-reconcile-verify | TASK-115 | pending | pending | Plan 自动登记，等待调度 |
 | WP-009 | TASK-113 | pending | REVIEWER | 独立审核 V4 工作台总览原型 | BL-005 | pending | TASK-112 | completed | docs/05-quality/evidence/TASK-113 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-009 | TASK-112 | pending | IMPLEMENTER | 重设计 V4 工作台总览原型 | BL-005 | pending | n/a | completed | public/index.html, public/app.js, public/styles.css, tests/v4-workbench.test.js | required-validation | TASK-113 | passed | docs/05-quality/evidence/TASK-113/review-round-4.json | Plan 自动登记，等待调度 |
 | WP-009 | TASK-111 | pending | REVIEWER | 独立审核 V4 颜色对比度修复（重启） | BL-005 | pending | TASK-110 | completed | docs/05-quality/evidence/TASK-111 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |

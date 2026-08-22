@@ -1,0 +1,76 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-115",
+  "work_package": "WP-010",
+  "title": "审核 Web 工艺组数据收敛结果",
+  "goal": "独立核对 TASK-114 实际数据库变更、备份、保留范围、外键关系、其他来源小组不变和验证证据。",
+  "baseline": "BL-005",
+  "profile": "Release",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-115"
+  ],
+  "read_paths": [
+    "scripts/reconcile-web-data.mjs",
+    "data/team_tasks.sqlite",
+    "data/backups",
+    "outputs/专题信息补全模板-20260822/专题任务Web字段整理表.xlsx",
+    "docs/08-changes/CR-006.md",
+    "docs/04-delivery/WORK-PACKAGES.md",
+    "docs/04-delivery/WORK-STATUS.md",
+    "docs/00-index/CURRENT-STATE.md",
+    "docs/05-quality/evidence/TASK-114"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-115"
+  ],
+  "out_of_scope": [
+    "修改数据库",
+    "修改脚本",
+    "修改前端代码",
+    "修改其他小组数据"
+  ],
+  "authoritative_documents": [
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-006",
+    "DEL-WORK-001",
+    "DEC-004"
+  ],
+  "dependencies": [
+    "TASK-114"
+  ],
+  "acceptance_criteria": [
+    "实际变更清单与 TASK-114 范围一致",
+    "备份存在且可恢复",
+    "工艺组保留范围准确",
+    "其他来源小组数据未改变",
+    "关系完整性与验证证据充分",
+    "无物理删除超出批准范围"
+  ],
+  "validations": [
+    {
+      "id": "web-data-reconcile-review-check",
+      "command": "node",
+      "args": [
+        "scripts/reconcile-web-data.mjs",
+        "--verify"
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-22T12:42:42.7637327Z",
+  "release_controls": {
+    "target_environment": "本地 Web 应用 SQLite",
+    "execution_window": "TASK-114 执行后立即审核",
+    "rollback_plan": "不写数据库；发现问题时报告 changes-required，交付任务按备份回滚",
+    "observation_metrics": "实际 Git 变更、数据库计数、备份文件、验证证据摘要",
+    "stop_conditions": "发现范围外写入、其他小组数据变化、备份不可恢复、外键孤儿非零",
+    "post_release_owner": "项目经理"
+  }
+}

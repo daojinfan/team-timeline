@@ -28,6 +28,7 @@ last_reviewed: 2026-08-22
 | WP-007 | 实现 V2 六区桌面外壳与样式 | BL-003 | WP-002 | DOM 契约、无溢出和双分辨率浏览器双轮审核 | IMPLEMENTER |
 | WP-008 | 集成 V2 客户端交互与完整人工闭环 | BL-003 | WP-006、WP-007 | 关键交互、错误路径、焦点、V1 回归与双轮审核 | INTEGRATOR |
 | WP-009 | 在 V2.1 兼容基础上修正 V4 专题唯一工作区与连续任务体验 | BL-005 | WP-006、WP-007、WP-008 | V3 schema/API 兼容、V4 专题主路径、样品/任务/状态/同步、双分辨率与 Release 双轮审核 | IMPLEMENTER |
+| WP-010 | 按 Web 字段表收敛工艺组专题、样品与任务数据 | BL-005 | CR-006 | 备份、数据库完整性、V3 API/页面数据核对与回滚演练 | PM |
 
 执行状态统一记录在 `WORK-STATUS.md`，避免日常状态变化改写已经批准的工作包契约。
 每个活动工作包还必须有 `context/WP-NNN.context.json`，声明所需权威文档、读取模式、适用基线和验证。上下文路由随基线锁定；已经 `accepted` 或 `superseded` 的历史工作包可以保留旧路由。生成的 `.governance/context/*.generated.md` 只是临时输入，不是项目事实。
@@ -118,4 +119,16 @@ last_reviewed: 2026-08-22
 - 依赖：BL-005、REQ-V21-001、REQ-V4-001、ARC-OVERALL-003、ARC-OVERALL-V4-001、ARC-COMP-005、ARC-COMP-V4-001、DEC-003、DEC-004、CR-003、CR-005。
 - 验收：V3 schema/API 兼容、V1/V2 golden 兼容、专题/样品/任务链/多人/ETA/制冷机/成果验收闭环、V4 主路径/编辑归属/人工排序/状态颜色与窗口/跨入口同步、1280×720 与 1366×768 双分辨率；实现任务各自独立 Reviewer 连续两轮通过。
 - 回滚：停止服务，保留失败库，使用迁移前 SQLite 备份恢复；代码按交付提交回退。
+- 任务档位：Release。
+
+## WP-010 契约
+
+- 目标：依据已确认的《专题任务Web字段整理表》，将当前 Web 中来源小组为“工艺组”的专题、样品和连续任务收敛到表格保留范围。
+- 范围：`data/team_tasks.sqlite` 的 V3 工艺组数据；执行前数据库备份；变更后 V3 关系、V1 canonical 任务投影和 Web 查询结果核对；保留可重复执行的整理脚本。
+- 范围外：其他来源小组数据、V2 schema/API、代码逻辑、V3 schema/API 合约、物理删除备份数据、手机端和 AI 功能。
+- 基线：BL-005。
+- 权威文档：`REQ-V4-001`、`ARC-OVERALL-V4-001`、`ARC-COMP-V4-001`、`CR-006`、`DEL-WORK-001`。
+- 允许修改：`scripts/reconcile-web-data.mjs`、`data/team_tasks.sqlite`、`data/backups`、`outputs/专题信息补全模板-20260822/专题任务Web字段整理表.xlsx`（只读）、`docs/08-changes/CR-006.md`、`docs/04-delivery/WORK-PACKAGES.md`、`docs/04-delivery/WORK-STATUS.md`、`docs/00-index/CURRENT-STATE.md`、`docs/00-index/APPROVAL-LOG.md`、`docs/05-quality/evidence`。
+- 验收：保留 5 个专题、9 个样品、9 个任务；多余工艺组专题/样品可恢复归档；其他来源小组数据不变；关联无孤儿；备份可恢复；V3 API 查询与前端页面只展示保留范围。
+- 回滚：停止服务，使用执行前 SQLite 备份原子恢复；保留失败库和验证证据。
 - 任务档位：Release。

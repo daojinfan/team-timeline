@@ -1,0 +1,51 @@
+{
+  "$schema": "schemas/work-package-context.schema.json",
+  "schema_version": 1,
+  "work_package": "WP-010",
+  "baseline": "BL-005",
+  "scope": [
+    "scripts/reconcile-web-data.mjs",
+    "data/team_tasks.sqlite",
+    "data/backups",
+    "outputs/专题信息补全模板-20260822/专题任务Web字段整理表.xlsx",
+    "docs/08-changes/CR-006.md",
+    "docs/04-delivery/WORK-PACKAGES.md",
+    "docs/04-delivery/WORK-STATUS.md",
+    "docs/00-index/CURRENT-STATE.md",
+    "docs/00-index/APPROVAL-LOG.md",
+    "docs/05-quality/evidence"
+  ],
+  "required_documents": [
+    {
+      "doc_id": "REQ-V4-001",
+      "mode": "full"
+    },
+    {
+      "doc_id": "ARC-OVERALL-V4-001",
+      "mode": "full"
+    },
+    {
+      "doc_id": "ARC-COMP-V4-001",
+      "mode": "full"
+    },
+    {
+      "doc_id": "CR-006",
+      "mode": "full"
+    },
+    {
+      "doc_id": "DEL-WORK-001",
+      "mode": "full"
+    }
+  ],
+  "decisions": [
+    "DEC-004"
+  ],
+  "validation": [
+    "database backup exists",
+    "sqlite integrity_check",
+    "v3 relation integrity",
+    "v3 API response check",
+    "other source groups unchanged",
+    "restore rehearsal"
+  ]
+}
