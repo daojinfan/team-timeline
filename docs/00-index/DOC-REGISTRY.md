@@ -53,6 +53,6 @@ last_reviewed: 2026-08-20
 | REQ-V4-001 | docs/02-product/requirements-v4.md | product.requirements.v4 | proposed | 1.0 | BL-005 | human |
 | ARC-OVERALL-V4-001 | docs/03-architecture/overall-design-v4.md | architecture.overall.v4 | proposed | 1.0 | BL-005 | human |
 | ARC-COMP-V4-001 | docs/03-architecture/components/v4-detailed-design.md | architecture.component.v4-detailed-design | proposed | 1.0 | BL-005 | human |
-| DEC-004 | docs/07-decisions/DEC-004.md | architecture.decision.v4 | active | 1.0 | BL-005 | human |
+| DEC-004 | docs/07-decisions/DEC-004.md | architecture.decision.v4 | proposed | 1.0 | BL-005 | human |
 | CR-005 | docs/08-changes/CR-005.md | change-package | approved | 1.0 | BL-004 | human |
 | QUAL-TRACE-V4-001 | docs/05-quality/traceability-v4.md | quality.traceability.v4 | proposed | 1.0 | BL-005 | human |
