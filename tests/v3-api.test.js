@@ -65,6 +65,29 @@ test("V3.1 task details expose topic context and persist structured test intent"
   } finally { await app.close(); }
 });
 
+test("V3 topic source updates enforce contact ownership and sample initial ETA persists", async () => {
+  const app = await fixture();
+  try {
+    const sourceA = (await app.request("/api/v2/source-groups", { method: "POST", body: { name: "来源 A" }, expected: [201] })).payload.data;
+    const sourceB = (await app.request("/api/v2/source-groups", { method: "POST", body: { name: "来源 B" }, expected: [201] })).payload.data;
+    const contactA = (await app.request(`/api/v2/source-groups/${sourceA.id}/contacts`, { method: "POST", body: { name: "A 负责人" }, expected: [201] })).payload.data;
+    const contactB = (await app.request(`/api/v2/source-groups/${sourceB.id}/contacts`, { method: "POST", body: { name: "B 负责人" }, expected: [201] })).payload.data;
+    const topic = (await app.request("/api/v3/topics", { method: "POST", body: { source_group_id: sourceA.id, source_contact_id: contactA.id, name: "来源变更专题", purpose: "验证来源迁移" }, expected: [201] })).payload.data;
+    const moved = (await app.request(`/api/v3/topics/${topic.id}`, { method: "PUT", body: { source_group_id: sourceB.id, source_contact_id: contactB.id, expected_version: topic.version }, expected: [200] })).payload.data;
+    assert.equal(moved.source_group_id, sourceB.id);
+    assert.equal(moved.source_contact_id, contactB.id);
+    const invalid = await app.request(`/api/v3/topics/${topic.id}`, { method: "PUT", body: { source_group_id: sourceA.id, source_contact_id: contactB.id, expected_version: moved.version }, expected: [400] });
+    assert.equal(invalid.payload.error.code, "VALIDATION_ERROR");
+    const legacyContactOnly = (await app.request(`/api/v3/topics/${topic.id}`, { method: "PUT", body: { source_contact_id: contactB.id, expected_version: moved.version }, expected: [200] })).payload.data;
+    assert.equal(legacyContactOnly.source_group_id, sourceB.id);
+    const sample = (await app.request(`/api/v3/topics/${topic.id}/samples`, { method: "POST", body: { planning_label: "初始 ETA 样品", model: "QPU-ETA", initial_eta_date: "2026-09-01", eta_date: "2026-09-10", eta_pending: 0 }, expected: [201] })).payload.data;
+    assert.equal(sample.initial_eta_date, "2026-09-01");
+    const updatedSample = (await app.request(`/api/v3/samples/${sample.id}`, { method: "PUT", body: { initial_eta_date: "2026-08-28", expected_version: sample.version }, expected: [200] })).payload.data;
+    assert.equal(updatedSample.initial_eta_date, "2026-08-28");
+    assert.equal(updatedSample.current_eta_date, "2026-09-10");
+  } finally { await app.close(); }
+});
+
 test("topic, sample, task-chain, assignment and exact-set submission flow", async () => {
   const app = await fixture();
   try {
