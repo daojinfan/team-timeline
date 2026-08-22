@@ -1,0 +1,48 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-111",
+  "reviewed_task_ids": ["TASK-110"],
+  "work_package": "WP-009",
+  "baseline": "BL-005",
+  "result": "changes-required",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-110",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "增加 V2 completed 前景色、专题/人工分配按钮的 surface/hover/focus/disabled 颜色规则、V3 状态芯片主状态与别名映射，以及迁移成功徽标颜色。"
+    },
+    {
+      "task_id": "TASK-110",
+      "path": "tests/v4-ui-contrast.test.js",
+      "change_type": "added",
+      "summary": "新增静态 CSS 检查，覆盖专题/任务按钮可读性、V3 状态映射、V2 completed 颜色和六个主状态的 WCAG AA 对比度。"
+    }
+  ],
+  "change_summary": "从 TASK-110 启动提交 14310fe8044fd0edf5162d5f58f4ec4a419885e3 到当前 HEAD 7144e32 的 scoped substantive manifest 为 public/styles.css (M) 与 tests/v4-ui-contrast.test.js (A)。完整 Git 差异另含 .governance/runtime/tasks/TASK-110.state.json、docs/00-index/APPROVAL-LOG.md、docs/04-delivery/TASK-LEDGER.md、docs/04-delivery/WORK-STATUS.md 以及 TASK-110 自动证据文件；这些是治理/运行/证据系统路径，不属于 TASK-110 write scope，故不列入 changes。",
+  "scope_checked": [
+    "TASK-110 Release 契约、TASK-111 REVIEWER 契约、WP-009 与 BL-005，以及 14310fe..HEAD 的完整 Git 差异",
+    "专题列表和专题工作区 compact button 的默认前景/背景、子元素颜色、hover、focus-visible、disabled cascade；人工分配列表的 v3-task-card 按钮同样核对",
+    "V3 六个主状态 testing、delayed、arriving_within_window、arriving_outside_window、time_pending、completed 及 active/planned/paused/cancelled/submitted/accepted/returned 别名映射",
+    "迁移成功徽标 v3-status-badge.is-success、V2 v2-status-chip[data-status=completed] 的前景/背景及既有选择器覆盖顺序",
+    "关键小字号文字对比度、颜色之外的状态文字、全局 hover/focus/disabled 语义与 1280×720/1366×768 桌面边界的静态影响",
+    "测试文件的颜色解析和 WCAG 对比度计算覆盖，以及项目既有 V1/V2/V3 回归测试"
+  ],
+  "findings": [
+    "阻塞项：button.v3-topic-row span/small 与 button.v3-task-card span/small 明确使用 --muted (#667085)，但同一元素在 hover、focus-visible 和 disabled 状态的父按钮背景为 --soft (#eef2f6)；按 WCAG 相对亮度计算对比度为 4.42:1，低于契约要求的 4.5:1。该路径覆盖专题列表 compact button 和人工分配任务按钮，disabled 的全局 opacity:0.52 还会进一步削弱可读性。建议为交互状态使用更深的前景 token/显式规则，并在静态测试中加入 muted-on-soft 的 hover/focus/disabled 对比度断言。"
+  ],
+  "validation_evidence": [
+    "git -c safe.directory='D:/Codex/人员管理系统' diff --name-status 14310fe..HEAD -- public/styles.css tests/v4-ui-contrast.test.js：M public/styles.css；A tests/v4-ui-contrast.test.js；scoped diff stat 为 2 files changed, 128 insertions(+)",
+    "完整 14310fe..HEAD name-status 另报告 4 个治理/台账修改和 2 个 TASK-110 自动证据新增；已在 change_summary 中按 write scope 排除。",
+    "node --check public/app.js 通过（exit 0）。",
+    "npm test 通过：33 tests、33 pass、0 fail、0 skipped；包含新增 v4-ui-contrast.test.js 的 2 个静态测试。",
+    "node --test tests/v4-ui-contrast.test.js 通过：2 tests、2 pass、0 fail。",
+    "git -c safe.directory='D:/Codex/人员管理系统' diff --check 14310fe..HEAD 通过（exit 0）。",
+    "独立计算关键状态芯片对比度：testing 5.17:1、delayed 4.83:1、arriving_within_window 6.79:1、arriving_outside_window 4.76:1、time_pending 5.70:1、completed 4.60:1；迁移成功徽标白字/绿色背景为 5.02:1，均达到 4.5:1。V2 completed 使用 #022c22/#16a34a 为 4.60:1。",
+    "CSS cascade 静态核对确认新规则位于既有 V3 card 基础样式之后；focus-visible 仍保留全局 outline，hover/disabled 的背景和 cursor 规则生效，V2 completed 的新前景色未被后续选择器覆盖。",
+    "浏览器不可用，无法进行 1280×720 与 1366×768 实机交互/溢出检查；已以 CSS cascade、静态对比度计算及回归测试记录限制。"
+  ],
+  "created_at": "2026-08-22T12:38:00+08:00"
+}

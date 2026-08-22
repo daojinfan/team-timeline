@@ -44,6 +44,12 @@ test("V4 compact task/topic buttons retain readable foregrounds", async () => {
   assert.match(buttonRule, /background:\s*var\(--surface\)/);
   assert.match(css, /button\.v3-topic-row span,[\s\S]*?button\.v3-task-card small[\s\S]*?color:\s*var\(--muted\)/);
   assert.match(css, /button\.v3-topic-row:disabled,[\s\S]*?button\.v3-task-card:disabled[\s\S]*?color:\s*var\(--muted\)/);
+  assert.match(css, /button\.v3-topic-row:hover span,[\s\S]*?button\.v3-task-card:focus-visible small\s*\{[\s\S]*?color:\s*var\(--text\)/);
+  assert.match(css, /button\.v3-topic-row:disabled span,[\s\S]*?button\.v3-task-card:disabled small\s*\{[\s\S]*?color:\s*var\(--text\)/);
+  const mutedOnSoft = contrast(cssVariable(css, "--muted"), cssVariable(css, "--soft"));
+  const textOnSoft = contrast(cssVariable(css, "--text"), cssVariable(css, "--soft"));
+  assert.ok(mutedOnSoft < 4.5, `the known muted-on-soft baseline should be below AA (${mutedOnSoft.toFixed(2)})`);
+  assert.ok(textOnSoft >= 4.5, `interaction descendant text-on-soft must meet AA (${textOnSoft.toFixed(2)})`);
 });
 
 test("V4 status chips expose all states and meet WCAG AA contrast", async () => {

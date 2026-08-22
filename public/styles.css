@@ -2651,11 +2651,29 @@ button.v3-task-card:focus-visible {
   background: var(--soft);
 }
 
+button.v3-topic-row:hover span,
+button.v3-topic-row:hover small,
+button.v3-topic-row:focus-visible span,
+button.v3-topic-row:focus-visible small,
+button.v3-task-card:hover span,
+button.v3-task-card:hover small,
+button.v3-task-card:focus-visible span,
+button.v3-task-card:focus-visible small {
+  color: var(--text);
+}
+
 button.v3-topic-row:disabled,
 button.v3-task-card:disabled {
   color: var(--muted);
   background: var(--soft);
   cursor: not-allowed;
+}
+
+button.v3-topic-row:disabled span,
+button.v3-topic-row:disabled small,
+button.v3-task-card:disabled span,
+button.v3-task-card:disabled small {
+  color: var(--text);
 }
 
 .v3-task-context-line {
