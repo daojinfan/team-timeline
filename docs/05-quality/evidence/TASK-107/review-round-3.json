@@ -1,0 +1,51 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-107",
+  "reviewed_task_ids": ["TASK-106"],
+  "work_package": "WP-009",
+  "baseline": "BL-005",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-106",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "最终前端差异为专题来源/联系人提交语义、样品初始 ETA 提交以及人工任务排序错误恢复：来源组变化且联系人选择为空时显式发送 null，样品创建与编辑携带 initial_eta_date，排序 PUT 出错时从服务端重载专题并要求人工确认。"
+    },
+    {
+      "task_id": "TASK-106",
+      "path": "src/v3/index.js",
+      "change_type": "modified",
+      "summary": "最终 V3 路由差异持久化专题 source_group_id，验证 source_contact_id 属于目标来源组并维持旧的联系人-only PUT；样品 POST/PUT 接受并保存 initial_eta_date，同时不改写当前 ETA/到样与版本事实链。"
+    },
+    {
+      "task_id": "TASK-106",
+      "path": "tests/v3-api.test.js",
+      "change_type": "modified",
+      "summary": "加入 API 回归覆盖：跨来源联系人拒绝、来源迁移后联系人读取、旧联系人-only 更新兼容、样品初始 ETA 创建与编辑后保持当前 ETA。"
+    }
+  ],
+  "change_summary": "本轮重新审查 9a75e0e..HEAD 的最终实现内容，Git 实际 substantive 变更只有上述三个 TASK-106 write scope 路径，均为 modified。工作树中 .governance runtime、TASK-LEDGER、审查自动产物及前轮 evidence 的变化属于系统治理/证据路径，不是 TASK-106 交付范围，按契约排除在 changes 清单之外。",
+  "scope_checked": [
+    "9a75e0e..HEAD 的完整 TASK-106 差异、TASK-106 Release 契约、WP-009 和 BL-005 范围",
+    "V4 requirements-v4、overall-design-v4、v4-detailed-design、traceability-v4、CR-005、DEC-004 和 WP-009 context 对唯一专题工作区、工作台直达、来源/状态/制冷机筛选分组、统一字段编辑、同步投影及桌面边界的约束",
+    "专题 source_group_id 写入、联系人归属错误路径、旧 source_contact_id-only 调用，以及来源切换后选择“稍后补充”时清空联系人路径",
+    "样品编号可空、initial_eta_date 与 current_eta_date/eta_pending、ETA 预览确认、actual_arrival_date 和 expected_version/版本递增链",
+    "连续任务的多样品/多人 payload 与人工排序事实；排序保存失败时重读服务端顺序，重读失败时保留本地事实并要求刷新确认；前置任务字段在 V4 编辑提交中保持 null",
+    "既有 V4 状态文字/颜色、实际到样未测试无主状态、筛选/分组、全量编辑和跨入口刷新实现的静态回归；未新增本地联络人持久化或页面级横向布局代码",
+    "V3 schema SQL、checksum、endpoint surface，以及 npm 测试覆盖的 V1/V2 schema、endpoint、迁移和兼容保护"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "9a75e0e..HEAD diff --name-status 对 public/app.js、src/v3/index.js、tests/v3-api.test.js 均报告 M；限定 diff stat 为 3 files changed, 37 insertions(+), 7 deletions(-)。",
+    "node --check public/app.js 返回 exit 0；node --check src/v3/index.js 返回 exit 0。",
+    "npm test 返回 exit 0：31 个测试全部通过（31 pass、0 fail、0 skipped），包括 V3 schema/endpoint、V3 source/contact 与 sample initial ETA、V2 schema/endpoint 以及 V1 迁移/兼容测试。",
+    "git -c safe.directory='D:/Codex/人员管理系统' diff --check 9a75e0e..HEAD 返回 exit 0，无空白错误。",
+    "对 src/v3/index.js 的 9a75e0e..HEAD 差异检索 V3_SCHEMA_SQL、V3_SCHEMA_CHECKSUM、V3_ENDPOINTS、CREATE TABLE、CREATE INDEX 无命中，证明 schema/checksum/endpoint 常量未被 TASK-106 改写。",
+    "静态错误路径审查确认联系人跨组请求在写入前返回 VALIDATION_ERROR；排序请求异常会触发 v3LoadTopic 服务端重读并展示确认提示；ETA/到样调用沿用预览 token 和当前版本事实。",
+    "浏览器交互环境不可用（Browser is not available: -8451-4a36-a379-94614fc256ed），本轮如实记录该限制；以完整 API 回归、语法/差异检查及 V4 相关渲染/筛选/布局静态审查替代浏览器证据。"
+  ],
+  "created_at": "2026-08-22T12:30:17+08:00"
+}

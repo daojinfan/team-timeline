@@ -1,0 +1,52 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-107",
+  "reviewed_task_ids": ["TASK-106"],
+  "work_package": "WP-009",
+  "baseline": "BL-005",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-106",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "专题保存在来源小组切换时允许空联系人并发送归属一致的 source_group_id/source_contact_id；样品创建和编辑传递 initial_eta_date；任务排序失败后重读服务端专题顺序并提示人工确认，重读失败时保留本地原顺序并提示刷新。"
+    },
+    {
+      "task_id": "TASK-106",
+      "path": "src/v3/index.js",
+      "change_type": "modified",
+      "summary": "V3 专题 PUT 持久化 source_group_id 并校验联系人归属，同时保留仅 source_contact_id 的旧调用；样品 POST/PUT 持久化 initial_eta_date，保持 current ETA、ETA pending、到样和版本链逻辑。"
+    },
+    {
+      "task_id": "TASK-106",
+      "path": "tests/v3-api.test.js",
+      "change_type": "modified",
+      "summary": "新增来源小组迁移、联系人归属错误、旧联系人调用兼容以及样品 initial ETA POST/PUT 持久化的 API 回归测试。"
+    }
+  ],
+  "change_summary": "核对 9a75e0e..HEAD 的实际实现差异，三项 substantive modified 路径与 TASK-106 write scope 一致：public/app.js、src/v3/index.js、tests/v3-api.test.js。治理运行状态、任务台账、审核自动证据等系统路径虽存在于工作树或提交历史，但按审核契约和 TASK-106 write scope 排除，不计入 changes。",
+  "scope_checked": [
+    "TASK-106 的 WP-009/BL-005 Release 范围、TASK-107 审核契约及 9a75e0e..HEAD 全部实现差异",
+    "V4 需求、总体设计、详细设计、追踪矩阵、CR-005、DEC-004 与 WP-009 context 中的唯一专题工作区、筛选分组、全量编辑、状态语义、同步和桌面边界要求",
+    "专题 PUT 的 source_group_id 持久化、联系人归属校验、旧 source_contact_id-only 调用兼容，以及前端切换来源小组后清空联系人发送 null 的路径",
+    "样品 POST/PUT 的空编号字段、initial_eta_date、current ETA/ETA pending、ETA 预览确认、实际到样和 expected_version 版本链",
+    "连续任务多样品/多人和人工排序调用；排序失败后服务端重读、失败提示和不虚构依赖/日期/成员事实",
+    "V4 专题工作区既有导航、状态颜色和到样未测试无主状态、来源/状态/制冷机分组、统一编辑器及跨入口刷新投影未被本次差异破坏",
+    "V3_SCHEMA_SQL、V3_SCHEMA_CHECKSUM、V3_ENDPOINTS 及 V2/V1 兼容测试和现有 API surface"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "git -c safe.directory='D:/Codex/人员管理系统' diff --name-status 9a75e0e..HEAD -- public/app.js src/v3/index.js tests/v3-api.test.js 输出三个路径均为 M；diff --stat 为 3 files changed, 37 insertions(+), 7 deletions(-)。",
+    "node --check public/app.js 通过（exit 0）。",
+    "node --check src/v3/index.js 通过（exit 0）。",
+    "npm test 通过：31 tests, 31 pass, 0 fail, 0 skipped；包含新增 source/contact ownership 与 sample initial ETA 回归测试，以及 V3 schema/endpoint、V2 schema/endpoint 和 V1 兼容测试。",
+    "git -c safe.directory='D:/Codex/人员管理系统' diff --check 9a75e0e..HEAD 通过（exit 0）。",
+    "9a75e0e..HEAD 的 src/v3/index.js 差异未包含 V3_SCHEMA_SQL、V3_SCHEMA_CHECKSUM、V3_ENDPOINTS、CREATE TABLE 或 CREATE INDEX 修改；现有 V3/V2/V1 合约保护保持不变。",
+    "静态错误路径核对确认专题来源切换联系人归属失败返回 VALIDATION_ERROR，排序 PUT 失败会重读服务端顺序并明确提示人工确认，重读失败则提示手动刷新；样品 ETA/到样请求继续携带版本事实。",
+    "未执行浏览器交互检查：当前环境返回 Browser is not available (-8451-4a36-a379-94614fc256ed)。因此以实现差异、静态路径核对和完整 API/回归测试作为证据；本次差异未触及 V4 CSS/布局或既有渲染/筛选实现。"
+  ],
+  "created_at": "2026-08-22T05:45:00+08:00"
+}
