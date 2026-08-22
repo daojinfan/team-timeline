@@ -36,6 +36,8 @@ review_policy: independent-required
 
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| WP-009 | TASK-109 | pending | REVIEWER | 独立审核 V4 颜色对比度修复 | BL-005 | pending | TASK-108 | pending | docs/05-quality/evidence/TASK-109 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-009 | TASK-108 | pending | IMPLEMENTER | 修复专题列表与 V3 组件颜色对比度 | BL-005 | pending | n/a | pending | public/styles.css, tests/v4-ui-contrast.test.js | required-validation | TASK-109 | pending | pending | Plan 自动登记，等待调度 |
 | WP-009 | TASK-107 | pending | REVIEWER | 独立审核 V4 范围扩展修复实现 | BL-005 | pending | TASK-106 | completed | docs/05-quality/evidence/TASK-107 | reviewer-diff-check | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-009 | TASK-106 | pending | IMPLEMENTER | 修复 V4 评审发现的来源小组、初始 ETA 与排序失败一致性 | BL-005 | pending | n/a | running | public/index.html, public/styles.css, public/app.js, src/v3/index.js, tests/v3-api.test.js | required-validation | TASK-107 | passed | docs/05-quality/evidence/TASK-107/review-round-3.json | Plan 自动登记，等待调度 |
 | WP-009 | TASK-105 | pending | REVIEWER | 独立审核 V4 专题工作区与执行中心同步实现 | BL-005 | pending | TASK-104 | completed | docs/05-quality/evidence/TASK-105 | reviewer-diff-check | n/a | n/a | n/a | Plan 自动登记，等待调度 |

@@ -1,0 +1,81 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-108",
+  "work_package": "WP-009",
+  "title": "修复专题列表与 V3 组件颜色对比度",
+  "goal": "在 BL-005 V4 视觉契约内修复专题列表和人工分配按钮的白字白底问题，并对其他浅背景交互项、状态芯片和完成状态做静态对比度审计与最小修复；不改变业务逻辑、接口、布局或数据。",
+  "baseline": "BL-005",
+  "profile": "Release",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/styles.css",
+    "tests/v4-ui-contrast.test.js"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "tests"
+  ],
+  "write_paths": [
+    "public/styles.css",
+    "tests/v4-ui-contrast.test.js"
+  ],
+  "out_of_scope": [
+    "public/index.html 与 public/app.js 行为修改",
+    "V1/V2/V3 API、schema、checksum 或数据库修改",
+    "布局重构、手机端、AI、自动分配"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "专题工作区紧凑专题列表中的 button.v3-topic-row 在白色/浅色背景上显式使用深色正文与可读的次要文字，不再继承全局按钮白字。",
+    "人工分配任务清单中的 button.v3-task-card 在白色/浅色背景上显式使用深色正文与可读的次要文字，不影响 article/li 任务卡和 hover/focus 状态。",
+    "V3 状态芯片覆盖 testing、delayed、arriving_within_window、arriving_outside_window、time_pending、completed 及任务/成果状态别名，颜色与文字同时可见；迁移成功徽标 is-success 不再白字白底。",
+    "完成/成功等小字号状态文字的前景背景对比度达到至少 4.5:1；V2 已完成状态芯片同步修正低对比度，不改变状态含义。",
+    "新增静态回归测试锁定浅背景交互项的显式前景色、V3 状态颜色和关键对比度；npm test、node --check、git diff --check 通过。",
+    "不修改 HTML/JS/API/schema/checksum、布局结构或移动端行为；1280×720 与 1366×768 不新增横向溢出。"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-22T06:15:23.9165048Z",
+  "release_controls": {
+    "target_environment": "本地 Windows 桌面浏览器与静态测试环境，D:\\Codex\\人员管理系统，dev 分支",
+    "execution_window": "V4 视觉缺陷修复窗口；静态颜色审计、回归测试与桌面双分辨率验证后进入审核",
+    "rollback_plan": "回退 TASK-108 的 CSS 与静态测试提交；不涉及数据或接口回滚",
+    "observation_metrics": "专题列表/人工分配文字可读性、关键颜色对比度、npm test、node --check、git diff --check、1280×720 与 1366×768 无横向溢出",
+    "stop_conditions": "发现需要修改 HTML/JS/API/schema、浏览器实测与静态结论冲突、非 V4 页面视觉回归或范围超出 CSS/单一静态测试文件",
+    "post_release_owner": "项目经理（协调工作树）"
+  }
+}
