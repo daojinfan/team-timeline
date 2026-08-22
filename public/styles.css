@@ -1928,6 +1928,7 @@ menu {
 
 .v2-status-chip[data-status="completed"] {
   background: var(--v2-completed);
+  color: #022c22;
 }
 
 .v2-status-chip[data-status="unclassified"] {
@@ -2628,6 +2629,35 @@ menu {
   background: var(--soft);
 }
 
+button.v3-topic-row,
+button.v3-task-card {
+  color: var(--text);
+  background: var(--surface);
+  text-align: left;
+}
+
+button.v3-topic-row span,
+button.v3-topic-row small,
+button.v3-task-card span,
+button.v3-task-card small {
+  color: var(--muted);
+}
+
+button.v3-topic-row:hover,
+button.v3-task-card:hover,
+button.v3-topic-row:focus-visible,
+button.v3-task-card:focus-visible {
+  color: var(--text);
+  background: var(--soft);
+}
+
+button.v3-topic-row:disabled,
+button.v3-task-card:disabled {
+  color: var(--muted);
+  background: var(--soft);
+  cursor: not-allowed;
+}
+
 .v3-task-context-line {
   display: flex;
   min-width: 0;
@@ -2686,7 +2716,35 @@ menu {
 .v3-status-badge.is-outside { background: var(--v2-outside); }
 .v3-status-badge.is-pending { background: var(--v2-pending); }
 .v3-status-badge.is-completed { background: var(--v2-completed); }
+.v3-status-badge.is-success { background: var(--success); color: #fff; }
 .v3-status-badge.is-blank { width: 22px; background: transparent; }
+
+.v3-status-chip {
+  display: inline-flex;
+  min-height: 22px;
+  align-items: center;
+  border-radius: 999px;
+  padding: 2px 8px;
+  background: var(--v2-outside);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.v3-status-chip.v3-status-testing,
+.v3-status-chip.v3-status-active { background: var(--v2-testing); color: #fff; }
+.v3-status-chip.v3-status-delayed,
+.v3-status-chip.v3-status-returned { background: var(--v2-delayed); color: #fff; }
+.v3-status-chip.v3-status-arriving_within_window { background: var(--v2-within); color: #422006; }
+.v3-status-chip.v3-status-arriving_outside_window,
+.v3-status-chip.v3-status-planned,
+.v3-status-chip.v3-status-cancelled { background: var(--v2-outside); color: #fff; }
+.v3-status-chip.v3-status-time_pending,
+.v3-status-chip.v3-status-submitted { background: var(--v2-pending); color: #fff; }
+.v3-status-chip.v3-status-completed,
+.v3-status-chip.v3-status-accepted { background: var(--v2-completed); color: #022c22; }
+.v3-status-chip.v3-status-paused { background: var(--v2-delayed); color: #fff; }
 
 .v3-inline-select {
   display: inline-flex;
