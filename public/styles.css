@@ -3114,3 +3114,201 @@ button.v3-task-card:disabled small {
 .v3-status-chip.v3-status-pending:empty {
   display: none;
 }
+
+/* Desktop workbench overview: dense, readable summaries without horizontal growth. */
+.v3-workbench-digest {
+  display: grid;
+  gap: 12px;
+  margin: 14px 0;
+  min-width: 0;
+}
+
+.v3-workbench-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+  min-width: 0;
+}
+
+.v3-workbench-summary-card {
+  display: grid;
+  min-width: 0;
+  gap: 5px;
+  min-height: 92px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  text-align: left;
+  white-space: normal;
+}
+
+.v3-workbench-summary-card span,
+.v3-workbench-summary-card small {
+  min-width: 0;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+.v3-workbench-summary-card strong {
+  color: var(--text);
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.v3-workbench-summary-card:hover,
+.v3-workbench-summary-card:focus-visible,
+.v3-workbench-summary-card[aria-pressed="true"] {
+  background: var(--soft);
+  color: var(--text);
+}
+
+.v3-workbench-summary-card.is-pending { border-top-color: var(--v2-pending); }
+.v3-workbench-summary-card.is-within { border-top-color: var(--v2-within); }
+.v3-workbench-summary-card.is-delayed { border-top-color: var(--v2-delayed); }
+.v3-workbench-summary-card.is-testing { border-top-color: var(--v2-testing); }
+.v3-workbench-summary-card.is-unassigned { border-top-color: var(--warning); }
+.v3-workbench-summary-card.is-submitted { border-top-color: var(--v2-outside); }
+
+.v3-workbench-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
+  gap: 12px;
+  min-width: 0;
+}
+
+.v3-workbench-queue-list,
+.v3-workbench-event-list {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.v3-workbench-queue-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.v3-workbench-queue-main {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+.v3-workbench-queue-main strong,
+.v3-workbench-queue-main span,
+.v3-workbench-queue-main small {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.v3-queue-kind {
+  width: fit-content;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: var(--soft);
+  color: var(--text);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.v3-workbench-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.v3-workbench-table th,
+.v3-workbench-table td {
+  padding: 7px 8px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+.v3-workbench-table th {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.v3-topic-table-row {
+  display: block;
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.v3-topic-table-row + .v3-topic-table-row { margin-top: 8px; }
+
+.v3-topic-table-row summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 0;
+  padding: 11px 12px;
+  cursor: pointer;
+  list-style-position: inside;
+}
+
+.v3-topic-table-main {
+  display: grid;
+  min-width: 0;
+  gap: 4px;
+}
+
+.v3-topic-table-main strong,
+.v3-topic-table-main small { min-width: 0; overflow-wrap: anywhere; }
+
+.v3-topic-table-details {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  padding: 0 12px 12px;
+  border-top: 1px solid var(--border);
+}
+
+.v3-topic-detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 10px;
+}
+
+.v3-workbench-event {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 10px;
+  min-width: 0;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.v3-workbench-event time {
+  color: var(--muted);
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
+
+.v3-workbench-event div { display: grid; min-width: 0; gap: 3px; }
+.v3-workbench-event div > * { min-width: 0; overflow-wrap: anywhere; }
+
+@media (max-width: 1280px) {
+  .v3-workbench-summary-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .v3-workbench-columns { grid-template-columns: minmax(0, 1fr); }
+}

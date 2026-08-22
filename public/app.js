@@ -3374,7 +3374,7 @@ const v3State = {
   topicDetails: new Map(), activeSampleId: null, activeTaskId: null, activeSubmissionId: null,
   taskEditId: null, taskEditVersion: null,
   preview: null, taskDraftMembers: [], editMembers: [], returnFocus: new Map(), busy: new Set(),
-  search: "", status: "", source: "", groupBy: "none", windowDays: 7, includeArchived: false,
+  search: "", status: "", source: "", cryostat: "", groupBy: "none", windowDays: 7, includeArchived: false, onlyPending: false, workbenchFocus: "",
   acceptanceStatus: "", assignmentTopicId: "", topicDetailReturnFocus: null, topicDetailReturnView: null,
   taskOrderBusy: false, taskOrderNotice: "", topicEditId: null, sampleEditId: null
 };
@@ -3507,16 +3507,17 @@ async function v3LoadTopics() {
   v3State.cryostats = result.cryostats || [];
   await Promise.all(v3State.topics.map(async (topic) => {
     try {
-      const [samples, tasks] = await Promise.all([
-        v3Api(`/api/v3/topics/${topic.id}/samples`), v3Api(`/api/v3/topics/${topic.id}/tasks`)
+      const [samples, tasks, submissions, events] = await Promise.all([
+        v3Api(`/api/v3/topics/${topic.id}/samples`), v3Api(`/api/v3/topics/${topic.id}/tasks`), v3Api(`/api/v3/topics/${topic.id}/submissions`), v3Api(`/api/v3/topics/${topic.id}/events`)
       ]);
-      v3State.topicDetails.set(topic.id, { topic, samples: samples.data?.items || [], tasks: tasks.data?.items || [] });
-    } catch { v3State.topicDetails.set(topic.id, { topic, samples: [], tasks: [] }); }
+      v3State.topicDetails.set(topic.id, { topic, samples: samples.data?.items || [], tasks: tasks.data?.items || [], submissions: submissions.data?.items || [], events: events.data?.items || [] });
+    } catch { v3State.topicDetails.set(topic.id, { topic, samples: [], tasks: [], submissions: [], events: [] }); }
   }));
   v3RebuildExecutionTaskIndex();
   renderTasks();
   renderDetail();
   v3RenderTopics();
+  v3RenderWorkbenchOverview();
   v3FillResourceSelects();
 }
 function v3FillSelect(id, items, label = (item) => item.name, empty = "请选择") {
@@ -3529,6 +3530,7 @@ function v3FillResourceSelects() {
   v3FillSelect("#v3TopicDefaultCryostatInput", v3State.cryostats.filter((c) => c.status === "active"), (item) => item.name, "不设默认值");
   v3FillSelect("#v3CryostatSelect", v3State.cryostats.filter((c) => c.status === "active"), (item) => item.name, "请选择制冷机");
   v3FillSelect("#v3TaskCryostat", v3State.cryostats.filter((c) => c.status === "active"), (item) => item.name, "请选择制冷机");
+  v3FillSelect("#v3TopicCryostatFilter", v3State.cryostats.filter((c) => c.status === "active"), (item) => item.name, "全部制冷机");
   v3FillSelect("#v3AssignmentTopicFilter", v3State.topics, (item) => item.name, "请选择专题");
   v3FillSelect("#v3AcceptanceTopicFilter", v3State.topics, (item) => item.name, "全部专题");
   const source = $("#v3TopicSourceFilter"); if (source) { const value = source.value; source.innerHTML = "<option value=''>全部来源</option>" + v3State.groups.map((g) => `<option value="${v3Esc(g.id)}">${v3Esc(g.name)}</option>`).join(""); if ([...source.options].some((o) => o.value === value)) source.value = value; }
@@ -3538,16 +3540,38 @@ async function v3FillContacts(groupId) {
   if (!groupId) { select.innerHTML = "<option value=''>稍后补充</option>"; return; }
   try { const result = await v2Api(`/api/v2/source-groups/${groupId}/contacts`); const rows = result.data || []; select.innerHTML = "<option value=''>稍后补充</option>" + rows.map((row) => `<option value="${row.id}">${v3Esc(row.name)}</option>`).join(""); } catch (error) { select.innerHTML = "<option value=''>稍后补充</option>"; showToast(v3ErrorText(error), { type: "error" }); }
 }
+function v3TopicHasPending(detail) {
+  const samples = detail.samples || [], tasks = detail.tasks || [], submissions = detail.submissions || [];
+  return samples.some((sample) => !sample.actual_arrival_date && (sample.eta_pending || !sample.current_eta_date || sample.current_eta_date < v3Today())) || tasks.some((task) => task.display_status === "active" || !task.primary_member_id || !(task.efforts || []).some((effort) => Number(effort.planned_half_hours || 0) > 0)) || submissions.some((submission) => submission.status === "submitted");
+}
+function v3DaysAgoIso(days) { return addDays(v3Today(), -Math.max(0, Number(days) || 0)); }
+function v3TopicHasFocus(detail, focus) {
+  const samples = detail.samples || [], tasks = detail.tasks || [], submissions = detail.submissions || [];
+  if (focus === "pending_eta") return samples.some((sample) => !sample.actual_arrival_date && (sample.eta_pending || !sample.current_eta_date));
+  if (focus === "recent_arrival") return samples.some((sample) => sample.actual_arrival_date && sample.actual_arrival_date >= v3DaysAgoIso(7));
+  if (focus === "delayed") return samples.some((sample) => !sample.actual_arrival_date && sample.current_eta_date && sample.current_eta_date < v3Today());
+  if (focus === "testing") return tasks.some((task) => task.display_status === "active");
+  if (focus === "unassigned") return tasks.some((task) => !task.primary_member_id || !(task.efforts || []).some((effort) => Number(effort.planned_half_hours || 0) > 0));
+  if (focus === "submitted") return submissions.some((submission) => submission.status === "submitted");
+  return true;
+}
+function v3TopicCryostatMatch(detail, value) {
+  if (!value) return true;
+  return (detail.tasks || []).some((task) => String(task.cryostat_id || "") === String(value));
+}
+function v3WorkbenchStatusLabel(focus) { return ({ pending_eta: "待确认 ETA", recent_arrival: "近期到样", delayed: "延期样品", testing: "测试中任务", unassigned: "待人工分配", submitted: "待验收成果" }[focus] || "全部事项"); }
+function v3EventLabel(type) { return ({ topic_create: "创建专题", topic_update: "更新专题", sample_create: "加入样品", sample_update: "更新样品", sample_arrival: "记录到样", sample_eta_confirm: "确认 ETA", task_create: "创建任务", task_update: "更新任务", task_order: "调整任务顺序", task_submit: "提交成果", submission_create: "提交成果", review_accept: "成果通过", review_return: "成果退回" }[type] || type || "专题变更"); }
 function v3RenderTopics() {
   const list = $("#v3TopicOverviewList"); if (!list) return;
-  const entries = v3State.topics.map((topic) => ({ ...topic, detail: v3State.topicDetails.get(topic.id) || { topic, samples: [], tasks: [] } }));
+  const entries = v3State.topics.map((topic) => ({ ...topic, detail: v3State.topicDetails.get(topic.id) || { topic, samples: [], tasks: [], submissions: [], events: [] } }));
   const filtered = entries.filter((entry) => {
     const status = v3TopicStatus(entry.detail);
-    return (!v3State.status || status === v3State.status) && (!v3State.source || String(entry.source_group_id) === String(v3State.source));
+    return (!v3State.status || status === v3State.status) && (!v3State.source || String(entry.source_group_id) === String(v3State.source)) && v3TopicCryostatMatch(entry.detail, v3State.cryostat) && (!v3State.onlyPending || v3TopicHasPending(entry.detail)) && v3TopicHasFocus(entry.detail, v3State.workbenchFocus);
   });
   const stats = { testing: 0, delayed: 0, arriving_within_window: 0, arriving_outside_window: 0, time_pending: 0, completed: 0 };
   entries.forEach((entry) => { const status = v3TopicStatus(entry.detail); if (status && Object.prototype.hasOwnProperty.call(stats, status)) stats[status] += 1; });
   $$("#v3TopicStats [data-v3-stat]").forEach((card) => { const key = card.dataset.v3Stat; const value = card.querySelector("strong"); if (value) value.textContent = stats[key] ?? 0; card.setAttribute("aria-pressed", String(v3State.status === key)); });
+  v3RenderWorkbenchOverview(entries);
   const count = $("#v3TopicResultCount"); if (count) count.textContent = `${filtered.length} 个专题`;
   if (!filtered.length) { list.innerHTML = v3State.topics.length ? ($("#v3TopicFilterEmptyTemplate")?.innerHTML || "<div class='v3-empty-state'><h3>没有匹配专题</h3></div>") : ($("#v3TopicTrueEmptyTemplate")?.innerHTML || "<div class='v3-empty-state'><h3>还没有专题</h3></div>"); return; }
   const grouped = new Map();
@@ -3562,7 +3586,35 @@ function v3RenderTopics() {
     }
     const bucket = grouped.get(label) || []; bucket.push({ entry, status, group }); grouped.set(label, bucket);
   });
-  list.innerHTML = [...grouped.entries()].map(([label, rows], groupIndex) => `<section class="v3-topic-group"${label ? ` aria-labelledby="v3TopicGroup-${groupIndex}"` : ""}>${label ? `<h3 id="v3TopicGroup-${groupIndex}" class="v3-topic-group-title">${v3Esc(label)}</h3>` : ""}${rows.map(({ entry, status, group }) => `<article class="v3-topic-row" data-v3-open-topic="${entry.id}" tabindex="0"><div><span class="eyebrow">${v3Esc(group?.name || "来源小组")}</span><h3>${v3Esc(entry.name)}</h3><p>${v3Esc(entry.purpose)}</p></div><div class="v3-topic-row-facts">${v3StatusMarkup(status)}<span>${entry.sample_count || entry.detail.samples.length} 个样品</span><span>${entry.task_count || entry.detail.tasks.length} 个任务</span></div></article>`).join("")}</section>`).join("");
+  list.innerHTML = [...grouped.entries()].map(([label, rows], groupIndex) => `<section class="v3-topic-group"${label ? ` aria-labelledby="v3TopicGroup-${groupIndex}"` : ""}>${label ? `<h3 id="v3TopicGroup-${groupIndex}" class="v3-topic-group-title">${v3Esc(label)}</h3>` : ""}${rows.map(({ entry, status, group }) => { const samples = entry.detail.samples || [], tasks = entry.detail.tasks || []; const sampleRows = samples.map((sample) => `<tr><th scope="row">${v3Esc(sample.planning_label)}</th><td>${v3Esc(sample.model)}</td><td>${sample.actual_arrival_date ? `到样 ${v3Esc(sample.actual_arrival_date)}` : sample.eta_pending ? "ETA 待确认" : v3Esc(sample.current_eta_date || "—")}</td></tr>`).join(""); const taskRows = tasks.map((task) => `<tr><th scope="row">${v3Esc(task.title)}</th><td>${v3Esc(task.display_status || "待规划")}</td><td>${v3Esc(v3Cryostat(task.cryostat_id)?.name || (task.cryostat_pending ? "待定" : "未指定"))}</td><td>${task.efforts?.length ? task.efforts.map((effort) => v3Esc(effort.name)).join("、") : "待分配"}</td></tr>`).join(""); return `<details class="v3-topic-table-row"><summary><span class="v3-topic-table-main"><span class="eyebrow">${v3Esc(group?.name || "来源小组")}</span><strong>${v3Esc(entry.name)}</strong><small>${v3Esc(entry.purpose || "")}</small></span><span class="v3-topic-row-facts">${v3StatusMarkup(status)}<span>${samples.length} 个样品</span><span>${tasks.length} 个任务</span></span></summary><div class="v3-topic-table-details"><div class="v3-topic-detail-actions"><span>专题负责人：${v3Esc(entry.source_contact_name || "待确认")}</span><button class="ghost-button compact" type="button" data-v3-open-topic="${entry.id}">进入专题</button></div>${samples.length ? `<table class="v3-workbench-table"><caption>样品明细</caption><thead><tr><th>标签</th><th>型号</th><th>ETA/到样</th></tr></thead><tbody>${sampleRows}</tbody></table>` : "<p class='v3-inline-note'>暂无样品规划。</p>"}${tasks.length ? `<table class="v3-workbench-table"><caption>任务明细</caption><thead><tr><th>任务</th><th>状态</th><th>制冷机</th><th>负责人</th></tr></thead><tbody>${taskRows}</tbody></table>` : "<p class='v3-inline-note'>暂无任务。</p>"}</div></details>`; }).join("")}</section>`).join("");
+}
+function v3RenderWorkbenchOverview(entries = null) {
+  const digest = $("#v3WorkbenchDigest"); if (!digest) return;
+  const rows = entries || v3State.topics.map((topic) => ({ ...topic, detail: v3State.topicDetails.get(topic.id) || { topic, samples: [], tasks: [], submissions: [], events: [] } }));
+  const counts = { pending_eta: 0, recent_arrival: 0, delayed: 0, testing: 0, unassigned: 0, submitted: 0 };
+  const queue = [], events = [];
+  rows.forEach((entry) => {
+    const detail = entry.detail, group = v3Group(entry.source_group_id), samples = detail.samples || [], tasks = detail.tasks || [], submissions = detail.submissions || [];
+    samples.forEach((sample) => {
+      if (!sample.actual_arrival_date && (sample.eta_pending || !sample.current_eta_date)) { counts.pending_eta += 1; queue.push({ kind: "pending_eta", topicId: entry.id, group: group?.name, topic: entry.name, sample: `${sample.planning_label} · ${sample.model}`, eta: "待确认", cryostat: "—", owner: "待确认", action: "补充 ETA" }); }
+      if (sample.actual_arrival_date && sample.actual_arrival_date >= v3DaysAgoIso(7)) { counts.recent_arrival += 1; queue.push({ kind: "recent_arrival", topicId: entry.id, group: group?.name, topic: entry.name, sample: `${sample.planning_label} · ${sample.model}`, eta: `到样 ${sample.actual_arrival_date}`, cryostat: "—", owner: "待开始测试", action: "查看任务" }); }
+      if (!sample.actual_arrival_date && sample.current_eta_date && sample.current_eta_date < v3Today()) { counts.delayed += 1; queue.push({ kind: "delayed", topicId: entry.id, group: group?.name, topic: entry.name, sample: `${sample.planning_label} · ${sample.model}`, eta: sample.current_eta_date, cryostat: "—", owner: "待确认到样", action: "确认到样" }); }
+    });
+    tasks.forEach((task) => {
+      const owner = task.efforts?.length ? task.efforts.map((effort) => effort.name).join("、") : "待分配"; const cryostat = v3Cryostat(task.cryostat_id)?.name || (task.cryostat_pending ? "待定" : "未指定"); const sample = task.samples?.[0];
+      if (task.display_status === "active") { counts.testing += 1; queue.push({ kind: "testing", topicId: entry.id, taskId: task.id, group: group?.name, topic: entry.name, sample: sample ? `${sample.planning_label} · ${sample.model}` : "未绑定样品", task: task.title, eta: `${task.start_date || "待排期"}～${task.end_date || "待排期"}`, cryostat, owner, action: "打开执行" }); }
+      if (!task.primary_member_id || !task.efforts?.some((effort) => Number(effort.planned_half_hours || 0) > 0)) { counts.unassigned += 1; queue.push({ kind: "unassigned", topicId: entry.id, taskId: task.id, group: group?.name, topic: entry.name, sample: sample ? `${sample.planning_label} · ${sample.model}` : "未绑定样品", task: task.title, eta: `${task.start_date || "待排期"}～${task.end_date || "待排期"}`, cryostat, owner, action: "人工分配" }); }
+    });
+    submissions.filter((submission) => submission.status === "submitted").forEach((submission) => { counts.submitted += 1; queue.push({ kind: "submitted", topicId: entry.id, group: group?.name, topic: entry.name, sample: "按提交快照", task: `任务 #${submission.topic_task_id}`, eta: "待人工验收", cryostat: "—", owner: submission.submitted_by || "本地用户", action: "打开验收" }); });
+    (detail.events || []).forEach((event) => events.push({ ...event, topicName: entry.name, groupName: group?.name || "来源小组" }));
+  });
+  $$("#v3WorkbenchSummaryGrid [data-v3-workbench-stat]").forEach((card) => { const key = card.dataset.v3WorkbenchStat; const value = card.querySelector("strong"); if (value) value.textContent = counts[key] ?? 0; card.setAttribute("aria-pressed", String(v3State.workbenchFocus === key)); });
+  const focus = $("#v3WorkbenchFocus"); if (focus) focus.textContent = v3WorkbenchStatusLabel(v3State.workbenchFocus);
+  let visibleQueue = queue.filter((item) => (!v3State.onlyPending || ["pending_eta", "delayed", "unassigned", "submitted"].includes(item.kind)) && (!v3State.workbenchFocus || item.kind === v3State.workbenchFocus));
+  visibleQueue.sort((a, b) => String(a.eta).localeCompare(String(b.eta)));
+  const queueList = $("#v3WorkbenchQueueList"), queueCount = $("#v3WorkbenchQueueCount"); if (queueCount) queueCount.textContent = `${visibleQueue.length} 项`;
+  if (queueList) queueList.innerHTML = visibleQueue.length ? visibleQueue.slice(0, 30).map((item) => `<article class="v3-workbench-queue-item"><div class="v3-workbench-queue-main"><span class="v3-queue-kind is-${v3Esc(item.kind)}">${v3Esc(v3WorkbenchStatusLabel(item.kind))}</span><strong>${v3Esc(item.task || item.sample || "待处理事项")}</strong><small>${v3Esc(item.group || "来源小组")} · ${v3Esc(item.topic || "专题")}</small><span>${v3Esc(item.sample || "")} · ETA/日期：${v3Esc(item.eta || "—")} · 制冷机：${v3Esc(item.cryostat || "—")} · 负责人：${v3Esc(item.owner || "待确认")}</span></div><button class="ghost-button compact" type="button" data-v3-open-topic="${item.topicId}">${v3Esc(item.action)}</button></article>`).join("") : "<div class='v3-empty-state compact'><h3>当前没有待处理事项</h3><p>可清空筛选或等待新的专题事件。</p></div>";
+  events.sort((a, b) => String(b.created_at).localeCompare(String(a.created_at))); const eventList = $("#v3WorkbenchEventList"); if (eventList) eventList.innerHTML = events.length ? events.slice(0, 16).map((event) => `<li class="v3-workbench-event"><time datetime="${v3Esc(event.created_at || "")}">${v3Esc(event.created_at || "")}</time><div><strong>${v3Esc(v3EventLabel(event.event_type))}</strong><span>${v3Esc(event.groupName)} · ${v3Esc(event.topicName)}</span><small>操作者：${v3Esc(event.actor || "本地用户")}</small></div></li>`).join("") : "<li class='v3-empty-state compact'><p>暂无近期事件。</p></li>";
 }
 function v3RenderTopic() {
   const topic = v3State.topic; if (!topic) return;
@@ -3582,13 +3634,13 @@ function v3RenderTopic() {
 }
 async function v3LoadTopic(id) {
   if (!v3State.members.length) await v3LoadMembers();
-  const [topic, samples, tasks, template] = await Promise.all([v3Api(`/api/v3/topics/${id}`), v3Api(`/api/v3/topics/${id}/samples`), v3Api(`/api/v3/topics/${id}/tasks`), v3Api(`/api/v3/topics/${id}/acceptance-template`)]);
+  const [topic, samples, tasks, template, submissions, events] = await Promise.all([v3Api(`/api/v3/topics/${id}`), v3Api(`/api/v3/topics/${id}/samples`), v3Api(`/api/v3/topics/${id}/tasks`), v3Api(`/api/v3/topics/${id}/acceptance-template`), v3Api(`/api/v3/topics/${id}/submissions`), v3Api(`/api/v3/topics/${id}/events`)]);
   v3State.topic = topic.data; v3State.samples = samples.data?.items || []; v3State.tasks = tasks.data?.items || []; v3State.template = template.data || null;
-  v3State.topicDetails.set(v3State.topic.id, { topic: v3State.topic, samples: v3State.samples, tasks: v3State.tasks });
+  v3State.topicDetails.set(v3State.topic.id, { topic: v3State.topic, samples: v3State.samples, tasks: v3State.tasks, submissions: submissions.data?.items || [], events: events.data?.items || [] });
   v3RebuildExecutionTaskIndex();
   renderTasks();
   renderDetail();
-  await v3LoadSubmissions(); v3RenderTopic();
+  await v3LoadSubmissions(); v3RenderTopic(); v3RenderWorkbenchOverview();
 }
 async function v3RefreshAfterChange(topicId = v3State.topic?.id, { reloadLegacy = true } = {}) {
   const selectedTopicId = topicId == null ? null : Number(topicId);
@@ -3813,7 +3865,11 @@ function bindV3Events() {
   $("#v3TopicSearchInput")?.addEventListener("input", (event) => { v3State.search = event.target.value.trim(); window.clearTimeout(v3State.searchTimer); v3State.searchTimer = window.setTimeout(() => v3LoadTopics().catch((e) => showToast(v3ErrorText(e), { type: "error" })), 220); });
   $("#v3TopicSourceGroup")?.addEventListener("change", (event) => v3FillContacts(event.target.value));
   $("#v3TopicStatusFilter")?.addEventListener("change", (event) => { v3State.status = event.target.value; v3RenderTopics(); }); $("#v3TopicSourceFilter")?.addEventListener("change", (event) => { v3State.source = event.target.value; v3RenderTopics(); }); $("#v3WindowDays")?.addEventListener("change", (event) => { v3State.windowDays = clamp(Number(event.target.value) || 7, 0, 365); event.target.value = String(v3State.windowDays); v3RenderTopics(); }); $("#v3IncludeArchived")?.addEventListener("change", (event) => { v3State.includeArchived = event.target.checked; v3LoadTopics().catch((e) => showToast(v3ErrorText(e), { type: "error" })); });
-  $("#v3TopicGroupBy")?.addEventListener("change", (event) => { v3State.groupBy = event.target.value; v3RenderTopics(); }); $$("#v3TopicStats [data-v3-stat]").forEach((card) => card.addEventListener("click", () => { v3State.status = v3State.status === card.dataset.v3Stat ? "" : card.dataset.v3Stat; $("#v3TopicStatusFilter").value = v3State.status; v3RenderTopics(); }));
+  $("#v3TopicGroupBy")?.addEventListener("change", (event) => { v3State.groupBy = event.target.value; v3RenderTopics(); });
+  $("#v3TopicCryostatFilter")?.addEventListener("change", (event) => { v3State.cryostat = event.target.value; v3RenderTopics(); });
+  $("#v3OnlyPending")?.addEventListener("change", (event) => { v3State.onlyPending = event.target.checked; v3RenderTopics(); });
+  $$("#v3WorkbenchSummaryGrid [data-v3-workbench-stat]").forEach((card) => card.addEventListener("click", () => { const key = card.dataset.v3WorkbenchStat; v3State.workbenchFocus = v3State.workbenchFocus === key ? "" : key; v3RenderTopics(); }));
+  $$("#v3TopicStats [data-v3-stat]").forEach((card) => card.addEventListener("click", () => { v3State.status = v3State.status === card.dataset.v3Stat ? "" : card.dataset.v3Stat; $("#v3TopicStatusFilter").value = v3State.status; v3RenderTopics(); }));
   $$('[data-v3-topic-view]').forEach((tab) => tab.addEventListener("click", () => { $$('[data-v3-topic-view]').forEach((item) => { item.classList.toggle("active", item === tab); item.setAttribute("aria-selected", String(item === tab)); }); $$('[data-v3-topic-panel]').forEach((panel) => { panel.hidden = panel.dataset.v3TopicPanel !== tab.dataset.v3TopicView; panel.classList.toggle("active", !panel.hidden); }); }));
   $("#v3TopicForm")?.addEventListener("submit", v3SaveTopic); $("#v3SampleForm")?.addEventListener("submit", v3SaveSample); $("#v3TaskForm")?.addEventListener("submit", v3SaveTask); $("#v3TaskDetailForm")?.addEventListener("submit", v3SaveTaskDetail); $("#v3MemberForm")?.addEventListener("submit", v3SaveMembers); $("#v3EtaForm")?.addEventListener("submit", v3SaveEta); $("#v3CryostatForm")?.addEventListener("submit", v3SaveCryostat); $("#v3SubmissionForm")?.addEventListener("submit", v3SaveSubmission); $("#v3ReviewForm")?.addEventListener("submit", v3SaveReview); $("#v3LegacyForm")?.addEventListener("submit", v3SaveLegacy);
   $("#v3ToggleQuickSampleBtn")?.addEventListener("click", v3ToggleQuickSampleEditor); $("#v3QuickSampleSaveBtn")?.addEventListener("click", v3QuickAddTaskSample);
@@ -3831,7 +3887,7 @@ function bindV3Events() {
   });
   document.body.addEventListener("click", async (event) => { const action = (selector) => event.target.closest(selector); try {
     if (action("[data-v3-open-topic]")) { const trigger = action("[data-v3-open-topic]"), returnView = v3State.activeView; const id = Number(trigger.dataset.v3OpenTopic); await v3LoadTopic(id); if (returnView !== "plans") setV2View("plans"); v3SetView("plans"); v3CloseTopicDetail({ restoreFocus: false }); $("#v3TopicView")?.scrollIntoView({ block: "start" }); return; }
-    if (action("[data-v3-clear-topic-filters]")) { v3State.status = ""; v3State.source = ""; $("#v3TopicStatusFilter").value = ""; $("#v3TopicSourceFilter").value = ""; v3RenderTopics(); return; }
+    if (action("[data-v3-clear-topic-filters]")) { v3State.status = ""; v3State.source = ""; v3State.cryostat = ""; v3State.onlyPending = false; v3State.workbenchFocus = ""; $("#v3TopicStatusFilter").value = ""; $("#v3TopicSourceFilter").value = ""; $("#v3TopicCryostatFilter").value = ""; $("#v3OnlyPending").checked = false; v3RenderTopics(); return; }
     if (action("[data-v3-open-topic-dialog]")) return v3OpenTopicDialog(action("[data-v3-open-topic-dialog]"));
     if (action("[data-v3-open-topic-edit]")) return v3OpenTopicDialog(action("[data-v3-open-topic-edit]"), action("[data-v3-open-topic-edit]").dataset.v3OpenTopicEdit);
     if (action("[data-v3-open-sample-dialog]")) return v3OpenSampleDialog(action("[data-v3-open-sample-dialog]"));

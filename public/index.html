@@ -51,8 +51,10 @@
           <label class="v3-search-control">搜索专题<input id="v3TopicSearchInput" type="search" placeholder="专题、样品或任务"></label>
           <label>专题状态<select id="v3TopicStatusFilter"><option value="">全部状态</option><option value="testing">测试中</option><option value="delayed">延期</option><option value="arriving_within_window">规定时间内到来</option><option value="arriving_outside_window">规定时间外到来</option><option value="time_pending">ETA 待确认</option><option value="completed">已完成</option></select></label>
           <label>来源小组<select id="v3TopicSourceFilter"><option value="">全部来源</option></select></label>
+          <label>制冷机<select id="v3TopicCryostatFilter"><option value="">全部制冷机</option></select></label>
           <label>分组<select id="v3TopicGroupBy"><option value="none">不分组</option><option value="source_group">来源小组</option><option value="status">专题状态</option><option value="cryostat">任务制冷机</option></select></label>
           <label class="v3-window-control">关注窗口<input id="v3WindowDays" type="number" min="0" max="365" value="7"><span>天</span></label>
+          <label class="inline v3-pending-toggle"><input id="v3OnlyPending" type="checkbox"> 只看待处理</label>
           <label class="inline v3-archive-toggle"><input id="v3IncludeArchived" type="checkbox"> 显示归档</label>
         </div>
       </div>
@@ -137,8 +139,23 @@
             <button class="v3-stat-card is-pending" type="button" data-v3-stat="time_pending"><span>ETA 待确认</span><strong>—</strong><small>需人工补充</small></button>
             <button class="v3-stat-card is-completed" type="button" data-v3-stat="completed"><span>已完成专题</span><strong>—</strong><small>必做任务已验收</small></button>
           </div>
+          <section id="v3WorkbenchDigest" class="v3-workbench-digest" aria-labelledby="v3WorkbenchDigestTitle">
+            <header class="v3-section-heading"><div><span class="eyebrow">管理总览</span><h2 id="v3WorkbenchDigestTitle">需要人工关注</h2></div><span id="v3WorkbenchFocus" class="v3-inline-note" role="status" aria-live="polite">全部事项</span></header>
+            <div id="v3WorkbenchSummaryGrid" class="v3-workbench-summary-grid">
+              <button class="v3-workbench-summary-card is-pending" type="button" data-v3-workbench-stat="pending_eta"><span>待确认 ETA</span><strong>—</strong><small>样品仍待人工确认</small></button>
+              <button class="v3-workbench-summary-card is-within" type="button" data-v3-workbench-stat="recent_arrival"><span>近期到样</span><strong>—</strong><small>最近 7 天已到样</small></button>
+              <button class="v3-workbench-summary-card is-delayed" type="button" data-v3-workbench-stat="delayed"><span>延期样品</span><strong>—</strong><small>超过 ETA 尚未到样</small></button>
+              <button class="v3-workbench-summary-card is-testing" type="button" data-v3-workbench-stat="testing"><span>测试中任务</span><strong>—</strong><small>当前正在执行</small></button>
+              <button class="v3-workbench-summary-card is-unassigned" type="button" data-v3-workbench-stat="unassigned"><span>待人工分配</span><strong>—</strong><small>缺少负责人或成员</small></button>
+              <button class="v3-workbench-summary-card is-submitted" type="button" data-v3-workbench-stat="submitted"><span>待验收成果</span><strong>—</strong><small>等待人工通过或退回</small></button>
+            </div>
+          </section>
+          <div class="v3-workbench-columns">
+            <section class="v3-surface v3-workbench-queue" aria-labelledby="v3WorkbenchQueueTitle"><header class="v3-section-heading"><div><span class="eyebrow">待处理事项</span><h2 id="v3WorkbenchQueueTitle">下一步动作</h2></div><span id="v3WorkbenchQueueCount" class="v3-muted">0 项</span></header><div id="v3WorkbenchQueueList" class="v3-workbench-queue-list"><div class="v3-empty-state compact"><p>正在汇总专题事项…</p></div></div></section>
+            <section class="v3-surface v3-workbench-events" aria-labelledby="v3WorkbenchEventsTitle"><header class="v3-section-heading"><div><span class="eyebrow">变更记录</span><h2 id="v3WorkbenchEventsTitle">近期事件</h2></div><span class="v3-muted">专题事件时间线</span></header><ol id="v3WorkbenchEventList" class="v3-workbench-event-list"><li class="v3-empty-state compact"><p>暂无近期事件。</p></li></ol></section>
+          </div>
           <section class="v3-surface" aria-labelledby="v3WorkbenchTitle">
-            <header class="v3-section-heading"><div><span class="eyebrow">专题总览</span><h2 id="v3WorkbenchTitle">专题</h2></div><strong id="v3TopicResultCount" aria-live="polite">0 个专题</strong></header>
+            <header class="v3-section-heading"><div><span class="eyebrow">专题总览</span><h2 id="v3WorkbenchTitle">专题与样品任务</h2></div><strong id="v3TopicResultCount" aria-live="polite">0 个专题</strong></header>
             <div id="v3TopicOverviewList" class="v3-topic-list" aria-live="polite">
               <div class="v3-empty-state"><h3>还没有专题</h3><p>从来源小组和样品型号开始建立专题，再由人确认任务链和成员。</p><button class="primary-action" type="button" data-v3-open-topic-dialog>新建第一个专题</button></div>
             </div>
