@@ -1,0 +1,84 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-113",
+  "work_package": "WP-009",
+  "title": "独立审核 V4 工作台总览原型",
+  "goal": "独立审核 TASK-112 的工作台总览重设计，核对信息架构、待处理队列、近期时间线、专题/样品/任务展开、筛选联动、桌面布局、现有模块兼容和实际变更范围，并完成 Release 双轮审核。",
+  "baseline": "BL-005",
+  "profile": "Release",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-113"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "tests/v4-workbench.test.js",
+    "tests",
+    "src/v3"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-113"
+  ],
+  "out_of_scope": [
+    "修改 public、tests、数据库、API、schema、任务台账或治理状态"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-112"
+  ],
+  "acceptance_criteria": [
+    "逐项核对 TASK-112 从启动提交到最终工作树的完整 scoped change manifest，包含 HTML、JS、CSS 和测试的实际变更类型。",
+    "独立复核管理摘要、待处理事项队列、近期时间线、专题表格和样品/任务展开内容是否覆盖来源小组、专题、样品、任务、ETA、制冷机、负责人和下一步动作。",
+    "核对工作台筛选与摘要联动、状态文字/颜色/非颜色标识、空状态、焦点、错误反馈和 1280×720/1366×768 桌面边界。",
+    "核对专题规划、人工分配、执行中心、成果验收、资源维护和 V3/V2 API/schema/数据库未发生越界回归。",
+    "运行 npm test、node --check public/app.js、git diff --check；浏览器可用时检查桌面交互，不可用时如实记录。",
+    "Release 档位对同一最终内容完成两个连续通过轮次并保存结构化审核证据。"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "git",
+      "args": [
+        "diff",
+        "--check"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface",
+    "scope",
+    "production_release"
+  ],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-22T07:31:22.8489316Z",
+  "release_controls": {
+    "target_environment": "本地协调工作树，审核 TASK-112 V4 工作台总览原型",
+    "execution_window": "TASK-112 实现并 Verify 后执行 Release 双轮全量审核",
+    "rollback_plan": "仅移除 TASK-113 审核证据，不修改 TASK-112 实现",
+    "observation_metrics": "工作台信息完整性、待处理事项准确性、时间线、专题展开、筛选联动、桌面布局、npm test、静态检查、双分辨率与 Release 治理结果",
+    "stop_conditions": "发现信息仍不足、交互入口失效、现有模块回归、横向溢出、范围越界、测试或治理校验失败",
+    "post_release_owner": "项目经理（协调工作树）"
+  }
+}

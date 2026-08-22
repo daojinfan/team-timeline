@@ -1,0 +1,90 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-112",
+  "work_package": "WP-009",
+  "title": "重设计 V4 工作台总览原型",
+  "goal": "在已验收 V4 专题模型上，将工作台从有限的专题卡片列表升级为桌面管理总览：提供管理摘要、待处理事项、近期时间线和可展开专题/样品/任务总览；保持专题规划、人工分配、执行中心、成果验收的数据与行为兼容，不新增 API、schema 或数据库字段。",
+  "baseline": "BL-005",
+  "profile": "Release",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "tests/v4-workbench.test.js"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "tests",
+    "src/v3"
+  ],
+  "write_paths": [
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "tests/v4-workbench.test.js"
+  ],
+  "out_of_scope": [
+    "src/server.js、src/v3/、数据库、API、schema、checksum 修改",
+    "专题规划样品池/任务链业务规则修改",
+    "人工分配、执行中心、成果验收业务流程修改",
+    "手机端、AI、自动分配、登录和云同步"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "工作台首屏改为管理总览：保留专题状态统计，并增加待确认 ETA、近期到样、延期样品、测试中任务、待人工分配和待验收成果等可点击摘要。",
+    "新增待处理事项队列，至少显示来源小组、专题、样品规划标签/型号、当前任务、ETA、制冷机、负责人或分配状态及下一步动作；状态以文字、颜色和非颜色标识共同表达。",
+    "新增近期时间线或事件列表，覆盖未来关注窗口内的样品 ETA、延期和任务节点，并可从事件进入对应专题或任务上下文。",
+    "专题总览改为信息密度更高的桌面表格或等价布局，显示来源小组、专题、样品进度、当前任务、最近 ETA、制冷机、负责人和下一步；支持展开查看样品/任务明细。",
+    "工作台筛选至少支持只看待处理、来源小组、状态、制冷机、ETA 窗口和归档；筛选与摘要卡联动，不改变专题规划中的独立编辑流程。",
+    "保持专题规划、人工分配、执行中心、成果验收和资源维护入口可用；不改变 V3 API/schema、V2 canonical 接口、数据库和已有任务状态语义。",
+    "1280×720 与 1366×768 桌面宽度下不新增横向溢出；键盘焦点、空状态、无数据状态和错误状态可读。",
+    "新增静态/客户端回归测试锁定工作台关键容器、字段和筛选入口；npm test、node --check public/app.js、git diff --check 通过。"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface",
+    "scope"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-22T07:31:03.5701059Z",
+  "release_controls": {
+    "target_environment": "本地 Windows 桌面浏览器与静态测试环境，D:\\Codex\\人员管理系统，dev 分支",
+    "execution_window": "工作台总览原型实现、桌面双分辨率检查、静态回归与独立审核窗口",
+    "rollback_plan": "回退 TASK-112 的 public/index.html、public/app.js、public/styles.css 和 tests/v4-workbench.test.js 提交；不涉及数据或接口回滚",
+    "observation_metrics": "工作台摘要字段完整性、待处理队列可读性、近期时间线、专题展开层级、筛选联动、npm test、node --check、git diff --check、1280×720/1366×768 溢出",
+    "stop_conditions": "发现需要修改 API/schema/数据库、专题规划/人工分配业务规则回归、浏览器与静态结论冲突、出现横向溢出或范围越出四个允许文件",
+    "post_release_owner": "项目经理（协调工作树）"
+  }
+}
