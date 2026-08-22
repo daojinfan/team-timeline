@@ -2,7 +2,7 @@
   "$schema": "schemas/work-package-context.schema.json",
   "schema_version": 1,
   "work_package": "WP-009",
-  "baseline": "BL-004",
+  "baseline": "BL-005",
   "scope": [
     "src/server.js",
     "src/v3",
@@ -24,19 +24,26 @@
     { "doc_id": "ARC-OVERALL-003", "mode": "full" },
     { "doc_id": "ARC-COMP-005", "mode": "full" },
     { "doc_id": "DEC-003", "mode": "full" },
+    { "doc_id": "DEC-004", "mode": "full" },
     { "doc_id": "CR-003", "mode": "full" },
     { "doc_id": "RPT-V21-DEV-001", "mode": "full" },
     { "doc_id": "QUAL-TRACE-V21-001", "mode": "full" },
+    { "doc_id": "REQ-V4-001", "mode": "full" },
+    { "doc_id": "ARC-OVERALL-V4-001", "mode": "full" },
+    { "doc_id": "ARC-COMP-V4-001", "mode": "full" },
+    { "doc_id": "CR-005", "mode": "full" },
+    { "doc_id": "QUAL-TRACE-V4-001", "mode": "full" },
     { "doc_id": "REQ-BASE-001", "mode": "summary" },
     { "doc_id": "ARC-OVERALL-001", "mode": "summary" },
     { "doc_id": "DEL-WORK-001", "mode": "full" }
   ],
-  "decisions": ["DEC-003"],
+  "decisions": ["DEC-003", "DEC-004"],
   "validation": [
     "npm test",
     "node --check src/server.js",
     "node --check public/app.js",
     "git diff --check",
-    "Test-ProjectGovernance.ps1 -Level Release"
+    "Test-ProjectGovernance.ps1 -Level Release",
+    "V4 topic IA, sync, ordering, status and dual-resolution acceptance"
   ]
 }

@@ -30,7 +30,7 @@ last_reviewed: 2026-08-20
 | ARC-COMP-002 | docs/03-architecture/components/task-workflow.md | architecture.component.task-workflow | active | 1.0 | BL-001 | human |
 | ARC-COMP-003 | docs/03-architecture/components/verification.md | architecture.component.verification | active | 1.0 | BL-001 | human |
 | DEC-001 | docs/07-decisions/DEC-001.md | architecture.decision | active | 1.0 | BL-001 | human |
-| DEL-WORK-001 | docs/04-delivery/WORK-PACKAGES.md | delivery.work-packages | active | 1.1 | BL-002 | human |
+| DEL-WORK-001 | docs/04-delivery/WORK-PACKAGES.md | delivery.work-packages | active | 1.2 | BL-005 | human |
 | DEL-WORK-STATUS-001 | docs/04-delivery/WORK-STATUS.md | delivery.work-status | active | 1.0 | BL-001 | human |
 | QUA-TRACE-001 | docs/05-quality/traceability.md | quality.traceability | active | 1.0 | BL-001 | human |
 | DEL-TASK-LEDGER-001 | docs/04-delivery/TASK-LEDGER.md | delivery.task-ledger | active | 1.0 | BL-001 | human |
