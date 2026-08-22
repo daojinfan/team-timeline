@@ -117,7 +117,7 @@
       "path": "docs/04-delivery/WORK-PACKAGES.md",
       "version": "1.2",
       "status": "active",
-      "sha256": "17f43f3bca5bb23e1e05dbd133494caa98775090edfa03ba5a44a2bc26d8de8d"
+      "sha256": "fa6b3da15e775c3d024cec8ce07c506709846545f5cc53463e93d9faed8dce0b"
     },
     {
       "doc_id": "QUAL-TRACE-V2-001",
@@ -225,6 +225,12 @@
       "baseline": "BL-005",
       "path": "docs/04-delivery/context/WP-009.context.json",
       "sha256": "24ecdba5e8379b739e88c106df106922db72d9f868ac8e23e84883fa63f5ed74"
+    },
+    {
+      "work_package": "WP-010",
+      "baseline": "BL-005",
+      "path": "docs/04-delivery/context/WP-010.context.json",
+      "sha256": "e90e21cc8be0988957950f8545be3fea58c5ddd75d40422dc451f3866eb98a37"
     }
   ]
 }

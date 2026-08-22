@@ -56,4 +56,4 @@ last_reviewed: 2026-08-20
 | DEC-004 | docs/07-decisions/DEC-004.md | architecture.decision.v4 | proposed | 1.0 | BL-005 | human |
 | CR-005 | docs/08-changes/CR-005.md | change-package | approved | 1.0 | BL-004 | human |
 | QUAL-TRACE-V4-001 | docs/05-quality/traceability-v4.md | quality.traceability.v4 | proposed | 1.0 | BL-005 | human |
-| CR-006 | docs/08-changes/CR-006.md | change-package | proposed | 1.0 | BL-005 | human |
+| CR-006 | docs/08-changes/CR-006.md | change-package | approved | 1.0 | BL-005 | human |
