@@ -2987,3 +2987,54 @@ menu {
 .v3-detail-list {
   max-width: 100%;
 }
+.v3-topic-group {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+.v3-topic-group + .v3-topic-group {
+  margin-top: 18px;
+}
+
+.v3-topic-group-title {
+  margin: 0;
+  color: var(--ink-strong, #16324f);
+  font-size: 0.86rem;
+  letter-spacing: 0.04em;
+}
+
+.v3-task-order-actions {
+  display: inline-flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.v3-task-order-actions .ghost-button {
+  min-width: 2rem;
+  padding-inline: 0.45rem;
+}
+
+#v3TaskOrderStatus {
+  min-height: 1.25rem;
+  max-width: 22rem;
+  overflow-wrap: anywhere;
+}
+
+.v3-sample-card,
+.v3-task-card,
+.v3-topic-row {
+  min-width: 0;
+}
+
+.v3-sample-card > div:last-child,
+.v3-task-card > div:last-child,
+.v3-topic-row-facts {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.v3-status-chip.v3-status-pending:empty {
+  display: none;
+}
