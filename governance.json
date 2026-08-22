@@ -1,71 +1,71 @@
 {
-    "$schema":  "schemas/governance.schema.json",
-    "schema_version":  "2.0",
-    "framework":  {
-                      "name":  "large-project-governance-framework",
-                      "version":  "2.0.0",
-                      "source_commit":  "216b1871d0f3bb152197710d69a428d54dc321c6",
-                      "source_dirty":  true,
-                      "source_tree_hash":  "c7761d457726ed6174afd2229e9e111fa7db6c72a7d191d39bcbd06a22d0620e",
-                      "installed_at":  "2026-08-20",
-                      "local_modifications":  false
-                  },
-    "project":  {
-                    "id":  "PRJ-PROJECT-A0C26D10",
-                    "name":  "小组任务管理与甘特图系统",
-                    "owner":  "human",
-                    "mode":  "TEAM_PROJECT",
-                    "phase":  "TEAM_EXECUTION"
-                },
-    "current_baseline":  "BL-004",
-    "task_profile":  "Release",
-    "validation_level":  "Release",
-    "context_policy":  {
-                           "Lite":  {
-                                        "target_chars":  10000,
-                                        "warning_chars":  14000
-                                    },
-                           "Standard":  {
-                                            "target_chars":  16000,
-                                            "warning_chars":  24000
-                                        },
-                           "Release":  {
-                                           "target_chars":  32000,
-                                           "warning_chars":  48000
-                                       },
-                           "required_documents_override_budget":  true,
-                           "allow_silent_truncation":  false,
-                           "overflow_strategy":  [
-                                                     "remove_irrelevant",
-                                                     "use_summary_for_routing",
-                                                     "expand_context",
-                                                     "split_work_package",
-                                                     "raise_task_profile"
-                                                 ]
-                       },
-    "approval_required_for":  [
-                                  "scope",
-                                  "success_criteria",
-                                  "overall_architecture",
-                                  "public_interface",
-                                  "data_model_or_migration",
-                                  "security_privacy_compliance",
-                                  "quality_gate_exception",
-                                  "production_release",
-                                  "irreversible_operation"
-                              ],
-    "authoritative_documents":  {
-                                    "project":  "docs/00-index/PROJECT.md",
-                                    "current_state":  "docs/00-index/CURRENT-STATE.md",
-                                    "document_registry":  "docs/00-index/DOC-REGISTRY.md",
-                                    "baseline_registry":  "docs/00-index/BASELINE-REGISTRY.md",
-                                    "approval_log":  "docs/00-index/APPROVAL-LOG.md",
-                                    "charter":  "docs/01-governance/charter.md",
-                                    "requirements":  "docs/02-product/requirements.md",
-                                    "overall_design":  "docs/03-architecture/overall-design.md",
-                                    "work_packages":  "docs/04-delivery/WORK-PACKAGES.md",
-                                    "work_status":  "docs/04-delivery/WORK-STATUS.md",
-                                    "task_ledger":  "docs/04-delivery/TASK-LEDGER.md",
-                                    "traceability":  "docs/05-quality/traceability.md"
-                                }
+  "$schema": "schemas/governance.schema.json",
+  "schema_version": "2.0",
+  "framework": {
+    "name": "large-project-governance-framework",
+    "version": "2.0.0",
+    "source_commit": "216b1871d0f3bb152197710d69a428d54dc321c6",
+    "source_dirty": true,
+    "source_tree_hash": "c7761d457726ed6174afd2229e9e111fa7db6c72a7d191d39bcbd06a22d0620e",
+    "installed_at": "2026-08-20",
+    "local_modifications": false
+  },
+  "project": {
+    "id": "PRJ-PROJECT-A0C26D10",
+    "name": "小组任务管理与甘特图系统",
+    "owner": "human",
+    "mode": "TEAM_PROJECT",
+    "phase": "EXECUTION_PLANNING"
+  },
+  "current_baseline": "BL-005",
+  "task_profile": "Release",
+  "validation_level": "Release",
+  "context_policy": {
+    "Lite": {
+      "target_chars": 10000,
+      "warning_chars": 14000
+    },
+    "Standard": {
+      "target_chars": 16000,
+      "warning_chars": 24000
+    },
+    "Release": {
+      "target_chars": 32000,
+      "warning_chars": 48000
+    },
+    "required_documents_override_budget": true,
+    "allow_silent_truncation": false,
+    "overflow_strategy": [
+      "remove_irrelevant",
+      "use_summary_for_routing",
+      "expand_context",
+      "split_work_package",
+      "raise_task_profile"
+    ]
+  },
+  "approval_required_for": [
+    "scope",
+    "success_criteria",
+    "overall_architecture",
+    "public_interface",
+    "data_model_or_migration",
+    "security_privacy_compliance",
+    "quality_gate_exception",
+    "production_release",
+    "irreversible_operation"
+  ],
+  "authoritative_documents": {
+    "project": "docs/00-index/PROJECT.md",
+    "current_state": "docs/00-index/CURRENT-STATE.md",
+    "document_registry": "docs/00-index/DOC-REGISTRY.md",
+    "baseline_registry": "docs/00-index/BASELINE-REGISTRY.md",
+    "approval_log": "docs/00-index/APPROVAL-LOG.md",
+    "charter": "docs/01-governance/charter.md",
+    "requirements": "docs/02-product/requirements.md",
+    "overall_design": "docs/03-architecture/overall-design.md",
+    "work_packages": "docs/04-delivery/WORK-PACKAGES.md",
+    "work_status": "docs/04-delivery/WORK-STATUS.md",
+    "task_ledger": "docs/04-delivery/TASK-LEDGER.md",
+    "traceability": "docs/05-quality/traceability.md"
+  }
 }

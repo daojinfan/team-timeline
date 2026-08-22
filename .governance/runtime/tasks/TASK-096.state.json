@@ -1,0 +1,55 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-096",
+  "work_package": "WP-009",
+  "contract_sha256": "f2d5badd04783f44ab3baeb636c2446bc002ef36e4e5ae7207fad8a9d9c4c090",
+  "baseline": "BL-004",
+  "state": "superseded",
+  "approval_id": "APR-080",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "1c723330bd5acca19151e58eb081e15e40b67a8f",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [],
+  "plan_checkpoint_git_commit": "1c723330bd5acca19151e58eb081e15e40b67a8f",
+  "plan_rebase_history": [
+    {
+      "previous_changes": [
+        "public/app.js"
+      ],
+      "checkpoint_git_commit": "1c723330bd5acca19151e58eb081e15e40b67a8f",
+      "rebased_at": "2026-08-21T15:52:16.7210913Z"
+    }
+  ],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-096/20260821T161110750Z-b2f50f37-client-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-096/20260821T161110750Z-b2f50f37-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-096/20260821T161110750Z-b2f50f37-diff-check.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-096/20260821T160527444Z-46f52f71-client-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-096/20260821T160527444Z-46f52f71-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-096/20260821T160527444Z-46f52f71-diff-check.evidence.json",
+    "docs/05-quality/evidence/TASK-096/20260821T161110750Z-b2f50f37-client-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-096/20260821T161110750Z-b2f50f37-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-096/20260821T161110750Z-b2f50f37-diff-check.evidence.json"
+  ],
+  "review_history": [],
+  "review": {
+    "required": true,
+    "reviewer_task_id": "TASK-100",
+    "status": "passed",
+    "evidence": [
+      "docs/05-quality/evidence/TASK-100/review-round-2.json"
+    ],
+    "pass_streak": 2,
+    "subject_sha256": "aea80d2a401731362bf5fa22f820fd51c8ca604de16e06e8b5df6bef4ab88131"
+  },
+  "last_error": "BL-005 V4 基线切换：保留历史交付与审核证据，关闭旧 BL-004 任务契约，不删除业务数据。",
+  "created_at": "2026-08-21T15:37:31.7768908Z",
+  "updated_at": "2026-08-22T03:07:55.3485752Z"
+}

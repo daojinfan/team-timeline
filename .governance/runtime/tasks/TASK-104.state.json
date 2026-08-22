@@ -1,0 +1,43 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-104",
+  "work_package": "WP-009",
+  "contract_sha256": "17a1672c368eae14d6e988914b513d6246da252aa9d699dd1d033f529695b99f",
+  "baseline": "BL-005",
+  "state": "planned",
+  "approval_id": "",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [
+    "docs/00-index/BASELINE-REGISTRY.md",
+    "docs/00-index/CURRENT-STATE.md",
+    "docs/00-index/DOC-REGISTRY.md",
+    "governance.json",
+    ".governance/baseline-activation.lock",
+    "baselines/BL-005/activation.json",
+    "baselines/BL-005/manifest.json",
+    "docs/00-index/.BASELINE-REGISTRY.md.lock"
+  ],
+  "plan_checkpoint_git_commit": "328076e6d56687443c6f0f06ca1c1103510d7d85",
+  "plan_rebase_history": [],
+  "evidence": [],
+  "evidence_history": [],
+  "review_history": [],
+  "review": {
+    "required": true,
+    "reviewer_task_id": "TASK-105",
+    "status": "pending",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
+  },
+  "last_error": "",
+  "created_at": "2026-08-22T03:15:13.5181606Z",
+  "updated_at": "2026-08-22T03:15:47.0297181Z"
+}

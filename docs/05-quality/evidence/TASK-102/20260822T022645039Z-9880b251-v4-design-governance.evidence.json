@@ -1,0 +1,28 @@
+{
+  "$schema": "schemas/validation-evidence.schema.json",
+  "schema_version": 1,
+  "task_id": "TASK-102",
+  "work_package": "WP-009",
+  "baseline": "BL-004",
+  "contract_sha256": "76e766414d2f2d9cb53bf4f10de2894a32d4c889882ca206214128a7ef7b30a9",
+  "git_commit": "5ed2a00713c108e46ba022558c334824104a0ff7",
+  "validation_id": "v4-design-governance",
+  "command": "powershell",
+  "args": [
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    ".governance/tools/Test-ProjectGovernance.ps1",
+    "-ProjectPath",
+    ".",
+    "-Level",
+    "Release"
+  ],
+  "started_at": "2026-08-22T02:26:45.0457475Z",
+  "finished_at": "2026-08-22T02:26:54.1266744Z",
+  "exit_code": 1,
+  "redactions_applied": 0,
+  "output_path": "docs/05-quality/evidence/TASK-102/20260822T022645039Z-9880b251-v4-design-governance.output.txt",
+  "output_sha256": "db93890a65d199e68087181ad6d34202c1cc5f6cb5d75383cc19d4186bec2360"
+}

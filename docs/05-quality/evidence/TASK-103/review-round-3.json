@@ -1,0 +1,75 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-103",
+  "reviewed_task_ids": [
+    "TASK-102"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-004",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-102",
+      "path": "docs/00-index/DOC-REGISTRY.md",
+      "change_type": "modified",
+      "summary": "登记六份 V4 文档，DEC-004 与其余 V4 规范文档均为 proposed、目标基线 BL-005。"
+    },
+    {
+      "task_id": "TASK-102",
+      "path": "docs/02-product/requirements-v4.md",
+      "change_type": "added",
+      "summary": "V4 唯一专题入口、样品池、人工排序、统一状态窗口、同步和桌面验收需求。"
+    },
+    {
+      "task_id": "TASK-102",
+      "path": "docs/03-architecture/overall-design-v4.md",
+      "change_type": "added",
+      "summary": "V4 六区 IA、专题/样品/任务事实关系、唯一主工作区、无主到样语义和 V2/V3 保护边界。"
+    },
+    {
+      "task_id": "TASK-102",
+      "path": "docs/03-architecture/components/v4-detailed-design.md",
+      "change_type": "added",
+      "summary": "V4 路由状态、三子页、统一编辑器、状态颜色/窗口、ordered_task_ids 排序、同步与焦点契约。"
+    },
+    {
+      "task_id": "TASK-102",
+      "path": "docs/05-quality/traceability-v4.md",
+      "change_type": "added",
+      "summary": "REQ-V4-001～014 追踪矩阵及与现有排序失败重载/人工确认一致的关键场景。"
+    },
+    {
+      "task_id": "TASK-102",
+      "path": "docs/07-decisions/DEC-004.md",
+      "change_type": "added",
+      "summary": "V4 唯一专题工作区、样品多对多、人工连续任务序列、统一事实模型与兼容约束决策。"
+    },
+    {
+      "task_id": "TASK-102",
+      "path": "docs/08-changes/CR-005.md",
+      "change_type": "added",
+      "summary": "V4 Option A 变更范围、BL-004 保护、BL-005 审核/激活门、范围外与停止条件。"
+    }
+  ],
+  "change_summary": "第三轮从 TASK-102 原始起始提交 5ed2a00713c108e46ba022558c334824104a0ff7 全量复审至最终 HEAD 2fa987b3c57622bdad4038efd396c0f68452bb0a。实际 Git 变更精确为 7 个 V4 文档（DOC-REGISTRY modified，其余 6 个 added），未发现其他路径漂移。",
+  "scope_checked": [
+    "TASK-102/TASK-103 Release 契约、原始起始提交、最终 HEAD、WP-009、BL-004 和限定路径",
+    "CR-005、DEC-004、REQ-V4、ARC-OVERALL-V4、ARC-COMP-V4、QUAL-TRACE-V4 全文与相互引用",
+    "REQ-V21-001～016、ARC-OVERALL-003、ARC-COMP-005 的领域关系、颜色优先级、窗口和兼容岛",
+    "DOC-REGISTRY、BASELINE-REGISTRY、governance.json 的 BL-004 active / V4 proposed BL-005 门禁",
+    "专题唯一入口、样品/任务 M:N、人工排序、不显示前置依赖、统一任务编辑器、跨入口同步、人工确认和桌面验收",
+    "最终七文件实际 Git 变更清单、排序 ordered_task_ids 合约、无 stale/version 残留以及 whitespace 范围"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "第三轮确认第一轮问题均已闭合：DEC-004/注册表为 proposed；状态为已完成最高优先级、完成绿色、规定时间内橙色、规定时间外灰蓝；实际到样未测试无主且排除窗口/统计；排序仅 ordered_task_ids、失败重载并人工确认。",
+    "traceability-v4 关键场景4 已改为排序失败后重载专题并人工确认当前顺序，无虚构 stale/version 提示。",
+    "git -c safe.directory='D:/Codex/人员管理系统' diff --name-status 5ed2a00713c108e46ba022558c334824104a0ff7..HEAD：仅 M DOC-REGISTRY.md 与 6 个 V4 added 文档；统计 355 insertions。",
+    "git diff --check 5ed2a00713c108e46ba022558c334824104a0ff7..HEAD -- 七个 V4 文档：通过，无 whitespace error。",
+    "Test-ProjectGovernance.ps1 -ProjectPath (Get-Location).Path -Level Release：通过，扫描 47 文档，错误数 0、警告数 0。",
+    "V4 文档与现有 src/v3.js task-order 合约静态一致：ordered_task_ids 完整排列，失败后客户端重载/人工确认；未声明新增 API 或 schema。"
+  ],
+  "created_at": "2026-08-22T02:41:38.2941797Z"
+}

@@ -1,0 +1,41 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-102",
+  "work_package": "WP-009",
+  "contract_sha256": "76e766414d2f2d9cb53bf4f10de2894a32d4c889882ca206214128a7ef7b30a9",
+  "baseline": "BL-004",
+  "state": "superseded",
+  "approval_id": "APR-081",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "5ed2a00713c108e46ba022558c334824104a0ff7",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [],
+  "plan_checkpoint_git_commit": "5ed2a00713c108e46ba022558c334824104a0ff7",
+  "plan_rebase_history": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-102/20260822T023951642Z-c24c0061-v4-design-governance.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-102/20260822T022645039Z-9880b251-v4-design-governance.evidence.json",
+    "docs/05-quality/evidence/TASK-102/20260822T022733171Z-6b578f3c-v4-design-governance.evidence.json",
+    "docs/05-quality/evidence/TASK-102/20260822T023458441Z-8f155170-v4-design-governance.evidence.json",
+    "docs/05-quality/evidence/TASK-102/20260822T023951642Z-c24c0061-v4-design-governance.evidence.json"
+  ],
+  "review_history": [],
+  "review": {
+    "required": true,
+    "reviewer_task_id": "",
+    "status": "cancelled",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
+  },
+  "last_error": "BL-005 V4 基线切换：保留历史交付与审核证据，关闭旧 BL-004 任务契约，不删除业务数据。",
+  "created_at": "2026-08-22T02:21:31.8742413Z",
+  "updated_at": "2026-08-22T03:07:55.6251403Z"
+}

@@ -1,0 +1,80 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-103",
+  "reviewed_task_ids": [
+    "TASK-102"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-004",
+  "result": "changes-required",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-102",
+      "path": "docs/00-index/DOC-REGISTRY.md",
+      "change_type": "modified",
+      "summary": "注册 REQ-V4-001、ARC-OVERALL-V4-001、ARC-COMP-V4-001、DEC-004、CR-005 与 QUAL-TRACE-V4-001。"
+    },
+    {
+      "task_id": "TASK-102",
+      "path": "docs/02-product/requirements-v4.md",
+      "change_type": "added",
+      "summary": "新增 V4 专题唯一入口、样品池、人工任务排序、状态窗口、同步和桌面验收需求。"
+    },
+    {
+      "task_id": "TASK-102",
+      "path": "docs/03-architecture/overall-design-v4.md",
+      "change_type": "added",
+      "summary": "新增 V4 六区 IA、领域关系、专题主工作区、状态聚合和 V2/V3 保护边界。"
+    },
+    {
+      "task_id": "TASK-102",
+      "path": "docs/03-architecture/components/v4-detailed-design.md",
+      "change_type": "added",
+      "summary": "新增专题路由状态、三子页、统一编辑器、状态颜色、排序确认、同步矩阵及桌面验证契约。"
+    },
+    {
+      "task_id": "TASK-102",
+      "path": "docs/05-quality/traceability-v4.md",
+      "change_type": "added",
+      "summary": "新增 REQ-V4-001～014 的设计关注点、验证项和五个关键场景。"
+    },
+    {
+      "task_id": "TASK-102",
+      "path": "docs/07-decisions/DEC-004.md",
+      "change_type": "added",
+      "summary": "新增 V4 专题规划唯一工作区、样品多对多、人工连续任务序列和统一事实模型决策。"
+    },
+    {
+      "task_id": "TASK-102",
+      "path": "docs/08-changes/CR-005.md",
+      "change_type": "added",
+      "summary": "新增 V4 Option A 变更包、BL-004 保护、BL-005 门禁、范围外和停止条件。"
+    }
+  ],
+  "change_summary": "相对 TASK-102 启动提交 5ed2a00713c108e46ba022558c334824104a0ff7，实际变更精确为 7 个 V4 文档：DOC-REGISTRY.md modified，其余 6 个文档 added；未发现 BL-004 权威文档、代码或数据库路径变更。",
+  "scope_checked": [
+    "TASK-102/TASK-103 Release 契约、启动提交、allowed/write/read paths、WP-009 与 BL-004",
+    "CR-005 的 Option A 范围、用户确认、V4 proposed/BL-005 门禁和 V2/V3 保护条款",
+    "DEC-004 的唯一专题工作区、样品/任务关系、人工排序、统一编辑器与同步决策",
+    "REQ-V4-001～014 与 REQ-V21-001～016 的范围、事实归属、桌面和兼容要求",
+    "ARC-OVERALL-V4-001 与 ARC-COMP-V4-001 的六区 IA、状态/颜色/窗口、排序接口、同步和焦点契约",
+    "QUAL-TRACE-V4-001 的逐项追踪、关键场景和 Release 双轮审核要求",
+    "DOC-REGISTRY、BASELINE-REGISTRY、governance.json 与 CURRENT-STATE 的当前 active baseline 关系"
+  ],
+  "findings": [
+    "基线状态冲突：DEC-004.md frontmatter 与 DOC-REGISTRY 均将 DEC-004 标为 active、BL-005，但 BASELINE-REGISTRY/governance.json 当前唯一 active 基线仍为 BL-004，且 CR-005 §7 明确 BL-005 审核/批准/激活前 V4 文档均应 proposed。请将 DEC-004 及注册表状态与 V4 门禁一致，或先完成正式 BL-005 基线门，不能在 BL-004 active 时宣称 DEC-004 active/BL-005。",
+    "状态颜色与优先级漂移：ARC-OVERALL-V4 §5 将已完成列为最低优先级，ARC-COMP-V4 §3 将规定时间内到来设为绿色、规定时间外到来设为橙色、已完成设为灰绿色；这与 V2/V2.1 保护语义及现有 V2/V3 颜色契约（已完成最高优先级且绿色、规定时间内到来橙色、规定时间外到来灰蓝）不一致。需冻结与兼容岛一致的优先级和颜色后再进入实现。",
+    "实际到样未测试语义未被明确冻结：V2.1 要求全部样品实际到样但未开始测试时主状态保持空白且排除到样窗口统计；V4 仅写“不强制显示待测试/不新增已到样待测试主状态”，未规定输出空白及窗口/统计排除。REQ、总体状态聚合、详细状态表和追踪验收应明确该真值与排除规则，否则实现可错误落入到样窗口状态。",
+    "排序接口契约不可执行：ARC-COMP-V4 §4/QUAL-TRACE-V4 场景要求排序发送完整排列和版本并处理 stale，但现有 `/api/v3/topics/:id/task-order` 只接受 `ordered_task_ids`，没有版本/preview token 或 stale 409 检查；CR-005 又禁止改变现有 `/api/v3` 合约。需删除未实现的版本/stale 承诺并定义客户端可验证语义，或重新提交 API 变更设计。"
+  ],
+  "validation_evidence": [
+    "git -c safe.directory='D:/Codex/人员管理系统' diff --name-status 5ed2a00713c108e46ba022558c334824104a0ff7..HEAD：M docs/00-index/DOC-REGISTRY.md；A requirements-v4.md、overall-design-v4.md、v4-detailed-design.md、traceability-v4.md、DEC-004.md、CR-005.md。",
+    "git diff --check 5ed2a00713c108e46ba022558c334824104a0ff7..HEAD -- 七个 V4 文档：通过，无 whitespace error。",
+    "Test-ProjectGovernance.ps1 -ProjectPath (Get-Location).Path -Level Release：通过，扫描 47 文档，错误数 0、警告数 0；该机械校验未捕获上述设计/基线语义冲突。",
+    "V2/V3 排序接口静态核对：src/v3/index.js 的 PUT /api/v3/topics/:id/task-order 仅校验 ordered_task_ids 并直接事务更新，没有 expected_version、preview_token 或 stale 分支。",
+    "当前基线静态核对：BASELINE-REGISTRY.md 与 governance.json 均显示 BL-004 active；V4 CR-005 §7 要求 BL-005 激活前 V4 文档 proposed。"
+  ],
+  "created_at": "2026-08-22T02:32:55.4296962Z"
+}

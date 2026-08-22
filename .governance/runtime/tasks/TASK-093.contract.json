@@ -1,0 +1,74 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-093",
+  "work_package": "WP-009",
+  "title": "独立复审执行中心 V3 任务编辑修复",
+  "goal": "独立检查执行中心编辑入口对 V3 结构化任务字段的可编辑性、保存契约和旧任务兼容性。",
+  "baseline": "BL-004",
+  "profile": "Standard",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-093"
+  ],
+  "read_paths": [
+    "public/app.js",
+    "src/v3/index.js",
+    "docs/02-product/requirements-v21.md",
+    "docs/03-architecture/components/v21-detailed-design.md"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-093"
+  ],
+  "out_of_scope": [],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-092"
+  ],
+  "acceptance_criteria": [
+    "复审执行中心 V3 任务编辑入口是否打开可编辑测试目的、测试项和任务说明的 V3 编辑器",
+    "复审 V3 保存是否仍通过预览确认接口且旧任务编辑路径保持兼容",
+    "复审客户端语法、自动化测试和差异检查证据"
+  ],
+  "validations": [
+    {
+      "id": "client-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "diff-check",
+      "command": "git",
+      "args": [
+        "diff",
+        "--check"
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-21T14:26:56.2123026Z"
+}

@@ -5,7 +5,7 @@
   "work_package": "WP-009",
   "contract_sha256": "d763395fef21a7c2043d31845a2176a74de40d4f6c660da7c18686a33b922d88",
   "baseline": "BL-004",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "APR-078",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -56,14 +56,14 @@
   "review": {
     "required": true,
     "reviewer_task_id": "TASK-091",
-    "status": "passed",
+    "status": "cancelled",
     "evidence": [
-      "docs/05-quality/evidence/TASK-091/review-round-3.json"
+      "docs/05-quality/evidence/TASK-091/review-cancelled-task090-fingerprint.json"
     ],
-    "pass_streak": 2,
-    "subject_sha256": "542c4cc5f4b35a7973c37267fe24d4920dd08f9b8f7d69f527428b2cc9d54e5b"
+    "pass_streak": 0,
+    "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "提交规范化导致已通过审核指纹与当前 Git 对象不一致；由新的执行中心编辑修复任务替代该交付。",
   "created_at": "2026-08-21T11:12:25.4696904Z",
-  "updated_at": "2026-08-21T13:58:16.4729302Z"
+  "updated_at": "2026-08-21T14:36:06.8776570Z"
 }

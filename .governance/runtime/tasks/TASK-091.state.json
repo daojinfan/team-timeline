@@ -5,7 +5,7 @@
   "work_package": "WP-009",
   "contract_sha256": "22f4af85ab71c3d956f93716d55e48058023fbe4a3685b50143dafc54ec0f589",
   "baseline": "BL-004",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -49,7 +49,8 @@
     "docs/05-quality/evidence/TASK-091/review-round-2.json",
     "docs/05-quality/evidence/TASK-091/20260821T135800887Z-3108d286-review-client-syntax.evidence.json",
     "docs/05-quality/evidence/TASK-091/20260821T135800887Z-3108d286-review-npm-test.evidence.json",
-    "docs/05-quality/evidence/TASK-091/review-round-3.json"
+    "docs/05-quality/evidence/TASK-091/review-round-3.json",
+    "docs/05-quality/evidence/TASK-091/review-cancelled-task090-fingerprint.json"
   ],
   "review_history": [
     {
@@ -72,6 +73,13 @@
       "result": "passed",
       "round_id": "RR-a3c5cb7d00ca463b938b99567cf1837c",
       "recorded_at": "2026-08-21T13:58:16.2529871Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-091/review-cancelled-task090-fingerprint.json",
+      "sha256": "8bab759be89ce710506df6b3ac57b94deb2d94296ccf9f20ab7ef20167dc5ffa",
+      "result": "cancelled",
+      "round_id": "RR-b0f3ad8dcb7944e39826f3d1e2b1f969",
+      "recorded_at": "2026-08-21T14:36:06.8351183Z"
     }
   ],
   "review": {
@@ -82,7 +90,7 @@
     "pass_streak": 0,
     "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "BL-005 V4 基线切换：保留历史交付与审核证据，关闭旧 BL-004 任务契约，不删除业务数据。",
   "created_at": "2026-08-21T11:12:25.77866Z",
-  "updated_at": "2026-08-21T13:58:16.5897469Z"
+  "updated_at": "2026-08-22T03:07:55.0691552Z"
 }

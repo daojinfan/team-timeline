@@ -1,0 +1,40 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-091",
+  "reviewed_task_ids": [
+    "TASK-090"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-004",
+  "result": "changes-required",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-090",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "TASK-090 唯一交付路径；相对启动提交 b2d2c0d 的实际 Git 变更仍为 88 行新增、0 行删除。HEAD 101b2d5 的 public/app.js 字节内容已规范化，导致此前审核绑定的最终内容指纹不再匹配。"
+    }
+  ],
+  "change_summary": "完成 TASK-090 历史交付的指纹复核：start_git_commit=b2d2c0dac93a8a672d66e3c0e603ad6eb07a6926，当前 HEAD=101b2d5c343e81481c5d1358c52e603ba3d91984。public/app.js 从 start blob e36473d638138225c52f7fc18de7b15850199cf3 变为 HEAD blob 40bdc34f1b888bdb13dace838b77f13f12350627；HEAD blob SHA-256=605efbb6464d6f399c8de0d3484b7c9c52cadcdbada23e1c91368b5c9e807fdd，当前工作树转换后 SHA-256=fa9fa99d70e116dea7a0abf47c56a6179b5891ddd8117a9937864b62a443be7f。TASK-090.state.json 当前 review subject_sha256=542c4cc5f4b35a7973c37267fe24d4920dd08f9b8f7d69f527428b2cc9d54e5b 绑定的是上一轮内容，治理 Release 已确认指纹不一致；需重新审核并重新绑定最终指纹后才能恢复 passed。",
+  "scope_checked": [
+    "TASK-090/TASK-091 契约、WP-009、BL-004、start_git_commit、当前 HEAD、Review 绑定和 Release 指纹要求",
+    "TASK-090.state.json 的 review subject_sha256、pass_streak=2、review-round-3 绑定及当前状态",
+    "TASK-091 review-round-1/2/3 证据的最终 public/app.js 变更清单和上一轮内容摘要",
+    "git name-status、numstat、raw diff、blob SHA-1、HEAD blob SHA-256、工作树 SHA-256 及 HEAD 与启动提交的 whitespace 检查",
+    "public/app.js 当前内容未发生语义范围扩张；本轮仅审计提交后的字节规范化和指纹一致性，不修改实现或治理状态"
+  ],
+  "findings": [
+    "[阻塞/治理指纹] TASK-090.state.json 的 review.subject_sha256=542c4cc5f4b35a7973c37267fe24d4920dd08f9b8f7d69f527428b2cc9d54e5b 与当前 HEAD 101b2d5 的 public/app.js 内容不一致；此前 review-round-3 绑定的文件摘要已失效。需由协调器按当前最终提交重新计算/绑定 subject 指纹，并对最终内容重新审核；在此之前不得将 TASK-090 作为已审核交付集成或请求验收。该 finding 由 Release 校验直接报告。"
+  ],
+  "validation_evidence": [
+    "node --check public/app.js：通过。",
+    "npm test：30 个测试全部通过，0 failed、0 skipped。",
+    "git -c safe.directory='D:/Codex/人员管理系统' diff --check b2d2c0dac93a8a672d66e3c0e603ad6eb07a6926..HEAD -- public/app.js：通过，无 whitespace error。",
+    "git name-status/numstat：TASK-090 实际变更只有 public/app.js modified，88 insertions、0 deletions；未发现其他 TASK-090 路径变更。",
+    "指纹核对：start blob SHA-1=e36473d638138225c52f7fc18de7b15850199cf3；HEAD blob SHA-1=40bdc34f1b888bdb13dace838b77f13f12350627；HEAD blob SHA-256=605efbb6464d6f399c8de0d3484b7c9c52cadcdbada23e1c91368b5c9e807fdd；工作树 SHA-256=fa9fa99d70e116dea7a0abf47c56a6179b5891ddd8117a9937864b62a443be7f。",
+    "Test-ProjectGovernance.ps1 -Level Release：失败，错误数 1、警告数 0；错误为‘连续审核通过所绑定的最终变更指纹不一致：TASK-090’。"
+  ],
+  "created_at": "2026-08-21T14:00:00Z"
+}

@@ -1,0 +1,95 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-096",
+  "work_package": "WP-009",
+  "title": "统一任务全量编辑台与跨页面配置同步",
+  "goal": "将专题任务创建与编辑统一到同一编辑台，支持任务基本信息、测试定义、样品集合、排期、制冷机、成员与工时的一站式维护；所有 V3 写入及资源维护后刷新专题总览、任务链、执行中心和兼容投影，确保同一配置在任意入口保持一致。",
+  "baseline": "BL-004",
+  "profile": "Release",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css"
+  ],
+  "read_paths": [
+    "src/v3/index.js",
+    "public/index.html",
+    "public/app.js",
+    "docs/03-architecture/overall-design-v21.md",
+    "docs/03-architecture/components/v21-detailed-design.md"
+  ],
+  "write_paths": [
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css"
+  ],
+  "out_of_scope": [
+    "不新增 AI 功能",
+    "不修改 V3 数据库表结构或迁移",
+    "不删除历史依赖表，仅隐藏前置任务入口并以空值保存"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "创建和编辑 V3 任务使用同一全量编辑台，任务字段无需在多个对话框之间跳转",
+    "编辑台可维护标题、说明、测试目的、测试项、样品集合、日期、到样后开始、制冷机、待定标记、成员和 0.5 小时工时",
+    "前置任务字段不再显示，新建和编辑请求统一写入 predecessor_task_id=null",
+    "V3 写入后专题列表、专题详情、任务链、执行中心和旧版投影在同一刷新周期内显示最新值",
+    "来源小组和制冷机资源在维护入口更新后，任务编辑台和各专题筛选/展示选项同步更新"
+  ],
+  "validations": [
+    {
+      "id": "client-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "diff-check",
+      "command": "git",
+      "args": [
+        "diff",
+        "--check"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "scope",
+    "success_criteria",
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-21T15:37:31.7768908Z",
+  "release_controls": {
+    "target_environment": "本地开发环境；Windows PowerShell；SQLite 开发数据库",
+    "execution_window": "本次工作包执行窗口",
+    "rollback_plan": "保留当前工作树改动；如需回滚，仅回退本任务新增的 public/app.js、public/index.html、public/styles.css 差异，不执行数据库删除或迁移回退",
+    "observation_metrics": "npm test、客户端语法检查、git diff --check；手工核对专题/任务链/执行中心字段一致性",
+    "stop_conditions": "出现数据模型或 API 契约需要扩展、现有未提交变更无法安全隔离、或治理校验报告越权/冲突时停止并请求决策",
+    "post_release_owner": "项目经理"
+  }
+}

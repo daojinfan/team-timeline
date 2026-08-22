@@ -1,0 +1,44 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-095",
+  "reviewed_task_ids": [
+    "TASK-094"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-004",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-094",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "执行中心 data-edit-task 改由 openExecutionTaskEditor 分流：V3 任务加载所属专题后打开结构化任务定义编辑器，无 V3 关联时继续使用旧 openTaskEditor。"
+    }
+  ],
+  "change_summary": "作为 Standard 第二个连续通过候选轮，本轮从 TASK-094 启动提交 101b2d5c343e81481c5d1358c52e603ba3d91984 重新全量复审最终内容，而非只复查上一轮结论。实际 Git 变更精确为 public/app.js modified（20 insertions、1 deletion），最终 blob=dff08019b67591330a531cb4655170f86c9d4983，无其他新增、删除或重命名。",
+  "scope_checked": [
+    "TASK-094/TASK-095 Standard 契约、WP-009、BL-004、启动提交与限定写入范围",
+    "相对启动提交的完整 public/app.js 实际 diff、变更类型、行数和最终 blob 指纹",
+    "执行中心卡片、列表、任务详情和个人分配详情中的 data-edit-task 委托入口",
+    "openExecutionTaskEditor 对 V1 task.id 到 V3 topic task 的索引解析与分支选择",
+    "不同专题任务的 topic_id 比较、v3LoadTopic 加载、execution 视图同步和 v3OpenTaskDetail 打开顺序",
+    "v3OpenTaskDetail 对测试目的、结构化测试项和任务说明的字段填充与当前任务解析",
+    "v3SaveTaskDetail 对完整任务事实的保留、POST preview、冲突确认、preview_token 绑定 PUT 和成功后刷新",
+    "无 V3 关联或无有效 topic_id 时回退 openTaskEditor，旧 V1/V2 任务表单、保存 API 与行为未改",
+    "v3Open/v3Close 对话框触发器记录和返焦；加载失败 Toast、保存失败 v3FormError 与输入保留路径",
+    "src/v3/index.js 对 /api/v3/topic-tasks/:task_id/preview 和 PUT 的结构化字段及 expected_version 契约"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "node --check public/app.js：重新运行并通过；最终 blob=dff08019b67591330a531cb4655170f86c9d4983。",
+    "npm test：重新运行，30 个测试全部通过，0 failed、0 skipped；V1/V2 兼容、V3 schema/API、结构化任务详情、任务链及成果流程均保持通过。",
+    "git -c safe.directory='D:/Codex/人员管理系统' diff --check 101b2d5c343e81481c5d1358c52e603ba3d91984 -- public/app.js：通过；只有 Git ignore 权限警告，无 whitespace error。",
+    "git diff --name-status/--numstat：仅 M public/app.js，20 insertions、1 deletion；与 TASK-094 allowed path 一致。",
+    "静态全路径复核：data-edit-task 传入真实 trigger；跨专题先 await v3LoadTopic，再由最新 v3State.tasks 解析 V3 task；错误时不打开错误编辑器且保留现有页面。",
+    "静态保存复核：描述、test_purpose、test_items 经 v3TaskUpdateBody 进入 preview 和 PUT；冲突未确认时停留对话框，API 错误写入表单 alert 且不清空输入。",
+    "Test-ProjectGovernance.ps1 -ProjectPath (Get-Location).Path -Level Release：重新运行并通过，错误数 0、警告数 0。"
+  ],
+  "created_at": "2026-08-21T14:52:06.3680871Z"
+}

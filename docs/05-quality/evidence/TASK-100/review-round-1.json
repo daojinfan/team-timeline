@@ -1,0 +1,54 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-100",
+  "reviewed_task_ids": [
+    "TASK-096"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-004",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-096",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "统一任务编辑入口、任务全量编辑状态、样品快速新增、结构化保存预览以及专题/资源变更后的统一刷新链路。"
+    },
+    {
+      "task_id": "TASK-096",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "将任务对话框改为任务全量编辑台，移除前置任务字段，补充样品快速新增、到样后开始、成员工时和保存预览区域。"
+    },
+    {
+      "task_id": "TASK-096",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "为任务编辑台的内嵌样品编辑区和保存预览结果补充样式。"
+    }
+  ],
+  "change_summary": "本轮从 TASK-096 启动提交 1c723330bd5acca19151e58eb081e15e40b67a8f 对最终内容进行全量独立复审。Git 变更清单精确为 public/app.js、public/index.html、public/styles.css 三个 modified 文件，均在 TASK-096 allowed_paths 内，无新增、删除或重命名。",
+  "scope_checked": [
+    "TASK-096 Release 契约、WP-009、BL-004、启动提交和 allowed_paths",
+    "相对 TASK-096 启动提交的完整 Git name-status/numstat 变更清单及变更类型",
+    "任务全量编辑台字段：任务名称、说明、测试目的、测试项、样品集合、排期、到样后开始、制冷机、成员和预计工时",
+    "任务编辑台不再渲染前置任务选择器，并在保存请求中将 predecessor_task_id 固定为 null",
+    "任务创建与编辑共用 v3TaskBody、预览和 POST/PUT 保存路径，并携带 expected_version 处理并发版本",
+    "样品快速新增通过当前专题样品 API 写入后刷新专题、任务链和选择状态",
+    "专题、样品、成员、制冷机、成果提交、验收以及兼容资源保存均调用 v3RefreshAfterChange 同步投影",
+    "执行中心、任务链、成员与制冷机入口统一打开全量编辑台，旧任务路径仍可回退",
+    "src/v3/index.js 的任务预览/更新接口契约与前端字段保持一致"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "node --check public/app.js：通过。",
+    "npm test：30/30 通过，0 failed、0 skipped。",
+    "git diff --check：通过，无 whitespace error。",
+    "git diff --name-status 1c723330bd5acca19151e58eb081e15e40b67a8f..HEAD：仅 M public/app.js、M public/index.html、M public/styles.css，与 TASK-096 允许范围一致。",
+    "本地 HTTP 静态检查确认任务全量编辑台标识、快速新增样品区域存在，前置任务字段已从 HTML 移除。",
+    "Test-ProjectGovernance.ps1 -Level Release：0 errors、0 warnings。"
+  ],
+  "created_at": "2026-08-21T16:20:00Z"
+}

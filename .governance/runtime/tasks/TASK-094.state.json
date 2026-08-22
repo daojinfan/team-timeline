@@ -1,0 +1,44 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-094",
+  "work_package": "WP-009",
+  "contract_sha256": "3d132086fa3498df725d2554dd1c592cd56ee93cb5e33a96bef313d5c104b1f5",
+  "baseline": "BL-004",
+  "state": "superseded",
+  "approval_id": "APR-079",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "101b2d5c343e81481c5d1358c52e603ba3d91984",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [],
+  "plan_checkpoint_git_commit": "101b2d5c343e81481c5d1358c52e603ba3d91984",
+  "plan_rebase_history": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-094/20260821T143952594Z-e30d8c4a-client-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-094/20260821T143952594Z-e30d8c4a-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-094/20260821T143952594Z-e30d8c4a-diff-check.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-094/20260821T143952594Z-e30d8c4a-client-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-094/20260821T143952594Z-e30d8c4a-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-094/20260821T143952594Z-e30d8c4a-diff-check.evidence.json"
+  ],
+  "review_history": [],
+  "review": {
+    "required": true,
+    "reviewer_task_id": "TASK-095",
+    "status": "cancelled",
+    "evidence": [
+      "docs/05-quality/evidence/TASK-095/review-cancelled-task094-fingerprint.json"
+    ],
+    "pass_streak": 0,
+    "subject_sha256": ""
+  },
+  "last_error": "后续任务提交了执行中心编辑入口修复，旧任务审核指纹不再对应当前最终代码；保留历史证据并由后续交付承接。",
+  "created_at": "2026-08-21T14:36:33.9714892Z",
+  "updated_at": "2026-08-21T16:09:26.8240640Z"
+}

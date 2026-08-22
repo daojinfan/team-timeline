@@ -1,0 +1,62 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-100",
+  "work_package": "WP-009",
+  "contract_sha256": "ecdfca66cba2f122f97c50e80b5053e9a17b08b550d3e3df049cf46f5b96a796",
+  "baseline": "BL-004",
+  "state": "superseded",
+  "approval_id": "",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "5ed2a00713c108e46ba022558c334824104a0ff7",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [],
+  "plan_checkpoint_git_commit": "5ed2a00713c108e46ba022558c334824104a0ff7",
+  "plan_rebase_history": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-100/20260821T162049041Z-99b6885c-review-client-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-100/20260821T162049041Z-99b6885c-review-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-100/20260821T162049041Z-99b6885c-review-diff-check.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-100/20260821T161840535Z-ad9a448e-review-client-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-100/20260821T161840535Z-ad9a448e-review-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-100/20260821T161840535Z-ad9a448e-review-diff-check.evidence.json",
+    "docs/05-quality/evidence/TASK-100/review-round-1.json",
+    "docs/05-quality/evidence/TASK-100/20260821T162049041Z-99b6885c-review-client-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-100/20260821T162049041Z-99b6885c-review-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-100/20260821T162049041Z-99b6885c-review-diff-check.evidence.json",
+    "docs/05-quality/evidence/TASK-100/review-round-2.json"
+  ],
+  "review_history": [
+    {
+      "path": "docs/05-quality/evidence/TASK-100/review-round-1.json",
+      "sha256": "8d669ed46832e5b42d19d4b82a08935e4e54247c0019beeb873c89e04fdebc0e",
+      "result": "passed",
+      "round_id": "RR-b8773fd31727463eafca1420a61f2023",
+      "recorded_at": "2026-08-21T16:19:57.9268944Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-100/review-round-2.json",
+      "sha256": "dc1e3e80abb1a726017435e470c87794684b2d5222a95ef3acd2634470132ec8",
+      "result": "passed",
+      "round_id": "RR-9f8d1b2b900f4d3db07327e886ab8fcd",
+      "recorded_at": "2026-08-21T16:21:26.5277104Z"
+    }
+  ],
+  "review": {
+    "required": false,
+    "reviewer_task_id": "",
+    "status": "not-applicable",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
+  },
+  "last_error": "BL-005 V4 基线切换：保留历史交付与审核证据，关闭旧 BL-004 任务契约，不删除业务数据。",
+  "created_at": "2026-08-21T16:18:06.073949Z",
+  "updated_at": "2026-08-22T03:07:55.4969110Z"
+}

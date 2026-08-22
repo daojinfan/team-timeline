@@ -1,0 +1,230 @@
+{
+  "schema_version": 2,
+  "scope_version": 1,
+  "baseline": "BL-005",
+  "status_at_creation": "approved",
+  "created_at": "2026-08-22T03:07:31.1082472Z",
+  "approval_id": "APR-083",
+  "git_commit": "328076e6d56687443c6f0f06ca1c1103510d7d85",
+  "documents": [
+    {
+      "doc_id": "PROJ-CHARTER-001",
+      "path": "docs/01-governance/charter.md",
+      "version": "1.0",
+      "status": "active",
+      "sha256": "3bdffc1866936b2e8acbdc37b8c4e0f85d6fc651d3092f80fb1201595a66238b"
+    },
+    {
+      "doc_id": "REQ-V2-001",
+      "path": "docs/02-product/requirements-v2.md",
+      "version": "1.0",
+      "status": "proposed",
+      "sha256": "6b7ee7437bf35099f0706bd87f31294ee7c389c989cbfeffe8e7e41017317b24"
+    },
+    {
+      "doc_id": "REQ-V21-001",
+      "path": "docs/02-product/requirements-v21.md",
+      "version": "1.0",
+      "status": "active",
+      "sha256": "f0dbca348d6ecea9d43fa591921100aa93f8e3e24f5d4b473d175f728ba05ffd"
+    },
+    {
+      "doc_id": "REQ-V4-001",
+      "path": "docs/02-product/requirements-v4.md",
+      "version": "1.0",
+      "status": "proposed",
+      "sha256": "0e67c834e51cb486dbfc9cb2a2e546e1a938a4ecc7e7ef232a0dbf76cfc1c3fc"
+    },
+    {
+      "doc_id": "REQ-BASE-001",
+      "path": "docs/02-product/requirements.md",
+      "version": "1.0",
+      "status": "active",
+      "sha256": "fefbb591e285db23aaf408275207651de7ce16d2c96284f2a68c0cd23c926ca7"
+    },
+    {
+      "doc_id": "ARC-OVERALL-002",
+      "path": "docs/03-architecture/overall-design-v2.md",
+      "version": "1.0",
+      "status": "proposed",
+      "sha256": "c916c554c045522ccc9f3bf9b23caaa4240db45ebd66b6f296450ba2d3c1e2c4"
+    },
+    {
+      "doc_id": "ARC-OVERALL-003",
+      "path": "docs/03-architecture/overall-design-v21.md",
+      "version": "1.0",
+      "status": "active",
+      "sha256": "d7b2f05b1e487c89523c064f775b4cf31167af39ac853f6df946f6ec582a2732"
+    },
+    {
+      "doc_id": "ARC-OVERALL-V4-001",
+      "path": "docs/03-architecture/overall-design-v4.md",
+      "version": "1.0",
+      "status": "proposed",
+      "sha256": "9bc6bcc129c9f8551f656ea96a4d22413ea0e27f7f88510d3af67af5334ee60b"
+    },
+    {
+      "doc_id": "ARC-OVERALL-001",
+      "path": "docs/03-architecture/overall-design.md",
+      "version": "1.0",
+      "status": "active",
+      "sha256": "983307c43bcc34e3ff6d76060529049f0cc61aa78b06c5ecdd771c7c4a49eda4"
+    },
+    {
+      "doc_id": "ARC-COMP-001",
+      "path": "docs/03-architecture/components/desktop-workspace.md",
+      "version": "1.0",
+      "status": "active",
+      "sha256": "fa1a92170e0ef7886db11f939a14cba0c63c6af7a9b43d9f8b9502bee2619102"
+    },
+    {
+      "doc_id": "ARC-COMP-002",
+      "path": "docs/03-architecture/components/task-workflow.md",
+      "version": "1.0",
+      "status": "active",
+      "sha256": "48736b512f44f8b3005bddb269bcc82c24791d7390d52bdc91fbc64fd4a8f508"
+    },
+    {
+      "doc_id": "ARC-COMP-004",
+      "path": "docs/03-architecture/components/v2-detailed-design.md",
+      "version": "1.0",
+      "status": "proposed",
+      "sha256": "61608be7e4da8e4aa653e47e0792fbf4cae744d02b2c8d21a350b443031766af"
+    },
+    {
+      "doc_id": "ARC-COMP-005",
+      "path": "docs/03-architecture/components/v21-detailed-design.md",
+      "version": "1.0",
+      "status": "active",
+      "sha256": "113b8b234b7c7d65ac5b8deff8606ad1a38be4a9f074d8a11b56f6bf93af8400"
+    },
+    {
+      "doc_id": "ARC-COMP-V4-001",
+      "path": "docs/03-architecture/components/v4-detailed-design.md",
+      "version": "1.0",
+      "status": "proposed",
+      "sha256": "19683cc3e0cc36b100f93270d389004813c9b042ffd632e1b18ca7d211b44455"
+    },
+    {
+      "doc_id": "ARC-COMP-003",
+      "path": "docs/03-architecture/components/verification.md",
+      "version": "1.0",
+      "status": "active",
+      "sha256": "087f4a33189a8d33eb95f041290da0dd431761d65e3c5ced2ba1cd31e8d9bec0"
+    },
+    {
+      "doc_id": "DEL-WORK-001",
+      "path": "docs/04-delivery/WORK-PACKAGES.md",
+      "version": "1.2",
+      "status": "active",
+      "sha256": "17f43f3bca5bb23e1e05dbd133494caa98775090edfa03ba5a44a2bc26d8de8d"
+    },
+    {
+      "doc_id": "QUAL-TRACE-V2-001",
+      "path": "docs/05-quality/traceability-v2.md",
+      "version": "1.0",
+      "status": "active",
+      "sha256": "b93d1deadc96c748b00e81d04d029fae30bf51b5f95894dd385d2641d5f6d1dc"
+    },
+    {
+      "doc_id": "QUAL-TRACE-V21-001",
+      "path": "docs/05-quality/traceability-v21.md",
+      "version": "1.0",
+      "status": "active",
+      "sha256": "570b2b96c2256ef80e791282e148a2721ae20873f5bd907a8f4ab27bb998a3ac"
+    },
+    {
+      "doc_id": "QUAL-TRACE-V4-001",
+      "path": "docs/05-quality/traceability-v4.md",
+      "version": "1.0",
+      "status": "proposed",
+      "sha256": "6b33f8c734187cf8125f734f326aef68b3d5f500c7bd30d41513c855ce3e6fb3"
+    },
+    {
+      "doc_id": "DEC-001",
+      "path": "docs/07-decisions/DEC-001.md",
+      "version": "1.0",
+      "status": "active",
+      "sha256": "08edf10d8f137529243c842c977f86a5d47992e5897656155fbaca76580bf15b"
+    },
+    {
+      "doc_id": "DEC-002",
+      "path": "docs/07-decisions/DEC-002.md",
+      "version": "1.0",
+      "status": "active",
+      "sha256": "7e3f689bc8d291453e72586630a2bdb9971c53db9951ab9098cc98ad4f2335f8"
+    },
+    {
+      "doc_id": "DEC-003",
+      "path": "docs/07-decisions/DEC-003.md",
+      "version": "1.0",
+      "status": "active",
+      "sha256": "704116eb5785431c86cc93287d69eac5532c33c047a0d74b72537702f678c09a"
+    },
+    {
+      "doc_id": "DEC-004",
+      "path": "docs/07-decisions/DEC-004.md",
+      "version": "1.0",
+      "status": "proposed",
+      "sha256": "ee4c7545e5d4210d149614d7d4734f76b82d09089cc1607ce8bb3a53dceaf028"
+    }
+  ],
+  "operational_documents": [
+    {
+      "path": "docs/00-index/APPROVAL-LOG.md"
+    },
+    {
+      "path": "docs/00-index/BASELINE-REGISTRY.md"
+    },
+    {
+      "path": "docs/00-index/CURRENT-STATE.md"
+    },
+    {
+      "path": "docs/00-index/DECISION-QUEUE.md"
+    },
+    {
+      "path": "docs/00-index/DOC-REGISTRY.md"
+    },
+    {
+      "path": "docs/00-index/PROJECT.md"
+    },
+    {
+      "path": "docs/04-delivery/TASK-LEDGER.md"
+    },
+    {
+      "path": "docs/04-delivery/WORK-STATUS.md"
+    },
+    {
+      "path": "docs/05-quality/traceability.md"
+    },
+    {
+      "path": "docs/08-changes/CR-001.md"
+    },
+    {
+      "path": "docs/08-changes/CR-002.md"
+    },
+    {
+      "path": "docs/08-changes/CR-003.md"
+    },
+    {
+      "path": "docs/08-changes/CR-004.md"
+    },
+    {
+      "path": "docs/08-changes/CR-005.md"
+    },
+    {
+      "path": "docs/09-reports/V21-development-plan.md"
+    },
+    {
+      "path": "docs/09-reports/WP-002-implementation-brief.md"
+    }
+  ],
+  "context_routes": [
+    {
+      "work_package": "WP-009",
+      "baseline": "BL-005",
+      "path": "docs/04-delivery/context/WP-009.context.json",
+      "sha256": "24ecdba5e8379b739e88c106df106922db72d9f868ac8e23e84883fa63f5ed74"
+    }
+  ]
+}

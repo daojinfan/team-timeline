@@ -1,0 +1,80 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-099",
+  "work_package": "WP-009",
+  "title": "独立复审统一任务编辑台与配置同步",
+  "goal": "独立检查 TASK-096 实际新增或修改的客户端代码，确认任务全量编辑、前置任务移除、跨页面刷新以及资源配置同步满足验收标准，并记录完整变更清单和验证证据。",
+  "baseline": "BL-004",
+  "profile": "Standard",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-099"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "src/v3/index.js"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-099"
+  ],
+  "out_of_scope": [
+    "不修改交付代码",
+    "不修改运行时治理状态"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-096"
+  ],
+  "acceptance_criteria": [
+    "审查 TASK-096 启动提交后的全部实际新增、修改、删除和重命名内容，并在 changes 中逐项列出",
+    "验证统一编辑台覆盖任务字段且不显示前置任务",
+    "验证 V3 写入和资源维护后的刷新链路覆盖专题、任务链、执行中心和兼容投影",
+    "验证 node --check、npm test、git diff --check 均通过"
+  ],
+  "validations": [
+    {
+      "id": "review-client-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "review-npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "review-diff-check",
+      "command": "git",
+      "args": [
+        "diff",
+        "--check"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "success_criteria"
+  ],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-21T16:16:30.2157963Z"
+}

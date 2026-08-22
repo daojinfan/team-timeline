@@ -1,0 +1,83 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-104",
+  "work_package": "WP-009",
+  "title": "实现 V4 专题唯一工作区与执行中心同步体验",
+  "goal": "在 BL-005 已批准的 V4 信息架构约束下，完成桌面端专题唯一管理工作区、样品规划、连续任务人工排序、状态颜色与窗口总览、全量任务编辑入口及跨入口同步刷新；保持现有 V1/V2/V3 API、schema 与数据库兼容，不接入 AI、手机端或自动分配。",
+  "baseline": "BL-005",
+  "profile": "Release",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "tests"
+  ],
+  "write_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js"
+  ],
+  "out_of_scope": [
+    "src/server.js",
+    "src/v3",
+    "数据库 schema、迁移与 API 契约",
+    "AI 自动建任务、自动分配、手机端、登录、云同步、附件存储"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "专题入口进入唯一专题管理工作区，专题列表与当前专题详情可直接切换且不产生重复编辑面。",
+    "样品池支持型号预规划、可选编号、预计交付时间与到样后状态展示，并能体现延期、临近、超出窗口颜色语义。",
+    "连续任务支持多个样品、多人绑定和人工上下移动排序；排序失败保留原顺序并提示人工确认。",
+    "执行中心、专题规划与人工分配台共用任务全量编辑与刷新机制，修改测试目的、测试项、来源小组、制冷机、样品预期交付时间等结构化字段后其他入口同步。",
+    "在 1365x768 与 1920x1080 桌面尺寸下关键路径可用，无横向溢出，现有 V1/V2/V3 回归保持通过。"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-22T03:15:13.5181606Z",
+  "release_controls": {
+    "target_environment": "本地 Windows 桌面浏览器，D:\\Codex\\人员管理系统，dev 分支",
+    "execution_window": "当前开发窗口；完成自动化、静态与双分辨率检查后再请求人工验收",
+    "rollback_plan": "仅回退 TASK-104 的实现提交；不修改数据库、schema 或 API 版本",
+    "observation_metrics": "npm test、public/app.js 与 src/server.js 语法检查、git diff --check、1365x768 与 1920x1080 关键路径与同步刷新检查",
+    "stop_conditions": "发现 V3 API/schema 漂移、写入范围超出 public、数据丢失、排序失败未保留原顺序或双分辨率出现关键路径不可用",
+    "post_release_owner": "项目经理（协调工作树）"
+  }
+}

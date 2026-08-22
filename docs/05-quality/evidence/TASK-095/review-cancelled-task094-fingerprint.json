@@ -1,0 +1,32 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-095",
+  "reviewed_task_ids": ["TASK-094"],
+  "work_package": "WP-009",
+  "baseline": "BL-004",
+  "result": "cancelled",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-094",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "TASK-094 的原交付路径后来被执行中心编辑修复及统一任务编辑台交付替代；当前 public/app.js 相对 TASK-094 启动提交已发生后续修改，旧审核不再继续绑定当前指纹。"
+    }
+  ],
+  "change_summary": "TASK-094 已被后续任务替代，旧审核指纹不再作为当前可集成成果；本证据仅取消旧审核，不把 TASK-094 作为当前交付成果。",
+  "scope_checked": [
+    "TASK-094 与 TASK-095 的 WP-009、BL-004、启动提交、审核范围和替代关系",
+    "TASK-094 启动提交至当前 HEAD 的 public/app.js 实际变更路径",
+    "旧审核指纹与当前最终代码不一致的治理阻塞事实",
+    "取消范围仅针对 TASK-094 历史审核，不修改应用代码、数据库或 TASK-096 交付"
+  ],
+  "findings": [
+    "TASK-094 的旧审核指纹已被后续代码提交替代，应以 TASK-096 的独立实现和审核为准。"
+  ],
+  "validation_evidence": [
+    "TASK-094 历史验证证据保留；当前代码由 TASK-096 重新执行 node --check public/app.js、npm test 30/30 和 git diff --check。"
+  ],
+  "created_at": "2026-08-22T00:10:00+08:00"
+}

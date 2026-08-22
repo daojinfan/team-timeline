@@ -5,7 +5,7 @@
   "work_package": "WP-009",
   "contract_sha256": "6a2493688963f8c5e575cc0334b67271f6ef405e8083d4fbe4a56b22b52a845a",
   "baseline": "BL-004",
-  "state": "needs-decision",
+  "state": "superseded",
   "approval_id": "APR-074",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -36,7 +36,7 @@
     "pass_streak": 0,
     "subject_sha256": ""
   },
-  "last_error": "Out-of-scope changes: tests/import-live-data.mjs",
+  "last_error": "BL-005 V4 基线切换：保留历史交付与审核证据，关闭旧 BL-004 任务契约，不删除业务数据。",
   "created_at": "2026-08-21T08:28:05.1747147Z",
-  "updated_at": "2026-08-21T08:40:49.7560366Z"
+  "updated_at": "2026-08-22T03:07:54.6626603Z"
 }

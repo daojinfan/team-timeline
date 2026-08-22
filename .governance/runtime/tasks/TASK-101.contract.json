@@ -1,0 +1,106 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-101",
+  "work_package": "WP-009",
+  "title": "登记 V4 专题模块信息架构修正设计",
+  "goal": "在已获人类批准的 V4 Option A 范围内，固化专题模块信息架构、详细交互契约、变更包、决策和追踪矩阵，为后续实现任务建立可验证边界。",
+  "baseline": "BL-004",
+  "profile": "Release",
+  "role": "ARCHITECT",
+  "allowed_paths": [
+    "docs/08-changes/CR-005.md",
+    "docs/07-decisions/DEC-004.md",
+    "docs/02-product/requirements-v21.md",
+    "docs/03-architecture/overall-design-v21.md",
+    "docs/03-architecture/components/v21-detailed-design.md",
+    "docs/05-quality/traceability-v21.md",
+    "docs/00-index/DOC-REGISTRY.md"
+  ],
+  "read_paths": [
+    "docs/02-product/requirements-v21.md",
+    "docs/03-architecture/overall-design-v21.md",
+    "docs/03-architecture/components/v21-detailed-design.md",
+    "docs/05-quality/traceability-v21.md",
+    "docs/07-decisions/DEC-003.md",
+    "docs/08-changes/CR-003.md",
+    "docs/08-changes/CR-004.md",
+    "docs/00-index/DOC-REGISTRY.md"
+  ],
+  "write_paths": [
+    "docs/08-changes/CR-005.md",
+    "docs/07-decisions/DEC-004.md",
+    "docs/02-product/requirements-v21.md",
+    "docs/03-architecture/overall-design-v21.md",
+    "docs/03-architecture/components/v21-detailed-design.md",
+    "docs/05-quality/traceability-v21.md",
+    "docs/00-index/DOC-REGISTRY.md"
+  ],
+  "out_of_scope": [
+    "src",
+    "public",
+    "tests",
+    "数据库迁移",
+    "AI 自动建任务",
+    "自动分配",
+    "手机端",
+    "V2 canonical 表/API",
+    "V3 schema/API 变化"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-096"
+  ],
+  "acceptance_criteria": [
+    "CR-005 and DEC-004 define approved V4 Option A scope and explicitly preserve V2 canonical and V3 schema/API contracts.",
+    "V4 requirements, overall design, detailed design and traceability describe one canonical topic workspace, sample-first planning, manual task ordering, status colors/window and cross-view synchronization.",
+    "The registry records all new authoritative documents and no code or database files are included in this design task.",
+    "Release governance validation passes with zero errors and zero warnings."
+  ],
+  "validations": [
+    {
+      "id": "v4-governance-design",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-ProjectPath",
+        ".",
+        "-Level",
+        "Release"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "scope",
+    "success_criteria",
+    "overall_architecture",
+    "production_release"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-22T02:19:35.8755649Z",
+  "release_controls": {
+    "target_environment": "local design workspace",
+    "execution_window": "2026-08-22 V4 design registration window",
+    "rollback_plan": "仅回退本次文档提交；未触及运行数据库、服务或用户数据，保留治理运行证据。",
+    "observation_metrics": "Test-ProjectGovernance Release 错误数和警告数；DOC-REGISTRY、活动基线和 V4 设计文档引用一致性。",
+    "stop_conditions": "发现批准范围冲突、活动基线漂移、权威文档互相矛盾、治理校验失败或需要写入代码/数据库。",
+    "post_release_owner": "项目经理"
+  }
+}

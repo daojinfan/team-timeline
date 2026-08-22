@@ -1,0 +1,7 @@
+项目：D:\Codex\人员管理系统
+级别：Release
+扫描文档数：47
+错误数：1
+警告数：1
+错误：变更包缺少必要章节 'Resulting baseline|变更后基线'：CR-005.md
+警告：有效文档仍包含占位内容：docs/08-changes/CR-005.md

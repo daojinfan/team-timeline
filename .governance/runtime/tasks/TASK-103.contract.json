@@ -1,0 +1,93 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-103",
+  "work_package": "WP-009",
+  "title": "独立复审 V4 专题模块信息架构设计",
+  "goal": "独立审查 TASK-102 生成的 V4 变更包、决策、需求、总体设计、详细设计、追踪矩阵和注册表变更，确认范围、引用、验收与保护边界一致。",
+  "baseline": "BL-004",
+  "profile": "Release",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-103"
+  ],
+  "read_paths": [
+    "docs/02-product/requirements-v4.md",
+    "docs/03-architecture/overall-design-v4.md",
+    "docs/03-architecture/components/v4-detailed-design.md",
+    "docs/05-quality/traceability-v4.md",
+    "docs/08-changes/CR-005.md",
+    "docs/07-decisions/DEC-004.md",
+    "docs/00-index/DOC-REGISTRY.md",
+    "docs/02-product/requirements-v21.md",
+    "docs/03-architecture/overall-design-v21.md",
+    "docs/03-architecture/components/v21-detailed-design.md"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-103"
+  ],
+  "out_of_scope": [
+    "src",
+    "public",
+    "tests",
+    "数据库迁移",
+    "任何实现代码",
+    "修改交付文档"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-102"
+  ],
+  "acceptance_criteria": [
+    "Review the complete V4 documentation diff against CR-005, DEC-004 and the approved user confirmation.",
+    "List every added/modified/removed/renamed document and verify no BL-004 canonical document or code/database path changed.",
+    "Verify V4 requirements, architecture, detailed design, traceability and registry references are mutually consistent and implementation-ready.",
+    "Release governance validation passes with zero errors and zero warnings."
+  ],
+  "validations": [
+    {
+      "id": "v4-design-review-governance",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-ProjectPath",
+        ".",
+        "-Level",
+        "Release"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "scope",
+    "success_criteria",
+    "overall_architecture",
+    "production_release"
+  ],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-22T02:22:12.5931101Z",
+  "release_controls": {
+    "target_environment": "local design review workspace",
+    "execution_window": "2026-08-22 V4 design review window",
+    "rollback_plan": "仅删除本审核任务证据目录，不修改 V4 设计交付物。",
+    "observation_metrics": "Review evidence completeness, actual Git change list, governance validator errors and warnings.",
+    "stop_conditions": "发现实际变更超出 TASK-102、文档之间冲突、V4 保护边界缺失或治理校验失败。",
+    "post_release_owner": "项目经理"
+  }
+}

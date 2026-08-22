@@ -1,0 +1,76 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-103",
+  "reviewed_task_ids": [
+    "TASK-102"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-004",
+  "result": "changes-required",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-102",
+      "path": "docs/00-index/DOC-REGISTRY.md",
+      "change_type": "modified",
+      "summary": "注册六份 V4 设计文档及 DEC-004；最终 DEC-004 状态为 proposed、目标基线 BL-005。"
+    },
+    {
+      "task_id": "TASK-102",
+      "path": "docs/02-product/requirements-v4.md",
+      "change_type": "added",
+      "summary": "定义 V4 唯一专题入口、样品池、人工排序、状态/窗口、统一编辑和跨入口同步需求，明确实际到样未测试保持无主并排除窗口/统计。"
+    },
+    {
+      "task_id": "TASK-102",
+      "path": "docs/03-architecture/overall-design-v4.md",
+      "change_type": "added",
+      "summary": "定义六区桌面 IA、专题/样品/任务事实关系、唯一主工作区、V2/V3 保护和兼容状态聚合。"
+    },
+    {
+      "task_id": "TASK-102",
+      "path": "docs/03-architecture/components/v4-detailed-design.md",
+      "change_type": "added",
+      "summary": "定义专题路由状态、三子页、统一编辑器、既有 ordered_task_ids 排序合约、对齐后的状态颜色/窗口/无主规则、同步与桌面验收。"
+    },
+    {
+      "task_id": "TASK-102",
+      "path": "docs/05-quality/traceability-v4.md",
+      "change_type": "added",
+      "summary": "追踪 REQ-V4-001～014 到 IA、样品/任务、排序、状态、同步、焦点和双分辨率验证场景。"
+    },
+    {
+      "task_id": "TASK-102",
+      "path": "docs/07-decisions/DEC-004.md",
+      "change_type": "added",
+      "summary": "记录 V4 唯一专题工作区、样品多对多、人工连续任务序列、统一编辑事实模型及 V2/V3 兼容约束，状态为 proposed。"
+    },
+    {
+      "task_id": "TASK-102",
+      "path": "docs/08-changes/CR-005.md",
+      "change_type": "added",
+      "summary": "记录 V4 Option A、BL-004 保持 active、BL-005 审核/批准/激活门、范围外和停止条件。"
+    }
+  ],
+  "change_summary": "本轮从 TASK-102 原始起始提交 5ed2a00713c108e46ba022558c334824104a0ff7 重新审查至最终 HEAD 6988d7a2b1248aba7083691f6cabaf6a4937a74a。实际变更仍精确为上述 7 个 V4 文档：DOC-REGISTRY modified，其余 6 个 added；第二提交已修复第一轮基线、状态、无主到样和排序 API 漂移，但追踪矩阵仍残留一处 stale 语义。",
+  "scope_checked": [
+    "TASK-102/TASK-103 Release 契约、原始 start_git_commit、最终 HEAD、allowed/write/read paths 与 BL-004",
+    "CR-005 的批准确认、Option A 范围、V4 proposed/BL-005 门禁、V2 canonical/V3 API 保护和停止条件",
+    "DEC-004、REQ-V4-001～014、ARC-OVERALL-V4-001、ARC-COMP-V4-001 的最终正文与相互引用",
+    "REQ-V21-001～016、ARC-OVERALL-003、ARC-COMP-005 的 V2.1 事实归属、颜色/优先级、样品关系和兼容岛",
+    "DOC-REGISTRY、BASELINE-REGISTRY、governance.json 对当前 BL-004 active 与 V4 proposed/BL-005 的登记一致性",
+    "最终七文件 Git 变更类型、路径、行数和 whitespace 范围"
+  ],
+  "findings": [
+    "追踪矩阵残留已取消的 stale/version 排序语义：docs/05-quality/traceability-v4.md 关键场景第 4 项仍要求“改变任务顺序并处理 stale 版本提示”，但最终 ARC-COMP-V4 §4 已明确现有 ordered_task_ids 合约不虚构版本或 stale API，失败时仅重新加载并提示确认。应将该追踪场景改为现有排序请求失败后的重载/确认行为，确保追踪矩阵与最终设计及 /api/v3 合约一致。"
+  ],
+  "validation_evidence": [
+    "第一轮四项问题复核：DEC-004 与注册表均已改为 proposed；状态优先级/颜色恢复为已完成绿色最高、规定时间内橙色、规定时间外灰蓝；REQ/总体/详细设计明确实际到样未测试无主且排除窗口/统计；详细设计排序改为仅发送 ordered_task_ids 且不虚构 stale/version。",
+    "git -c safe.directory='D:/Codex/人员管理系统' diff --name-status 5ed2a00713c108e46ba022558c334824104a0ff7..HEAD：M DOC-REGISTRY.md；A requirements-v4.md、overall-design-v4.md、v4-detailed-design.md、traceability-v4.md、DEC-004.md、CR-005.md。",
+    "git diff --check 5ed2a00713c108e46ba022558c334824104a0ff7..HEAD -- 七个 V4 文档：通过，无 whitespace error。",
+    "Test-ProjectGovernance.ps1 -ProjectPath (Get-Location).Path -Level Release：通过，扫描 47 文档，错误数 0、警告数 0。",
+    "src/v3/index.js 排序端点静态核对：PUT /api/v3/topics/:id/task-order 仅接受完整 ordered_task_ids；最终详细设计与该合约一致，但 traceability 第 4 场景尚未同步。"
+  ],
+  "created_at": "2026-08-22T02:38:25.1804643Z"
+}

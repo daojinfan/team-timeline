@@ -1,0 +1,35 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-091",
+  "reviewed_task_ids": [
+    "TASK-090"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-004",
+  "result": "cancelled",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-090",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "旧 TASK-090 的唯一交付路径；相对启动提交 b2d2c0d 的实际差异为 88 行新增、0 行删除。该旧任务随后已由新修复任务替代，本审核不再继续其指纹重绑定流程。"
+    }
+  ],
+  "change_summary": "TASK-090 已被新修复任务 superseded。此前指纹复核发现 HEAD 101b2d5 的 public/app.js 与旧审核绑定指纹不一致；由于旧任务已替代，本证据将 TASK-090 审核标记为 cancelled，不把旧交付作为当前可集成审核成果。",
+  "scope_checked": [
+    "TASK-090/TASK-091 的 WP-009、BL-004、启动提交、审核范围和旧任务替代状态",
+    "TASK-090 从 b2d2c0dac93a8a672d66e3c0e603ad6eb07a6926 到当前内容的实际 public/app.js 变更清单",
+    "此前指纹复核证据中的 public/app.js modified、指纹不一致和 Release 阻塞事实",
+    "取消范围仅针对旧 TASK-090 审核；未修改代码、数据库、治理状态或新修复任务"
+  ],
+  "findings": [
+    "旧 TASK-090 已被新修复任务 superseded，原审核指纹不再作为当前交付的有效审核对象；应以替代任务的独立实现、审核和最终指纹为准。"
+  ],
+  "validation_evidence": [
+    "git diff --check b2d2c0dac93a8a672d66e3c0e603ad6eb07a6926..HEAD -- public/app.js：通过；旧任务实际变更仍仅 public/app.js modified。",
+    "此前复核已记录 node --check public/app.js、npm test 30/30 通过；本证据不重新声明旧任务为可集成成果。"
+  ],
+  "created_at": "2026-08-21T14:05:00Z"
+}

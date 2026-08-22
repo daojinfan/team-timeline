@@ -1,0 +1,52 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-100",
+  "reviewed_task_ids": [
+    "TASK-096"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-004",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-096",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "复查最终客户端逻辑：编辑入口、统一刷新、样品快速新增、任务预览/保存和所有配置维护成功后的重载链路均保持在允许范围内。"
+    },
+    {
+      "task_id": "TASK-096",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "复查最终任务编辑台结构：前置任务控件不存在，任务字段、样品规划、到样后开始、制冷机、成员工时和预览控件均可在一个对话框内操作。"
+    },
+    {
+      "task_id": "TASK-096",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "复查内嵌编辑区与预览结果样式，无越出交付范围的样式修改。"
+    }
+  ],
+  "change_summary": "Release 父任务的第二轮复审。本轮重新读取 TASK-096 最终工作树，并再次以启动提交 1c723330bd5acca19151e58eb081e15e40b67a8f 计算完整 Git 差异；实际变更仍只有三个 modified 文件，内容指纹与第一轮一致，没有仅复查上一轮发现项或新增代码变更。",
+  "scope_checked": [
+    "TASK-096 启动提交、最终 blob 与三文件 name-status/numstat 清单",
+    "任务全量编辑台创建和编辑两种模式的字段回填、版本号和冲突确认",
+    "前置任务移除后的 predecessor_task_id=null 契约",
+    "样品选择与快速样品新增后的专题/任务链刷新及选择状态保留",
+    "专题、样品、成员、ETA、制冷机、成果提交、成果验收、旧计划复制和兼容资源保存的同步刷新",
+    "执行中心入口、任务链编辑全部入口及成员/制冷机入口是否汇聚到同一编辑台",
+    "前端静态资源、V3 API 调用和测试结果的最终一致性"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "node --check public/app.js：第二轮重新执行并通过。",
+    "npm test：第二轮重新执行，30/30 通过，0 failed、0 skipped。",
+    "git diff --check：第二轮重新执行并通过，无 whitespace error。",
+    "git diff --name-status 1c723330bd5acca19151e58eb081e15e40b67a8f..HEAD：仍仅包含 public/app.js、public/index.html、public/styles.css 三个 modified 文件。",
+    "静态检查确认 public/index.html 不含前置任务字段，统一编辑台和快速样品编辑标识存在。",
+    "Test-ProjectGovernance.ps1 -Level Release：第二轮前后保持 0 errors、0 warnings。"
+  ],
+  "created_at": "2026-08-21T16:21:30Z"
+}

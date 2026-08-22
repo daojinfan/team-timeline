@@ -1,0 +1,42 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-098",
+  "work_package": "WP-009",
+  "contract_sha256": "411fb99921f3b8503061d7665cecff604d700342ea147637ae25c359e42502e8",
+  "baseline": "BL-004",
+  "state": "superseded",
+  "approval_id": "",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [],
+  "plan_checkpoint_git_commit": "5ed2a00713c108e46ba022558c334824104a0ff7",
+  "plan_rebase_history": [
+    {
+      "previous_changes": [
+        "public/app.js"
+      ],
+      "checkpoint_git_commit": "5ed2a00713c108e46ba022558c334824104a0ff7",
+      "rebased_at": "2026-08-21T16:11:49.3150589Z"
+    }
+  ],
+  "evidence": [],
+  "evidence_history": [],
+  "review_history": [],
+  "review": {
+    "required": false,
+    "reviewer_task_id": "",
+    "status": "not-applicable",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
+  },
+  "last_error": "审核任务档位需调整为 Standard，重建为无需重复执行审批的证据任务",
+  "created_at": "2026-08-21T15:51:27.4523917Z",
+  "updated_at": "2026-08-21T16:15:47.8281792Z"
+}

@@ -1,0 +1,41 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-095",
+  "reviewed_task_ids": [
+    "TASK-094"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-004",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-094",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "执行中心 data-edit-task 委托至 openExecutionTaskEditor；V3 任务按 topic_id 加载专题上下文后打开 V3 任务定义对话框，无 V3 关联时保留旧 openTaskEditor 路径。"
+    }
+  ],
+  "change_summary": "从 TASK-094 启动提交 101b2d5c343e81481c5d1358c52e603ba3d91984 复核最终工作树，实际交付区间仅 public/app.js modified（20 insertions、1 deletion），没有其他新增、删除或重命名。",
+  "scope_checked": [
+    "TASK-094/TASK-095 Standard 契约、WP-009、BL-004、allowed/write/read paths 与 start_git_commit",
+    "public/app.js 的 data-edit-task 委托、openExecutionTaskEditor、executionV3Task 索引和 topic 切换路径",
+    "V3 任务编辑器 v3TaskDetailDialog 的测试目的、测试项和描述字段填充与输入保留",
+    "v3SaveTaskDetail 的 POST /api/v3/topic-tasks/:id/preview 与带 preview_token 的 PUT /api/v3/topic-tasks/:id 保存闭环",
+    "不同专题任务按 topic_id 调用 v3LoadTopic 后从最新 v3State.tasks 解析并打开详情",
+    "无 V3 关联或缺少 topic_id 时回退 openTaskEditor，V1/V2 旧编辑器/API 不变",
+    "v3Open/v3Close 的对话框焦点记录、关闭返焦与错误路径的 v3FormError 输入保留",
+    "src/v3/index.js 的 topic-task preview/PUT 端点与 test_purpose、test_items、description 字段契约",
+    "TASK-094 实际变更类型、行数、范围与 whitespace 差异"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "node --check public/app.js：通过；",
+    "npm test：30 个测试全部通过，0 failed、0 skipped，包含 V1/V2 回归、V3 结构化任务详情与任务链/成果流程；",
+    "git -c safe.directory='D:/Codex/人员管理系统' diff --check 101b2d5c343e81481c5d1358c52e603ba3d91984 -- public/app.js：通过（仅 Git ignore 权限警告，无 whitespace error）；",
+    "实际差异核对：public/app.js 20 insertions、1 deletion；其他路径无 TASK-094 交付区间差异；",
+    "Test-ProjectGovernance.ps1 -ProjectPath (Get-Location).Path -Level Release：通过，错误数 0、警告数 0。"
+  ],
+  "created_at": "2026-08-21T14:48:54.3790229Z"
+}

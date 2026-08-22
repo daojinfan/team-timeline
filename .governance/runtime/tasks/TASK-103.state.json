@@ -1,0 +1,74 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-103",
+  "work_package": "WP-009",
+  "contract_sha256": "d4d0e3f2a82776967fe6e52a96df165a5d735c8368c990e9f5a39f710c0cd3fe",
+  "baseline": "BL-004",
+  "state": "superseded",
+  "approval_id": "APR-082",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "2fa987b3c57622bdad4038efd396c0f68452bb0a",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [],
+  "plan_checkpoint_git_commit": "5ed2a00713c108e46ba022558c334824104a0ff7",
+  "plan_rebase_history": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-103/20260822T024505334Z-cb6fe48f-v4-design-review-governance.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-103/20260822T023413225Z-6aa37f33-v4-design-review-governance.evidence.json",
+    "docs/05-quality/evidence/TASK-103/review-round-1.json",
+    "docs/05-quality/evidence/TASK-103/20260822T023914347Z-75b7d1b0-v4-design-review-governance.evidence.json",
+    "docs/05-quality/evidence/TASK-103/review-round-2.json",
+    "docs/05-quality/evidence/TASK-103/20260822T024237243Z-c7712263-v4-design-review-governance.evidence.json",
+    "docs/05-quality/evidence/TASK-103/review-round-3.json",
+    "docs/05-quality/evidence/TASK-103/20260822T024505334Z-cb6fe48f-v4-design-review-governance.evidence.json",
+    "docs/05-quality/evidence/TASK-103/review-round-4.json"
+  ],
+  "review_history": [
+    {
+      "path": "docs/05-quality/evidence/TASK-103/review-round-1.json",
+      "sha256": "f5106903a04944f42d94c64c8f26bef531e93d24a8436ce73f60dc26b2f82806",
+      "result": "changes-required",
+      "round_id": "RR-42fbfbb1d0a045c69207fbedbe97ff50",
+      "recorded_at": "2026-08-22T02:34:36.8143843Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-103/review-round-2.json",
+      "sha256": "63acfe93572d0acb1c2b1e2109a485f65cdfcc7bd992eb2491c531182797b685",
+      "result": "changes-required",
+      "round_id": "RR-e9df2d2558504adca5fad1df349f50e2",
+      "recorded_at": "2026-08-22T02:39:38.3301061Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-103/review-round-3.json",
+      "sha256": "cf1095418bf16e2b204e88ebb35bfe96b496b4b1256fd2c3114ca06ee2452ee0",
+      "result": "passed",
+      "round_id": "RR-3b12152463b04c41949b4ef8828de2dd",
+      "recorded_at": "2026-08-22T02:42:53.8883765Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-103/review-round-4.json",
+      "sha256": "0226c1f066b107a77427c3dd8e2105f7d9e0add9371b2830350e0739e4c9f3ce",
+      "result": "passed",
+      "round_id": "RR-7b86dae7a6ae404db348910e1e670c15",
+      "recorded_at": "2026-08-22T02:45:22.9016271Z"
+    }
+  ],
+  "review": {
+    "required": false,
+    "reviewer_task_id": "",
+    "status": "not-applicable",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
+  },
+  "last_error": "BL-005 V4 基线切换：保留历史交付与审核证据，关闭旧 BL-004 任务契约，不删除业务数据。",
+  "created_at": "2026-08-22T02:22:12.5931101Z",
+  "updated_at": "2026-08-22T03:07:55.7685111Z"
+}
