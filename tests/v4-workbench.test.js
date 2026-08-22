@@ -29,9 +29,16 @@ test('workbench reuses V3 topic resources and renders safe, actionable projectio
   for (const endpoint of ['/samples', '/tasks', '/submissions', '/events']) assert.match(app, new RegExp(`topics/\\$\\{topic\.id\\}${endpoint}`));
   for (const helper of ['v3TopicHasPending', 'v3TopicHasFocus', 'v3RenderWorkbenchOverview', 'v3EventLabel']) assert.match(app, new RegExp(`function ${helper}`));
   assert.match(app, /v3Esc\(item\.topic/);
+  assert.match(app, /data-v3-workbench-action/);
+  assert.match(app, /function v3OpenWorkbenchAction/);
+  assert.match(app, /action === "execution"/);
+  assert.match(app, /action === "assignment"/);
+  assert.match(app, /action === "acceptance"/);
   assert.match(app, /data-v3-open-topic/);
   assert.match(app, /v3State\.onlyPending/);
   assert.match(app, /v3State\.cryostat/);
+  assert.match(app, /v3StatusMarkup\(task\.display_status\)/);
+  assert.match(app, /\["pending_eta", "recent_arrival", "delayed", "testing", "unassigned", "submitted"\]/);
 });
 
 test('workbench layout constrains dense desktop content', () => {
@@ -39,5 +46,6 @@ test('workbench layout constrains dense desktop content', () => {
   assert.match(css, /\.v3-workbench-columns\s*\{[\s\S]*minmax\(0,\s*1\.35fr\)/);
   assert.match(css, /\.v3-workbench-queue-item\s*\{[\s\S]*min-width:\s*0/);
   assert.match(css, /\.v3-workbench-table\s*\{[\s\S]*table-layout:\s*fixed/);
+  assert.match(css, /\.v3-queue-kind\.is-testing\s*\{[\s\S]*background:\s*var\(--v2-testing\)/);
   assert.match(css, /@media\s*\(max-width:\s*1280px\)/);
 });

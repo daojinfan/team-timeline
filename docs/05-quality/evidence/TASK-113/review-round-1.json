@@ -1,0 +1,61 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-113",
+  "reviewed_task_ids": ["TASK-112"],
+  "work_package": "WP-009",
+  "baseline": "BL-005",
+  "result": "changes-required",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-112",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "扩展专题事实加载为 samples/tasks/submissions/events，增加工作台摘要/待处理队列/事件投影、制冷机与待处理筛选、摘要卡联动、专题展开明细和刷新同步。"
+    },
+    {
+      "task_id": "TASK-112",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "增加工作台管理摘要六类卡片、待处理事项队列、近期事件列表、制冷机与只看待处理筛选，并将专题总览改为可展开样品/任务明细容器。"
+    },
+    {
+      "task_id": "TASK-112",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "增加工作台摘要卡、队列、事件时间线、固定布局表格、专题展开行和 1280px 桌面断点样式，限制密集内容最小宽度与换行。"
+    },
+    {
+      "task_id": "TASK-112",
+      "path": "tests/v4-workbench.test.js",
+      "change_type": "added",
+      "summary": "新增静态回归测试，锁定工作台摘要/队列/时间线/筛选入口、V3 资源端点与工作台布局约束。"
+    }
+  ],
+  "change_summary": "从 TASK-112 启动提交 efedac37f4f775ea3529bdd35147ef269e29a6b2 到当前 HEAD 7b92d80 的 scoped manifest 为 public/app.js (M)、public/index.html (M)、public/styles.css (M)、tests/v4-workbench.test.js (A)，共 328 insertions、14 deletions。完整 Git 差异另含 TASK-112 运行状态、审批/台账/工作状态和自动验证 evidence 路径；这些是治理/证据系统文件，不属于 TASK-112 write scope，故不列入 changes。",
+  "scope_checked": [
+    "TASK-112 Release 契约、TASK-113 REVIEWER 契约、WP-009/BL-005 及 efedac37..HEAD 全部实际 scoped 差异",
+    "工作台首屏管理摘要六卡（待确认 ETA、近期到样、延期样品、测试中任务、待人工分配、待验收成果）、摘要点击过滤与状态文字/颜色表达",
+    "待处理事项队列的来源小组、专题、样品/型号、任务、ETA、制冷机、负责人和下一步按钮数据，以及 only-pending/source/status/cryostat/archive/window 筛选联动",
+    "近期事件时间线的 V3 events 加载、事件标签、时间排序、空状态、未来 ETA/延期/任务节点覆盖和进入专题/任务上下文路径",
+    "可展开专题明细的来源/专题/样品 ETA/到样、任务状态/制冷机/负责人和进入专题入口，及现有专题规划、人工分配、执行中心、成果验收、资源维护刷新兼容",
+    "新增 CSS 的固定表格、最小宽度、换行和 1280px 断点对 1280×720/1366×768 桌面边界的静态影响；无 API/schema/database/src/v3 差异"
+  ],
+  "findings": [
+    "阻塞项：近期事件列表由 v3RenderWorkbenchOverview 生成的 li 仅包含 time、event label、来源/专题和操作者，没有 data-v3-open-topic、任务链接或按钮；事件无法进入对应专题或任务上下文，且数据仅来自历史 v3_topic_events，不覆盖未来关注窗口内的样品 ETA、延期和任务节点事实。",
+    "阻塞项：待处理队列中“打开执行”“人工分配”“打开验收”的按钮全部使用 data-v3-open-topic；公共点击处理器始终 setV2View(\"plans\")/v3SetView(\"plans\")，因此三类下一步动作均跳回专题规划，未进入执行中心、人工分配或成果验收上下文，动作标签与实际路由不一致。",
+    "阻塞项：专题展开任务表格直接输出 task.display_status 原始值（如 active/planned/completed），没有 v3StatusMarkup 的中文状态文字、颜色和非颜色标识；队列 v3-queue-kind 虽带 is-* class，但 CSS 只有统一 var(--soft) 背景，待处理类型没有语义颜色，未满足状态文字/颜色/非颜色共同表达。",
+    "阻塞项：只看待处理筛选的判定 v3TopicHasPending 会把 active 任务纳入专题，但工作台队列的 onlyPending 显示过滤只保留 pending_eta、delayed、unassigned、submitted，导致测试中专题被摘要计数保留却没有对应队列项，筛选与摘要/队列事实不一致。"
+  ],
+  "validation_evidence": [
+    "git -c safe.directory='D:/Codex/人员管理系统' diff --name-status efedac37..HEAD -- public/index.html public/app.js public/styles.css tests/v4-workbench.test.js 输出 public/app.js=M、public/index.html=M、public/styles.css=M、tests/v4-workbench.test.js=A；scoped stat 为 4 files changed, 328 insertions(+), 14 deletions(-)。",
+    "完整 efedac37..HEAD manifest 另含 .governance/runtime/tasks/TASK-112.state.json、docs/00-index/APPROVAL-LOG.md、docs/04-delivery/TASK-LEDGER.md、docs/04-delivery/WORK-STATUS.md 和 TASK-112 自动 evidence，均按 write scope 排除。",
+    "node --check public/app.js 通过（exit 0）。",
+    "npm test 通过：36 tests、36 pass、0 fail、0 skipped；包括新增 v4-workbench.test.js 的 3 个静态测试及既有 V1/V2/V3 回归。",
+    "git -c safe.directory='D:/Codex/人员管理系统' diff --check efedac37..HEAD 通过（exit 0）。",
+    "静态源码证据：事件模板为 `<li class=\"v3-workbench-event\">...` 且无 data-v3-open-topic/action；所有队列动作模板统一为 `<button ... data-v3-open-topic=\"${item.topicId}\">`，点击处理器统一切换 plans；任务明细使用 `${v3Esc(task.display_status || \"待规划\")}`；`.v3-queue-kind` 仅声明统一背景/颜色。",
+    "浏览器环境不可用，未执行 1280×720 与 1366×768 实机交互或横向溢出检查；已以 CSS 断点/最小宽度静态审查、源码路径和完整自动化回归记录限制。"
+  ],
+  "created_at": "2026-08-22T15:12:00+08:00"
+}

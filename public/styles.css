@@ -3224,6 +3224,13 @@ button.v3-task-card:disabled small {
   font-weight: 700;
 }
 
+.v3-queue-kind.is-pending_eta,
+.v3-queue-kind.is-submitted { background: var(--v2-pending); color: #fff; }
+.v3-queue-kind.is-recent_arrival { background: var(--v2-within); color: #422006; }
+.v3-queue-kind.is-delayed { background: var(--v2-delayed); color: #fff; }
+.v3-queue-kind.is-testing { background: var(--v2-testing); color: #fff; }
+.v3-queue-kind.is-unassigned { background: var(--warning); color: #422006; }
+
 .v3-workbench-table {
   width: 100%;
   border-collapse: collapse;
