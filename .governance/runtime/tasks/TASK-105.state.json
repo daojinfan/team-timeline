@@ -14,18 +14,24 @@
   "execution_lease": "",
   "execution_lease_owner": "",
   "execution_lease_expires_at": "",
-  "preexisting_changes": [
-    "docs/00-index/BASELINE-REGISTRY.md",
-    "docs/00-index/CURRENT-STATE.md",
-    "docs/00-index/DOC-REGISTRY.md",
-    "governance.json",
-    ".governance/baseline-activation.lock",
-    "baselines/BL-005/activation.json",
-    "baselines/BL-005/manifest.json",
-    "docs/00-index/.BASELINE-REGISTRY.md.lock"
+  "preexisting_changes": [],
+  "plan_checkpoint_git_commit": "6660bc5d47f7ffdffb9f3d558567d902662e3370",
+  "plan_rebase_history": [
+    {
+      "previous_changes": [
+        "docs/00-index/BASELINE-REGISTRY.md",
+        "docs/00-index/CURRENT-STATE.md",
+        "docs/00-index/DOC-REGISTRY.md",
+        "governance.json",
+        ".governance/baseline-activation.lock",
+        "baselines/BL-005/activation.json",
+        "baselines/BL-005/manifest.json",
+        "docs/00-index/.BASELINE-REGISTRY.md.lock"
+      ],
+      "checkpoint_git_commit": "6660bc5d47f7ffdffb9f3d558567d902662e3370",
+      "rebased_at": "2026-08-22T03:34:39.8580301Z"
+    }
   ],
-  "plan_checkpoint_git_commit": "328076e6d56687443c6f0f06ca1c1103510d7d85",
-  "plan_rebase_history": [],
   "evidence": [],
   "evidence_history": [],
   "review_history": [],
@@ -39,5 +45,5 @@
   },
   "last_error": "",
   "created_at": "2026-08-22T03:15:42.4495834Z",
-  "updated_at": "2026-08-22T03:15:42.4495834Z"
+  "updated_at": "2026-08-22T03:34:39.8658155Z"
 }
