@@ -1,0 +1,21 @@
+{
+  "$schema": "schemas/validation-evidence.schema.json",
+  "schema_version": 1,
+  "task_id": "TASK-114",
+  "work_package": "WP-010",
+  "baseline": "BL-005",
+  "contract_sha256": "c4a145758aacf6810434f13ec4db241d3edc8853b69db0343c27361c5c387e77",
+  "git_commit": "76ee0516818e6849d4a0541033c715436bf652ad",
+  "validation_id": "web-data-reconcile-verify",
+  "command": "node",
+  "args": [
+    "scripts/reconcile-web-data.mjs",
+    "--verify"
+  ],
+  "started_at": "2026-08-22T12:57:14.6555942Z",
+  "finished_at": "2026-08-22T12:57:14.8137346Z",
+  "exit_code": 0,
+  "redactions_applied": 0,
+  "output_path": "docs/05-quality/evidence/TASK-114/20260822T125714649Z-0cdfcb78-web-data-reconcile-verify.output.txt",
+  "output_sha256": "d9ddccb0f260d45e4f7737ced6eb5bdcb48dec21c42e6f814703775b52952fa4"
+}
