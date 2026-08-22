@@ -1,0 +1,80 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-111",
+  "work_package": "WP-009",
+  "title": "独立审核 V4 颜色对比度修复（重启）",
+  "goal": "独立审核 TASK-110 的专题列表与其他 V3/V2 颜色对比度修复，核对实际 CSS cascade、关键对比度、状态文字/颜色一致性、回归测试与桌面边界，并完成 Release 双轮审核。",
+  "baseline": "BL-005",
+  "profile": "Release",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-111"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "tests/v4-ui-contrast.test.js",
+    "tests"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-111"
+  ],
+  "out_of_scope": [
+    "修改 public、tests、数据库、任务台账或治理状态"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-110"
+  ],
+  "acceptance_criteria": [
+    "逐项审查 TASK-110 从启动提交到最终工作树的所有 CSS 与测试差异并列出准确 change manifest。",
+    "独立核对专题列表、人工分配按钮、迁移成功徽标、V3 六类状态芯片及 V2 completed 状态的前景/背景与交互状态。",
+    "核对关键小字号前景背景对比度至少 4.5:1，颜色不是唯一状态信息，且不影响既有 hover/focus/disabled 语义。",
+    "运行 npm test、静态测试、node --check 与 git diff --check；浏览器可用时检查 1280×720 与 1366×768，无权限时如实记录限制。",
+    "Release 档位对同一最终内容完成两个连续通过轮次并保存结构化审核证据。"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "git",
+      "args": [
+        "diff",
+        "--check"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "production_release"
+  ],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-22T06:32:33.0012134Z",
+  "release_controls": {
+    "target_environment": "本地协调工作树，审核 TASK-110 V4 颜色对比度修复",
+    "execution_window": "TASK-110 实现并 Verify 后执行 Release 双轮全量审核",
+    "rollback_plan": "仅移除 TASK-111 审核证据，不修改 TASK-110 实现",
+    "observation_metrics": "实际差异清单、CSS cascade、对比度计算、状态颜色契约、npm test、静态检查、双分辨率与 Release 治理结果",
+    "stop_conditions": "发现白字白底/低对比度残留、范围越界、状态文字颜色不一致、布局回归、测试或治理校验失败",
+    "post_release_owner": "项目经理（协调工作树）"
+  }
+}

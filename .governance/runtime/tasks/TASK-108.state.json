@@ -5,7 +5,7 @@
   "work_package": "WP-009",
   "contract_sha256": "4f7670a728f211d82333c230b6c58faffb7e7d894799abf7e68f0feb0c5424d7",
   "baseline": "BL-005",
-  "state": "needs-decision",
+  "state": "superseded",
   "approval_id": "APR-088",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -38,7 +38,7 @@
     "pass_streak": 0,
     "subject_sha256": ""
   },
-  "last_error": "旧交付 TASK-106 的 Release 独立审核已冻结 public/styles.css 内容指纹；本任务在未完成 TASK-106 acceptance 前修改同一写入范围，治理校验检测到旧审核证据与当前工作树不一致。需先获得 TASK-106 acceptance，再重新规划 CSS 修复。",
+  "last_error": "前序 TASK-106 已于 APR-089 正式验收；原任务无法从 needs-decision 原地恢复，且实现改动已撤回、未进入集成，现以相同已确认范围重新规划替代任务。",
   "created_at": "2026-08-22T06:15:23.9165048Z",
-  "updated_at": "2026-08-22T06:23:57.2200306Z"
+  "updated_at": "2026-08-22T06:31:44.6689852Z"
 }

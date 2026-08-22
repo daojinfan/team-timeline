@@ -5,7 +5,7 @@
   "work_package": "WP-009",
   "contract_sha256": "4d2cf7ebcfb81c8c5a359ef37ca593132f5c7d644dd9fca4a68beebcac14e3c1",
   "baseline": "BL-005",
-  "state": "planned",
+  "state": "superseded",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -34,7 +34,7 @@
     "pass_streak": 0,
     "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "依赖的 TASK-108 因前序 TASK-106 尚未验收而进入 needs-decision；TASK-106 已于 APR-089 正式验收，现由新的独立审核任务替代。",
   "created_at": "2026-08-22T06:15:41.7577461Z",
-  "updated_at": "2026-08-22T06:17:13.4627557Z"
+  "updated_at": "2026-08-22T06:31:43.9535975Z"
 }
