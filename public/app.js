@@ -3516,6 +3516,7 @@ async function v3LoadTopics() {
   v3RebuildExecutionTaskIndex();
   renderTasks();
   renderDetail();
+  v3RenderTopicList();
   v3RenderTopics();
   v3RenderWorkbenchOverview();
   v3FillResourceSelects();
@@ -3539,6 +3540,24 @@ async function v3FillContacts(groupId) {
   const select = $("#v3TopicContact"); if (!select) return;
   if (!groupId) { select.innerHTML = "<option value=''>稍后补充</option>"; return; }
   try { const result = await v2Api(`/api/v2/source-groups/${groupId}/contacts`); const rows = result.data || []; select.innerHTML = "<option value=''>稍后补充</option>" + rows.map((row) => `<option value="${row.id}">${v3Esc(row.name)}</option>`).join(""); } catch (error) { select.innerHTML = "<option value=''>稍后补充</option>"; showToast(v3ErrorText(error), { type: "error" }); }
+}
+function v3RenderTopicList() {
+  const list = $("#v3TopicList"); if (!list) return;
+  const topics = v3State.topics || [];
+  const count = $("#v3TopicListCount"); if (count) count.textContent = `${topics.length}`;
+  if (!topics.length) {
+    list.innerHTML = "<div class='v3-empty-state compact'><p>当前还没有专题，请从新建专题开始。</p></div>";
+    return;
+  }
+  const activeId = v3State.topic ? Number(v3State.topic.id) : null;
+  list.innerHTML = topics.map((topic) => {
+    const detail = v3State.topicDetails.get(topic.id);
+    const status = detail ? v3TopicStatus(detail) : null;
+    const active = activeId === Number(topic.id);
+    const sampleCount = detail ? (detail.samples || []).length : Number(topic.sample_count || 0);
+    const taskCount = detail ? (detail.tasks || []).length : Number(topic.task_count || 0);
+    return `<button class="v3-topic-row compact${active ? " is-active" : ""}" type="button" data-v3-open-topic="${topic.id}" aria-current="${active ? "true" : "false"}"><span>${v3Esc(topic.name)}</span><small>${v3Esc(v3Group(topic.source_group_id)?.name || "来源小组")} · ${sampleCount} 个样品 · ${taskCount} 个任务</small>${v3StatusMarkup(status)}</button>`;
+  }).join("");
 }
 function v3TopicHasPending(detail) {
   const samples = detail.samples || [], tasks = detail.tasks || [], submissions = detail.submissions || [];
@@ -3626,7 +3645,7 @@ function v3RenderTopic() {
   $("#v3TopicTaskSummary").textContent = `${tasks.length} 个连续任务`; $("#v3TopicDefaultCryostat").textContent = v3Cryostat(topic.default_cryostat_id)?.name || "不设默认";
   $("#v3TopicBreadcrumb").textContent = `${group?.name || "来源小组"} / ${topic.name}`;
   $("#v3TopicListCount").textContent = `${v3State.topics.length}`;
-  $("#v3TopicList").innerHTML = v3State.topics.map((item) => `<button class="v3-topic-row compact" type="button" data-v3-open-topic="${item.id}"><span>${v3Esc(item.name)}</span><small>${v3Esc(v3Group(item.source_group_id)?.name || "")}</small></button>`).join("");
+  v3RenderTopicList();
   $("#v3SampleCount").textContent = `${samples.length} 个样品`; $("#v3TaskChainCount").textContent = `${tasks.length} 个任务`;
   $("#v3SampleList").innerHTML = samples.length ? samples.map((sample) => `<article class="v3-sample-card"><div><strong>${v3Esc(sample.planning_label)}</strong><span>${v3Esc(sample.model)}</span><small>${sample.formal_identifier || sample.temporary_identifier ? `编号：${v3Esc(sample.formal_identifier || sample.temporary_identifier)}` : "编号待补"}</small></div><div><span class="v3-eta-chip">${sample.eta_pending ? "ETA 待确认" : `ETA ${v3Esc(sample.current_eta_date || "—")}`}</span>${sample.actual_arrival_date ? `<small>到样 ${v3Esc(sample.actual_arrival_date)}</small>` : ""}<div class="v3-card-actions"><button class="ghost-button compact" type="button" data-v3-open-sample-edit="${sample.id}">编辑样品</button><button class="ghost-button compact" type="button" data-v3-open-eta="${sample.id}">修订 ETA</button></div></div></article>`).join("") : "<li class='v3-empty-state compact'><h3>样品池为空</h3><p>先记录规划标签和型号，后续再补编号。</p></li>";
   $("#v3TaskChainList").innerHTML = tasks.length ? tasks.map((task, index) => `<li class="v3-task-card"><div><strong>${v3Esc(task.title)}</strong>${v3StatusMarkup(task.display_status)}<span class="v3-required-chip">${task.is_required === 0 ? "可选" : "必做"}</span><p>${v3Esc(task.start_date || "待排期")} ～ ${v3Esc(task.end_date || "待排期")} · ${task.samples.map((s) => v3Esc(s.planning_label)).join("、")}</p><div class="v3-task-context-line">${v3TaskContextText(task)}</div><p class="v3-task-purpose-line">${v3Esc(task.test_purpose || "测试目的待补充")}</p><small>测试项：${task.test_items?.length ? task.test_items.map((item) => v3Esc(item.name || item.label)).join("、") : "待补充"} · ${task.efforts?.map((e) => `${v3Esc(e.name)} ${Number(e.planned_half_hours || 0) / 2}h`).join(" · ") || "未完成人工分配"}</small></div><div class="v3-card-actions"><div class="v3-task-order-actions" aria-label="人工调整任务顺序"><button class="ghost-button compact" type="button" data-v3-move-task="up" data-v3-task-id="${task.id}" aria-label="任务上移"${index === 0 || v3State.taskOrderBusy ? " disabled" : ""}>↑</button><button class="ghost-button compact" type="button" data-v3-move-task="down" data-v3-task-id="${task.id}" aria-label="任务下移"${index === tasks.length - 1 || v3State.taskOrderBusy ? " disabled" : ""}>↓</button></div><button class="ghost-button compact" type="button" data-v3-open-task-editor="${task.id}">编辑全部</button><button class="ghost-button compact" type="button" data-v3-open-submission="${task.id}">提交成果</button></div></li>`).join("") : "<li class='v3-empty-state compact'><h3>任务链为空</h3><p>从第一个任务开始，逐步建立前后关系。</p></li>";
@@ -3732,7 +3751,10 @@ function v3SetView(view) {
     renderViewState();
   }
   v3SyncPanels(view);
-  if (view === "plans" && v3State.topic) v3RenderTopic();
+  if (view === "plans") {
+    v3RenderTopicList();
+    if (v3State.topic) v3RenderTopic();
+  }
   if (view === "assignment") v3RenderAssignment();
   if (view === "acceptance") v3RenderAcceptance();
   if (view === "management") v3RenderManagement();

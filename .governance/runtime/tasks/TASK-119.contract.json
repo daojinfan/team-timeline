@@ -1,0 +1,74 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-119",
+  "work_package": "WP-010",
+  "title": "审核无专题任务迁移结果",
+  "goal": "独立核对无专题专题创建、27 个 canonical 任务绑定、数据库备份、关系完整性与验证证据，确认未产生重复或范围外数据变更。",
+  "baseline": "BL-005",
+  "profile": "Release",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-119"
+  ],
+  "read_paths": [
+    "scripts/reconcile-web-data.mjs",
+    "data/team_tasks.sqlite",
+    "data/backups",
+    "docs/05-quality/evidence/TASK-118",
+    "docs/04-delivery/WORK-PACKAGES.md",
+    "docs/00-index/CURRENT-STATE.md",
+    "docs/08-changes/CR-006.md"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-119"
+  ],
+  "out_of_scope": [
+    "修改数据库",
+    "修改迁移脚本",
+    "修改前端代码",
+    "删除或覆盖备份"
+  ],
+  "authoritative_documents": [
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-006",
+    "DEL-WORK-001",
+    "DEC-004"
+  ],
+  "dependencies": [
+    "TASK-118"
+  ],
+  "acceptance_criteria": [
+    "实际数据库变更清单与 TASK-118 范围一致。",
+    "备份、快照和回滚演练证据完整。",
+    "无专题专题唯一且未绑定任务全部归入，原任务编号保持不变。",
+    "V3 外键、任务成员关系和 SQLite integrity_check 均通过。"
+  ],
+  "validations": [
+    {
+      "id": "unassigned-topic-review",
+      "command": "node",
+      "args": [
+        "scripts/reconcile-web-data.mjs",
+        "--verify-unassigned"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "data_model_or_migration"
+  ],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-22T15:35:54.0079676Z",
+  "release_controls": {
+    "target_environment": "本地 Web 应用 SQLite",
+    "execution_window": "TASK-118 执行并验证后立即进行独立审核",
+    "rollback_plan": "审核只写证据；发现问题时记录 changes-required，由实现任务使用备份回滚",
+    "observation_metrics": "数据库专题/任务计数、迁移前后任务绑定、备份哈希、关系完整性、实际变更清单",
+    "stop_conditions": "发现重复专题、任务遗漏、范围外写入、备份不可用、验证失败",
+    "post_release_owner": "项目经理"
+  }
+}

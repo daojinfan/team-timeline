@@ -2651,6 +2651,12 @@ button.v3-task-card:focus-visible {
   background: var(--soft);
 }
 
+button.v3-topic-row.is-active {
+  border-color: var(--accent);
+  background: var(--soft-accent);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
 button.v3-topic-row:hover span,
 button.v3-topic-row:hover small,
 button.v3-topic-row:focus-visible span,

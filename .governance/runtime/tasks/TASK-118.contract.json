@@ -1,0 +1,85 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-118",
+  "work_package": "WP-010",
+  "title": "将无专题任务归入无专题专题",
+  "goal": "新增工艺组无专题专题，并将当前未绑定 V3 专题的 canonical 任务直接绑定到该专题，保留原任务编号与已有任务字段，缺失 V3 详情留待后续补全。",
+  "baseline": "BL-005",
+  "profile": "Release",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "scripts/reconcile-web-data.mjs",
+    "data/team_tasks.sqlite",
+    "data/backups",
+    "docs/05-quality/evidence/TASK-118"
+  ],
+  "read_paths": [
+    "scripts/reconcile-web-data.mjs",
+    "data/team_tasks.sqlite",
+    "data/backups",
+    "docs/04-delivery/WORK-PACKAGES.md",
+    "docs/00-index/CURRENT-STATE.md",
+    "docs/08-changes/CR-006.md"
+  ],
+  "write_paths": [
+    "scripts/reconcile-web-data.mjs",
+    "data/team_tasks.sqlite",
+    "data/backups",
+    "docs/05-quality/evidence/TASK-118"
+  ],
+  "out_of_scope": [
+    "修改 V1/V2 schema/API",
+    "物理删除任务或备份",
+    "修改其他来源小组 V3 数据",
+    "自动补造样品、测试目的或测试项",
+    "前端功能改动"
+  ],
+  "authoritative_documents": [
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-006",
+    "DEL-WORK-001",
+    "DEC-004"
+  ],
+  "dependencies": [
+    "TASK-114"
+  ],
+  "acceptance_criteria": [
+    "执行前创建并校验 SQLite 备份与迁移快照。",
+    "创建或恢复工艺组“无专题”专题且不产生重复专题。",
+    "将执行前所有未绑定专题的 canonical 任务绑定到该专题，原任务编号与已有任务基本字段保持不变。",
+    "不创建占位样品，不猜测测试目的、测试项或来源小组；这些字段保留为空或待补充。",
+    "V3 外键、任务成员关系、任务绑定关系和 SQLite integrity_check 通过。",
+    "回滚演练能够读取执行前备份并通过完整性校验。"
+  ],
+  "validations": [
+    {
+      "id": "unassigned-topic-verify",
+      "command": "node",
+      "args": [
+        "scripts/reconcile-web-data.mjs",
+        "--verify-unassigned"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "data_model_or_migration",
+    "irreversible_operation",
+    "scope",
+    "success_criteria"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-22T15:35:37.5951216Z",
+  "release_controls": {
+    "target_environment": "本地 Web 应用 data/team_tasks.sqlite；不发布远程环境",
+    "execution_window": "停止 localhost:3000 服务后执行一次事务，完成备份、迁移、验证并重启服务",
+    "rollback_plan": "停止服务后使用 data/backups/team_tasks.sqlite.pre-unassigned-topic-20260822-01.sqlite 原子恢复，保留失败数据库和快照证据",
+    "observation_metrics": "无专题专题 ID、迁移前未绑定任务数、迁移后绑定任务数、V3 孤儿关系、PRAGMA integrity_check、API 专题任务总数",
+    "stop_conditions": "备份哈希不一致、存在重复无专题、任务已经被其他专题绑定、事务/完整性/API 验证失败或发现范围外数据变更",
+    "post_release_owner": "项目经理"
+  }
+}

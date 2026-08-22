@@ -53,3 +53,12 @@ test('workbench layout constrains dense desktop content', () => {
   assert.match(css, /\.v3-queue-kind\.is-testing\s*\{[\s\S]*background:\s*var\(--v2-testing\)/);
   assert.match(css, /@media\s*\(max-width:\s*1280px\)/);
 });
+
+test('topic planning renders a navigable topic list before a topic is selected', () => {
+  assert.match(html, /id="v3TopicView"[^>]*data-v3-panel="plans"/);
+  assert.match(html, /id="v3TopicList"/);
+  assert.match(app, /function v3RenderTopicList/);
+  assert.match(app, /v3RenderTopicList\(\);/);
+  assert.match(app, /data-v3-open-topic=\"\$\{topic\.id\}\"/);
+  assert.match(css, /button\.v3-topic-row\.is-active/);
+});
