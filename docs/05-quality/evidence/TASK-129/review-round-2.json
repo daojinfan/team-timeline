@@ -1,0 +1,58 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-129",
+  "reviewed_task_ids": ["TASK-128"],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-128",
+      "path": "src/server.js",
+      "change_type": "modified",
+      "summary": "复核 V5 初始化时按已有 V3 数据创建 V5 迁移前备份，并保持 V1/V2 迁移备份数量和兼容重置行为。"
+    },
+    {
+      "task_id": "TASK-128",
+      "path": "src/v3/index.js",
+      "change_type": "modified",
+      "summary": "复核 V5 迁移对 V2 计划映射、任务/成员排期同步、资源版本校验、样品/专题/资源事件和结构化错误的最终实现。"
+    },
+    {
+      "task_id": "TASK-128",
+      "path": "tests/v5-api.test.js",
+      "change_type": "added",
+      "summary": "复核 V5 资源 updated_at 并发校验和任务整体排期同步成员的回归覆盖。"
+    }
+  ],
+  "change_summary": "第二轮对 TASK-128 从启动检查点 649cd6e1 到最终提交 ca03bda 的完整 scoped manifest 复核；实现范围仍为 src/server.js、src/v3/index.js 和 tests/v5-api.test.js，治理状态与证据文件排除在交付 write scope 之外。首轮 changes-required 的最终内容已重新全量检查，未发现额外越界路径。",
+  "scope_checked": [
+    "重新读取 TASK-128 Release 契约、BL-006、rollback controls 和首轮 findings",
+    "重新检查 V5 canonical purpose、manual_phase、color，V5 表结构和 V5 API 的可写字段边界",
+    "重新检查 v5SyncLegacyData 对 V3、V1 和 V2 plan/task/test-item/sample/member 关系的可重复迁移，及 V5 前置备份触发条件",
+    "重新检查 ChangeTaskSchedule 的 sync_members、成员范围冲突、任务版本递增和事务一致性",
+    "重新检查资源 updated_at 并发校验、停用资源保护、专题/样品/资源事件和任务事件投影",
+    "重新检查五类状态计算、样品 ETA/到样、任务版本冲突、预览令牌和 V1/V2/V3 兼容回归",
+    "重新检查 TASK-128 实际变更清单、提交范围和 Release 自动验证证据"
+  ],
+  "findings": [
+    "首轮排期同步缺口已修正：sync_members=true 时任务日期与全部参与成员日期在同一事务中更新，成员日期变化会递增成员版本并同步 V1 assignment；成员时间超出任务范围会在预览中产生可确认冲突。",
+    "首轮 V2 legacy mapping 缺口已修正：V2 plan/task fallback 读取 source_group_id、cryostat_id、purpose、sample model/identifier/ETA、v2_test_items 和 primary member，并对首次迁移和后续仍未分类投影分别执行可重复 enrich。",
+    "首轮资源并发缺口已修正：资源 PUT 使用 expected_updated_at 与当前 updated_at 做 VERSION_CONFLICT 校验；历史引用仍保留，停用资源不能用于新任务。",
+    "首轮迁移回滚缺口已修正：已有 V3 数据库首次 V5 migration 前创建并 quick_check 验证 pre-v5 SQLite backup；V1/V2 首次升级继续复用既有 pre-v3 backup，不改变既有测试契约。",
+    "首轮审计缺口已修正：样品、专题移动/删除、资源维护和任务排期/状态命令均写入 v5_events 的 before/after 或影响快照。",
+    "未发现阻塞项；V5 服务端基础仍未引入负责人/工时/前置任务/联系人/成果验收或 AI 自动分配，符合 BL-006 范围。"
+  ],
+  "validation_evidence": [
+    "npm test：40 项通过。",
+    "node --check src/server.js、node --check src/v3/index.js：通过。",
+    "git diff --check：通过。",
+    "V5 回归覆盖资源 expected_updated_at 的 VERSION_CONFLICT、任务整体 schedule sync_members 和成员日期越界冲突。",
+    "代码复核确认 V2 fallback 查询 v2_plan_tasks/v2_control_plans/v2_test_items，并通过 marker 防止重复创建迁移样品。",
+    "代码复核确认已有 V3 数据库才创建 pre-v5 backup，V1/V2 历史迁移不会额外破坏既有单备份契约。",
+    "reviewer Verify：governance-release、npm-test、git-diff-check 均退出码 0。"
+  ],
+  "created_at": "2026-08-23T05:20:00Z"
+}
