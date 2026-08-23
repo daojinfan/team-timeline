@@ -1,0 +1,88 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-154",
+  "work_package": "WP-009",
+  "title": "独立复审摘要区任务直接编辑",
+  "goal": "对 TASK-153 的摘要区就地编辑实现执行独立 Release 双轮全量复审，审核只写入自身证据目录。",
+  "baseline": "BL-006",
+  "profile": "Release",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-154"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "src/v3",
+    "tests",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/05-quality",
+    "docs/08-changes"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-154"
+  ],
+  "out_of_scope": [
+    "修改实现代码",
+    "数据库",
+    "手机端",
+    "其他审核目录"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [
+    "TASK-153"
+  ],
+  "acceptance_criteria": [
+    "独立检查摘要区字段、V5 preview/PUT、expected_version 冲突处理、跨模块刷新和旧全量编辑入口。",
+    "Release 档位完成两轮对同一最终内容的全量复审，证据逐项列出实际变更路径、变更类型、验证结果和最终指纹。"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "production_release"
+  ],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-23T09:41:31.6264987Z",
+  "release_controls": {
+    "target_environment": "本地桌面开发环境：D:\\Codex\\人员管理系统，Node.js + SQLite，dev 分支",
+    "execution_window": "TASK-153 Verify 后，对同一最终内容执行第一轮和第二轮独立 Release 复审",
+    "rollback_plan": "审核任务仅写 docs/05-quality/evidence/TASK-154，不修改实现范围、数据库或其他审核目录",
+    "observation_metrics": "实际 Git 变更清单、摘要区交互、preview/PUT、冲突、同步刷新、npm test 和双轮证据指纹",
+    "stop_conditions": "发现变更越界、字段丢失、保存绕过预览、同步断裂、证据不完整或最终指纹变化时给出 changes-required",
+    "post_release_owner": "PM / human"
+  }
+}

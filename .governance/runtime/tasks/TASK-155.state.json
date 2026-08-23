@@ -1,0 +1,56 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-155",
+  "work_package": "WP-009",
+  "contract_sha256": "2e8e475a4dda7d2ba9b69d3daec6e98d86bb4d68be4024d9fd6179570c2ad491",
+  "baseline": "BL-006",
+  "state": "verified",
+  "approval_id": "",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "e062f62474ae14b3f2acf03a15d48ad643b2717f",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [],
+  "plan_checkpoint_git_commit": "e062f62474ae14b3f2acf03a15d48ad643b2717f",
+  "plan_rebase_history": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-155/20260823T094741633Z-a0edf726-required-validation.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-155/20260823T094615163Z-f24cd3f8-required-validation.evidence.json",
+    "docs/05-quality/evidence/TASK-155/review-round-1.json",
+    "docs/05-quality/evidence/TASK-155/20260823T094741633Z-a0edf726-required-validation.evidence.json",
+    "docs/05-quality/evidence/TASK-155/review-round-2.json"
+  ],
+  "review_history": [
+    {
+      "path": "docs/05-quality/evidence/TASK-155/review-round-1.json",
+      "sha256": "c33e9414f99b10d1278253e89ad1d1958133ce6d8f0aea8522b599fdc92d5440",
+      "result": "passed",
+      "round_id": "RR-49b95ec8033646fcbd9ee5391fb64011",
+      "recorded_at": "2026-08-23T09:46:54.4291313Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-155/review-round-2.json",
+      "sha256": "f942427bea7663051a5fc7a2edad19cb5886a483a69260d0a7b64a44d139a15b",
+      "result": "passed",
+      "round_id": "RR-fdbf7ccdd2f14c3a8ae60959f4769a7f",
+      "recorded_at": "2026-08-23T09:50:02.4618062Z"
+    }
+  ],
+  "review": {
+    "required": false,
+    "reviewer_task_id": "",
+    "status": "not-applicable",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
+  },
+  "last_error": "",
+  "created_at": "2026-08-23T09:45:32.1019032Z",
+  "updated_at": "2026-08-23T09:50:02.8280002Z"
+}

@@ -1,0 +1,46 @@
+{
+    "$schema":  "schemas/governed-work-state.schema.json",
+    "schema_version":  2,
+    "task_id":  "TASK-152",
+    "work_package":  "WP-009",
+    "contract_sha256":  "7322265465f729d396e0521546e68f87fd27c158833d3ebfa2cf41ca63f0b85c",
+    "baseline":  "BL-006",
+    "state":  "superseded",
+    "approval_id":  "",
+    "acceptance_subject_sha256":  "",
+    "acceptance_evidence_sha256":  "",
+    "acceptance_git_commit":  "",
+    "start_git_commit":  "",
+    "execution_lease":  "",
+    "execution_lease_owner":  "",
+    "execution_lease_expires_at":  "",
+    "preexisting_changes":  [
+
+                            ],
+    "plan_checkpoint_git_commit":  "d73030a2f37d4039d834888265ae7bcd62dc4fa8",
+    "plan_rebase_history":  [
+
+                            ],
+    "evidence":  [
+
+                 ],
+    "evidence_history":  [
+
+                         ],
+    "review_history":  [
+
+                       ],
+    "review":  {
+                   "required":  false,
+                   "reviewer_task_id":  "",
+                   "status":  "not-applicable",
+                   "evidence":  [
+
+                                ],
+                   "pass_streak":  0,
+                   "subject_sha256":  ""
+               },
+    "last_error":  "TASK-151 契约生成错误，TASK-152 未启动，随实现任务一并替代。",
+    "created_at":  "2026-08-23T09:25:01.1133441Z",
+    "updated_at":  "2026-08-23T09:31:01.7510199Z"
+}

@@ -1,48 +1,56 @@
 {
-  "$schema": "schemas/governed-work-state.schema.json",
-  "schema_version": 2,
-  "task_id": "TASK-134",
-  "work_package": "WP-009",
-  "contract_sha256": "729ef3f3aa4ff3f74049bf8ddfdc8aad2f05ca8f72848eb85c1681a006c9b44f",
-  "baseline": "BL-006",
-  "state": "implemented",
-  "approval_id": "APR-108",
-  "acceptance_subject_sha256": "",
-  "acceptance_evidence_sha256": "",
-  "acceptance_git_commit": "",
-  "start_git_commit": "59965d2e032f2f084fca89871a507d998aa21c4c",
-  "execution_lease": "",
-  "execution_lease_owner": "",
-  "execution_lease_expires_at": "",
-  "preexisting_changes": [],
-  "plan_checkpoint_git_commit": "59965d2e032f2f084fca89871a507d998aa21c4c",
-  "plan_rebase_history": [],
-  "evidence": [
-    "docs/05-quality/evidence/TASK-134/20260823T061854572Z-8c49b3ba-npm-test.evidence.json",
-    "docs/05-quality/evidence/TASK-134/20260823T061854572Z-8c49b3ba-app-syntax.evidence.json",
-    "docs/05-quality/evidence/TASK-134/20260823T061854572Z-8c49b3ba-server-syntax.evidence.json",
-    "docs/05-quality/evidence/TASK-134/20260823T061854572Z-8c49b3ba-v5-syntax.evidence.json",
-    "docs/05-quality/evidence/TASK-134/20260823T061854572Z-8c49b3ba-git-diff-check.evidence.json",
-    "docs/05-quality/evidence/TASK-134/20260823T061854572Z-8c49b3ba-governance-release.evidence.json"
-  ],
-  "evidence_history": [
-    "docs/05-quality/evidence/TASK-134/20260823T061854572Z-8c49b3ba-npm-test.evidence.json",
-    "docs/05-quality/evidence/TASK-134/20260823T061854572Z-8c49b3ba-app-syntax.evidence.json",
-    "docs/05-quality/evidence/TASK-134/20260823T061854572Z-8c49b3ba-server-syntax.evidence.json",
-    "docs/05-quality/evidence/TASK-134/20260823T061854572Z-8c49b3ba-v5-syntax.evidence.json",
-    "docs/05-quality/evidence/TASK-134/20260823T061854572Z-8c49b3ba-git-diff-check.evidence.json",
-    "docs/05-quality/evidence/TASK-134/20260823T061854572Z-8c49b3ba-governance-release.evidence.json"
-  ],
-  "review_history": [],
-  "review": {
-    "required": true,
-    "reviewer_task_id": "TASK-135",
-    "status": "pending",
-    "evidence": [],
-    "pass_streak": 0,
-    "subject_sha256": ""
-  },
-  "last_error": "Validation governance-release failed with exit code 1.",
-  "created_at": "2026-08-23T05:47:03.6442298Z",
-  "updated_at": "2026-08-23T06:19:11.0123396Z"
+    "$schema":  "schemas/governed-work-state.schema.json",
+    "schema_version":  2,
+    "task_id":  "TASK-134",
+    "work_package":  "WP-009",
+    "contract_sha256":  "729ef3f3aa4ff3f74049bf8ddfdc8aad2f05ca8f72848eb85c1681a006c9b44f",
+    "baseline":  "BL-006",
+    "state":  "superseded",
+    "approval_id":  "APR-108",
+    "acceptance_subject_sha256":  "",
+    "acceptance_evidence_sha256":  "",
+    "acceptance_git_commit":  "",
+    "start_git_commit":  "59965d2e032f2f084fca89871a507d998aa21c4c",
+    "execution_lease":  "",
+    "execution_lease_owner":  "",
+    "execution_lease_expires_at":  "",
+    "preexisting_changes":  [
+
+                            ],
+    "plan_checkpoint_git_commit":  "59965d2e032f2f084fca89871a507d998aa21c4c",
+    "plan_rebase_history":  [
+
+                            ],
+    "evidence":  [
+                     "docs/05-quality/evidence/TASK-134/20260823T061854572Z-8c49b3ba-npm-test.evidence.json",
+                     "docs/05-quality/evidence/TASK-134/20260823T061854572Z-8c49b3ba-app-syntax.evidence.json",
+                     "docs/05-quality/evidence/TASK-134/20260823T061854572Z-8c49b3ba-server-syntax.evidence.json",
+                     "docs/05-quality/evidence/TASK-134/20260823T061854572Z-8c49b3ba-v5-syntax.evidence.json",
+                     "docs/05-quality/evidence/TASK-134/20260823T061854572Z-8c49b3ba-git-diff-check.evidence.json",
+                     "docs/05-quality/evidence/TASK-134/20260823T061854572Z-8c49b3ba-governance-release.evidence.json"
+                 ],
+    "evidence_history":  [
+                             "docs/05-quality/evidence/TASK-134/20260823T061854572Z-8c49b3ba-npm-test.evidence.json",
+                             "docs/05-quality/evidence/TASK-134/20260823T061854572Z-8c49b3ba-app-syntax.evidence.json",
+                             "docs/05-quality/evidence/TASK-134/20260823T061854572Z-8c49b3ba-server-syntax.evidence.json",
+                             "docs/05-quality/evidence/TASK-134/20260823T061854572Z-8c49b3ba-v5-syntax.evidence.json",
+                             "docs/05-quality/evidence/TASK-134/20260823T061854572Z-8c49b3ba-git-diff-check.evidence.json",
+                             "docs/05-quality/evidence/TASK-134/20260823T061854572Z-8c49b3ba-governance-release.evidence.json"
+                         ],
+    "review_history":  [
+
+                       ],
+    "review":  {
+                   "required":  true,
+                   "reviewer_task_id":  "TASK-135",
+                   "status":  "pending",
+                   "evidence":  [
+
+                                ],
+                   "pass_streak":  0,
+                   "subject_sha256":  ""
+               },
+    "last_error":  "用户批准重规划；TASK-134 的同范围修复已被当前最终代码和新的独立交付任务替代，保留实现与验证证据。",
+    "created_at":  "2026-08-23T05:47:03.6442298Z",
+    "updated_at":  "2026-08-23T09:21:59.8965484Z"
 }

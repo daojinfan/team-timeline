@@ -1,0 +1,39 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-155",
+  "reviewed_task_ids": ["TASK-153"],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-153",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "第二轮复核确认摘要区编辑表单与全量编辑入口职责分离，专题/资源/排期/成员/测试项/备注保存均使用同一 V5 任务更新事务。"
+    },
+    {
+      "task_id": "TASK-153",
+      "path": "tests/v5-inline-editor.test.js",
+      "change_type": "modified",
+      "summary": "第二轮复核确认回归断言覆盖字段渲染、预览令牌、版本冲突确认、刷新同步和可访问错误提示。"
+    }
+  ],
+  "change_summary": "对 TASK-153 相同最终内容执行第二轮全量独立复审。第二轮重新检查实际 Git 差异、保存边界、错误恢复和桌面布局；内容指纹与第一轮一致，未发现新增问题。",
+  "scope_checked": [
+    "第二轮重新核对 TASK-153 契约允许路径与实际 Git 变更类型，不复用第一轮证据文件",
+    "专题切换、停用资源保留、成员选择和成员日期继承是否仍符合 V5 服务端规范化规则",
+    "测试项新增/删除、空项过滤、任务颜色和备注字段的保存与重新加载",
+    "预览冲突确认、expected_version 并发保护、失败后表单错误提示和重新渲染路径",
+    "样品保持由全量编辑维护，任务树、摘要区和执行中心共用刷新后的服务端事实"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "npm test：45 项通过，包含新增 V5 摘要区回归测试。",
+    "node --check public/app.js：通过；git diff --check：通过。",
+    "第二轮代码审查确认错误提示带 role=alert 和 aria-live=polite，失败不会关闭摘要区表单；保存成功后重新加载 V5 全量数据。"
+  ],
+  "created_at": "2026-08-23T10:35:00+08:00"
+}

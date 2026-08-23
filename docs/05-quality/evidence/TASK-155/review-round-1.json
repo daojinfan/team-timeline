@@ -1,0 +1,40 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-155",
+  "reviewed_task_ids": ["TASK-153"],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-153",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "摘要区渲染可编辑专题、来源小组、测试目的、测试项、排期、制冷机、参与成员、任务颜色和备注；保存复用 V5 preview/PUT、版本校验、冲突确认及统一刷新。"
+    },
+    {
+      "task_id": "TASK-153",
+      "path": "tests/v5-inline-editor.test.js",
+      "change_type": "modified",
+      "summary": "补充摘要区就地编辑字段、V5 preview/PUT、冲突确认、同步刷新及错误提示可访问性回归断言。"
+    }
+  ],
+  "change_summary": "对 TASK-153 启动提交 27fee3d 至当前最终内容执行第一轮全量独立复审。实际差异为 public/app.js 与 tests/v5-inline-editor.test.js 两个修改路径；此前已提交的完整摘要区实现作为当前代码对象一并检查。",
+  "scope_checked": [
+    "摘要区以表单方式直接编辑所属专题、来源小组、制冷机、测试目的、测试项、计划开始、计划结束、参与成员、任务颜色和备注",
+    "保存链路是否调用 /api/v5/tasks/:id/preview，再用 preview_token、ack 和 expected_version 调用 PUT",
+    "成员日期沿用已有任务成员排期，样品集合不在摘要区重复编辑并保留全量编辑入口",
+    "保存后 v5LoadAll、任务树和选中任务摘要是否同步刷新，错误提示是否可被辅助技术读取",
+    "旧全量编辑入口、开始测试/标记完成操作和桌面响应式布局是否保持"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "npm test：45 项通过。",
+    "node --check public/app.js：通过。",
+    "git diff --check：通过。",
+    "代码复核确认摘要区未写入样品明细，样品继续由全量编辑入口维护；冲突与版本错误沿用 V5 错误提示。"
+  ],
+  "created_at": "2026-08-23T10:20:00+08:00"
+}

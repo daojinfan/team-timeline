@@ -1,0 +1,94 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-153",
+  "work_package": "WP-009",
+  "title": "摘要区任务直接编辑",
+  "goal": "在任务全量编辑台选中任务后的摘要区提供就地编辑能力，修改关键任务属性并通过同一 V5 保存接口同步到任务树与执行中心。",
+  "baseline": "BL-006",
+  "profile": "Release",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/app.js",
+    "public/styles.css",
+    "tests/v5-inline-editor.test.js"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "src/v3",
+    "tests",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/05-quality",
+    "docs/08-changes"
+  ],
+  "write_paths": [
+    "public/app.js",
+    "public/styles.css",
+    "tests/v5-inline-editor.test.js"
+  ],
+  "out_of_scope": [
+    "src/server.js",
+    "src/v3",
+    "data/team_tasks.sqlite",
+    "手机端",
+    "AI自动建任务",
+    "数据库删除或重置"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "选中任务后的摘要区可直接编辑所属专题、来源小组、测试目的、测试项、排期、制冷机、参与成员和备注。",
+    "摘要区保存复用 V5 任务 preview/PUT、冲突确认和 expected_version，保存后任务树、全量编辑台和执行中心同步刷新。",
+    "摘要区不重复承担样品明细编辑，样品仍通过全量编辑入口维护；旧全量编辑入口保持可用。",
+    "npm test、前端语法、差异检查和 Release 治理校验通过。"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-23T09:41:16.1380895Z",
+  "release_controls": {
+    "target_environment": "本地桌面开发环境：D:\\Codex\\人员管理系统，Node.js + SQLite，dev 分支",
+    "execution_window": "在旧审核链正式替换后，从当前清洁执行点实现摘要区就地编辑；完成后绑定独立 Reviewer 并执行 Release 双轮复审",
+    "rollback_plan": "仅回退 TASK-153 实际修改的 public/app.js、public/styles.css 和 tests/v5-inline-editor.test.js，不修改数据库和既有任务事实",
+    "observation_metrics": "摘要区字段可编辑、V5 preview/PUT 与 expected_version、跨模块刷新、旧全量编辑入口、npm test、前端语法、差异检查和 Release 治理校验",
+    "stop_conditions": "摘要区保存绕过 V5 预览、字段丢失、模块不同步、旧入口回归、页面溢出、越界修改或审核失败时立即停止",
+    "post_release_owner": "PM / human"
+  }
+}

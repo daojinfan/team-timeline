@@ -1,34 +1,46 @@
 {
-  "$schema": "schemas/governed-work-state.schema.json",
-  "schema_version": 2,
-  "task_id": "TASK-135",
-  "work_package": "WP-009",
-  "contract_sha256": "fca97cf0d17afe2ce141d8a5a4c7e4e5654b5a771fc5b21c5ce7580b0012fc16",
-  "baseline": "BL-006",
-  "state": "planned",
-  "approval_id": "",
-  "acceptance_subject_sha256": "",
-  "acceptance_evidence_sha256": "",
-  "acceptance_git_commit": "",
-  "start_git_commit": "",
-  "execution_lease": "",
-  "execution_lease_owner": "",
-  "execution_lease_expires_at": "",
-  "preexisting_changes": [],
-  "plan_checkpoint_git_commit": "59965d2e032f2f084fca89871a507d998aa21c4c",
-  "plan_rebase_history": [],
-  "evidence": [],
-  "evidence_history": [],
-  "review_history": [],
-  "review": {
-    "required": false,
-    "reviewer_task_id": "",
-    "status": "not-applicable",
-    "evidence": [],
-    "pass_streak": 0,
-    "subject_sha256": ""
-  },
-  "last_error": "",
-  "created_at": "2026-08-23T05:47:24.9516361Z",
-  "updated_at": "2026-08-23T05:47:24.9516361Z"
+    "$schema":  "schemas/governed-work-state.schema.json",
+    "schema_version":  2,
+    "task_id":  "TASK-135",
+    "work_package":  "WP-009",
+    "contract_sha256":  "fca97cf0d17afe2ce141d8a5a4c7e4e5654b5a771fc5b21c5ce7580b0012fc16",
+    "baseline":  "BL-006",
+    "state":  "superseded",
+    "approval_id":  "",
+    "acceptance_subject_sha256":  "",
+    "acceptance_evidence_sha256":  "",
+    "acceptance_git_commit":  "",
+    "start_git_commit":  "",
+    "execution_lease":  "",
+    "execution_lease_owner":  "",
+    "execution_lease_expires_at":  "",
+    "preexisting_changes":  [
+
+                            ],
+    "plan_checkpoint_git_commit":  "59965d2e032f2f084fca89871a507d998aa21c4c",
+    "plan_rebase_history":  [
+
+                            ],
+    "evidence":  [
+
+                 ],
+    "evidence_history":  [
+
+                         ],
+    "review_history":  [
+
+                       ],
+    "review":  {
+                   "required":  false,
+                   "reviewer_task_id":  "",
+                   "status":  "not-applicable",
+                   "evidence":  [
+
+                                ],
+                   "pass_streak":  0,
+                   "subject_sha256":  ""
+               },
+    "last_error":  "TASK-134 已被新确认的当前交付任务替代；该审核任务未启动，保留计划历史。",
+    "created_at":  "2026-08-23T05:47:24.9516361Z",
+    "updated_at":  "2026-08-23T09:22:04.6197254Z"
 }

@@ -1,0 +1,46 @@
+{
+    "$schema":  "schemas/governed-work-state.schema.json",
+    "schema_version":  2,
+    "task_id":  "TASK-149",
+    "work_package":  "WP-009",
+    "contract_sha256":  "26526a798d583754a583de4bb85f4a8a1d2aee3e87442b553c98a05e8a0c24ef",
+    "baseline":  "BL-006",
+    "state":  "superseded",
+    "approval_id":  "",
+    "acceptance_subject_sha256":  "",
+    "acceptance_evidence_sha256":  "",
+    "acceptance_git_commit":  "",
+    "start_git_commit":  "",
+    "execution_lease":  "",
+    "execution_lease_owner":  "",
+    "execution_lease_expires_at":  "",
+    "preexisting_changes":  [
+
+                            ],
+    "plan_checkpoint_git_commit":  "d73030a2f37d4039d834888265ae7bcd62dc4fa8",
+    "plan_rebase_history":  [
+
+                            ],
+    "evidence":  [
+
+                 ],
+    "evidence_history":  [
+
+                         ],
+    "review_history":  [
+
+                       ],
+    "review":  {
+                   "required":  true,
+                   "reviewer_task_id":  "TASK-150",
+                   "status":  "pending",
+                   "evidence":  [
+
+                                ],
+                   "pass_streak":  0,
+                   "subject_sha256":  ""
+               },
+    "last_error":  "用户批准重规划；TASK-149 依赖已替代的旧修复链，改由新的清洁执行点任务承接摘要区就地编辑。",
+    "created_at":  "2026-08-23T09:04:57.5876892Z",
+    "updated_at":  "2026-08-23T09:22:27.2112169Z"
+}

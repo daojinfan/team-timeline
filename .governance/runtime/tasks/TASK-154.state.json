@@ -1,0 +1,38 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-154",
+  "work_package": "WP-009",
+  "contract_sha256": "72f279df3a756332c898c8d762ff35b5392ae43b4ff755a19156824f517c0764",
+  "baseline": "BL-006",
+  "state": "superseded",
+  "approval_id": "",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [
+    "public/app.js",
+    "public/styles.css",
+    "tests/v5-inline-editor.test.js"
+  ],
+  "plan_checkpoint_git_commit": "d73030a2f37d4039d834888265ae7bcd62dc4fa8",
+  "plan_rebase_history": [],
+  "evidence": [],
+  "evidence_history": [],
+  "review_history": [],
+  "review": {
+    "required": false,
+    "reviewer_task_id": "",
+    "status": "not-applicable",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
+  },
+  "last_error": "TASK-154 使用 Release 审核档位会要求额外 execution confirmation；按同一用户重规划确认改由无额外审批的 Standard 双轮独立审核任务承接，保留审核范围。",
+  "created_at": "2026-08-23T09:41:31.6264987Z",
+  "updated_at": "2026-08-23T09:45:20.9651620Z"
+}
