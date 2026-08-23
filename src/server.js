@@ -5,7 +5,7 @@ import { createHash, randomUUID } from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { DatabaseSync } from "node:sqlite";
-import { migrateV3Schema, routeV3Api, V3_ENDPOINTS } from "./v3/index.js";
+import { migrateV3Schema, routeV3Api, V3_ENDPOINTS, migrateV5Schema, routeV5Api, V5_ENDPOINTS } from "./v3/index.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -418,7 +418,7 @@ export const V2_ENDPOINTS = Object.freeze([
   "POST /api/v2/submissions/:id/review"
 ]);
 
-export { V3_ENDPOINTS };
+export { V3_ENDPOINTS, V5_ENDPOINTS };
 
 const V2_ENDPOINT_MATCHERS = V2_ENDPOINTS.map((entry) => {
   const [method, template] = entry.split(" ");
@@ -813,6 +813,7 @@ export async function initDatabase(customPath = dbPath) {
     }
     migrateV3Schema(database);
     seedIfEmpty(database, isNewDatabase ? todayIsoDate() : null);
+    migrateV5Schema(database);
     validateV2Schema(database);
     return database;
   } catch (error) {
@@ -1508,6 +1509,11 @@ function resetSampleData() {
       }
     }
     db.exec(`
+      DELETE FROM v5_events;
+      DELETE FROM v5_test_items;
+      DELETE FROM v5_task_samples;
+      DELETE FROM v5_task_members;
+      DELETE FROM v5_tasks;
       DELETE FROM task_change_logs;
       DELETE FROM task_checklist_items;
       DELETE FROM task_assignments;
@@ -3127,6 +3133,7 @@ async function routeV2Api(req, res, url) {
 }
 
 async function routeApi(req, res, url) {
+  if (url.pathname === "/api/v5" || url.pathname.startsWith("/api/v5/")) return routeV5Api(req, res, db, url);
   if (url.pathname === "/api/v3" || url.pathname.startsWith("/api/v3/")) return routeV3Api(req, res, db, url);
   if (url.pathname === "/api/v2" || url.pathname.startsWith("/api/v2/")) return routeV2Api(req, res, url);
   try {

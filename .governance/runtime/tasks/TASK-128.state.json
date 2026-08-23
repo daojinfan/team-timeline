@@ -5,32 +5,48 @@
   "work_package": "WP-009",
   "contract_sha256": "08cc099cc2218d6b0fe534c72e073eb734a6df1e9bcce1de4ea4deafbada0fd6",
   "baseline": "BL-006",
-  "state": "planned",
-  "approval_id": "",
+  "state": "verified",
+  "approval_id": "APR-104",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
   "acceptance_git_commit": "",
-  "start_git_commit": "",
+  "start_git_commit": "649cd6e1bd18700e8bf911ece7e66bce166207c3",
   "execution_lease": "",
   "execution_lease_owner": "",
   "execution_lease_expires_at": "",
-  "preexisting_changes": [
-    "docs/00-index/BASELINE-REGISTRY.md",
-    "docs/00-index/CURRENT-STATE.md",
-    "docs/00-index/DOC-REGISTRY.md",
-    "docs/04-delivery/context/WP-009.context.json",
-    "docs/04-delivery/context/WP-010.context.json",
-    "governance.json",
-    ".governance/baseline-activation.lock",
-    "baselines/BL-006-draft-before-route-refresh/manifest.json",
-    "baselines/BL-006/activation.json",
-    "baselines/BL-006/manifest.json",
-    "docs/00-index/.BASELINE-REGISTRY.md.lock"
+  "preexisting_changes": [],
+  "plan_checkpoint_git_commit": "649cd6e1bd18700e8bf911ece7e66bce166207c3",
+  "plan_rebase_history": [
+    {
+      "previous_changes": [
+        "docs/00-index/BASELINE-REGISTRY.md",
+        "docs/00-index/CURRENT-STATE.md",
+        "docs/00-index/DOC-REGISTRY.md",
+        "docs/04-delivery/context/WP-009.context.json",
+        "docs/04-delivery/context/WP-010.context.json",
+        "governance.json",
+        ".governance/baseline-activation.lock",
+        "baselines/BL-006-draft-before-route-refresh/manifest.json",
+        "baselines/BL-006/activation.json",
+        "baselines/BL-006/manifest.json",
+        "docs/00-index/.BASELINE-REGISTRY.md.lock"
+      ],
+      "checkpoint_git_commit": "649cd6e1bd18700e8bf911ece7e66bce166207c3",
+      "rebased_at": "2026-08-23T04:31:17.9606045Z"
+    }
   ],
-  "plan_checkpoint_git_commit": "be88bd0c89fbd8bcb63a74b5a0784ebdfe970f07",
-  "plan_rebase_history": [],
-  "evidence": [],
-  "evidence_history": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-128/20260823T044530386Z-059958a1-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-128/20260823T044530386Z-059958a1-server-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-128/20260823T044530386Z-059958a1-v3-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-128/20260823T044530386Z-059958a1-git-diff-check.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-128/20260823T044530386Z-059958a1-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-128/20260823T044530386Z-059958a1-server-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-128/20260823T044530386Z-059958a1-v3-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-128/20260823T044530386Z-059958a1-git-diff-check.evidence.json"
+  ],
   "review_history": [],
   "review": {
     "required": true,
@@ -42,5 +58,5 @@
   },
   "last_error": "",
   "created_at": "2026-08-23T04:23:28.09313Z",
-  "updated_at": "2026-08-23T04:25:03.5813423Z"
+  "updated_at": "2026-08-23T04:45:33.7287344Z"
 }

@@ -164,6 +164,138 @@ CREATE INDEX idx_v3_events_topic ON v3_topic_events(topic_id,id DESC);
 
 export const V3_SCHEMA_CHECKSUM = createHash("sha256").update(V3_SCHEMA_SQL).digest("hex");
 
+// V5 is an additive canonical model for the three approved modules.  It is
+// deliberately kept outside app_schema_versions (which is owned by V2/V3) so
+// that reopening an existing V3 database remains backwards compatible.
+export const V5_TABLES = Object.freeze([
+  "v5_schema_versions", "v5_topics", "v5_tasks", "v5_test_items",
+  "v5_samples", "v5_task_samples", "v5_task_members", "v5_events"
+]);
+
+export const V5_INDEXES = Object.freeze([
+  "idx_v5_tasks_topic", "idx_v5_tasks_source", "idx_v5_tasks_cryostat",
+  "idx_v5_tasks_dates", "idx_v5_samples_eta", "idx_v5_task_samples_sample",
+  "idx_v5_task_members_member", "idx_v5_events_topic", "idx_v5_events_task"
+]);
+
+export const V5_ENDPOINTS = Object.freeze([
+  "GET /api/v5/status", "GET /api/v5/resources", "POST /api/v5/resources/:kind",
+  "PUT /api/v5/resources/:kind/:id", "GET /api/v5/topics", "POST /api/v5/topics",
+  "PUT /api/v5/topics/:id", "DELETE /api/v5/topics/:id", "POST /api/v5/topics/:id/move-tasks",
+  "GET /api/v5/samples", "POST /api/v5/samples", "PUT /api/v5/samples/:id",
+  "GET /api/v5/tasks", "GET /api/v5/tasks/:id", "POST /api/v5/tasks/preview",
+  "POST /api/v5/tasks", "POST /api/v5/tasks/:id/preview", "PUT /api/v5/tasks/:id",
+  "POST /api/v5/tasks/:id/start-testing", "POST /api/v5/tasks/:id/complete",
+  "POST /api/v5/tasks/:id/schedule-preview", "POST /api/v5/tasks/:id/schedule",
+  "POST /api/v5/tasks/:id/member-schedule-preview", "POST /api/v5/tasks/:id/member-schedule",
+  "GET /api/v5/execution", "GET /api/v5/events"
+]);
+
+export const V5_SCHEMA_SQL = `
+CREATE TABLE v5_schema_versions (
+  version INTEGER PRIMARY KEY,
+  name TEXT NOT NULL UNIQUE,
+  checksum TEXT NOT NULL CHECK(length(checksum)=64),
+  applied_at TEXT NOT NULL
+);
+CREATE TABLE v5_topics (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL CHECK(length(trim(name)) BETWEEN 1 AND 200),
+  purpose TEXT NOT NULL DEFAULT '' CHECK(length(purpose)<=4000),
+  status TEXT NOT NULL DEFAULT 'active' CHECK(status IN ('active','archived')),
+  notes TEXT NOT NULL DEFAULT '' CHECK(length(notes)<=4000),
+  system_key TEXT UNIQUE,
+  version INTEGER NOT NULL DEFAULT 1 CHECK(version>=1),
+  archived_at TEXT,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+CREATE TABLE v5_tasks (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  legacy_task_id INTEGER UNIQUE REFERENCES tasks(id) ON DELETE SET NULL,
+  topic_id INTEGER NOT NULL REFERENCES v5_topics(id) ON DELETE RESTRICT,
+  source_group_id INTEGER REFERENCES v2_source_groups(id) ON DELETE RESTRICT,
+  cryostat_id INTEGER REFERENCES v2_cryostats(id) ON DELETE RESTRICT,
+  title TEXT NOT NULL CHECK(length(trim(title)) BETWEEN 1 AND 200),
+  purpose TEXT NOT NULL DEFAULT '' CHECK(length(purpose)<=4000),
+  notes TEXT NOT NULL DEFAULT '' CHECK(length(notes)<=4000),
+  color TEXT NOT NULL DEFAULT '' CHECK(length(color)<=32),
+  manual_phase TEXT NOT NULL DEFAULT 'waiting' CHECK(manual_phase IN ('waiting','testing','completed')),
+  start_date TEXT,
+  end_date TEXT,
+  version INTEGER NOT NULL DEFAULT 1 CHECK(version>=1),
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL,
+  CHECK((start_date IS NULL AND end_date IS NULL) OR (start_date IS NOT NULL AND end_date IS NOT NULL AND start_date<=end_date))
+);
+CREATE TABLE v5_test_items (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  task_id INTEGER NOT NULL REFERENCES v5_tasks(id) ON DELETE CASCADE,
+  name TEXT NOT NULL CHECK(length(trim(name)) BETWEEN 1 AND 300),
+  acceptance_criteria TEXT NOT NULL DEFAULT '' CHECK(length(acceptance_criteria)<=2000),
+  note TEXT NOT NULL DEFAULT '' CHECK(length(note)<=2000),
+  position INTEGER NOT NULL DEFAULT 0 CHECK(position>=0),
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL,
+  UNIQUE(task_id,position)
+);
+CREATE TABLE v5_samples (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  planning_label TEXT NOT NULL CHECK(length(trim(planning_label)) BETWEEN 1 AND 300),
+  model TEXT NOT NULL CHECK(length(trim(model)) BETWEEN 1 AND 200),
+  sample_no TEXT,
+  eta_date TEXT,
+  arrival_date TEXT,
+  eta_pending INTEGER NOT NULL DEFAULT 0 CHECK(eta_pending IN (0,1)),
+  notes TEXT NOT NULL DEFAULT '' CHECK(length(notes)<=4000),
+  version INTEGER NOT NULL DEFAULT 1 CHECK(version>=1),
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL,
+  CHECK((eta_pending=1) OR eta_date IS NOT NULL),
+  CHECK(arrival_date IS NULL OR eta_date IS NULL OR arrival_date>=eta_date)
+);
+CREATE TABLE v5_task_samples (
+  task_id INTEGER NOT NULL REFERENCES v5_tasks(id) ON DELETE CASCADE,
+  sample_id INTEGER NOT NULL REFERENCES v5_samples(id) ON DELETE RESTRICT,
+  is_required INTEGER NOT NULL DEFAULT 1 CHECK(is_required IN (0,1)),
+  created_at TEXT NOT NULL,
+  PRIMARY KEY(task_id,sample_id)
+);
+CREATE TABLE v5_task_members (
+  task_id INTEGER NOT NULL REFERENCES v5_tasks(id) ON DELETE CASCADE,
+  member_id INTEGER NOT NULL REFERENCES members(id) ON DELETE RESTRICT,
+  start_date TEXT,
+  end_date TEXT,
+  version INTEGER NOT NULL DEFAULT 1 CHECK(version>=1),
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL,
+  PRIMARY KEY(task_id,member_id),
+  CHECK((start_date IS NULL AND end_date IS NULL) OR (start_date IS NOT NULL AND end_date IS NOT NULL AND start_date<=end_date))
+);
+CREATE TABLE v5_events (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  topic_id INTEGER NOT NULL REFERENCES v5_topics(id) ON DELETE CASCADE,
+  task_id INTEGER REFERENCES v5_tasks(id) ON DELETE SET NULL,
+  sample_id INTEGER REFERENCES v5_samples(id) ON DELETE SET NULL,
+  event_type TEXT NOT NULL,
+  actor TEXT NOT NULL DEFAULT '本地用户',
+  before_json TEXT,
+  after_json TEXT,
+  created_at TEXT NOT NULL
+);
+CREATE INDEX idx_v5_tasks_topic ON v5_tasks(topic_id,updated_at DESC);
+CREATE INDEX idx_v5_tasks_source ON v5_tasks(source_group_id,updated_at DESC);
+CREATE INDEX idx_v5_tasks_cryostat ON v5_tasks(cryostat_id,start_date,end_date);
+CREATE INDEX idx_v5_tasks_dates ON v5_tasks(start_date,end_date);
+CREATE INDEX idx_v5_samples_eta ON v5_samples(eta_date,arrival_date,eta_pending);
+CREATE INDEX idx_v5_task_samples_sample ON v5_task_samples(sample_id);
+CREATE INDEX idx_v5_task_members_member ON v5_task_members(member_id,start_date,end_date);
+CREATE INDEX idx_v5_events_topic ON v5_events(topic_id,id DESC);
+CREATE INDEX idx_v5_events_task ON v5_events(task_id,id DESC);
+`;
+
+export const V5_SCHEMA_CHECKSUM = createHash("sha256").update(V5_SCHEMA_SQL).digest("hex");
+
 // V3.1 is an additive task-detail migration.  Keeping these fields on the
 // existing task table preserves the schema-3 checksum and all V1/V2 routes.
 const V31_TASK_DETAIL_COLUMNS = Object.freeze([
@@ -258,6 +390,129 @@ export function migrateV3Schema(database) {
   });
   ensureV31TaskDetailSchema(database);
   return { migrated: true, version: validateV3Schema(database) };
+}
+
+function v5NormalizeName(value) {
+  return String(value ?? "").trim().toLocaleLowerCase("zh-CN");
+}
+
+function v5EnsureUnassignedTopic(database) {
+  const existing = database.prepare("SELECT * FROM v5_topics WHERE system_key='unassigned'").get();
+  if (existing) return existing;
+  const stamp = now();
+  const result = database.prepare("INSERT INTO v5_topics(name,purpose,status,notes,system_key,created_at,updated_at) VALUES(?,?,?,?,?,?,?)")
+    .run("无专题", "尚未归类的任务暂存区", "active", "可在任务全量编辑台中重新归类到其他专题。", "unassigned", stamp, stamp);
+  return database.prepare("SELECT * FROM v5_topics WHERE id=?").get(Number(result.lastInsertRowid));
+}
+
+function v5LegacyPhase(status, startDate) {
+  if (status === "completed") return "completed";
+  if (status === "active" || (status == null && startDate && startDate <= todayIsoDate())) return "testing";
+  return "waiting";
+}
+
+function v5InsertSample(database, source) {
+  const sampleNo = source.sample_no ?? source.formal_identifier ?? source.temporary_identifier ?? null;
+  const eta = source.eta_date ?? source.current_eta_date ?? null;
+  const pending = source.eta_pending ? 1 : (eta ? 0 : 1);
+  const stamp = now();
+  const result = database.prepare("INSERT INTO v5_samples(planning_label,model,sample_no,eta_date,arrival_date,eta_pending,notes,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?)")
+    .run(String(source.planning_label || source.model || "待确认样品"), String(source.model || "待确认型号"), sampleNo, eta, source.arrival_date ?? source.actual_arrival_date ?? null, pending, String(source.notes || ""), stamp, stamp);
+  return Number(result.lastInsertRowid);
+}
+
+function v5SyncLegacyData(database) {
+  const unassigned = v5EnsureUnassignedTopic(database);
+  const topicMap = new Map();
+  const sampleMap = new Map();
+  const taskMap = new Map();
+
+  for (const topic of database.prepare("SELECT * FROM v3_topics ORDER BY id").all()) {
+    const key = `legacy-v3-topic-${topic.id}`;
+    let target = database.prepare("SELECT * FROM v5_topics WHERE system_key=?").get(key);
+    if (!target) {
+      const stamp = now();
+      const result = database.prepare("INSERT INTO v5_topics(name,purpose,status,notes,system_key,created_at,updated_at) VALUES(?,?,?,?,?,?,?)")
+        .run(topic.name, topic.purpose || "", topic.archived_at ? "archived" : "active", "从 V3 专题迁移", key, stamp, stamp);
+      target = database.prepare("SELECT * FROM v5_topics WHERE id=?").get(Number(result.lastInsertRowid));
+    }
+    topicMap.set(topic.id, target.id);
+  }
+  for (const sample of database.prepare("SELECT * FROM v3_samples ORDER BY id").all()) {
+    const existing = database.prepare("SELECT id FROM v5_samples WHERE notes LIKE ? AND planning_label=? AND model=? ORDER BY id LIMIT 1")
+      .get(`%legacy-v3-sample:${sample.id}%`, sample.planning_label, sample.model);
+    if (existing) { sampleMap.set(sample.id, existing.id); continue; }
+    const sampleId = v5InsertSample(database, { planning_label: sample.planning_label, model: sample.model, formal_identifier: sample.formal_identifier, temporary_identifier: sample.temporary_identifier, current_eta_date: sample.current_eta_date, eta_pending: sample.eta_pending, actual_arrival_date: sample.actual_arrival_date, notes: `${sample.notes || ""}${sample.notes ? " " : ""}[legacy-v3-sample:${sample.id}]` });
+    sampleMap.set(sample.id, sampleId);
+  }
+  for (const task of database.prepare("SELECT * FROM v3_topic_tasks ORDER BY id").all()) {
+    const topicId = topicMap.get(task.topic_id) || unassigned.id;
+    let target = database.prepare("SELECT * FROM v5_tasks WHERE legacy_task_id=?").get(task.task_id);
+    if (!target) {
+      const linked = task.task_id == null ? null : database.prepare("SELECT * FROM tasks WHERE id=?").get(task.task_id);
+      const stamp = now();
+      const result = database.prepare("INSERT INTO v5_tasks(legacy_task_id,topic_id,source_group_id,cryostat_id,title,purpose,notes,color,manual_phase,start_date,end_date,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)")
+        .run(task.task_id ?? null, topicId, database.prepare("SELECT source_group_id FROM v3_topics WHERE id=?").get(task.topic_id)?.source_group_id ?? null, task.cryostat_id ?? null, task.title, task.test_purpose || "", task.description || "", linked?.color || "", v5LegacyPhase(linked?.status, task.start_date), task.start_date, task.end_date, stamp, stamp);
+      target = database.prepare("SELECT * FROM v5_tasks WHERE id=?").get(Number(result.lastInsertRowid));
+    }
+    taskMap.set(task.id, target.id);
+    for (const link of database.prepare("SELECT sample_id FROM v3_task_samples WHERE topic_task_id=? ORDER BY sample_id").all(task.id)) {
+      const sampleId = sampleMap.get(link.sample_id);
+      if (sampleId) database.prepare("INSERT OR IGNORE INTO v5_task_samples(task_id,sample_id,is_required,created_at) VALUES(?,?,1,?)").run(target.id, sampleId, now());
+    }
+    for (const item of storedTestItems(task.test_items_json)) {
+      if (!item?.name) continue;
+      const position = Number(item.position ?? 0);
+      if (!database.prepare("SELECT 1 FROM v5_test_items WHERE task_id=? AND position=?").get(target.id, position)) database.prepare("INSERT INTO v5_test_items(task_id,name,acceptance_criteria,note,position,created_at,updated_at) VALUES(?,?,?,?,?,?,?)").run(target.id, item.name, item.acceptance_criteria || "", item.note || "", position, now(), now());
+    }
+    for (const effort of database.prepare("SELECT member_id FROM v3_task_member_efforts WHERE topic_task_id=?").all(task.id)) {
+      if (!memberExists(database, effort.member_id)) continue;
+      database.prepare("INSERT OR IGNORE INTO v5_task_members(task_id,member_id,start_date,end_date,created_at,updated_at) VALUES(?,?,?,?,?,?)").run(target.id, effort.member_id, task.start_date, task.end_date, now(), now());
+    }
+  }
+  // V1 tasks that were not represented in V3 are still first-class V5 tasks.
+  for (const task of database.prepare("SELECT * FROM tasks WHERE deleted_at IS NULL ORDER BY id").all()) {
+    if (database.prepare("SELECT 1 FROM v5_tasks WHERE legacy_task_id=?").get(task.id)) continue;
+    const stamp = now();
+    const result = database.prepare("INSERT INTO v5_tasks(legacy_task_id,topic_id,source_group_id,cryostat_id,title,purpose,notes,color,manual_phase,start_date,end_date,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)")
+      .run(task.id, unassigned.id, null, null, task.title, "", task.description || "", task.color || "", v5LegacyPhase(task.status, task.default_start_date), task.default_start_date, task.default_end_date, stamp, stamp);
+    const v5TaskId = Number(result.lastInsertRowid);
+    for (const assignment of database.prepare("SELECT * FROM task_assignments WHERE task_id=? AND deleted_at IS NULL").all(task.id)) {
+      if (!memberExists(database, assignment.member_id)) continue;
+      database.prepare("INSERT OR IGNORE INTO v5_task_members(task_id,member_id,start_date,end_date,created_at,updated_at) VALUES(?,?,?,?,?,?)").run(v5TaskId, assignment.member_id, assignment.start_date, assignment.end_date, stamp, stamp);
+    }
+  }
+}
+
+export function validateV5Schema(database) {
+  const actualTables = new Set(tables(database, "table"));
+  const actualIndexes = new Set(tables(database, "index"));
+  for (const name of V5_TABLES) if (!actualTables.has(name)) throw new Error(`V5 schema missing table: ${name}`);
+  for (const name of V5_INDEXES) if (!actualIndexes.has(name)) throw new Error(`V5 schema missing index: ${name}`);
+  const version = database.prepare("SELECT version,name,checksum,applied_at FROM v5_schema_versions WHERE version=1").get();
+  if (!version || version.name !== "v5-three-modules" || version.checksum !== V5_SCHEMA_CHECKSUM) throw new Error("V5 schema checksum mismatch");
+  const violations = database.prepare("PRAGMA foreign_key_check").all();
+  if (violations.length) throw new Error(`V5 foreign key violations: ${violations.length}`);
+  return version;
+}
+
+export function migrateV5Schema(database) {
+  const names = new Set(tables(database, "table"));
+  if (!names.has("v5_schema_versions")) {
+    const partial = [...names].filter((name) => name.startsWith("v5_"));
+    if (partial.length) throw new Error(`Partial V5 migration detected: ${partial.join(",")}`);
+    transaction(database, () => {
+      database.exec(V5_SCHEMA_SQL);
+      database.prepare("INSERT INTO v5_schema_versions(version,name,checksum,applied_at) VALUES(1,'v5-three-modules',?,?)").run(V5_SCHEMA_CHECKSUM, now());
+      v5EnsureUnassignedTopic(database);
+      v5SyncLegacyData(database);
+    });
+    return { migrated: true, version: validateV5Schema(database) };
+  }
+  const current = database.prepare("SELECT * FROM v5_schema_versions WHERE version=1").get();
+  if (!current || current.checksum !== V5_SCHEMA_CHECKSUM || current.name !== "v5-three-modules") throw new Error("V5 schema checksum mismatch");
+  transaction(database, () => { v5EnsureUnassignedTopic(database); v5SyncLegacyData(database); });
+  return { migrated: false, version: validateV5Schema(database) };
 }
 
 function ensureTopic(database, topicId, includeArchived = false) { const row = database.prepare("SELECT * FROM v3_topics WHERE id=?").get(topicId); if (!row || (!includeArchived && row.archived_at)) fail(404, "NOT_FOUND", { resource: "topic", id: topicId }); return row; }
@@ -456,6 +711,230 @@ export async function routeV3Api(req, res, database, url) {
     match=path.match(/^\/api\/v3\/tasks\/(\d+)\/submissions$/);if(match&&method==="POST"){const task=ensureTask(database,id(match[1],"task_id"));const p=await body(req);const sampleIds=exactSampleSet(database,task.id,p.sample_ids);const checklist=parseChecklist(database,task.topic_id,p);const description=trim(p.description,"description",1,4000);const resource=trim(p.resource_url,"resource_url",1,2000);if(!/^(https?|file):/i.test(resource))fail(400,"VALIDATION_ERROR",{field:"resource_url",reason:"http,https or file URL required"});const prior=p.supersedes_submission_id==null?null:database.prepare("SELECT * FROM v3_deliverable_submissions WHERE id=? AND task_lineage_key=?").get(id(p.supersedes_submission_id,"supersedes_submission_id"),task.task_lineage_key);if(p.supersedes_submission_id!=null&&(!prior||prior.status!=="returned"))fail(409,"SUPERSESSION_REQUIRED",{});const latest=database.prepare("SELECT * FROM v3_deliverable_submissions WHERE task_lineage_key=? ORDER BY sequence DESC LIMIT 1").get(task.task_lineage_key);if(latest&&latest.status!=="returned")fail(409,"SUBMISSION_ALREADY_ACTIVE",{});const fingerprint=createHash("sha256").update(JSON.stringify(sampleIds)).digest("hex");const row=transaction(database,()=>{const stamp=now();const seq=(latest?.sequence||0)+1;const result=database.prepare("INSERT INTO v3_deliverable_submissions(topic_task_id,task_id,task_lineage_key,task_title_snapshot,sequence,supersedes_submission_id,sample_set_fingerprint,description,submitted_by,submitted_at,resource_url,checklist_snapshot_json,status,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)").run(task.id,task.task_id,task.task_lineage_key,task.title,seq,prior?.id||null,fingerprint,description,trim(p.submitted_by||"本地用户","submitted_by",1,100),p.submitted_at||stamp,resource,JSON.stringify(checklist),"submitted",stamp,stamp);const submissionId=Number(result.lastInsertRowid);for(const [position,sampleId] of sampleIds.entries()){const sample=database.prepare("SELECT * FROM v3_samples WHERE id=?").get(sampleId);database.prepare("INSERT INTO v3_submission_samples(submission_id,sample_id,sample_key,position,model_snapshot,identifier_snapshot,planning_label_snapshot) VALUES(?,?,?,?,?,?,?)").run(submissionId,sample.id,randomUUID(),position,sample.model,sample.formal_identifier||sample.temporary_identifier||null,sample.planning_label);}event(database,task.topic_id,"submission",{actor:actor(p),taskId:task.id,after:{submission_id:submissionId}});return database.prepare("SELECT * FROM v3_deliverable_submissions WHERE id=?").get(submissionId);});return response(res,201,row);}
     match=path.match(/^\/api\/v3\/submissions\/(\d+)\/review$/);if(match&&method==="POST"){const submission=database.prepare("SELECT * FROM v3_deliverable_submissions WHERE id=?").get(id(match[1]));if(!submission)fail(404,"NOT_FOUND",{resource:"submission",id:match[1]});const p=await body(req);const decision=p.decision;if(!["accepted","returned"].includes(decision))fail(400,"VALIDATION_ERROR",{field:"decision",reason:"accepted or returned"});const checked=Array.isArray(p.checked_items)?p.checked_items:[];const snapshot=JSON.parse(submission.checklist_snapshot_json);if(decision==="accepted"&&(!snapshot.length||snapshot.some((item)=>!checked.some((c)=>Number(c.id)===item.id&&c.passed===true))))fail(400,"CHECKLIST_NOT_PASSED",{});if(decision==="returned"&&!trim(p.reason,"reason",1,4000))fail(400,"VALIDATION_ERROR",{field:"reason",reason:"required"});const row=transaction(database,()=>{const stamp=now();database.prepare("INSERT INTO v3_acceptance_reviews(submission_id,decision,reviewer,reason,checked_snapshot_json,reviewed_at) VALUES(?,?,?,?,?,?)").run(submission.id,decision,trim(p.reviewer||"本地用户","reviewer",1,100),p.reason||"",JSON.stringify(checked),stamp);database.prepare("UPDATE v3_deliverable_submissions SET status=?,version=version+1,updated_at=? WHERE id=?").run(decision,stamp,submission.id);if(decision==="accepted"&&submission.topic_task_id)database.prepare("UPDATE tasks SET status='completed',updated_at=? WHERE id=? AND deleted_at IS NULL").run(stamp,submission.task_id);event(database,submission.topic_task_id?database.prepare("SELECT topic_id FROM v3_topic_tasks WHERE id=?").get(submission.topic_task_id).topic_id:null,"acceptance",{actor:actor(p),taskId:submission.topic_task_id,after:{submission_id:submission.id,decision}});return database.prepare("SELECT * FROM v3_deliverable_submissions WHERE id=?").get(submission.id);});return response(res,200,row);}
     match=path.match(/^\/api\/v3\/topics\/(\d+)\/events$/);if(match&&method==="GET"){ensureTopic(database,id(match[1]),true);return response(res,200,{items:database.prepare("SELECT * FROM v3_topic_events WHERE topic_id=? ORDER BY id DESC").all(id(match[1]))});}
+    return errorResponse(res, new V3Error(404, "API_NOT_FOUND", {}, "API route not found"));
+  } catch (error) { return errorResponse(res,error); }
+}
+
+const V5_STATUS_META = Object.freeze({
+  waiting: { label: "等待样品", color: "#0f172a", background: "#e2e8f0" },
+  "sample-delayed": { label: "样品交付延期", color: "#7f1d1d", background: "#fee2e2" },
+  testing: { label: "正在测试", color: "#1e3a8a", background: "#dbeafe" },
+  "test-delayed": { label: "测试延期", color: "#7c2d12", background: "#ffedd5" },
+  completed: { label: "已完成", color: "#14532d", background: "#dcfce7" }
+});
+
+function v5EnsureTopic(database, topicId, includeArchived = false) {
+  const row = database.prepare("SELECT * FROM v5_topics WHERE id=?").get(topicId);
+  if (!row || (!includeArchived && row.status === "archived")) fail(404, "NOT_FOUND", { resource: "topic", id: topicId });
+  return row;
+}
+function v5EnsureTask(database, taskId) {
+  const row = database.prepare("SELECT * FROM v5_tasks WHERE id=?").get(taskId);
+  if (!row) fail(404, "NOT_FOUND", { resource: "task", id: taskId });
+  return row;
+}
+function v5EnsureSample(database, sampleId) {
+  const row = database.prepare("SELECT * FROM v5_samples WHERE id=?").get(sampleId);
+  if (!row) fail(404, "NOT_FOUND", { resource: "sample", id: sampleId });
+  return row;
+}
+function v5Expected(row, payload) {
+  if (payload.expected_version !== undefined && Number(payload.expected_version) !== row.version) fail(409, "VERSION_CONFLICT", { expected_version: payload.expected_version, actual_version: row.version });
+}
+function v5DateRange(start, end) {
+  const s = date(start, "start_date"); const e = date(end, "end_date");
+  if ((s && !e) || (!s && e) || (s && e && s > e)) fail(400, "VALIDATION_ERROR", { field: "end_date", reason: "valid date range required" });
+  return { start_date: s, end_date: e };
+}
+function v5Color(value, fallback = "") {
+  const color = String(value ?? fallback).trim();
+  if (color && !/^#[0-9a-f]{3,8}$/i.test(color)) fail(400, "VALIDATION_ERROR", { field: "color", reason: "hex color required" });
+  return color;
+}
+function v5ListIds(input, field, allowEmpty = true) {
+  if (input === undefined) return [];
+  if (!Array.isArray(input)) fail(400, "VALIDATION_ERROR", { field, reason: "array required" });
+  const values = input.map((value) => id(value, field));
+  const unique = [...new Set(values)].sort((a, b) => a - b);
+  if (unique.length !== values.length) fail(400, "VALIDATION_ERROR", { field, reason: "duplicates are not allowed" });
+  if (!allowEmpty && !unique.length) fail(400, "VALIDATION_ERROR", { field, reason: "at least one item required" });
+  return unique;
+}
+function v5ActiveResource(database, table, resourceId, field) {
+  const row = database.prepare(`SELECT * FROM ${table} WHERE id=?`).get(resourceId);
+  if (!row) fail(400, "VALIDATION_ERROR", { field, reason: "resource not found" });
+  const active = table === "members" ? row.deleted_at == null && row.status === "active" : table === "v2_source_groups" ? row.is_active === 1 : row.status === "active";
+  if (!active) fail(409, "RESOURCE_DISABLED", { field, id: resourceId });
+  return row;
+}
+function v5TaskSamples(database, taskId) {
+  return database.prepare("SELECT s.*,ts.is_required FROM v5_samples s JOIN v5_task_samples ts ON ts.sample_id=s.id WHERE ts.task_id=? ORDER BY s.eta_date IS NULL,s.eta_date,s.id").all(taskId);
+}
+function v5TaskMembers(database, taskId) {
+  return database.prepare("SELECT tm.*,m.name,m.role,m.status FROM v5_task_members tm JOIN members m ON m.id=tm.member_id WHERE tm.task_id=? ORDER BY m.name COLLATE NOCASE,m.id").all(taskId);
+}
+function v5ComputedStatus(database, row, at = todayIsoDate()) {
+  if (row.manual_phase === "completed") return "completed";
+  const samples = v5TaskSamples(database, row.id).filter((sample) => sample.is_required === 1);
+  const sampleDelayed = row.manual_phase === "waiting" && samples.some((sample) => !sample.arrival_date && !sample.eta_pending && sample.eta_date && sample.eta_date < at);
+  if (sampleDelayed) return "sample-delayed";
+  if (row.manual_phase === "testing" && row.end_date && row.end_date < at) return "test-delayed";
+  if (row.manual_phase === "testing") return "testing";
+  return "waiting";
+}
+function v5TaskData(database, row) {
+  const topic = database.prepare("SELECT id,name,purpose,status FROM v5_topics WHERE id=?").get(row.topic_id);
+  const source = row.source_group_id == null ? null : database.prepare("SELECT id,name,is_active FROM v2_source_groups WHERE id=?").get(row.source_group_id);
+  const cryostat = row.cryostat_id == null ? null : database.prepare("SELECT id,name,status FROM v2_cryostats WHERE id=?").get(row.cryostat_id);
+  const statusCode = v5ComputedStatus(database, row);
+  const statusMeta = V5_STATUS_META[statusCode];
+  const samples = v5TaskSamples(database, row.id).map((sample) => ({ id: sample.id, planning_label: sample.planning_label, model: sample.model, sample_no: sample.sample_no, eta_date: sample.eta_date, arrival_date: sample.arrival_date, eta_pending: sample.eta_pending, is_required: sample.is_required, notes: sample.notes }));
+  const members = v5TaskMembers(database, row.id).map((member) => ({ id: member.member_id, name: member.name, role: member.role, status: member.status, start_date: member.start_date, end_date: member.end_date, version: member.version }));
+  const testItems = database.prepare("SELECT id,name,acceptance_criteria,note,position FROM v5_test_items WHERE task_id=? ORDER BY position,id").all(row.id);
+  return { ...row, task_number: `TASK-${row.legacy_task_id ?? row.id}`, topic, source_group: source, cryostat, samples, test_items: testItems, participants: members, participant_member_ids: members.map((member) => member.id), status: statusCode, status_label: statusMeta.label, status_color: statusMeta.color, status_background: statusMeta.background, display_status: statusCode };
+}
+function v5Facts(database, row) {
+  return { task_id: row?.id ?? null, version: row?.version ?? null, topic_id: row?.topic_id ?? null, member_count: row ? database.prepare("SELECT COUNT(*) AS count FROM v5_task_members WHERE task_id=?").get(row.id).count : 0, sample_count: row ? database.prepare("SELECT COUNT(*) AS count FROM v5_task_samples WHERE task_id=?").get(row.id).count : 0 };
+}
+function v5Token(normalized, facts, conflicts) { return createHash("sha256").update(JSON.stringify({ normalized, facts, conflicts, checksum: V5_SCHEMA_CHECKSUM })).digest("hex"); }
+function v5NormalizeItems(input, existingTaskId = null, database = null) {
+  const raw = input === undefined && existingTaskId != null ? database.prepare("SELECT name,acceptance_criteria,note,position FROM v5_test_items WHERE task_id=? ORDER BY position").all(existingTaskId) : (input ?? []);
+  if (!Array.isArray(raw)) fail(400, "VALIDATION_ERROR", { field: "test_items", reason: "array required" });
+  return raw.map((item, index) => ({ name: trim(typeof item === "string" ? item : item?.name ?? item?.label, `test_items[${index}].name`, 1, 300), acceptance_criteria: trim(typeof item === "string" ? "" : item?.acceptance_criteria ?? "", `test_items[${index}].acceptance_criteria`, 0, 2000), note: trim(typeof item === "string" ? "" : item?.note ?? "", `test_items[${index}].note`, 0, 2000), position: index }));
+}
+function v5NormalizeTask(database, payload, existing = null) {
+  const topicId = payload.topic_id === undefined ? (existing?.topic_id ?? v5EnsureUnassignedTopic(database).id) : id(payload.topic_id, "topic_id");
+  v5EnsureTopic(database, topicId);
+  const title = trim(payload.title ?? existing?.title, "title", 1, 200);
+  const purpose = trim(payload.purpose ?? existing?.purpose ?? "", "purpose", 0, 4000);
+  const notes = trim(payload.notes ?? existing?.notes ?? "", "notes", 0, 4000);
+  const sourceGroupId = payload.source_group_id === undefined ? (existing?.source_group_id ?? null) : (payload.source_group_id == null ? null : id(payload.source_group_id, "source_group_id"));
+  const cryostatId = payload.cryostat_id === undefined ? (existing?.cryostat_id ?? null) : (payload.cryostat_id == null ? null : id(payload.cryostat_id, "cryostat_id"));
+  if (sourceGroupId != null) v5ActiveResource(database, "v2_source_groups", sourceGroupId, "source_group_id");
+  if (cryostatId != null) v5ActiveResource(database, "v2_cryostats", cryostatId, "cryostat_id");
+  const manualPhase = payload.manual_phase ?? existing?.manual_phase ?? "waiting";
+  if (!["waiting", "testing", "completed"].includes(manualPhase)) fail(400, "VALIDATION_ERROR", { field: "manual_phase", reason: "waiting, testing or completed required" });
+  const ranges = v5DateRange(payload.start_date === undefined ? existing?.start_date : payload.start_date, payload.end_date === undefined ? existing?.end_date : payload.end_date);
+  const sampleIds = v5ListIds(payload.sample_ids === undefined ? (existing ? database.prepare("SELECT sample_id FROM v5_task_samples WHERE task_id=? ORDER BY sample_id").all(existing.id).map((item) => item.sample_id) : []) : payload.sample_ids, "sample_ids");
+  for (const sampleId of sampleIds) v5EnsureSample(database, sampleId);
+  const memberIds = v5ListIds(payload.participant_member_ids ?? payload.member_ids ?? (existing ? database.prepare("SELECT member_id FROM v5_task_members WHERE task_id=? ORDER BY member_id").all(existing.id).map((item) => item.member_id) : []), "participant_member_ids");
+  for (const memberId of memberIds) v5ActiveResource(database, "members", memberId, "participant_member_ids");
+  const memberDates = (payload.member_dates ?? (existing ? database.prepare("SELECT member_id,start_date,end_date FROM v5_task_members WHERE task_id=? ORDER BY member_id").all(existing.id) : [])).map((item, index) => { const memberId = id(item.member_id, `member_dates[${index}].member_id`); if (!memberIds.includes(memberId)) fail(400, "VALIDATION_ERROR", { field: "member_dates", reason: "member must be in participants" }); const range = v5DateRange(item.start_date ?? null, item.end_date ?? null); return { member_id: memberId, ...range }; });
+  for (const memberId of memberIds) if (!memberDates.some((item) => item.member_id === memberId)) memberDates.push({ member_id: memberId, start_date: ranges.start_date, end_date: ranges.end_date });
+  return { topic_id: topicId, source_group_id: sourceGroupId, cryostat_id: cryostatId, title, purpose, notes, color: v5Color(payload.color, existing?.color ?? ""), manual_phase: manualPhase, start_date: ranges.start_date, end_date: ranges.end_date, sample_ids: sampleIds, participant_member_ids: memberIds, member_dates: memberDates, test_items: v5NormalizeItems(payload.test_items, existing?.id, database) };
+}
+function v5Conflicts(database, normalized, existing = null) {
+  const conflicts = [];
+  if (normalized.start_date && normalized.end_date && normalized.participant_member_ids.length) {
+    const marks = normalized.participant_member_ids.map(() => "?").join(",");
+    const rows = database.prepare(`SELECT tm.task_id,tm.member_id,tm.start_date,tm.end_date,t.title FROM v5_task_members tm JOIN v5_tasks t ON t.id=tm.task_id WHERE tm.member_id IN (${marks}) AND tm.start_date IS NOT NULL AND tm.end_date IS NOT NULL AND tm.start_date<=? AND tm.end_date>=? AND tm.task_id<>? ORDER BY tm.task_id`).all(...normalized.participant_member_ids, normalized.end_date, normalized.start_date, existing?.id ?? -1);
+    for (const row of rows) conflicts.push({ type: "MEMBER_DATE_OVERLAP", task_id: row.task_id, member_id: row.member_id, title: row.title, start_date: row.start_date, end_date: row.end_date });
+  }
+  if (normalized.cryostat_id != null && normalized.start_date && normalized.end_date) {
+    const rows = database.prepare("SELECT id,title,start_date,end_date FROM v5_tasks WHERE cryostat_id=? AND start_date IS NOT NULL AND end_date IS NOT NULL AND start_date<=? AND end_date>=? AND id<>? ORDER BY id").all(normalized.cryostat_id, normalized.end_date, normalized.start_date, existing?.id ?? -1);
+    for (const row of rows) conflicts.push({ type: "CRYOSTAT_DATE_OVERLAP", task_id: row.id, title: row.title, start_date: row.start_date, end_date: row.end_date });
+  }
+  return conflicts.sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b)));
+}
+function v5Preview(database, payload, existing = null) { const normalized = v5NormalizeTask(database, payload, existing); const conflicts = v5Conflicts(database, normalized, existing); return { normalized_input: normalized, conflicts, preview_token: v5Token(normalized, v5Facts(database, existing), conflicts) }; }
+function v5RequirePreview(payload, preview, database, existing = null) { if (!payload.preview_token || payload.preview_token !== preview.preview_token) fail(409, "STALE_PREVIEW", { reason: "preview token no longer matches" }); if (preview.conflicts.length && !payload.ack) fail(409, "CONFLICTS_NOT_ACKNOWLEDGED", { conflicts: preview.conflicts }); if (existing) v5Expected(existing, payload); }
+function v5WriteEvent(database, topicId, taskId, type, payload = {}) { database.prepare("INSERT INTO v5_events(topic_id,task_id,sample_id,event_type,actor,before_json,after_json,created_at) VALUES(?,?,?,?,?,?,?,?)").run(topicId, taskId ?? null, payload.sample_id ?? null, type, payload.actor || "本地用户", payload.before == null ? null : JSON.stringify(payload.before), payload.after == null ? null : JSON.stringify(payload.after), now()); }
+function v5SyncLegacyTask(database, v5Task, input) {
+  if (v5Task.legacy_task_id == null) return null;
+  const legacy = database.prepare("SELECT * FROM tasks WHERE id=?").get(v5Task.legacy_task_id);
+  if (!legacy) return null;
+  const start = input.start_date || todayIsoDate(); const end = input.end_date || start;
+  const legacyStatus = input.manual_phase === "completed" ? "completed" : input.manual_phase === "testing" ? "active" : "planned";
+  database.prepare("UPDATE tasks SET title=?,description=?,default_start_date=?,default_end_date=?,color=?,status=?,updated_at=? WHERE id=? AND deleted_at IS NULL").run(input.title, input.notes, start, end, input.color || legacy.color || "#2563eb", legacyStatus, now(), legacy.id);
+  const desired = new Set(input.participant_member_ids);
+  for (const assignment of database.prepare("SELECT id,member_id FROM task_assignments WHERE task_id=? AND deleted_at IS NULL").all(legacy.id)) if (!desired.has(assignment.member_id)) database.prepare("UPDATE task_assignments SET deleted_at=?,updated_at=? WHERE id=?").run(now(), now(), assignment.id);
+  for (const member of input.member_dates) {
+    if (!member.start_date || !member.end_date) continue;
+    const current = database.prepare("SELECT id FROM task_assignments WHERE task_id=? AND member_id=?").get(legacy.id, member.member_id);
+    if (current) database.prepare("UPDATE task_assignments SET start_date=?,end_date=?,deleted_at=NULL,updated_at=? WHERE id=?").run(member.start_date, member.end_date, now(), current.id);
+    else database.prepare("INSERT INTO task_assignments(task_id,member_id,start_date,end_date,progress,note,created_at,updated_at) VALUES(?,?,?,?,0,'',?,?)").run(legacy.id, member.member_id, member.start_date, member.end_date, now(), now());
+  }
+  return legacy.id;
+}
+function v5ListTasks(database, url) {
+  const clauses = ["1=1"]; const params = [];
+  const value = (name) => url.searchParams.get(name);
+  if (value("topic_id")) { clauses.push("t.topic_id=?"); params.push(id(value("topic_id"), "topic_id")); }
+  if (value("source_group_id")) { clauses.push("t.source_group_id=?"); params.push(id(value("source_group_id"), "source_group_id")); }
+  if (value("cryostat_id")) { clauses.push("t.cryostat_id=?"); params.push(id(value("cryostat_id"), "cryostat_id")); }
+  if (value("member_id")) { clauses.push("EXISTS (SELECT 1 FROM v5_task_members tmf WHERE tmf.task_id=t.id AND tmf.member_id=?)"); params.push(id(value("member_id"), "member_id")); }
+  if (value("search")) { clauses.push("(t.title LIKE ? OR t.purpose LIKE ? OR t.notes LIKE ?)"); const search = `%${value("search")}%`; params.push(search, search, search); }
+  if (value("from")) { date(value("from"), "from"); clauses.push("(t.end_date IS NULL OR t.end_date>=?)"); params.push(value("from")); }
+  if (value("to")) { date(value("to"), "to"); clauses.push("(t.start_date IS NULL OR t.start_date<=?)"); params.push(value("to")); }
+  const rows = database.prepare(`SELECT t.* FROM v5_tasks t WHERE ${clauses.join(" AND ")} ORDER BY t.start_date IS NULL,t.start_date,t.id`).all(...params).map((row) => v5TaskData(database, row));
+  const status = value("status"); return status ? rows.filter((row) => row.status === status) : rows;
+}
+
+export async function routeV5Api(req, res, database, url) {
+  try {
+    const path = url.pathname; const method = req.method; let match;
+    if (method === "GET" && path === "/api/v5/status") return response(res, 200, { schema_version: 1, checksum: V5_SCHEMA_CHECKSUM, tables: V5_TABLES.length, indexes: V5_INDEXES.length, endpoints: V5_ENDPOINTS.length, v1_compat: true, v2_compat: true, v3_compat: true });
+    if (method === "GET" && path === "/api/v5/resources") {
+      seedV3ReferenceResources(database);
+      return response(res, 200, {
+        source_groups: database.prepare("SELECT id,name,note,is_active,created_at,updated_at FROM v2_source_groups ORDER BY name COLLATE NOCASE").all(),
+        members: database.prepare("SELECT id,name,role,status,created_at,updated_at FROM members WHERE deleted_at IS NULL ORDER BY status,name COLLATE NOCASE").all(),
+        cryostats: database.prepare("SELECT id,name,note,status,created_at,updated_at FROM v2_cryostats ORDER BY name COLLATE NOCASE").all()
+      });
+    }
+    match = path.match(/^\/api\/v5\/resources\/(source-groups|members|cryostats)(?:\/(\d+))?$/);
+    if (match && (method === "POST" || method === "PUT")) {
+      const kind = match[1]; const resourceId = match[2] ? id(match[2]) : null; const payload = await body(req); const stamp = now();
+      if (kind === "source-groups") {
+        const name = trim(payload.name, "name", 1, 100); const normalized = v5NormalizeName(name); const note = trim(payload.note ?? "", "note", 0, 1000); const active = payload.is_active === undefined ? 1 : bool(payload.is_active, "is_active");
+        const row = transaction(database, () => { if (resourceId) { const current = database.prepare("SELECT * FROM v2_source_groups WHERE id=?").get(resourceId); if (!current) fail(404, "NOT_FOUND", { resource: kind, id: resourceId }); database.prepare("UPDATE v2_source_groups SET name=?,normalized_name=?,note=?,is_active=?,updated_at=? WHERE id=?").run(name, normalized, note, active, stamp, resourceId); return database.prepare("SELECT * FROM v2_source_groups WHERE id=?").get(resourceId); } const result = database.prepare("INSERT INTO v2_source_groups(name,normalized_name,note,is_active,created_at,updated_at) VALUES(?,?,?,?,?,?)").run(name, normalized, note, active, stamp, stamp); return database.prepare("SELECT * FROM v2_source_groups WHERE id=?").get(Number(result.lastInsertRowid)); });
+        return response(res, resourceId ? 200 : 201, row);
+      }
+      if (kind === "cryostats") {
+        const name = trim(payload.name, "name", 1, 100); const normalized = v5NormalizeName(name); const note = trim(payload.note ?? "", "note", 0, 1000); const status = payload.status ?? "active"; if (!["active", "inactive"].includes(status)) fail(400, "VALIDATION_ERROR", { field: "status" });
+        const row = transaction(database, () => { if (resourceId) { if (!database.prepare("SELECT 1 FROM v2_cryostats WHERE id=?").get(resourceId)) fail(404, "NOT_FOUND", { resource: kind, id: resourceId }); database.prepare("UPDATE v2_cryostats SET name=?,normalized_name=?,note=?,status=?,updated_at=? WHERE id=?").run(name, normalized, note, status, stamp, resourceId); return database.prepare("SELECT * FROM v2_cryostats WHERE id=?").get(resourceId); } const result = database.prepare("INSERT INTO v2_cryostats(name,normalized_name,note,status,created_at,updated_at) VALUES(?,?,?,?,?,?)").run(name, normalized, note, status, stamp, stamp); return database.prepare("SELECT * FROM v2_cryostats WHERE id=?").get(Number(result.lastInsertRowid)); });
+        return response(res, resourceId ? 200 : 201, row);
+      }
+      const memberId = resourceId; const name = trim(payload.name, "name", 1, 100); const role = trim(payload.role ?? "", "role", 0, 200); const status = payload.status ?? "active"; if (!["active", "inactive"].includes(status)) fail(400, "VALIDATION_ERROR", { field: "status" });
+      const row = transaction(database, () => { if (memberId) { if (!database.prepare("SELECT 1 FROM members WHERE id=? AND deleted_at IS NULL").get(memberId)) fail(404, "NOT_FOUND", { resource: kind, id: memberId }); database.prepare("UPDATE members SET name=?,role=?,status=?,updated_at=? WHERE id=?").run(name, role, status, stamp, memberId); return database.prepare("SELECT id,name,role,status,created_at,updated_at FROM members WHERE id=?").get(memberId); } const result = database.prepare("INSERT INTO members(name,role,email,status,created_at,updated_at) VALUES(?,?,?, ?,?,?)").run(name, role, "", status, stamp, stamp); return database.prepare("SELECT id,name,role,status,created_at,updated_at FROM members WHERE id=?").get(Number(result.lastInsertRowid)); });
+      return response(res, memberId ? 200 : 201, row);
+    }
+    if (method === "GET" && path === "/api/v5/topics") {
+      const includeArchived = url.searchParams.get("include_archived") === "1"; const rows = database.prepare(`SELECT t.*, (SELECT COUNT(*) FROM v5_tasks x WHERE x.topic_id=t.id) task_count FROM v5_topics t WHERE ${includeArchived ? "1=1" : "t.status='active'"} ORDER BY t.system_key='unassigned' DESC,t.name COLLATE NOCASE`).all();
+      return response(res, 200, { items: rows, total: rows.length });
+    }
+    if (method === "POST" && path === "/api/v5/topics") { const p = await body(req); const name = trim(p.name, "name", 1, 200); const purpose = trim(p.purpose ?? "", "purpose", 0, 4000); const notes = trim(p.notes ?? "", "notes", 0, 4000); const stamp = now(); const result = transaction(database, () => database.prepare("INSERT INTO v5_topics(name,purpose,status,notes,created_at,updated_at) VALUES(?,?,?,?,?,?)").run(name, purpose, "active", notes, stamp, stamp)); return response(res, 201, database.prepare("SELECT * FROM v5_topics WHERE id=?").get(Number(result.lastInsertRowid))); }
+    match = path.match(/^\/api\/v5\/topics\/(\d+)$/);
+    if (match && method === "PUT") { const topic = v5EnsureTopic(database, id(match[1]), true); const p = await body(req); v5Expected(topic, p); const name = trim(p.name ?? topic.name, "name", 1, 200); const purpose = trim(p.purpose ?? topic.purpose, "purpose", 0, 4000); const notes = trim(p.notes ?? topic.notes, "notes", 0, 4000); const status = p.status ?? topic.status; if (!["active", "archived"].includes(status)) fail(400, "VALIDATION_ERROR", { field: "status" }); const row = transaction(database, () => { database.prepare("UPDATE v5_topics SET name=?,purpose=?,status=?,notes=?,archived_at=?,version=version+1,updated_at=? WHERE id=?").run(name, purpose, status, notes, status === "archived" ? now() : null, now(), topic.id); return database.prepare("SELECT * FROM v5_topics WHERE id=?").get(topic.id); }); return response(res, 200, row); }
+    if (match && method === "DELETE") { const topic = v5EnsureTopic(database, id(match[1]), true); const p = await body(req); const target = id(p.target_topic_id, "target_topic_id"); if (topic.system_key === "unassigned" || target === topic.id) fail(409, "VALIDATION_ERROR", { reason: "unassigned topic cannot be deleted and target must differ" }); const destination = v5EnsureTopic(database, target); v5Expected(topic, p); const row = transaction(database, () => { database.prepare("UPDATE v5_tasks SET topic_id=?,version=version+1,updated_at=? WHERE topic_id=?").run(destination.id, now(), topic.id); database.prepare("UPDATE v5_topics SET status='archived',archived_at=?,version=version+1,updated_at=? WHERE id=?").run(now(), now(), topic.id); return database.prepare("SELECT * FROM v5_topics WHERE id=?").get(topic.id); }); return response(res, 200, row); }
+    match = path.match(/^\/api\/v5\/topics\/(\d+)\/move-tasks$/); if (match && method === "POST") { const source = v5EnsureTopic(database, id(match[1])); const p = await body(req); const destination = v5EnsureTopic(database, id(p.target_topic_id)); const taskIds = v5ListIds(p.task_ids, "task_ids", false); const row = transaction(database, () => { const marks = taskIds.map(() => "?").join(","); const result = database.prepare(`UPDATE v5_tasks SET topic_id=?,version=version+1,updated_at=? WHERE topic_id=? AND id IN (${marks})`).run(destination.id, now(), source.id, ...taskIds); return { moved: result.changes, task_ids: taskIds }; }); return response(res, 200, row); }
+    if (method === "GET" && path === "/api/v5/samples") { const search = url.searchParams.get("search"); const rows = search ? database.prepare("SELECT * FROM v5_samples WHERE planning_label LIKE ? OR model LIKE ? OR sample_no LIKE ? ORDER BY eta_date IS NULL,eta_date,id").all(`%${search}%`,`%${search}%`,`%${search}%`) : database.prepare("SELECT * FROM v5_samples ORDER BY eta_date IS NULL,eta_date,id").all(); return response(res, 200, { items: rows }); }
+    if (method === "POST" && path === "/api/v5/samples") { const p = await body(req); const label = trim(p.planning_label, "planning_label", 1, 300); const model = trim(p.model, "model", 1, 200); const etaPending = bool(p.eta_pending, "eta_pending"); const eta = date(p.eta_date ?? null, "eta_date"); const arrival = date(p.arrival_date ?? null, "arrival_date"); if (!etaPending && !eta) fail(400, "VALIDATION_ERROR", { field: "eta_date", reason: "eta or pending required" }); if (eta && arrival && arrival < eta) fail(400, "VALIDATION_ERROR", { field: "arrival_date", reason: "arrival cannot precede ETA" }); const stamp = now(); const result = transaction(database, () => database.prepare("INSERT INTO v5_samples(planning_label,model,sample_no,eta_date,arrival_date,eta_pending,notes,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?)").run(label, model, p.sample_no == null ? null : trim(p.sample_no, "sample_no", 0, 200), eta, arrival, etaPending, trim(p.notes ?? "", "notes", 0, 4000), stamp, stamp)); return response(res, 201, database.prepare("SELECT * FROM v5_samples WHERE id=?").get(Number(result.lastInsertRowid))); }
+    match = path.match(/^\/api\/v5\/samples\/(\d+)$/); if (match && method === "PUT") { const sample = v5EnsureSample(database, id(match[1])); const p = await body(req); v5Expected(sample, p); const label = trim(p.planning_label ?? sample.planning_label, "planning_label", 1, 300); const model = trim(p.model ?? sample.model, "model", 1, 200); const etaPending = p.eta_pending === undefined ? sample.eta_pending : bool(p.eta_pending, "eta_pending"); const eta = date(p.eta_date === undefined ? sample.eta_date : p.eta_date, "eta_date"); const arrival = date(p.arrival_date === undefined ? sample.arrival_date : p.arrival_date, "arrival_date"); if (!etaPending && !eta) fail(400, "VALIDATION_ERROR", { field: "eta_date", reason: "eta or pending required" }); if (eta && arrival && arrival < eta) fail(400, "VALIDATION_ERROR", { field: "arrival_date", reason: "arrival cannot precede ETA" }); const row = transaction(database, () => { database.prepare("UPDATE v5_samples SET planning_label=?,model=?,sample_no=?,eta_date=?,arrival_date=?,eta_pending=?,notes=?,version=version+1,updated_at=? WHERE id=?").run(label, model, p.sample_no === undefined ? sample.sample_no : (p.sample_no == null ? null : trim(p.sample_no, "sample_no", 0, 200)), eta, arrival, etaPending, trim(p.notes ?? sample.notes, "notes", 0, 4000), now(), sample.id); return database.prepare("SELECT * FROM v5_samples WHERE id=?").get(sample.id); }); return response(res, 200, row); }
+    if (method === "GET" && path === "/api/v5/tasks") return response(res, 200, { items: v5ListTasks(database, url) });
+    match = path.match(/^\/api\/v5\/tasks\/(\d+)$/);
+    if (match && method === "GET") return response(res, 200, v5TaskData(database, v5EnsureTask(database, id(match[1]))));
+    if (method === "POST" && path === "/api/v5/tasks/preview") { const p = await body(req); return response(res, 200, v5Preview(database, p)); }
+    if (method === "POST" && path === "/api/v5/tasks") {
+      const p = await body(req); const preview = v5Preview(database, p); v5RequirePreview(p, preview, database); const input = preview.normalized_input; const stamp = now();
+      const task = transaction(database, () => { const start = input.start_date || todayIsoDate(); const end = input.end_date || start; const legacy = database.prepare("INSERT INTO tasks(title,description,default_start_date,default_end_date,color,status,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?)").run(input.title, input.notes, start, end, input.color || "#2563eb", input.manual_phase === "completed" ? "completed" : input.manual_phase === "testing" ? "active" : "planned", stamp, stamp); const result = database.prepare("INSERT INTO v5_tasks(legacy_task_id,topic_id,source_group_id,cryostat_id,title,purpose,notes,color,manual_phase,start_date,end_date,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)").run(Number(legacy.lastInsertRowid), input.topic_id, input.source_group_id, input.cryostat_id, input.title, input.purpose, input.notes, input.color, input.manual_phase, input.start_date, input.end_date, stamp, stamp); const taskId = Number(result.lastInsertRowid); for (const item of input.test_items) database.prepare("INSERT INTO v5_test_items(task_id,name,acceptance_criteria,note,position,created_at,updated_at) VALUES(?,?,?,?,?,?,?)").run(taskId,item.name,item.acceptance_criteria,item.note,item.position,stamp,stamp); for (const sampleId of input.sample_ids) database.prepare("INSERT INTO v5_task_samples(task_id,sample_id,is_required,created_at) VALUES(?,?,1,?)").run(taskId,sampleId,stamp); for (const member of input.member_dates) database.prepare("INSERT INTO v5_task_members(task_id,member_id,start_date,end_date,created_at,updated_at) VALUES(?,?,?,?,?,?)").run(taskId,member.member_id,member.start_date,member.end_date,stamp,stamp); v5SyncLegacyTask(database, database.prepare("SELECT * FROM v5_tasks WHERE id=?").get(taskId), input); v5WriteEvent(database,input.topic_id,taskId,"task_create",{actor:actor(p),after:input}); return database.prepare("SELECT * FROM v5_tasks WHERE id=?").get(taskId); });
+      return response(res, 201, v5TaskData(database, task));
+    }
+    match = path.match(/^\/api\/v5\/tasks\/(\d+)\/preview$/); if (match && method === "POST") { const task = v5EnsureTask(database, id(match[1])); const p = await body(req); return response(res, 200, v5Preview(database, p, task)); }
+    match = path.match(/^\/api\/v5\/tasks\/(\d+)$/);
+    if (match && method === "PUT") {
+      const task = v5EnsureTask(database, id(match[1])); const p = await body(req); const preview = v5Preview(database, p, task); v5RequirePreview(p, preview, database, task); const input = preview.normalized_input;
+      const row = transaction(database, () => { const stamp = now(); database.prepare("UPDATE v5_tasks SET topic_id=?,source_group_id=?,cryostat_id=?,title=?,purpose=?,notes=?,color=?,manual_phase=?,start_date=?,end_date=?,version=version+1,updated_at=? WHERE id=?").run(input.topic_id,input.source_group_id,input.cryostat_id,input.title,input.purpose,input.notes,input.color,input.manual_phase,input.start_date,input.end_date,stamp,task.id); database.prepare("DELETE FROM v5_test_items WHERE task_id=?").run(task.id); for(const item of input.test_items) database.prepare("INSERT INTO v5_test_items(task_id,name,acceptance_criteria,note,position,created_at,updated_at) VALUES(?,?,?,?,?,?,?)").run(task.id,item.name,item.acceptance_criteria,item.note,item.position,stamp,stamp); database.prepare("DELETE FROM v5_task_samples WHERE task_id=?").run(task.id); for(const sampleId of input.sample_ids) database.prepare("INSERT INTO v5_task_samples(task_id,sample_id,is_required,created_at) VALUES(?,?,1,?)").run(task.id,sampleId,stamp); database.prepare("DELETE FROM v5_task_members WHERE task_id=?").run(task.id); for(const member of input.member_dates) database.prepare("INSERT INTO v5_task_members(task_id,member_id,start_date,end_date,created_at,updated_at) VALUES(?,?,?,?,?,?)").run(task.id,member.member_id,member.start_date,member.end_date,stamp,stamp); const updated=database.prepare("SELECT * FROM v5_tasks WHERE id=?").get(task.id); v5SyncLegacyTask(database,updated,input); v5WriteEvent(database,input.topic_id,task.id,"task_update",{actor:actor(p),before:task,after:input}); return updated; });
+      return response(res, 200, v5TaskData(database, row));
+    }
+    match = path.match(/^\/api\/v5\/tasks\/(\d+)\/(start-testing|complete)$/); if (match && method === "POST") { const task = v5EnsureTask(database, id(match[1])); const p = await body(req); v5Expected(task,p); const phase = match[2] === "complete" ? "completed" : "testing"; const row = transaction(database, () => { database.prepare("UPDATE v5_tasks SET manual_phase=?,version=version+1,updated_at=? WHERE id=?").run(phase,now(),task.id); const updated=database.prepare("SELECT * FROM v5_tasks WHERE id=?").get(task.id); v5SyncLegacyTask(database,updated,{...updated,participant_member_ids:database.prepare("SELECT member_id FROM v5_task_members WHERE task_id=?").all(task.id).map((x)=>x.member_id),member_dates:v5TaskMembers(database,task.id),color:updated.color}); v5WriteEvent(database,task.topic_id,task.id,phase==="completed"?"task_complete":"task_start_testing",{actor:actor(p),before:task,after:{manual_phase:phase}}); return updated; }); return response(res,200,v5TaskData(database,row)); }
+    match = path.match(/^\/api\/v5\/tasks\/(\d+)\/(schedule-preview|schedule|member-schedule-preview|member-schedule)$/);
+    if (match && (method === "POST")) {
+      const task = v5EnsureTask(database, id(match[1])); const p = await body(req); const isMember = match[2].includes("member"); const input = isMember ? { ...task, start_date: p.start_date, end_date: p.end_date, participant_member_ids: [id(p.member_id,"member_id")], member_dates: [{member_id:id(p.member_id,"member_id"),start_date:p.start_date,end_date:p.end_date}], topic_id:task.topic_id, source_group_id:task.source_group_id, cryostat_id:task.cryostat_id, title:task.title, purpose:task.purpose, notes:task.notes, color:task.color, manual_phase:task.manual_phase, sample_ids:database.prepare("SELECT sample_id FROM v5_task_samples WHERE task_id=?").all(task.id).map((x)=>x.sample_id), test_items:database.prepare("SELECT name,acceptance_criteria,note FROM v5_test_items WHERE task_id=? ORDER BY position").all(task.id) } : { ...task, ...p, topic_id:task.topic_id, title:task.title, purpose:task.purpose, notes:task.notes, sample_ids:database.prepare("SELECT sample_id FROM v5_task_samples WHERE task_id=?").all(task.id).map((x)=>x.sample_id), participant_member_ids:database.prepare("SELECT member_id FROM v5_task_members WHERE task_id=?").all(task.id).map((x)=>x.member_id), test_items:database.prepare("SELECT name,acceptance_criteria,note FROM v5_test_items WHERE task_id=? ORDER BY position").all(task.id) };
+      const preview = v5Preview(database,input,task); if (match[2].endsWith("preview")) return response(res,200,preview); v5RequirePreview(p,preview,database,task); const normalized=preview.normalized_input; const row=transaction(database,()=>{ const stamp=now(); if(isMember){ const memberId=id(p.member_id,"member_id"); if(!database.prepare("SELECT 1 FROM v5_task_members WHERE task_id=? AND member_id=?").get(task.id,memberId)) fail(404,"NOT_FOUND",{resource:"task_member",task_id:task.id,member_id:memberId}); database.prepare("UPDATE v5_task_members SET start_date=?,end_date=?,version=version+1,updated_at=? WHERE task_id=? AND member_id=?").run(normalized.start_date,normalized.end_date,stamp,task.id,memberId); database.prepare("UPDATE v5_tasks SET version=version+1,updated_at=? WHERE id=?").run(stamp,task.id); } else { database.prepare("UPDATE v5_tasks SET start_date=?,end_date=?,version=version+1,updated_at=? WHERE id=?").run(normalized.start_date,normalized.end_date,stamp,task.id); } const updated=database.prepare("SELECT * FROM v5_tasks WHERE id=?").get(task.id); v5SyncLegacyTask(database,updated,{...normalized,participant_member_ids:database.prepare("SELECT member_id FROM v5_task_members WHERE task_id=?").all(task.id).map((x)=>x.member_id),member_dates:v5TaskMembers(database,task.id),color:updated.color}); v5WriteEvent(database,task.topic_id,task.id,isMember?"member_schedule_change":"task_schedule_change",{actor:actor(p),after:normalized}); return updated; }); return response(res,200,v5TaskData(database,row));
+    }
+    if (method === "GET" && (path === "/api/v5/execution" || path === "/api/v5/gantt")) { const items = v5ListTasks(database,url); const memberLoad = database.prepare("SELECT m.id,m.name,COUNT(tm.task_id) AS task_count,MIN(tm.start_date) AS first_date,MAX(tm.end_date) AS last_date FROM members m LEFT JOIN v5_task_members tm ON tm.member_id=m.id WHERE m.deleted_at IS NULL GROUP BY m.id ORDER BY m.name COLLATE NOCASE").all(); return response(res,200,{items,member_load:memberLoad,filters:Object.fromEntries(url.searchParams)}); }
+    if (method === "GET" && path === "/api/v5/events") return response(res,200,{items:database.prepare("SELECT * FROM v5_events ORDER BY id DESC LIMIT 500").all()});
     return errorResponse(res, new V3Error(404, "API_NOT_FOUND", {}, "API route not found"));
   } catch (error) { return errorResponse(res,error); }
 }

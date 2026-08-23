@@ -1,0 +1,2 @@
+warning: in the working copy of 'src/server.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/v3/index.js', LF will be replaced by CRLF the next time Git touches it
