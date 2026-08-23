@@ -4088,7 +4088,23 @@ function v5RenderResourceList(kind, targetId) {
   const list = $(targetId); if (!list) return; const query = (v5State.resourceSearch[kind] || "").toLowerCase(); const rows = (v5State.resources[kind] || []).filter((item) => !query || `${item.name} ${item.role || ""} ${item.note || ""}`.toLowerCase().includes(query));
   list.innerHTML = rows.length ? rows.map((item) => { const active = v5ResourceActive(kind, item); const stateLabel = active ? "启用" : "停用"; const referenceCount = Number(item.reference_count || 0); const currentCount = Number(item.current_task_count || 0); const detail = kind === "members" ? `${item.role || "未填写角色"} · ${stateLabel}` : `${item.note || "无备注"} · ${stateLabel}`; return `<div class="v5-resource-item${active ? "" : " is-inactive"}"><div><strong>${escapeHtml(item.name)}<span class="v5-resource-state">${stateLabel}</span></strong><small>${escapeHtml(detail)}</small><small>历史引用 ${referenceCount} 个 · 当前任务 ${currentCount} 个</small></div><div class="v5-resource-item-actions"><button class="small-button" type="button" data-v5-edit-resource="${kind}:${item.id}">编辑</button></div></div>`; }).join("") : `<div class="v5-empty-state" style="padding:25px 10px"><p>没有匹配资源</p></div>`;
 }
-function v5RenderResources() { v5RenderResourceList("source-groups", "#v5SourceGroupsList"); v5RenderResourceList("members", "#v5MembersList"); v5RenderResourceList("cryostats", "#v5CryostatsList"); const stamp = $("#v5ResourceUpdated"); if (stamp) stamp.textContent = `${v5State.resources.source_groups.length} 个小组 · ${v5State.resources.members.length} 名成员 · ${v5State.resources.cryostats.length} 台制冷机`; }
+function v5RenderResourceStats() {
+  const groups = v5State.resources.source_groups || [];
+  const members = v5State.resources.members || [];
+  const cryostats = v5State.resources.cryostats || [];
+  const resources = [
+    ...groups.map((item) => ({ kind: "source-groups", item })),
+    ...members.map((item) => ({ kind: "members", item })),
+    ...cryostats.map((item) => ({ kind: "cryostats", item }))
+  ];
+  const total = resources.length;
+  const active = resources.filter(({ kind, item }) => v5ResourceActive(kind, item)).length;
+  const references = resources.reduce((sum, { item }) => sum + Number(item.reference_count || 0), 0);
+  const current = resources.reduce((sum, { item }) => sum + Number(item.current_task_count || 0), 0);
+  const values = { "#v5ResourceTotal": total, "#v5ResourceActive": active, "#v5ResourceReferences": references, "#v5ResourceCurrent": current };
+  Object.entries(values).forEach(([selector, value]) => { const node = $(selector); if (node) node.textContent = String(value); });
+}
+function v5RenderResources() { v5RenderResourceList("source-groups", "#v5SourceGroupsList"); v5RenderResourceList("members", "#v5MembersList"); v5RenderResourceList("cryostats", "#v5CryostatsList"); v5RenderResourceStats(); const stamp = $("#v5ResourceUpdated"); if (stamp) stamp.textContent = `${v5State.resources.source_groups.length} 个小组 · ${v5State.resources.members.length} 名成员 · ${v5State.resources.cryostats.length} 台制冷机`; }
 function v5OpenResourceEditor(kind, id = null) { const item = id == null ? null : (v5State.resources[kind] || []).find((row) => Number(row.id) === Number(id)); v5State.editingResource = { kind, id: item?.id || null, updated_at: item?.updated_at || null }; $("#v5ResourceDialogTitle").textContent = `${item ? "编辑" : "新增"}${v5ResourceLabels[kind]}`; $("#v5ResourceKind").value = kind; $("#v5ResourceName").value = item?.name || ""; $("#v5ResourceRole").value = item?.role || ""; $("#v5ResourceNote").value = item?.note || ""; $("#v5ResourceActive").checked = kind === "source-groups" ? item ? Number(item.is_active) === 1 : true : item ? item.status === "active" : true; $("#v5ResourceRoleWrap").hidden = kind !== "members"; v5SetFormError("#v5ResourceFormError"); v5Open("#v5ResourceDialog"); }
 async function v5SaveResource(event) { event.preventDefault(); const editing = v5State.editingResource; const kind = $("#v5ResourceKind").value; try { const payload = { name: $("#v5ResourceName").value.trim(), note: $("#v5ResourceNote").value.trim(), actor: "本地用户" }; if (kind === "members") { payload.role = $("#v5ResourceRole").value.trim(); payload.status = $("#v5ResourceActive").checked ? "active" : "inactive"; } else if (kind === "source-groups") payload.is_active = $("#v5ResourceActive").checked; else payload.status = $("#v5ResourceActive").checked ? "active" : "inactive"; const path = editing?.id ? `/api/v5/resources/${kind}/${editing.id}` : `/api/v5/resources/${kind}`; if (editing?.id) payload.expected_updated_at = editing.updated_at; await v5Api(path, v5Json(editing?.id ? "PUT" : "POST", payload)); v5Close("#v5ResourceDialog"); await v5LoadAll(); showToast(`${v5ResourceLabels[kind]}已保存`); } catch (error) { v5SetFormError("#v5ResourceFormError", v5ErrorText(error)); } }
 

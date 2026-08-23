@@ -3409,6 +3409,11 @@ button.v3-task-card:disabled small {
 .v5-resource-intro { display: flex; justify-content: space-between; gap: 20px; padding: 2px 1px 12px; }
 .v5-resource-intro h3 { margin: 4px 0; font-size: 22px; }
 .v5-resource-intro p { margin: 0; color: var(--muted); font-size: 13px; }
+.v5-resource-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 0 0 18px; }
+.v5-resource-stat { min-width: 0; padding: 14px 16px; border: 1px solid var(--border); border-radius: 14px; background: var(--surface); box-shadow: var(--shadow); }
+.v5-resource-stat span, .v5-resource-stat small { display: block; color: var(--muted); font-size: 12px; font-weight: 700; }
+.v5-resource-stat strong { display: block; margin: 7px 0 3px; color: var(--text); font-size: 28px; line-height: 1; }
+.v5-resource-stat small { font-size: 11px; font-weight: 500; }
 .v5-resource-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
 .v5-resource-card { overflow: hidden; }
 .v5-resource-search { margin: 12px 15px 8px; }
@@ -3479,5 +3484,9 @@ button.v3-task-card:disabled small {
   .v5-editor-toolbar > button { grid-column: 1 / -1; justify-self: start; }
   .v5-editor-layout { grid-template-columns: minmax(0, 1fr); }
   .v5-editor-pane { position: static; max-height: none; }
+  .v5-resource-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .v5-resource-grid { grid-template-columns: repeat(3, minmax(260px, 1fr)); overflow-x: auto; }
+}
+@media (max-width: 520px) {
+  .v5-resource-stats { grid-template-columns: minmax(0, 1fr); }
 }

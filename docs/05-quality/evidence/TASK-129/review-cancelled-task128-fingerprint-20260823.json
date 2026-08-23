@@ -1,0 +1,45 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-129",
+  "reviewed_task_ids": ["TASK-128"],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "cancelled",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-128",
+      "path": "src/server.js",
+      "change_type": "modified",
+      "summary": "TASK-128 原服务端交付路径仍存在，但旧审核指纹不再绑定当前交付。"
+    },
+    {
+      "task_id": "TASK-128",
+      "path": "src/v3/index.js",
+      "change_type": "modified",
+      "summary": "TASK-128 启动提交 649cd6e1 后，后续修复任务对同一服务端范围继续修改，导致旧双轮审核 subject_sha256 与当前内容不一致。"
+    },
+    {
+      "task_id": "TASK-128",
+      "path": "tests/v5-api.test.js",
+      "change_type": "added",
+      "summary": "TASK-128 原回归测试路径保留；本次不修改测试，仅取消旧审核对当前内容的指纹绑定。"
+    }
+  ],
+  "change_summary": "TASK-128 已按用户确认通过治理动作标记为 superseded。其后续服务端修复已由 TASK-134 及当前最终代码承接，旧 TASK-128/TASK-129 审核不再作为当前可集成成果；本证据只取消旧审核，不回退或改写产品代码。",
+  "scope_checked": [
+    "TASK-128/TASK-129 的 WP-009、BL-006、启动提交、审核范围、历史证据和当前 superseded 状态",
+    "TASK-128 启动提交 649cd6e1 至当前 HEAD 在 src/server.js、src/v3/index.js、tests/v5-api.test.js 的实际 Git 变更清单",
+    "TASK-129/review-round-3.json 的旧审核清单及其 subject_sha256 与当前内容不一致的 Release 门禁事实",
+    "取消范围仅针对 TASK-128 的历史审核；未修改应用代码、数据库或 TASK-134/TASK-136 的实施范围"
+  ],
+  "findings": [
+    "TASK-128 已被后续修复交付替代，旧双轮审核指纹不应继续阻塞当前 Release；应以 TASK-134 及后续任务的独立实现、审核和最终指纹为准。"
+  ],
+  "validation_evidence": [
+    "git diff --name-status 649cd6e1..HEAD -- src/server.js src/v3 tests：实际路径为 src/server.js modified、src/v3/index.js modified、tests/v5-api.test.js added。",
+    "Test-ProjectGovernance.ps1 -Level Release 在替代前唯一错误为 TASK-128 连续审核通过所绑定的最终变更指纹不一致；本证据不把旧任务重新声明为 passed。"
+  ],
+  "created_at": "2026-08-23T14:40:00+08:00"
+}

@@ -61,6 +61,12 @@
         </section>
         <section id="v5ResourcesView" class="v5-view" data-v5-panel="resources" role="tabpanel" aria-label="资源维护" hidden>
           <div class="v5-resource-intro"><div><span class="v5-eyebrow">稳定 ID 资源</span><h3>资源维护</h3><p>维护来源小组、测控成员和制冷机。停用只影响新关联，历史任务仍保留当前名称。</p></div><span id="v5ResourceUpdated" class="v5-muted">—</span></div>
+          <section class="v5-resource-stats" aria-label="资源维护汇总统计">
+            <article class="v5-resource-stat"><span>资源总数</span><strong id="v5ResourceTotal">—</strong><small>来源小组、测控成员、制冷机</small></article>
+            <article class="v5-resource-stat"><span>启用资源</span><strong id="v5ResourceActive">—</strong><small>可用于新任务关联</small></article>
+            <article class="v5-resource-stat"><span>历史引用任务数</span><strong id="v5ResourceReferences">—</strong><small>资源与任务的累计引用</small></article>
+            <article class="v5-resource-stat"><span>当前任务数</span><strong id="v5ResourceCurrent">—</strong><small>未完成任务的资源引用</small></article>
+          </section>
           <section class="v5-maintenance-strip" aria-labelledby="v5MaintenanceTitle"><div><span class="v5-eyebrow">数据安全与迁移</span><h3 id="v5MaintenanceTitle">备份、导出与恢复</h3><p>资源和任务共用同一份数据库；在导入或恢复前先下载备份。</p></div><div class="v5-maintenance-actions"><a class="ghost-button" href="/api/backup" target="_blank" rel="noreferrer">下载备份 JSON</a><a class="ghost-button" href="/api/export/tasks.csv">导出任务 CSV</a><a class="ghost-button" href="/api/export/member-load.csv">导出负载 CSV</a><button class="ghost-button" type="button" data-v5-open-maintenance>打开导入/恢复</button></div></section>
           <div class="v5-resource-grid">
             <article class="v5-resource-card"><header class="v5-card-header"><div><span class="v5-eyebrow">任务来源</span><h3>来源小组</h3></div><button class="small-button" type="button" data-v5-add-resource="source-groups">＋ 新增</button></header><label class="v5-resource-search">搜索<input type="search" data-v5-resource-search="source-groups" placeholder="小组名称"></label><div id="v5SourceGroupsList" class="v5-resource-list"></div></article>

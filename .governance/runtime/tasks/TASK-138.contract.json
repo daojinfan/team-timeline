@@ -1,0 +1,133 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-138",
+  "work_package": "WP-009",
+  "title": "重新实现资源维护汇总统计与来源小组校验",
+  "goal": "在 V5 资源维护视图增加可读的资源汇总统计，并确保已确认的四个来源小组以稳定名称和启用状态存在；统计只读取现有 V5 资源接口，不改变任务事实。",
+  "baseline": "BL-006",
+  "profile": "Release",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "src/v3",
+    "tests",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/05-quality",
+    "docs/08-changes"
+  ],
+  "write_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js"
+  ],
+  "out_of_scope": [
+    "手机端",
+    "AI 自动建任务",
+    "自动分配成员",
+    "成果提交/验收",
+    "数据库结构迁移",
+    "来源小组重复新增"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [
+    "TASK-130",
+    "TASK-136"
+  ],
+  "acceptance_criteria": [
+    "资源维护视图新增汇总统计：资源总数、启用资源数、历史引用任务数和当前任务数。",
+    "统计与来源小组、测控成员、制冷机三类资源列表使用同一接口数据，刷新后同步更新，不引入第二份事实。",
+    "四个来源小组工艺组、读取组、量子门组、电子学组在数据库中保持存在且启用，名称不重复。",
+    "1280×720 与 1366×768 下统计区不造成页面级横向溢出，既有 V5 任务编辑和资源维护功能保持通过。"
+  ],
+  "validations": [
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "git-diff-check",
+      "command": "git",
+      "args": [
+        "diff",
+        "--check"
+      ]
+    },
+    {
+      "id": "governance-release",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-Level",
+        "Release"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "scope",
+    "success_criteria",
+    "public_interface",
+    "production_release"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-23T07:27:47.4918208Z",
+  "repair_of": [
+    "TASK-130",
+    "TASK-136"
+  ],
+  "release_controls": {
+    "target_environment": "本地桌面开发环境：D:\\Codex\\人员管理系统，Node.js + SQLite，dev 分支",
+    "execution_window": "历史审核链检修完成后，在当前最终代码上执行资源维护统计小改动，并由 TASK-139 独立复审",
+    "rollback_plan": "仅回退 public/index.html、public/styles.css、public/app.js 的本次统计区变更；来源小组写入为幂等 API 操作，不删除历史任务引用",
+    "observation_metrics": "来源小组四项存在性与启用状态、资源汇总统计与列表数字一致、npm test、app syntax、Release governance、双分辨率布局",
+    "stop_conditions": "发现来源组重复/停用、统计与接口不一致、页面级横向溢出、既有 V5 字段丢失、治理校验失败或越界变更时停止",
+    "post_release_owner": "PM / human"
+  }
+}

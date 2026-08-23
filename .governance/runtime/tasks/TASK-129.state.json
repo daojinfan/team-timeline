@@ -52,7 +52,8 @@
     "docs/05-quality/evidence/TASK-129/20260823T051704182Z-7eab21b6-governance-release.evidence.json",
     "docs/05-quality/evidence/TASK-129/20260823T051704182Z-7eab21b6-npm-test.evidence.json",
     "docs/05-quality/evidence/TASK-129/20260823T051704182Z-7eab21b6-git-diff-check.evidence.json",
-    "docs/05-quality/evidence/TASK-129/review-round-3.json"
+    "docs/05-quality/evidence/TASK-129/review-round-3.json",
+    "docs/05-quality/evidence/TASK-129/review-cancelled-task128-fingerprint-20260823.json"
   ],
   "review_history": [
     {
@@ -75,6 +76,13 @@
       "result": "passed",
       "round_id": "RR-4674a6c8eb614efe8fde4536fd4babbe",
       "recorded_at": "2026-08-23T05:17:59.4663977Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-129/review-cancelled-task128-fingerprint-20260823.json",
+      "sha256": "30483b2cdda288cf826c63d3524afd3228c157623299d2abe5420fb43dc05ca0",
+      "result": "cancelled",
+      "round_id": "RR-f99aa691565d44a7ac2a2d11e6d8f8c3",
+      "recorded_at": "2026-08-23T07:26:03.2541243Z"
     }
   ],
   "review": {
@@ -87,5 +95,5 @@
   },
   "last_error": "",
   "created_at": "2026-08-23T04:23:43.9668043Z",
-  "updated_at": "2026-08-23T05:17:59.8372171Z"
+  "updated_at": "2026-08-23T07:26:03.4578145Z"
 }

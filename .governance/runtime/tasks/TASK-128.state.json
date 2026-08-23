@@ -5,7 +5,7 @@
   "work_package": "WP-009",
   "contract_sha256": "08cc099cc2218d6b0fe534c72e073eb734a6df1e9bcce1de4ea4deafbada0fd6",
   "baseline": "BL-006",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "APR-104",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -55,14 +55,14 @@
   "review": {
     "required": true,
     "reviewer_task_id": "TASK-129",
-    "status": "passed",
+    "status": "cancelled",
     "evidence": [
-      "docs/05-quality/evidence/TASK-129/review-round-3.json"
+      "docs/05-quality/evidence/TASK-129/review-cancelled-task128-fingerprint-20260823.json"
     ],
-    "pass_streak": 2,
-    "subject_sha256": "1bb1f168d70854df2126072993796a6ede6a822ceebe6dfe86d441d4d28e9590"
+    "pass_streak": 0,
+    "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "用户确认检修历史审核链：TASK-128 的旧服务端交付已被后续修复任务 TASK-134 及当前最终代码替代；保留代码和历史证据，不再使用 TASK-128 的旧审核指纹作为当前交付门禁对象。",
   "created_at": "2026-08-23T04:23:28.09313Z",
-  "updated_at": "2026-08-23T05:17:59.6903054Z"
+  "updated_at": "2026-08-23T07:26:03.2980478Z"
 }
