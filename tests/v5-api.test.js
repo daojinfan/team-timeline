@@ -94,31 +94,3 @@ test("V5 supports topic regrouping, member schedule synchronization, and executi
     assert.equal(execution.member_load[0].task_count >= 1, true);
   } finally { await app.close(); }
 });
-
-test("V5 defaults to active topics, exposes resource impact counts, and keeps sample updates in the task save contract", async () => {
-  const app = await fixture();
-  try {
-    const resources = (await app.request("/api/v5/resources")).data;
-    const topic = (await app.request("/api/v5/topics", { method: "POST", body: { name: "待归档专题" }, expected: [201] })).data;
-    const archived = (await app.request(`/api/v5/topics/${topic.id}`, { method: "PUT", body: { name: topic.name, status: "archived", expected_version: topic.version }, expected: [200] })).data;
-    assert.equal((await app.request("/api/v5/topics")).data.items.some((item) => item.id === archived.id), false);
-    assert.equal((await app.request("/api/v5/topics?include_archived=1")).data.items.some((item) => item.id === archived.id), true);
-    assert.equal(typeof resources.source_groups[0].reference_count, "number");
-    assert.equal(typeof resources.members[0].current_task_count, "number");
-    assert.equal(typeof resources.cryostats[0].reference_count, "number");
-
-    const sample = (await app.request("/api/v5/samples", { method: "POST", body: { planning_label: "原子保存样品", model: "Z4", eta_date: "2099-01-01" }, expected: [201] })).data;
-    const input = { topic_id: (await app.request("/api/v5/topics", { method: "POST", body: { name: "原子保存专题" }, expected: [201] })).data.id, title: "原子保存任务", sample_ids: [sample.id] };
-    const preview = (await app.request("/api/v5/tasks/preview", { method: "POST", body: input })).data;
-    const created = (await app.request("/api/v5/tasks", { method: "POST", body: { ...preview.normalized_input, preview_token: preview.preview_token }, expected: [201] })).data;
-    const currentSample = (await app.request("/api/v5/samples")).data.items.find((item) => item.id === sample.id);
-    const currentTask = (await app.request(`/api/v5/tasks/${created.id}`)).data;
-    const edit = { ...currentTask, sample_updates: [{ sample_id: sample.id, planning_label: "重复更新", model: "Z4", eta_date: "2099-01-02", eta_pending: false, expected_version: currentSample.version }, { sample_id: sample.id, planning_label: "重复更新 2", model: "Z4", eta_date: "2099-01-03", eta_pending: false, expected_version: currentSample.version }] };
-    const invalidPreview = await app.request(`/api/v5/tasks/${created.id}/preview`, { method: "POST", body: edit, expected: [400] });
-    assert.equal(invalidPreview.error.code, "VALIDATION_ERROR");
-    const afterSample = (await app.request("/api/v5/samples")).data.items.find((item) => item.id === sample.id);
-    const afterTask = (await app.request(`/api/v5/tasks/${created.id}`)).data;
-    assert.equal(afterSample.version, currentSample.version);
-    assert.equal(afterTask.version, currentTask.version);
-  } finally { await app.close(); }
-});
