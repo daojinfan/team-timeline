@@ -1,0 +1,50 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-161",
+  "reviewed_task_ids": ["TASK-160"],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-160",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "第二轮复核确认状态筛选与“非”复选框的可访问关联、默认未勾选状态和工具栏布局。"
+    },
+    {
+      "task_id": "TASK-160",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "第二轮复核确认状态为空时不取反、状态有值时按非条件筛选、清空筛选复位勾选框且其他筛选仍保持 AND 组合。"
+    },
+    {
+      "task_id": "TASK-160",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "第二轮复核确认“非”控件样式紧凑、对齐稳定，未影响其他 V5 工具栏控件。"
+    },
+    {
+      "task_id": "TASK-160",
+      "path": "tests/v5-inline-editor.test.js",
+      "change_type": "modified",
+      "summary": "第二轮复核确认回归断言覆盖控件标识、反向条件、复位逻辑和样式选择器。"
+    }
+  ],
+  "change_summary": "第二轮对 TASK-160 同一最终内容执行全量独立复审；重新核对四文件 Git 清单、正向/反向状态边界和清空行为，内容指纹与第一轮一致，未发现新增问题。",
+  "scope_checked": [
+    "再次核对实际 Git 差异仅包含 TASK-160 契约声明的四个写入路径。",
+    "选择状态并勾选“非”显示其他状态；取消“非”恢复原筛选；状态为空时勾选“非”仍显示全部。",
+    "清空筛选会恢复状态、非、来源、制冷机和关键词的默认值。",
+    "专题树展开/收起、归档专题、来源小组、制冷机和搜索筛选未被修改。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "npm test：46 项全部通过。",
+    "node --check public/app.js：通过。",
+    "git diff --check 4050cc3..HEAD：通过；与第一轮相同的四文件内容指纹。"
+  ],
+  "created_at": "2026-08-23T19:45:00+08:00"
+}

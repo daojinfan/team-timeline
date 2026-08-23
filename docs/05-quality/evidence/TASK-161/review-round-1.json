@@ -1,0 +1,50 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-161",
+  "reviewed_task_ids": ["TASK-160"],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-160",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "状态筛选控件增加带明确 id 的“非”复选框，并将状态标签与 select 关联。"
+    },
+    {
+      "task_id": "TASK-160",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "任务筛选读取“非”状态，状态有值时按选中状态取正向或反向集合；清空筛选同步取消该复选框。"
+    },
+    {
+      "task_id": "TASK-160",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "为状态反向筛选控件增加紧凑网格和复选框布局，保持工具栏对齐。"
+    },
+    {
+      "task_id": "TASK-160",
+      "path": "tests/v5-inline-editor.test.js",
+      "change_type": "modified",
+      "summary": "新增状态反向筛选控件、反向逻辑、清空行为和样式的回归断言。"
+    }
+  ],
+  "change_summary": "第一轮全量复审确认 TASK-160 启动提交后的四项实际文件变更与 Git 差异一致；未发现越界修改或状态筛选组合逻辑回归。",
+  "scope_checked": [
+    "状态选择具体值且未勾选“非”时保持原正向筛选。",
+    "状态选择具体值且勾选“非”时筛除该状态；状态为空时“非”不改变全部任务结果。",
+    "清除筛选同时清空状态选择与“非”复选框，关键词、来源小组和制冷机仍按原逻辑组合。",
+    "状态控件具有可访问的 label/for 关联，样式不会改变其他模块筛选。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "npm test：46 项全部通过。",
+    "node --check public/app.js：通过。",
+    "git diff --check 4050cc3..HEAD：通过。"
+  ],
+  "created_at": "2026-08-23T19:35:00+08:00"
+}
