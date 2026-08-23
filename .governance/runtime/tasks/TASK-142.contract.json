@@ -1,0 +1,122 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-142",
+  "work_package": "WP-009",
+  "title": "独立复审资源维护汇总统计",
+  "goal": "对 TASK-140 的资源维护统计与来源小组校验执行独立 Release 双轮全量复审；审核只写入 TASK-142 自身证据目录。",
+  "baseline": "BL-006",
+  "profile": "Release",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-142"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "src/v3",
+    "tests",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/05-quality",
+    "docs/08-changes"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-142"
+  ],
+  "out_of_scope": [
+    "产品代码",
+    "数据库数据删除或重置",
+    "手机端",
+    "AI 自动建任务",
+    "其他审核目录"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [
+    "TASK-140"
+  ],
+  "acceptance_criteria": [
+    "独立复核资源维护汇总统计、三类资源列表的一致性和四个来源小组的存在性/启用状态。",
+    "独立复核统计区在桌面分辨率下的可读性和无页面级横向溢出。",
+    "Release 档位完成两轮对同一最终内容的全量复审，证据列出实际变更路径和验证结果。"
+  ],
+  "validations": [
+    {
+      "id": "governance-release",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-Level",
+        "Release"
+      ]
+    },
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "git-diff-check",
+      "command": "git",
+      "args": [
+        "diff",
+        "--check"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "scope",
+    "success_criteria",
+    "public_interface",
+    "production_release"
+  ],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-23T07:36:20.3286399Z",
+  "release_controls": {
+    "target_environment": "本地桌面开发环境：D:\\Codex\\人员管理系统，Node.js + SQLite，dev 分支",
+    "execution_window": "TASK-140 已验证后，从当前最终提交执行第一轮和第二轮全量复审",
+    "rollback_plan": "审核只写 docs/05-quality/evidence/TASK-137，不直接修改产品代码或数据库",
+    "observation_metrics": "Git 变更清单、来源小组 API 数据、统计区渲染、npm test、app syntax、Release governance 和双分辨率布局",
+    "stop_conditions": "发现统计与接口不一致、来源组重复/停用、布局溢出、证据越界或变更清单不一致时记录 changes-required",
+    "post_release_owner": "PM / human"
+  }
+}

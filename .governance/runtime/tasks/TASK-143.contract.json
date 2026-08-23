@@ -1,0 +1,130 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-143",
+  "work_package": "WP-009",
+  "title": "资源统计展示可访问性与响应式收尾",
+  "goal": "在已验证的资源维护汇总统计基础上，补齐统计数字的动态播报语义和窄屏响应式布局，确保资源维护页面更易用；不改变统计口径、接口和数据库事实。",
+  "baseline": "BL-006",
+  "profile": "Release",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "src/v3",
+    "tests",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/05-quality",
+    "docs/08-changes"
+  ],
+  "write_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js"
+  ],
+  "out_of_scope": [
+    "数据库结构和数据",
+    "资源接口与统计口径",
+    "手机端",
+    "AI 自动建任务",
+    "执行中心甘特图"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [
+    "TASK-140"
+  ],
+  "acceptance_criteria": [
+    "资源统计数字具备可访问的动态更新语义，刷新后读屏可感知变化。",
+    "统计区在桌面宽度和窄屏宽度下保持 4/2/1 列布局，不造成页面级横向溢出。",
+    "不改变现有资源接口、统计口径、来源小组数据和任务编辑功能。",
+    "npm test、前端语法、差异检查和 Release 治理校验通过。"
+  ],
+  "validations": [
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "git-diff-check",
+      "command": "git",
+      "args": [
+        "diff",
+        "--check"
+      ]
+    },
+    {
+      "id": "governance-release",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-Level",
+        "Release"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "scope",
+    "success_criteria",
+    "public_interface",
+    "production_release"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-23T07:39:03.3260402Z",
+  "repair_of": [
+    "TASK-140"
+  ],
+  "release_controls": {
+    "target_environment": "本地桌面开发环境：D:\\Codex\\人员管理系统，Node.js + SQLite，dev 分支",
+    "execution_window": "在 TASK-140 已验证提交上执行统计展示收尾，并由 TASK-144 独立复审",
+    "rollback_plan": "仅回退本次 public/index.html、public/styles.css、public/app.js 的可访问性和响应式展示变更；不回退已验证统计和数据库数据",
+    "observation_metrics": "统计区 aria-live 语义、4/2/1 列布局、页面横向溢出、既有统计数字、npm test、app syntax、Release governance",
+    "stop_conditions": "发现统计口径、资源接口或任务编辑行为变化，或布局溢出、治理失败、越界变更时停止",
+    "post_release_owner": "PM / human"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "schemas/validation-evidence.schema.json",
+  "schema_version": 1,
+  "task_id": "TASK-143",
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "contract_sha256": "986059c4f1502210045e9b8b9d79fb2b3167f1f088099fe8b8fc5e1bedacd4da",
+  "git_commit": "e0084cae6cf87a89b9ac40b50f18274be4b7e034",
+  "validation_id": "app-syntax",
+  "command": "node",
+  "args": [
+    "--check",
+    "public/app.js"
+  ],
+  "started_at": "2026-08-23T07:40:29.9208911Z",
+  "finished_at": "2026-08-23T07:40:30.0792521Z",
+  "exit_code": 0,
+  "redactions_applied": 0,
+  "output_path": "docs/05-quality/evidence/TASK-143/20260823T074027688Z-691de423-app-syntax.output.txt",
+  "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}
