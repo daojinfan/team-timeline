@@ -46,7 +46,7 @@
             <label>来源小组<select id="v5TaskSourceFilter"><option value="">全部来源小组</option></select></label>
             <label>状态<select id="v5TaskStatusFilter"><option value="">全部状态</option><option value="waiting">等待样品</option><option value="sample-delayed">样品交付延期</option><option value="testing">正在测试</option><option value="test-delayed">测试延期</option><option value="completed">已完成</option></select></label>
             <label>制冷机<select id="v5TaskCryostatFilter"><option value="">全部制冷机</option></select></label>
-            <button id="v5ClearTaskFilters" class="ghost-button" type="button">清除筛选</button>
+            <label class="v5-archive-toggle"><input id="v5ShowArchivedTopics" type="checkbox"> 显示归档专题</label><button id="v5ClearTaskFilters" class="ghost-button" type="button">清除筛选</button>
           </div>
           <div class="v5-editor-layout">
             <section class="v5-tree-card" aria-labelledby="v5TreeTitle">
@@ -61,6 +61,7 @@
         </section>
         <section id="v5ResourcesView" class="v5-view" data-v5-panel="resources" role="tabpanel" aria-label="资源维护" hidden>
           <div class="v5-resource-intro"><div><span class="v5-eyebrow">稳定 ID 资源</span><h3>资源维护</h3><p>维护来源小组、测控成员和制冷机。停用只影响新关联，历史任务仍保留当前名称。</p></div><span id="v5ResourceUpdated" class="v5-muted">—</span></div>
+          <section class="v5-maintenance-strip" aria-labelledby="v5MaintenanceTitle"><div><span class="v5-eyebrow">数据安全与迁移</span><h3 id="v5MaintenanceTitle">备份、导出与恢复</h3><p>资源和任务共用同一份数据库；在导入或恢复前先下载备份。</p></div><div class="v5-maintenance-actions"><a class="ghost-button" href="/api/backup" target="_blank" rel="noreferrer">下载备份 JSON</a><a class="ghost-button" href="/api/export/tasks.csv">导出任务 CSV</a><a class="ghost-button" href="/api/export/member-load.csv">导出负载 CSV</a><button class="ghost-button" type="button" data-v5-open-maintenance>打开导入/恢复</button></div></section>
           <div class="v5-resource-grid">
             <article class="v5-resource-card"><header class="v5-card-header"><div><span class="v5-eyebrow">任务来源</span><h3>来源小组</h3></div><button class="small-button" type="button" data-v5-add-resource="source-groups">＋ 新增</button></header><label class="v5-resource-search">搜索<input type="search" data-v5-resource-search="source-groups" placeholder="小组名称"></label><div id="v5SourceGroupsList" class="v5-resource-list"></div></article>
             <article class="v5-resource-card"><header class="v5-card-header"><div><span class="v5-eyebrow">执行人员</span><h3>测控成员</h3></div><button class="small-button" type="button" data-v5-add-resource="members">＋ 新增</button></header><label class="v5-resource-search">搜索<input type="search" data-v5-resource-search="members" placeholder="姓名或角色"></label><div id="v5MembersList" class="v5-resource-list"></div></article>
@@ -412,6 +413,15 @@
         <div id="v5ResourceFormError" class="v5-form-error" role="alert" hidden></div>
         <div class="v5-dialog-body"><input id="v5ResourceKind" type="hidden"><label>名称<input id="v5ResourceName" name="name" maxlength="100" required autofocus></label><label id="v5ResourceRoleWrap">基本角色<input id="v5ResourceRole" name="role" maxlength="100" placeholder="例如：实验负责人"></label><label>备注<textarea id="v5ResourceNote" name="note" rows="3" maxlength="1000"></textarea></label><label class="v5-check-inline"><input id="v5ResourceActive" name="is_active" type="checkbox" checked> 启用</label></div>
         <footer class="v5-dialog-actions"><button type="button" class="ghost-button" data-v5-close-dialog="v5ResourceDialog">取消</button><button class="primary-action" type="submit">保存资源</button></footer>
+      </form>
+    </dialog>
+
+    <dialog id="v5TopicMoveDialog" class="v5-dialog" aria-labelledby="v5TopicMoveDialogTitle">
+      <form id="v5TopicMoveForm" class="v5-dialog-form v5-narrow-dialog-form">
+        <header class="v5-dialog-header"><div><span class="v5-eyebrow">专题归类</span><h2 id="v5TopicMoveDialogTitle">重新归类</h2><p id="v5TopicMoveHint">请选择目标专题，保存前会显示影响范围。</p></div><button type="button" class="icon-button" data-v5-close-dialog="v5TopicMoveDialog" aria-label="关闭专题归类">×</button></header>
+        <div id="v5TopicMoveFormError" class="v5-form-error" role="alert" hidden></div>
+        <div class="v5-dialog-body"><label>目标专题<select id="v5TopicMoveTarget" required></select></label><section id="v5TopicMovePreview" class="v5-preview-box" aria-live="polite"></section></div>
+        <footer class="v5-dialog-actions"><button type="button" class="ghost-button" data-v5-close-dialog="v5TopicMoveDialog">取消</button><button id="v5TopicMoveSaveBtn" class="primary-action" type="submit">确认操作</button></footer>
       </form>
     </dialog>
 

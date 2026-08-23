@@ -1,0 +1,154 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-134",
+  "work_package": "WP-009",
+  "title": "修复 V5 编辑台首轮审核问题",
+  "goal": "修复 TASK-130 首轮独立审核发现的 V5 归档专题默认展示、资源影响范围、专题结构化归类交互、任务与样品原子保存及相关回归验证问题，保持三模块职责和既有数据事实不变。",
+  "baseline": "BL-006",
+  "profile": "Release",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "src/v3",
+    "tests"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "src/v3",
+    "tests",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/05-quality",
+    "docs/08-changes"
+  ],
+  "write_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "src/v3",
+    "tests"
+  ],
+  "out_of_scope": [
+    "手机端",
+    "AI 自动建任务",
+    "自动分配成员",
+    "成果提交/验收",
+    "数据库删除或重置",
+    "旧版 V2/V3 业务改造"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [
+    "TASK-130"
+  ],
+  "acceptance_criteria": [
+    "归档专题默认不出现在任务树，提供明确的显示/隐藏归档专题开关；无专题始终可见。",
+    "资源维护卡片展示稳定引用数量与当前任务数量，并在 V5 资源维护主视图提供备份、导入、导出、恢复入口或明确的可操作维护路径。",
+    "专题删除和任务重新归类使用结构化目标专题选择器，操作前展示影响范围和任务数量，不再依赖输入专题 ID。",
+    "任务及其样品、成员关系的保存具备服务端原子性；任一校验或版本冲突失败时不得留下部分写入。",
+    "既有 V5 字段、版本冲突、状态计算和三模块同步行为保持不变，回归测试覆盖修复路径，桌面 1280×720 与 1366×768 无页面级横向溢出。"
+  ],
+  "validations": [
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "server-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "src/server.js"
+      ]
+    },
+    {
+      "id": "v5-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "src/v3/index.js"
+      ]
+    },
+    {
+      "id": "git-diff-check",
+      "command": "git",
+      "args": [
+        "diff",
+        "--check"
+      ]
+    },
+    {
+      "id": "governance-release",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-Level",
+        "Release"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "scope",
+    "success_criteria",
+    "overall_architecture",
+    "public_interface",
+    "data_model_or_migration",
+    "production_release"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-23T05:47:03.6442298Z",
+  "repair_of": [
+    "TASK-130"
+  ],
+  "release_controls": {
+    "target_environment": "本地桌面开发环境：D:\\Codex\\人员管理系统，Node.js + SQLite，dev 分支",
+    "execution_window": "TASK-131 首轮审核提出 changes-required 后，在当前最终 UI 基线建立修复提交；修复完成后交由 TASK-135 执行两轮 Release 复审",
+    "rollback_plan": "仅回退 TASK-134 实际修改的 public/index.html、public/styles.css、public/app.js、src/v3 与 tests 文件；保留现有数据库和 TASK-130 提交，不执行数据删除",
+    "observation_metrics": "npm test、前后端语法检查、governance Release 校验、V5 任务/样品原子保存测试、归档专题/资源计数/结构化移动交互检查、双分辨率布局和控制台错误",
+    "stop_conditions": "出现部分写入、版本冲突绕过、归档数据误显示或误删除、资源引用计数不一致、旧入口丢失、页面级横向溢出、越界修改或复审失败时立即停止",
+    "post_release_owner": "PM / human"
+  }
+}
