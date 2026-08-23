@@ -1,0 +1,51 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-163",
+  "reviewed_task_ids": ["TASK-162"],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-162",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "将搜索、筛选和操作拆成明确的主工具栏与筛选栏，保留所有既有控件 ID 和可访问标签。"
+    },
+    {
+      "task_id": "TASK-162",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "为任务行的日期、制冷机和参与成员补充语义 class，支持目标宽度下稳定隐藏和对齐。"
+    },
+    {
+      "task_id": "TASK-162",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "重排 V5 工作区、导航、筛选工具栏、专题树、任务行和编辑面板的间距、边界、响应式列和选中态。"
+    },
+    {
+      "task_id": "TASK-162",
+      "path": "tests/v5-inline-editor.test.js",
+      "change_type": "modified",
+      "summary": "新增布局结构、任务元数据 class 和目标响应式规则的静态回归断言。"
+    }
+  ],
+  "change_summary": "第一轮独立复核确认任务全量编辑台的布局优化仅修改 TASK-162 契约声明的四个交付路径；筛选逻辑、专题展开/收起、任务选择/移动、编辑保存和“非”筛选行为未被改写。",
+  "scope_checked": [
+    "工具栏已从单层隐式网格改为搜索主行、操作区和三列筛选行，清除筛选与归档专题控件不再形成隐式列。",
+    "专题任务树保持专题一级、任务二级的缩进关系；任务行在宽屏显示日期、制冷机、状态和成员，1280 宽度显式收起制冷机列以避免拥挤。",
+    "右侧编辑面板仍保持 sticky 与滚动边界，字段、底部操作区和现有内联编辑节点没有改名或移除。",
+    "用户可见状态颜色、选中态和主题卡片边界增强层级；既有筛选控件 ID 和事件目标保持不变。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "npm test：47 项全部通过。",
+    "node --check public/app.js：通过。",
+    "git diff --check f1cebd1..HEAD：通过。",
+    "静态复核 1280×720 与 1366×768 的 CSS 断点、网格最小列宽与任务行隐藏策略；未发现隐式网格列或超出声明范围的产品文件。"
+  ],
+  "created_at": "2026-08-23T20:20:00+08:00"
+}

@@ -5,21 +5,49 @@
   "work_package": "WP-009",
   "contract_sha256": "4201f5e32910df89b79839cc53eb368f3fb67ecbbe1d4c236b046ac905d9e54b",
   "baseline": "BL-006",
-  "state": "planned",
+  "state": "verified",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
   "acceptance_git_commit": "",
-  "start_git_commit": "",
+  "start_git_commit": "a67647aba747db5957673e77d761b90f781e0127",
   "execution_lease": "",
   "execution_lease_owner": "",
   "execution_lease_expires_at": "",
   "preexisting_changes": [],
-  "plan_checkpoint_git_commit": "f1cebd1cc45619e2d85c478925a14e898ded25b9",
-  "plan_rebase_history": [],
-  "evidence": [],
-  "evidence_history": [],
-  "review_history": [],
+  "plan_checkpoint_git_commit": "a67647aba747db5957673e77d761b90f781e0127",
+  "plan_rebase_history": [
+    {
+      "previous_changes": [],
+      "checkpoint_git_commit": "a67647aba747db5957673e77d761b90f781e0127",
+      "rebased_at": "2026-08-23T12:10:20.1352807Z"
+    }
+  ],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-163/20260823T121307861Z-f4ea1afc-required-validation.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-163/20260823T121140715Z-e4194d78-required-validation.evidence.json",
+    "docs/05-quality/evidence/TASK-163/review-round-1.json",
+    "docs/05-quality/evidence/TASK-163/20260823T121307861Z-f4ea1afc-required-validation.evidence.json",
+    "docs/05-quality/evidence/TASK-163/review-round-2.json"
+  ],
+  "review_history": [
+    {
+      "path": "docs/05-quality/evidence/TASK-163/review-round-1.json",
+      "sha256": "b2ad85a97fd4f9a9a867acc021ea1e3ace08c4bc2ef18dd96936efe7e82762e8",
+      "result": "passed",
+      "round_id": "RR-0919f4a2ddb842b3a8be2a11740b2296",
+      "recorded_at": "2026-08-23T12:11:57.8672173Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-163/review-round-2.json",
+      "sha256": "5a34f412d1af076ed8e16fda6f3ed6a1e0fbd3df67fd900d1ae8838cf34d475b",
+      "result": "passed",
+      "round_id": "RR-229ad41302124110845c47c6a20665a6",
+      "recorded_at": "2026-08-23T12:13:25.2414876Z"
+    }
+  ],
   "review": {
     "required": false,
     "reviewer_task_id": "",
@@ -30,5 +58,5 @@
   },
   "last_error": "",
   "created_at": "2026-08-23T11:27:16.1883767Z",
-  "updated_at": "2026-08-23T11:27:16.1883767Z"
+  "updated_at": "2026-08-23T12:13:25.6295103Z"
 }
