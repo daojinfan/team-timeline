@@ -1,0 +1,24 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-161",
+  "reviewed_task_ids": ["TASK-160"],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "cancelled",
+  "diff_checked": true,
+  "changes": [],
+  "change_summary": "TASK-160 已由项目经理标记为 superseded，原因是 TASK-162 的布局优化继续修改其同一组前端文件，旧状态反向筛选审核冻结点不再代表当前最终差异；本证据取消 TASK-161 对旧交付的当前审核资格，保留历史两轮审核证据。",
+  "scope_checked": [
+    "TASK-160.state.json：state=superseded，历史验证、执行批准和状态反向筛选复审证据保持不变。",
+    "TASK-161 为 TASK-160 的独立审核任务，历史 round-1/round-2 证据保持不可变。",
+    "TASK-162/TASK-163 已按布局优化范围建立新的交付与独立审核链。",
+    "changes=[]：本取消记录不新增、修改或删除产品交付内容。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "已核对 TASK-160 superseded 状态、TASK-161 历史审核证据及 TASK-162/TASK-163 新审核链。",
+    "取消前 Strict 唯一阻塞为 TASK-160 旧审核 subject_sha256 与当前同范围 Git 差异不一致；本记录不把旧任务重新声明为 passed。"
+  ],
+  "created_at": "2026-08-23T20:12:00+08:00"
+}

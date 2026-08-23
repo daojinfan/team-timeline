@@ -51,3 +51,16 @@ test("V5 task status filter supports an accessible inverse mode", () => {
   assert.match(app, /\$\("#v5TaskStatusNot"\)\.checked = false/);
   assert.match(styles, /\.v5-status-filter-control/);
 });
+
+test("V5 editor layout keeps filters, task hierarchy, and metadata aligned", () => {
+  const index = readFileSync(path.join(root, "public/index.html"), "utf8");
+  assert.match(index, /class="v5-toolbar-primary"/);
+  assert.match(index, /class="v5-toolbar-filters"/);
+  assert.match(index, /class="v5-toolbar-actions"/);
+  assert.match(app, /v5-task-meta v5-task-date/);
+  assert.match(app, /v5-task-meta v5-task-cryostat/);
+  assert.match(app, /v5-task-meta v5-task-participants/);
+  assert.match(styles, /\.v5-task-row \{ display: grid; grid-template-columns:/);
+  assert.match(styles, /\.v5-task-cryostat \{ display: none; \}/);
+  assert.match(styles, /\.v5-editor-layout \{ display: grid; grid-template-columns:/);
+});

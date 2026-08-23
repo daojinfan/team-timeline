@@ -1,0 +1,88 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-162",
+  "work_package": "WP-009",
+  "title": "优化任务全量编辑台布局与视觉层级",
+  "goal": "在不改变任务筛选、专题归类和编辑行为的前提下，重排任务全量编辑台的筛选工具栏、专题任务树和右侧编辑面板，改善桌面端的信息层级、留白、对齐和密集任务行的可读性。",
+  "baseline": "BL-006",
+  "profile": "Standard",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "tests/v5-inline-editor.test.js"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "tests",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/05-quality",
+    "docs/08-changes"
+  ],
+  "write_paths": [
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "tests/v5-inline-editor.test.js"
+  ],
+  "out_of_scope": [
+    "src/server.js",
+    "src/v3",
+    "data/team_tasks.sqlite",
+    "手机端",
+    "AI自动建任务",
+    "数据库删除或重置",
+    "任务筛选逻辑、专题归类逻辑和编辑接口行为"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "筛选工具栏在桌面宽度下形成清晰的搜索区、过滤区和操作区，不再产生隐式网格列或控件错位。",
+    "专题→任务层级保持可展开、可收起和可选择，任务标题、排期、制冷机、状态、成员与移动操作在 1280×720 和 1366×768 下对齐且可读。",
+    "右侧编辑面板保持 sticky 桌面编辑体验，标题、字段分组、成员摘要和底部操作区层级清晰，不改变已有编辑字段和保存行为。",
+    "保持“非”筛选及其他筛选、专题管理、任务移动和内联编辑功能不变；npm test、前端语法和差异检查通过。"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-23T11:27:04.1295825Z"
+}

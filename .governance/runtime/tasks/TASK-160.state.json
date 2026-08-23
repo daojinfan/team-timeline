@@ -5,7 +5,7 @@
   "work_package": "WP-009",
   "contract_sha256": "8a2f3137570b966163f696281460e816594c6456e4e6798924e9feda3ead8655",
   "baseline": "BL-006",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "APR-122",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -28,14 +28,14 @@
   "review": {
     "required": true,
     "reviewer_task_id": "TASK-161",
-    "status": "passed",
+    "status": "cancelled",
     "evidence": [
-      "docs/05-quality/evidence/TASK-161/review-round-2.json"
+      "docs/05-quality/evidence/TASK-161/review-cancelled-task160-layout-followup-20260823.json"
     ],
-    "pass_streak": 2,
-    "subject_sha256": "c0158aebd4564e8aa95c56b32dab406cd512e0ccfac96d4305972395d622222b"
+    "pass_streak": 0,
+    "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "TASK-162 的布局优化修改同一组前端文件，旧状态筛选交付的最终变更指纹已不再对应当前工作树；保留历史实现与复审证据，由新任务重新覆盖并复审最终内容。",
   "created_at": "2026-08-23T11:13:53.889573Z",
-  "updated_at": "2026-08-23T11:21:27.0063762Z"
+  "updated_at": "2026-08-23T12:09:00.3310856Z"
 }
