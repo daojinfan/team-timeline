@@ -1,0 +1,55 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-175",
+  "reviewed_task_ids": ["TASK-174"],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-174",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "新增 execution.granularity 状态、1–5 档位标签和 aria-valuetext，同一日/周/月单位宽度函数按粒度密度调整；range input 的 input 事件即时重绘甘特图，既有筛选、今天定位、任务选择和排期入口保持不变。"
+    },
+    {
+      "task_id": "TASK-174",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "在执行中心工具栏加入原生 range 粒度控件（min=1、max=5、step=1）、输出档位文本和时间单位标签，保留原有 scale、range、今天、堆叠和清除控件。"
+    },
+    {
+      "task_id": "TASK-174",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "为粒度控制条增加网格布局、触控宽度、accent-color、焦点态和 720px 以下响应式宽度，未改变甘特内部滚动或成员行布局。"
+    },
+    {
+      "task_id": "TASK-174",
+      "path": "tests/v5-execution.test.js",
+      "change_type": "modified",
+      "summary": "扩展执行中心静态回归，检查粒度 range/output DOM、标签/宽度/输入事件接线和粒度控件样式。"
+    }
+  ],
+  "change_summary": "第一轮独立复核以 TASK-174 contract 的 start_git_commit 2f7d64ae6d37b168b8ceef5b216a424f4909804a 为基准，实际产品净差异仅包含 public/app.js、public/index.html、public/styles.css、tests/v5-execution.test.js 四个契约路径；实现提交为 134265f0。既有治理运行记录不计为产品变更。",
+  "scope_checked": [
+    "range 控件使用原生 input type=range，min=1、max=5、step=1，支持键盘方向键、Home/End 和触控拖动；output 显示紧凑、精简、标准、细致、精细五档。",
+    "v5ExecutionGranularityValue 对非法值进行有限范围归一化，v5ExecutionGranularityLabel 同步 aria-valuetext 和 output；input 事件立即更新状态和甘特投影。",
+    "v5ExecutionUnitWidth 保留日=42、周=106、月=145 的基准语义，只叠加密度系数；范围起止、单位偏移、今天线和日期格式仍由原有日/周/月逻辑计算。",
+    "粒度调节只调用 v5RenderExecutionGantt，不触碰组合筛选、任务/成员选择、成员排期预览保存、任务列表、负载表或内部横向滚动。",
+    "实际 diff 中四个产品路径均为 modified，无新增、删除、重命名；未修改 public 外的服务端、数据库、API 或移动端。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "git diff --name-status 2f7d64ae6d37b168b8ceef5b216a424f4909804a HEAD：public/app.js、public/index.html、public/styles.css、tests/v5-execution.test.js 均为 modified。",
+    "npm test：51 项全部通过。",
+    "node --check public/app.js：通过。",
+    "node --test tests/v5-execution.test.js：5 项全部通过。",
+    "git diff --check：通过（仅现有治理文档换行风格提示，无差异错误）。",
+    "Test-ProjectGovernance.ps1 -ProjectPath . -Level Release：扫描 53 份文档，0 errors、0 warnings。",
+    "独立静态检查：Range、Output、MinMax、Label、Width、Input、Aria、ScaleDay/ScaleWeek/ScaleMonth、RangeSemantics、InternalScroll 均确认存在。"
+  ],
+  "created_at": "2026-08-23T23:10:00+08:00"
+}

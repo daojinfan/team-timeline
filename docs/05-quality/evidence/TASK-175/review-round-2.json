@@ -1,0 +1,54 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-175",
+  "reviewed_task_ids": ["TASK-174"],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-174",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "第二轮重新核对粒度状态归一化、五档标签、日周月基础单位宽度和 input 即时甘特重绘；筛选、今天、任务选择、成员排期编辑仍由原事件链提供。"
+    },
+    {
+      "task_id": "TASK-174",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "第二轮重新核对 range 控件的 min/max/step、output for 关联、时间单位 select 和既有执行工具栏层级，未发现控件丢失或 ID 变化。"
+    },
+    {
+      "task_id": "TASK-174",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "第二轮重新核对粒度条桌面网格、触控宽度、focus-within 和 720px 响应式规则，甘特内部横向滚动及成员行样式保持不变。"
+    },
+    {
+      "task_id": "TASK-174",
+      "path": "tests/v5-execution.test.js",
+      "change_type": "modified",
+      "summary": "第二轮确认粒度控件回归断言与全量 52 项测试、V5 5 项回归共同通过。"
+    }
+  ],
+  "change_summary": "第二轮 ReopenReview 后对 TASK-174 同一最终内容完成全量独立复审。实际 Git 净差异仍为四个产品路径，共 25 insertions、3 deletions；第一轮和第二轮 subject_sha256 均为 b2319fb52c1444f546b77908566920952c58879b5b7efe059f01e7c01776bce7，未发现新增问题、范围越界、单位语义变化或执行中心交互回归。",
+  "scope_checked": [
+    "第二轮确认 range input 原生支持键盘和触控，input 事件实时更新状态、aria-valuetext、output 和甘特宽度；非法值仍被 clamp 到 1–5。",
+    "第二轮确认日/周/月仅改变基准单位宽度，日期范围计算、单位起止、今天线和任务/成员条定位仍由既有逻辑负责。",
+    "第二轮确认筛选、今天按钮、任务选择、成员排期编辑、任务排期预览、任务列表/负载 tab 与内部横向滚动均未被粒度控件破坏。",
+    "第二轮实际净差异仍只包含 public/app.js、public/index.html、public/styles.css、tests/v5-execution.test.js，治理记录未计为产品改动。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "第二轮 npm test：52 项全部通过。",
+    "第二轮 node --check public/app.js：通过。",
+    "第二轮 node --test tests/v5-execution.test.js：5 项全部通过。",
+    "第二轮 git diff --check：通过（仅现有治理文档换行风格提示，无差异错误）。",
+    "第二轮 Test-ProjectGovernance.ps1 -ProjectPath . -Level Release：53 份文档，0 errors、0 warnings。",
+    "第二轮 Git 清单与第一轮一致：四个产品路径均 modified，25 insertions、3 deletions。",
+    "第二轮粒度静态检查：Range、Output、MinMax、Label、Width、Input、Aria、ScaleDay/ScaleWeek/ScaleMonth、RangeSemantics、InternalScroll 均为 true。"
+  ],
+  "created_at": "2026-08-23T23:20:00+08:00"
+}

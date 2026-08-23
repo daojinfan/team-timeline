@@ -1,0 +1,64 @@
+
+> team-task-gantt@1.0.0 test
+> node --test tests/*.test.js
+
+✔ dashboard exposes seeded data, templates, checklist, and stats (163.5462ms)
+✔ fresh database sample dates are relative to server-local today (97.7958ms)
+✔ reopening an existing database does not rewrite stored dates (108.0626ms)
+✔ structured filters return matching task ids (120.9052ms)
+✔ planned and active task statuses are derived from dates (114.4482ms)
+✔ completed task status survives title and description edits (98.6302ms)
+✔ batch completion preserves every personal assignment progress value (91.6731ms)
+✔ archived status filter can include archived tasks (95.5026ms)
+✔ template and checklist workflow works (116.052ms)
+✔ archive area, trash, and restore workflow works (106.8656ms)
+✔ task delete is a recoverable soft delete (80.2524ms)
+✔ deleted members can be restored from trash (85.9743ms)
+✔ maintenance preview and safer maintenance backups work (106.4273ms)
+✔ SQLite schema and CSV and JSON export formats remain compatible (70.7304ms)
+✔ core assignment behavior still works (81.6695ms)
+✔ gantt assignment adjustment only changes one member assignment (68.6122ms)
+✔ V2 schema is exactly version 2 with 12 tables and 10 indexes (165.2596ms)
+✔ the guarded V2 endpoint surface is the exact frozen set of 34 method-path pairs (0.3544ms)
+✔ a real V1-shaped database is backed up, migrated once, and reopened idempotently (191.8348ms)
+✔ checksum mismatch refuses startup without rewriting the database (210.8741ms)
+✔ resource, plan, test-item, template, event, archive, arrival, and backup APIs preserve canonical contracts (254.1019ms)
+✔ manual task preview and confirm preserve progress while ETA and cryostat confirmations bind current facts (193.7167ms)
+✔ manual task cryostat conflicts only include other active plans (146.5335ms)
+✔ V2 plan-task text boundaries are enforced without changing the V1 task endpoint (100.1792ms)
+✔ submission checklist snapshots and manual returned/accepted reviews are authoritative and progress-independent (154.4913ms)
+✔ V1 primary guards, soft-delete restore, and reset preserve V2 lineage history without changing success shapes (169.7275ms)
+✔ V3 schema and endpoint surface are exact and re-open idempotently (172.8355ms)
+✔ V3.1 task details expose topic context and persist structured test intent (194.4409ms)
+✔ V3 topic source updates enforce contact ownership and sample initial ETA persists (194.772ms)
+✔ topic, sample, task-chain, assignment and exact-set submission flow (238.2762ms)
+✔ cryostat preview warns only for overlapping tasks in another active topic (168.1252ms)
+✔ V4 compact task/topic buttons retain readable foregrounds (34.744ms)
+✔ V4 status chips expose all states and meet WCAG AA contrast (2.811ms)
+✔ V4 workbench overview exposes summary, queue, timeline and desktop filters (3.5193ms)
+✔ workbench reuses V3 topic resources and renders safe, actionable projections (2.1103ms)
+✔ workbench layout constrains dense desktop content (0.6986ms)
+✔ topic planning renders a navigable topic list before a topic is selected (0.3817ms)
+✔ V5 schema is additive, exposes the frozen endpoint surface, and reopens idempotently (190.3442ms)
+✔ V5 task editor persists canonical fields and computes the five user-facing states (176.8949ms)
+✔ V5 supports topic regrouping, member schedule synchronization, and execution load projections (175.2055ms)
+✔ V5 task editor renders the existing test-item editor node (7.332ms)
+✔ V5 task editor protects topic defaults and surfaces nested API errors (0.5693ms)
+✔ V5 execution center is a real projection, not the legacy placeholder (2.873ms)
+✔ V5 execution center exposes the approved filters and schedule preview flow (0.9339ms)
+✔ V5 execution center keeps internal gantt scrolling and synchronizes all V5 projections (0.9659ms)
+✔ V5 gantt is grouped by member and preserves unassigned work (0.8252ms)
+✔ V5 gantt exposes a continuous granularity control without changing date units (0.6329ms)
+✔ V5 selected-task summary renders inline editable task attributes (2.3165ms)
+✔ V5 inline task save uses preview, conflict acknowledgement and expected version (0.6218ms)
+✔ V5 inline editor keeps samples in the full editor and has compact responsive styles (0.4635ms)
+✔ V5 task status filter supports an accessible inverse mode (0.9435ms)
+✔ V5 editor layout keeps filters, task hierarchy, and metadata aligned (0.9107ms)
+ℹ tests 52
+ℹ suites 0
+ℹ pass 52
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1738.6272
