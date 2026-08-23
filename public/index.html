@@ -79,7 +79,29 @@
           </div>
         </section>
         <section id="v5ExecutionView" class="v5-view" data-v5-panel="execution" role="tabpanel" aria-label="执行中心" hidden>
-          <div class="v5-placeholder-card"><span class="v5-eyebrow">排期与负载</span><h3>执行中心</h3><p>甘特图和成员负载视图将在这里使用任务全量编辑台保存的同一份任务事实。当前版本先从编辑台维护任务，执行视图随后接入。</p><button class="ghost-button" type="button" data-v5-back-editor>返回任务编辑台</button></div>
+          <div class="v5-execution-toolbar" aria-label="执行中心筛选与视图设置">
+            <div class="v5-execution-filter-grid">
+              <label class="v5-search-field">搜索任务、样品或测试项<input id="v5ExecutionSearch" type="search" placeholder="任务名称、样品型号、测试项或成员"></label>
+              <label>来源小组<select id="v5ExecutionSource"><option value="">全部来源小组</option></select></label>
+              <label>专题<select id="v5ExecutionTopic"><option value="">全部专题</option></select></label>
+              <label class="v5-status-filter-control"><span class="v5-status-filter-heading"><span>状态</span></span><select id="v5ExecutionStatus"><option value="">全部状态</option><option value="waiting">等待样品</option><option value="sample-delayed">样品交付延期</option><option value="testing">正在测试</option><option value="test-delayed">测试延期</option><option value="completed">已完成</option></select></label>
+              <label>成员<select id="v5ExecutionMember"><option value="">全部成员</option></select></label>
+              <label>样品<select id="v5ExecutionSample"><option value="">全部样品</option></select></label>
+              <label>制冷机<select id="v5ExecutionCryostat"><option value="">全部制冷机</option></select></label>
+              <label>开始不晚于<input id="v5ExecutionFrom" type="date"></label>
+              <label>结束不早于<input id="v5ExecutionTo" type="date"></label>
+            </div>
+            <div class="v5-execution-toolbar-row">
+              <div class="v5-toolbar-actions"><label>粒度<select id="v5ExecutionScale"><option value="day">日</option><option value="week" selected>周</option><option value="month">月</option></select></label><label>范围<select id="v5ExecutionRange"><option value="smart" selected>智能</option><option value="all">全部</option><option value="7">未来 7 天</option><option value="30">未来 30 天</option><option value="90">未来 90 天</option></select></label><button id="v5ExecutionToday" class="ghost-button" type="button">今天</button></div>
+              <div class="v5-toolbar-actions"><label class="v5-check-inline"><input id="v5ExecutionOnlyBusy" type="checkbox"> 只看有任务成员</label><label class="v5-check-inline"><input id="v5ExecutionStack" type="checkbox" checked> 任务堆叠</label><button id="v5ExecutionClear" class="ghost-button" type="button">清除筛选</button></div>
+            </div>
+          </div>
+          <section id="v5ExecutionStats" class="v5-execution-stats" aria-label="执行中心汇总统计" aria-live="polite"></section>
+          <section class="v5-execution-layout">
+            <article class="v5-execution-card v5-execution-gantt-card"><header class="v5-card-header"><div><span class="v5-eyebrow">排期总览</span><h3>任务与成员甘特图</h3></div><div class="v5-execution-legend"><span><i class="v5-legend-task"></i>任务整体</span><span><i class="v5-legend-member"></i>成员排期</span><span><i class="v5-legend-today"></i>今天</span></div></header><div id="v5ExecutionRangeLabel" class="v5-execution-range-label">正在计算范围…</div><div id="v5ExecutionGantt" class="v5-execution-gantt" aria-live="polite"><div class="v5-empty-state"><p>正在读取执行数据…</p></div></div></article>
+            <aside class="v5-execution-side"><article class="v5-execution-card"><header class="v5-card-header"><div><span class="v5-eyebrow">成员负载</span><h3>当前筛选范围</h3></div><span id="v5ExecutionLoadCount" class="v5-muted">—</span></header><div id="v5ExecutionLoad" class="v5-execution-load"></div></article><article class="v5-execution-card v5-execution-detail-card"><header class="v5-card-header"><div><span class="v5-eyebrow">选中任务</span><h3>排期详情</h3></div><button class="small-button" type="button" data-v5-back-editor>编辑任务</button></header><div id="v5ExecutionDetail" class="v5-execution-detail"><div class="v5-empty-state" style="padding:25px 12px"><p>点击任务条或任务列表查看详情。</p></div></div></article></aside>
+          </section>
+          <section class="v5-execution-card v5-execution-task-list-card"><header class="v5-card-header"><div><span class="v5-eyebrow">当前筛选结果</span><h3>任务列表</h3></div><span id="v5ExecutionTaskCount" class="v5-muted">—</span></header><div id="v5ExecutionTaskList" class="v5-execution-task-list"></div></section>
         </section>
       </section>
       <div id="legacyV2Content" hidden>
@@ -432,6 +454,15 @@
         <div id="v5TopicMoveFormError" class="v5-form-error" role="alert" hidden></div>
         <div class="v5-dialog-body"><label>目标专题<select id="v5TopicMoveTarget" required></select></label><section id="v5TopicMovePreview" class="v5-preview-box" aria-live="polite"></section></div>
         <footer class="v5-dialog-actions"><button type="button" class="ghost-button" data-v5-close-dialog="v5TopicMoveDialog">取消</button><button id="v5TopicMoveSaveBtn" class="primary-action" type="submit">确认操作</button></footer>
+      </form>
+    </dialog>
+
+    <dialog id="v5ScheduleDialog" class="v5-dialog" aria-labelledby="v5ScheduleDialogTitle">
+      <form id="v5ScheduleForm" class="v5-dialog-form v5-narrow-dialog-form">
+        <header class="v5-dialog-header"><div><span class="v5-eyebrow">执行中心排期</span><h2 id="v5ScheduleDialogTitle">修改任务时间</h2><p id="v5ScheduleDialogHint">保存前先生成预览；冲突需要明确确认。</p></div><button type="button" class="icon-button" data-v5-close-dialog="v5ScheduleDialog" aria-label="关闭排期编辑">×</button></header>
+        <div id="v5ScheduleFormError" class="v5-form-error" role="alert" hidden></div>
+        <div class="v5-dialog-body"><div id="v5ScheduleTaskSummary" class="v5-preview-box"></div><div id="v5ScheduleMemberField" class="v5-form-grid" hidden><label class="v5-span-2">成员<select id="v5ScheduleMember"></select></label></div><div class="v5-form-grid"><label>开始日期<input id="v5ScheduleStart" type="date" required></label><label>结束日期<input id="v5ScheduleEnd" type="date" required></label></div><label id="v5ScheduleSyncField" class="v5-check-inline"><input id="v5ScheduleSync" type="checkbox"> 同步所有成员的排期</label><p id="v5ScheduleBoundaryHint" class="v5-field-hint"></p><section id="v5SchedulePreview" class="v5-preview-box" aria-live="polite"><strong>保存预览</strong><p>修改日期后点击“生成预览”。</p></section></div>
+        <footer class="v5-dialog-actions"><button type="button" class="ghost-button" data-v5-close-dialog="v5ScheduleDialog">取消</button><button id="v5SchedulePreviewBtn" class="ghost-button" type="button">生成预览</button><button id="v5ScheduleSaveBtn" class="primary-action" type="submit" disabled>确认保存</button></footer>
       </form>
     </dialog>
 
