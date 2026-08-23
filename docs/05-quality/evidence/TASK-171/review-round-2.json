@@ -1,0 +1,54 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-171",
+  "reviewed_task_ids": ["TASK-170"],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-170",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "第二轮重新核对执行中心 DOM：旧版式成员侧栏、统计区和甘特图/任务/负载 tab 与 V5 过滤控件、详情区的层级和引用保持稳定。"
+    },
+    {
+      "task_id": "TASK-170",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "第二轮重新核对执行中心投影：筛选任务、成员侧栏、甘特条、负载表、子视图切换和排期预览保存使用同一份 V5 状态，未出现第一轮之后的内容变化。"
+    },
+    {
+      "task_id": "TASK-170",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "第二轮重新核对 226px 成员侧栏、168px 甘特标签列、内部横向滚动、选中态和 1180/720 响应式断点，未发现会把时间轴溢出到页面的规则。"
+    },
+    {
+      "task_id": "TASK-170",
+      "path": "tests/v5-execution.test.js",
+      "change_type": "modified",
+      "summary": "第二轮确认新增布局断言仍与全量 50 项测试及 V5 3 项回归共同通过。"
+    }
+  ],
+  "change_summary": "第二轮在 ReopenReview 后对 TASK-170 同一最终内容完成全量独立复审。重新计算的 Git 净差异仍为同一四个交付路径，第一轮与第二轮 subject_sha256 均为 12560c0dfd2a5c3c07a0f6cfa8419a337fee085b328624ab19d32f9eed7ec7ea，未发现新增问题、范围越界或设计漂移。",
+  "scope_checked": [
+    "实际差异仍以 TASK-170 start_git_commit 7a7211a5d7458ae1d66f778d6d3272fe98f812de 为起点，仅包含 public/index.html、public/app.js、public/styles.css 和 tests/v5-execution.test.js。",
+    "V5 执行中心仍保留组合筛选、按成员筛选、任务/成员排期入口、预览 token 和 expected_version 保护；没有新增接口、服务端、数据库或移动端改动。",
+    "甘特图任务整体条和成员条仍共享任务选择但只允许成员条进入成员排期编辑；任务详情仍可修改任务时间并打开全量编辑台。",
+    "第二轮重跑 DOM 静态检查，执行中心所需 ID 和三种子视图存在，新增执行中心 ID 无重复；响应式规则仍将侧栏在 720px 以下降为单列。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "第二轮 npm test：50 项全部通过。",
+    "第二轮 node --check public/app.js：通过。",
+    "第二轮 node --test tests/v5-execution.test.js：3 项全部通过。",
+    "第二轮 git diff --check：通过（仅现有治理文档换行风格提示，无差异错误）。",
+    "第二轮 Test-ProjectGovernance.ps1 -ProjectPath . -Level Release：53 份文档，0 errors、0 warnings。",
+    "第二轮 Git 清单与第一轮一致：public/app.js、public/index.html、public/styles.css、tests/v5-execution.test.js 均 modified，净差异 86 insertions、12 deletions。",
+    "第二轮独立 DOM/CSS 静态检查：RequiredMissing 为空、DuplicateExecutionIds 为空、Workspace=True、Subviews=True。"
+  ],
+  "created_at": "2026-08-23T22:05:00+08:00"
+}

@@ -1,0 +1,55 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-171",
+  "reviewed_task_ids": ["TASK-170"],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-170",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "将 V5 执行中心从左右卡片布局改为旧版工作区骨架：统计区、甘特图/任务/负载分视图、成员侧栏和底部选中任务详情；保留原有筛选控件与排期对话框入口。"
+    },
+    {
+      "task_id": "TASK-170",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "增加执行中心当前子视图和成员搜索状态，按当前 V5 筛选生成成员侧栏及负载表，并在甘特图、任务、负载视图之间切换；任务选择、成员排期编辑、预览保存和全量编辑入口保持连接。"
+    },
+    {
+      "task_id": "TASK-170",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "补充旧版风格的 226px 成员侧栏、内部甘特滚动、168px 标签列、分视图导航、成员列表和负载表样式，并保留桌面断点与小屏降为单列。"
+    },
+    {
+      "task_id": "TASK-170",
+      "path": "tests/v5-execution.test.js",
+      "change_type": "modified",
+      "summary": "将静态回归断言扩展为检查成员工作区、分视图导航、成员列表渲染和子视图状态切换。"
+    }
+  ],
+  "change_summary": "第一轮独立复核以 TASK-170 启动提交 7a7211a5d7458ae1d66f778d6d3272fe98f812de 为基准，实际产品净差异仅包含其契约允许的四个路径；DOM、客户端状态/事件、样式和静态测试均对应旧版成员侧栏与甘特/任务/负载信息架构，没有发现越界或设计漂移。",
+  "scope_checked": [
+    "public/index.html 的执行中心保留来源小组、专题、状态、成员、样品、制冷机、日期、粒度、范围、今天和堆叠控件，并新增旧版式甘特图/任务/负载 tab 与成员侧栏。",
+    "public/app.js 的 v5ExecutionFilteredTasks 仍以 V5 任务事实过滤；成员侧栏搜索只影响成员投影，成员点击仍复用成员筛选并同步甘特图和负载表。",
+    "甘特图仍使用 v5ExecutionGanttScroll 内部横向滚动，任务整体条与成员条分别保留任务选择、成员排期编辑和延期颜色；任务详情仍提供修改时间和全量编辑。",
+    "成员排期和任务排期仍调用 schedule-preview/member-schedule-preview，并携带 preview_token、expected_version 与确认语义；没有修改服务端、数据库或 API。",
+    "新增 v5Execution* DOM ID 均唯一；全页已有的 v5ResourceActive 重复 ID 在 TASK-170 启动提交前已存在，未由本任务引入，也不属于执行中心改动。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "git diff --name-status 7a7211a5d7458ae1d66f778d6d3272fe98f812de HEAD -- public/index.html public/styles.css public/app.js tests/v5-execution.test.js：四个路径均为 modified，无新增、删除或重命名。",
+    "npm test：50 项全部通过。",
+    "node --check public/app.js：通过。",
+    "node --test tests/v5-execution.test.js：3 项全部通过。",
+    "git diff --check：通过（仅报告现有 APPPROVAL-LOG.md 的换行风格提示，无差异错误）。",
+    "Test-ProjectGovernance.ps1 -ProjectPath . -Level Release：扫描 53 份文档，0 errors、0 warnings。",
+    "独立 DOM/CSS 静态检查：执行中心所需 ID、三种子视图、226px 成员工作区和 168px 甘特标签列均存在，新增执行中心 ID 无重复。"
+  ],
+  "created_at": "2026-08-23T21:55:00+08:00"
+}
