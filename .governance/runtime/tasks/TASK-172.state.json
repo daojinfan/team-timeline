@@ -5,7 +5,7 @@
   "work_package": "WP-009",
   "contract_sha256": "5c448bed48a9ec3463b7bea073667bc2bfaa064adb2c210bc3eeb86bde2da39f",
   "baseline": "BL-006",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "APR-128",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -37,14 +37,14 @@
   "review": {
     "required": true,
     "reviewer_task_id": "TASK-173",
-    "status": "passed",
+    "status": "cancelled",
     "evidence": [
-      "docs/05-quality/evidence/TASK-173/review-round-2.json"
+      "docs/05-quality/evidence/TASK-173/review-cancelled-task172-superseded-20260823.json"
     ],
-    "pass_streak": 2,
-    "subject_sha256": "34da7c4ab560a9b6779335139fe35dee04a16517254033c42a270cfafb68ac6d"
+    "pass_streak": 0,
+    "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "TASK-174 在 TASK-172 的成员甘特图最终内容上新增粒度调节 bar，替代 TASK-172 的旧版最终内容；保留 TASK-172 代码与两轮历史审核证据。",
   "created_at": "2026-08-23T14:19:52.5649591Z",
-  "updated_at": "2026-08-23T14:36:30.3322599Z"
+  "updated_at": "2026-08-23T14:46:26.3396160Z"
 }

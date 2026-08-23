@@ -1,0 +1,13 @@
+✔ V5 execution center is a real projection, not the legacy placeholder (1.5839ms)
+✔ V5 execution center exposes the approved filters and schedule preview flow (0.5648ms)
+✔ V5 execution center keeps internal gantt scrolling and synchronizes all V5 projections (0.6129ms)
+✔ V5 gantt is grouped by member and preserves unassigned work (0.5418ms)
+✔ V5 gantt exposes a continuous granularity control without changing date units (0.4946ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 56.4295

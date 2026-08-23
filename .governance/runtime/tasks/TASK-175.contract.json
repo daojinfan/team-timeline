@@ -1,0 +1,124 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-175",
+  "work_package": "WP-009",
+  "title": "独立审核执行中心甘特图粒度调节条",
+  "goal": "对 TASK-174 的甘特图粒度调节条执行独立 Release 双轮全量审核，确认控件可操作、缩放语义稳定且既有执行中心无回归。",
+  "baseline": "BL-006",
+  "profile": "Release",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-175"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "tests",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/05-quality"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-175"
+  ],
+  "out_of_scope": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "src/server.js",
+    "data/team_tasks.sqlite",
+    "手机端"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [
+    "TASK-174"
+  ],
+  "acceptance_criteria": [
+    "核对 TASK-174 实际 Git 变更清单未越界，且粒度控件 DOM、样式和事件接线完整。",
+    "独立验证粒度档位改变单位宽度、日周月单位与范围语义不变、键盘操作可用。",
+    "核对筛选、今天定位、任务/成员选择、排期编辑、内部滚动和 V5 其他视图无回归。",
+    "按 Release 规则对同一最终内容完成双轮全量审核并记录实际变更清单。"
+  ],
+  "validations": [
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "v5-execution-regression",
+      "command": "node",
+      "args": [
+        "--test",
+        "tests/v5-execution.test.js"
+      ]
+    },
+    {
+      "id": "governance-release",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-ProjectPath",
+        ".",
+        "-Level",
+        "Release"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface",
+    "success_criteria",
+    "scope",
+    "production_release"
+  ],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-23T14:42:04.2163087Z",
+  "release_controls": {
+    "target_environment": "本地桌面开发环境：D:\\Codex\\人员管理系统，审核当前 dev 分支 TASK-174 最终内容",
+    "execution_window": "TASK-174 Verify 后执行第一轮，ReopenReview 后对同一最终内容执行第二轮",
+    "rollback_plan": "审核只写 docs/05-quality/evidence/TASK-175，不修改产品实现",
+    "observation_metrics": "实际 Git 变更、粒度控件 DOM/CSS/JS、单位宽度函数、事件与回归测试、npm、语法、V5 回归、Release治理",
+    "stop_conditions": "发现变更越界、控件不可用、缩放语义变化、交互回归、验证失败或两轮指纹不一致时停止",
+    "post_release_owner": "PM / human"
+  }
+}

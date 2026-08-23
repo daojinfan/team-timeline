@@ -3544,6 +3544,9 @@ button.v3-task-card:disabled small {
 .v5-execution-toolbar-row .v5-toolbar-actions { align-items: center; }
 .v5-execution-toolbar-row label { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 12px; font-weight: 700; }
 .v5-execution-toolbar-row select { min-width: 92px; }
+.v5-execution-granularity-control { display: inline-grid !important; grid-template-columns: max-content minmax(110px, 150px) max-content; align-items: center; gap: 7px !important; }
+.v5-execution-granularity-control input[type="range"] { width: 138px; margin: 0; accent-color: #2563eb; cursor: pointer; }
+.v5-execution-granularity-control output { min-width: 32px; color: var(--text); font-size: 11px; font-weight: 800; text-align: right; }
 .v5-execution-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 14px; }
 .v5-execution-stats article { min-width: 0; padding: 13px 16px; border: 1px solid var(--border); border-radius: 13px; background: var(--surface); box-shadow: var(--shadow); }
 .v5-execution-stats span, .v5-execution-stats small { display: block; color: var(--muted); font-size: 12px; font-weight: 700; }
@@ -3624,3 +3627,5 @@ button.v3-task-card:disabled small {
 .v5-execution-load-table td:first-child strong { font-size: 12px; }.v5-execution-load-table td:first-child small { color: var(--muted); font-size: 10px; }
 @media (max-width: 1180px) { .v5-execution-workspace { grid-template-columns: 200px minmax(0, 1fr); } }
 @media (max-width: 720px) { .v5-execution-workspace { grid-template-columns: minmax(0, 1fr); }.v5-execution-member-sidebar { position: static; max-height: none; }.v5-execution-member-list { max-height: 250px; }.v5-execution-subnav { width: 100%; }.v5-execution-subnav button { flex: 1; } }
+.v5-execution-granularity-control:focus-within { color: var(--text); }
+@media (max-width: 720px) { .v5-execution-granularity-control { grid-template-columns: max-content minmax(130px, 1fr) max-content; width: min(100%, 330px); }.v5-execution-granularity-control input[type="range"] { width: 100%; } }

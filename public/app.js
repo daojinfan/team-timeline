@@ -3965,6 +3965,7 @@ const v5State = {
   execution: {
     activeView: "gantt",
     scale: "week",
+    granularity: 3,
     range: "smart",
     onlyBusy: false,
     stack: true,
@@ -4275,8 +4276,13 @@ function v5RenderExecutionFilterOptions() {
   ["#v5ExecutionSearch", "#v5ExecutionFrom", "#v5ExecutionTo"].forEach((selector) => { const node = $(selector); if (node) node.value = execution[selector === "#v5ExecutionSearch" ? "search" : selector === "#v5ExecutionFrom" ? "from" : "to"] || ""; });
   const selects = [["#v5ExecutionScale", execution.scale], ["#v5ExecutionRange", execution.range], ["#v5ExecutionStatus", execution.status]];
   selects.forEach(([selector, value]) => { const node = $(selector); if (node) node.value = value || ""; });
+  const granularity = v5ExecutionGranularityValue(); const granularityInput = $("#v5ExecutionGranularity"); const granularityOutput = $("#v5ExecutionGranularityValue");
+  if (granularityInput) { granularityInput.value = String(granularity); granularityInput.setAttribute("aria-valuetext", v5ExecutionGranularityLabel(granularity)); }
+  if (granularityOutput) granularityOutput.textContent = v5ExecutionGranularityLabel(granularity);
   const onlyBusy = $("#v5ExecutionOnlyBusy"); const stack = $("#v5ExecutionStack"); if (onlyBusy) onlyBusy.checked = Boolean(execution.onlyBusy); if (stack) stack.checked = execution.stack !== false;
 }
+function v5ExecutionGranularityValue(value = v5State.execution.granularity) { const parsed = Number(value); return Number.isFinite(parsed) ? clamp(Math.round(parsed), 1, 5) : 3; }
+function v5ExecutionGranularityLabel(value) { return ({ 1: "紧凑", 2: "精简", 3: "标准", 4: "细致", 5: "精细" })[v5ExecutionGranularityValue(value)] || "标准"; }
 function v5ExecutionStartOfUnit(date, scale) {
   if (scale === "day") return date;
   const value = new Date(`${date}T00:00:00`);
@@ -4303,7 +4309,7 @@ function v5ExecutionBuildRange(tasks) {
   const units = []; let cursor = start; while (cursor <= end && units.length < 500) { const next = v5ExecutionNextUnit(cursor, execution.scale); units.push({ start: cursor, end: next <= end ? addDays(next, -1) : end }); cursor = next; }
   return { start, end, units };
 }
-function v5ExecutionUnitWidth() { return v5State.execution.scale === "day" ? 42 : v5State.execution.scale === "week" ? 106 : 145; }
+function v5ExecutionUnitWidth() { const base = v5State.execution.scale === "day" ? 42 : v5State.execution.scale === "week" ? 106 : 145; const density = [0.7, 0.85, 1, 1.2, 1.42][v5ExecutionGranularityValue() - 1]; return Math.max(28, Math.round(base * density)); }
 function v5ExecutionOffset(range, date) { if (!date || date < range.start) return 0; const unit = v5State.execution.scale; if (unit === "day") return daysBetween(range.start, date); if (unit === "week") return Math.floor(daysBetween(range.start, date) / 7); const start = new Date(`${range.start}T00:00:00`); const value = new Date(`${date}T00:00:00`); return (value.getFullYear() - start.getFullYear()) * 12 + value.getMonth() - start.getMonth(); }
 function v5ExecutionDuration(range, start, end) { const clippedStart = start < range.start ? range.start : start; const clippedEnd = end > range.end ? range.end : end; if (clippedEnd < range.start || clippedStart > range.end) return 0; const width = v5ExecutionUnitWidth(); if (v5State.execution.scale === "day") return Math.max(16, (daysBetween(clippedStart, clippedEnd) + 1) * width - 6); if (v5State.execution.scale === "week") return Math.max(22, (daysBetween(clippedStart, clippedEnd) + 1) / 7 * width - 6); const units = v5ExecutionOffset(range, clippedEnd) - v5ExecutionOffset(range, clippedStart) + 1; return Math.max(22, units * width - 6); }
 function v5ExecutionPosition(range, start, end) { const width = v5ExecutionUnitWidth(); const safeStart = start && start > range.start ? start : range.start; return { left: v5ExecutionOffset(range, safeStart) * width + 3, width: v5ExecutionDuration(range, start || range.start, end || range.end) }; }
@@ -4417,6 +4423,7 @@ function bindV5ExecutionEvents() {
   const update = (key, value) => { v5State.execution[key] = value; v5RenderExecution(); };
   $("#v5ExecutionSearch")?.addEventListener("input", (event) => update("search", event.target.value));
   [["#v5ExecutionSource", "sourceId"], ["#v5ExecutionTopic", "topicId"], ["#v5ExecutionStatus", "status"], ["#v5ExecutionMember", "memberId"], ["#v5ExecutionSample", "sampleId"], ["#v5ExecutionCryostat", "cryostatId"], ["#v5ExecutionFrom", "from"], ["#v5ExecutionTo", "to"], ["#v5ExecutionScale", "scale"], ["#v5ExecutionRange", "range"]].forEach(([selector, key]) => $(selector)?.addEventListener("change", (event) => update(key, event.target.value)));
+  $("#v5ExecutionGranularity")?.addEventListener("input", (event) => { const value = v5ExecutionGranularityValue(event.target.value); v5State.execution.granularity = value; event.target.setAttribute("aria-valuetext", v5ExecutionGranularityLabel(value)); const output = $("#v5ExecutionGranularityValue"); if (output) output.textContent = v5ExecutionGranularityLabel(value); v5RenderExecutionGantt(v5ExecutionFilteredTasks()); });
   $("#v5ExecutionOnlyBusy")?.addEventListener("change", (event) => update("onlyBusy", event.target.checked)); $("#v5ExecutionStack")?.addEventListener("change", (event) => update("stack", event.target.checked)); $("#v5ExecutionMemberSearch")?.addEventListener("input", (event) => update("memberSearch", event.target.value));
   $("#v5ExecutionToday")?.addEventListener("click", () => { v5State.execution.anchorDate = todayLocalDate(); v5State.execution.range = "smart"; v5RenderExecutionFilterOptions(); v5RenderExecution(); });
   $("#v5ExecutionClear")?.addEventListener("click", () => { Object.assign(v5State.execution, { search: "", sourceId: "", topicId: "", status: "", memberId: "", sampleId: "", cryostatId: "", from: "", to: "", memberSearch: "", anchorDate: null }); v5RenderExecution(); });

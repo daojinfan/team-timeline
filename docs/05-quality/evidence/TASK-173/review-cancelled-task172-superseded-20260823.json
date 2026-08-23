@@ -1,0 +1,19 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-173",
+  "reviewed_task_ids": ["TASK-172"],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "cancelled",
+  "diff_checked": true,
+  "changes": [],
+  "change_summary": "TASK-172 的按成员甘特图最终内容已被 TASK-174 的粒度调节条改动替代；保留 TASK-172/TASK-173 两轮历史审核证据，不将旧审核指纹绑定到新的最终内容。",
+  "scope_checked": [
+    "TASK-174 在 TASK-172 最终版本上新增 V5 甘特图粒度调节控件及其缩放逻辑，形成新的最终内容。",
+    "本证据仅取消历史审核关系，不修改产品代码。"
+  ],
+  "findings": [],
+  "validation_evidence": [],
+  "created_at": "2026-08-23T22:48:00+08:00"
+}

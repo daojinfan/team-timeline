@@ -33,7 +33,8 @@
     "docs/05-quality/evidence/TASK-173/20260823T143546937Z-16294140-app-syntax.evidence.json",
     "docs/05-quality/evidence/TASK-173/20260823T143546937Z-16294140-gantt-member-regression.evidence.json",
     "docs/05-quality/evidence/TASK-173/20260823T143546937Z-16294140-governance-release.evidence.json",
-    "docs/05-quality/evidence/TASK-173/review-round-2.json"
+    "docs/05-quality/evidence/TASK-173/review-round-2.json",
+    "docs/05-quality/evidence/TASK-173/review-cancelled-task172-superseded-20260823.json"
   ],
   "review_history": [
     {
@@ -48,7 +49,14 @@
       "sha256": "dd33cee4233b0979fcc223e73653e8f635eb057c769cb31110551376f1c8b789",
       "result": "passed",
       "round_id": "RR-0de8406b48b04a7583077c30a008d4d9",
-      "recorded_at": "2026-08-23T14:36:30.0969670Z"
+      "recorded_at": "2026-08-23T14:36:30.096967Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-173/review-cancelled-task172-superseded-20260823.json",
+      "sha256": "749f05cde1f659d0a769ec1fe211d7d8958b22c82d2331f2883822ced2246b63",
+      "result": "cancelled",
+      "round_id": "RR-6f2f75a9ac314094ba928ecb028c382f",
+      "recorded_at": "2026-08-23T14:46:26.2988534Z"
     }
   ],
   "review": {
@@ -61,5 +69,5 @@
   },
   "last_error": "",
   "created_at": "2026-08-23T14:20:39.0245466Z",
-  "updated_at": "2026-08-23T14:36:30.5473595Z"
+  "updated_at": "2026-08-23T14:46:26.5417336Z"
 }

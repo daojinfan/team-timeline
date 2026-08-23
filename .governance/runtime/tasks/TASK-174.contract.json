@@ -1,0 +1,135 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-174",
+  "work_package": "WP-009",
+  "title": "执行中心甘特图增加粒度调节条",
+  "goal": "在 V5 执行中心甘特图保留日周月时间单位选择，并增加可拖动的时间粒度调节条，让用户连续调整时间轴密度。",
+  "baseline": "BL-006",
+  "profile": "Release",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "tests/v5-execution.test.js"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "tests"
+  ],
+  "write_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "tests/v5-execution.test.js"
+  ],
+  "out_of_scope": [
+    "src/server.js",
+    "data/team_tasks.sqlite",
+    "手机端",
+    "任务数据结构",
+    "任务日期语义",
+    "制冷机和专题资源"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [
+    "TASK-172"
+  ],
+  "acceptance_criteria": [
+    "执行中心工具栏显示可拖动的粒度调节条，支持鼠标、键盘和触控，并提供当前档位文本。",
+    "拖动粒度条即时改变甘特图时间单元宽度与可读性，不改变日、周、月单位及日期范围语义。",
+    "粒度条与任务/成员筛选、今天定位、任务选择、成员排期编辑、内部横向滚动保持兼容。",
+    "默认档位、边界值和非法值均安全回退，并有静态回归测试覆盖。"
+  ],
+  "validations": [
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "v5-execution-regression",
+      "command": "node",
+      "args": [
+        "--test",
+        "tests/v5-execution.test.js"
+      ]
+    },
+    {
+      "id": "git-diff-check",
+      "command": "git",
+      "args": [
+        "diff",
+        "--check"
+      ]
+    },
+    {
+      "id": "governance-release",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-ProjectPath",
+        ".",
+        "-Level",
+        "Release"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface",
+    "success_criteria",
+    "scope",
+    "production_release"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-23T14:41:45.3397932Z",
+  "release_controls": {
+    "target_environment": "本地桌面开发环境：D:\\Codex\\人员管理系统，当前 dev 分支",
+    "execution_window": "在 TASK-174 开发与 Verify 期间实施；完成后执行独立 Release 双轮审核",
+    "rollback_plan": "仅回滚 public/index.html、public/styles.css、public/app.js、tests/v5-execution.test.js 与本任务治理证据，不触碰任务数据、数据库和服务端",
+    "observation_metrics": "粒度控件 DOM、键盘可操作性、单位宽度随档位变化、甘特内部滚动、npm test、V5 回归、语法、diff 和 Release 治理",
+    "stop_conditions": "发现时间范围语义变化、拖动中断、任务选择或编辑回归、页面横向溢出、验证失败或超出允许路径时停止",
+    "post_release_owner": "PM / human"
+  }
+}

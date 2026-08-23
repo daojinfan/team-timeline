@@ -1,0 +1,6 @@
+warning: in the working copy of 'docs/00-index/APPROVAL-LOG.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/04-delivery/WORK-STATUS.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'public/app.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'public/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'public/styles.css', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/v5-execution.test.js', LF will be replaced by CRLF the next time Git touches it

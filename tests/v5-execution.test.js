@@ -19,7 +19,7 @@ test("V5 execution center is a real projection, not the legacy placeholder", () 
 });
 
 test("V5 execution center exposes the approved filters and schedule preview flow", () => {
-  for (const id of ["v5ExecutionSearch", "v5ExecutionSource", "v5ExecutionTopic", "v5ExecutionStatus", "v5ExecutionMember", "v5ExecutionSample", "v5ExecutionCryostat", "v5ExecutionFrom", "v5ExecutionTo", "v5ExecutionScale", "v5ExecutionRange", "v5ExecutionOnlyBusy", "v5ExecutionStack"]) assert.match(index, new RegExp(`id="${id}"`));
+  for (const id of ["v5ExecutionSearch", "v5ExecutionSource", "v5ExecutionTopic", "v5ExecutionStatus", "v5ExecutionMember", "v5ExecutionSample", "v5ExecutionCryostat", "v5ExecutionFrom", "v5ExecutionTo", "v5ExecutionScale", "v5ExecutionGranularity", "v5ExecutionGranularityValue", "v5ExecutionRange", "v5ExecutionOnlyBusy", "v5ExecutionStack"]) assert.match(index, new RegExp(`id="${id}"`));
   assert.match(app, /schedule-preview/);
   assert.match(app, /member-schedule-preview/);
   assert.match(app, /preview_token: schedule\.preview\.preview_token/);
@@ -45,4 +45,14 @@ test("V5 gantt is grouped by member and preserves unassigned work", () => {
   assert.match(app, /ensure\("unassigned", null\)/);
   assert.match(app, /成员 \/ 任务/);
   assert.match(styles, /\.v5-execution-bar\.member-bar[^}]*background:\s*var\(--task-accent/);
+});
+
+test("V5 gantt exposes a continuous granularity control without changing date units", () => {
+  assert.match(index, /id="v5ExecutionGranularity"[^>]*type="range"/);
+  assert.match(index, /id="v5ExecutionGranularityValue"/);
+  assert.match(app, /v5ExecutionGranularityValue/);
+  assert.match(app, /v5ExecutionGranularityLabel/);
+  assert.match(app, /v5ExecutionUnitWidth\(\)\s*\{[^}]*v5ExecutionGranularityValue/);
+  assert.match(app, /#v5ExecutionGranularity"\)\?\.addEventListener\("input"/);
+  assert.match(styles, /\.v5-execution-granularity-control[^}]*grid-template-columns/);
 });
