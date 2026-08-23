@@ -44,7 +44,7 @@
           <div class="v5-editor-toolbar">
             <label class="v5-search-field">搜索任务、专题、样品或测试内容<input id="v5TaskSearch" type="search" placeholder="输入关键词…"></label>
             <label>来源小组<select id="v5TaskSourceFilter"><option value="">全部来源小组</option></select></label>
-            <label>状态<select id="v5TaskStatusFilter"><option value="">全部状态</option><option value="waiting">等待样品</option><option value="sample-delayed">样品交付延期</option><option value="testing">正在测试</option><option value="test-delayed">测试延期</option><option value="completed">已完成</option></select></label>
+            <div class="v5-status-filter-control"><label for="v5TaskStatusFilter">状态<select id="v5TaskStatusFilter"><option value="">全部状态</option><option value="waiting">等待样品</option><option value="sample-delayed">样品交付延期</option><option value="testing">正在测试</option><option value="test-delayed">测试延期</option><option value="completed">已完成</option></select></label><label class="v5-filter-negate"><input id="v5TaskStatusNot" type="checkbox"> 非</label></div>
             <label>制冷机<select id="v5TaskCryostatFilter"><option value="">全部制冷机</option></select></label>
             <label class="v5-archive-toggle"><input id="v5ShowArchivedTopics" type="checkbox"> 显示归档专题</label><button id="v5ClearTaskFilters" class="ghost-button" type="button">清除筛选</button>
           </div>

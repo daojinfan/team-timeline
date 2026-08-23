@@ -3358,6 +3358,9 @@ button.v3-task-card:disabled small {
 .v5-editor-toolbar label, .v5-resource-search { display: grid; gap: 5px; color: var(--muted); font-size: 12px; font-weight: 700; }
 .v5-editor-toolbar input, .v5-editor-toolbar select, .v5-resource-search input { min-width: 0; }
 .v5-search-field { min-width: 0; }
+.v5-status-filter-control { display: grid; gap: 5px; min-width: 0; }
+.v5-filter-negate { display: inline-flex !important; grid-template-columns: max-content max-content !important; align-items: center; gap: 5px !important; width: max-content; color: var(--muted); font-size: 11px !important; }
+.v5-filter-negate input { accent-color: var(--accent); }
 .v5-editor-layout { display: grid; grid-template-columns: minmax(0, 1.58fr) minmax(360px, .92fr); gap: 16px; align-items: start; }
 .v5-tree-card, .v5-editor-pane, .v5-resource-card, .v5-placeholder-card { min-width: 0; border: 1px solid var(--border); border-radius: 14px; background: var(--surface); box-shadow: var(--shadow); }
 .v5-tree-card { overflow: hidden; }

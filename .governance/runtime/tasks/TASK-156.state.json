@@ -5,7 +5,7 @@
   "work_package": "WP-009",
   "contract_sha256": "a6ad4d9e2f76664e729150a532339580851e61a86d43e7922df439a48c3a7736",
   "baseline": "BL-006",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "APR-120",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -28,14 +28,14 @@
   "review": {
     "required": true,
     "reviewer_task_id": "TASK-157",
-    "status": "passed",
+    "status": "cancelled",
     "evidence": [
-      "docs/05-quality/evidence/TASK-157/review-round-2.json"
+      "docs/05-quality/evidence/TASK-157/review-cancelled-task156-status-filter-followup-20260823.json"
     ],
-    "pass_streak": 2,
-    "subject_sha256": "32f9fe41d1d7ad89ba735622521eadadefffba6dafe56bc0db731aeb7d4815b7"
+    "pass_streak": 0,
+    "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "状态反向筛选继续修改摘要区任务编辑台的同一前端文件，旧 TASK-156 审核指纹不再代表当前最终差异；该未验收旧交付链保留历史证据并由后续任务承接。",
   "created_at": "2026-08-23T10:01:51.3510863Z",
-  "updated_at": "2026-08-23T10:13:54.7228588Z"
+  "updated_at": "2026-08-23T11:16:20.8813970Z"
 }
