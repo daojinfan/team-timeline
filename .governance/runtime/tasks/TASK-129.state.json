@@ -10,7 +10,7 @@
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
   "acceptance_git_commit": "",
-  "start_git_commit": "ca03bda5307c9102b8b0fb961a0f98f466c6f725",
+  "start_git_commit": "ee9ce52b4c61cdc1f7d46efb7b164d7ab8484d36",
   "execution_lease": "",
   "execution_lease_owner": "",
   "execution_lease_expires_at": "",
@@ -36,9 +36,9 @@
     }
   ],
   "evidence": [
-    "docs/05-quality/evidence/TASK-129/20260823T051442310Z-9f968d00-governance-release.evidence.json",
-    "docs/05-quality/evidence/TASK-129/20260823T051442310Z-9f968d00-npm-test.evidence.json",
-    "docs/05-quality/evidence/TASK-129/20260823T051442310Z-9f968d00-git-diff-check.evidence.json"
+    "docs/05-quality/evidence/TASK-129/20260823T051704182Z-7eab21b6-governance-release.evidence.json",
+    "docs/05-quality/evidence/TASK-129/20260823T051704182Z-7eab21b6-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-129/20260823T051704182Z-7eab21b6-git-diff-check.evidence.json"
   ],
   "evidence_history": [
     "docs/05-quality/evidence/TASK-129/20260823T050258035Z-2106c5a7-governance-release.evidence.json",
@@ -48,7 +48,11 @@
     "docs/05-quality/evidence/TASK-129/20260823T051442310Z-9f968d00-governance-release.evidence.json",
     "docs/05-quality/evidence/TASK-129/20260823T051442310Z-9f968d00-npm-test.evidence.json",
     "docs/05-quality/evidence/TASK-129/20260823T051442310Z-9f968d00-git-diff-check.evidence.json",
-    "docs/05-quality/evidence/TASK-129/review-round-2.json"
+    "docs/05-quality/evidence/TASK-129/review-round-2.json",
+    "docs/05-quality/evidence/TASK-129/20260823T051704182Z-7eab21b6-governance-release.evidence.json",
+    "docs/05-quality/evidence/TASK-129/20260823T051704182Z-7eab21b6-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-129/20260823T051704182Z-7eab21b6-git-diff-check.evidence.json",
+    "docs/05-quality/evidence/TASK-129/review-round-3.json"
   ],
   "review_history": [
     {
@@ -63,7 +67,14 @@
       "sha256": "720ea7725d8c5a31119d5155d02168c1e4b6ff2fe17beb069712eab8be68e513",
       "result": "passed",
       "round_id": "RR-4ad0bbef47bf4aba85191fc25dcff135",
-      "recorded_at": "2026-08-23T05:15:49.1664440Z"
+      "recorded_at": "2026-08-23T05:15:49.166444Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-129/review-round-3.json",
+      "sha256": "053f194c087967ec42dcb9ad98c47265ccc246a79e3df0fa1f795880805559dd",
+      "result": "passed",
+      "round_id": "RR-4674a6c8eb614efe8fde4536fd4babbe",
+      "recorded_at": "2026-08-23T05:17:59.4663977Z"
     }
   ],
   "review": {
@@ -76,5 +87,5 @@
   },
   "last_error": "",
   "created_at": "2026-08-23T04:23:43.9668043Z",
-  "updated_at": "2026-08-23T05:15:49.5369878Z"
+  "updated_at": "2026-08-23T05:17:59.8372171Z"
 }

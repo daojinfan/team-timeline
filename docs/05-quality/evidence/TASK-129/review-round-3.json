@@ -1,0 +1,55 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-129",
+  "reviewed_task_ids": ["TASK-128"],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-128",
+      "path": "src/server.js",
+      "change_type": "modified",
+      "summary": "最终复审 V5 migration 注册、已有 V3 数据库 pre-v5 backup 和旧维护流程兼容。"
+    },
+    {
+      "task_id": "TASK-128",
+      "path": "src/v3/index.js",
+      "change_type": "modified",
+      "summary": "最终复审 V5 schema、V2/V3/V1 数据映射、命令事务、状态读模型、排期同步、资源和事件边界。"
+    },
+    {
+      "task_id": "TASK-128",
+      "path": "tests/v5-api.test.js",
+      "change_type": "added",
+      "summary": "最终复审 V5 服务端回归测试及新增资源并发、成员同步断言。"
+    }
+  ],
+  "change_summary": "第三轮对同一最终交付内容执行全量复审；以 TASK-128 启动检查点 649cd6e1 计算的实现 scoped manifest 仍只有 src/server.js、src/v3/index.js 和 tests/v5-api.test.js，内容指纹与上一轮一致，未发生两轮之间的产品内容变化。",
+  "scope_checked": [
+    "重新逐文件检查 TASK-128 的最终实际变更及提交 ca03bda，确认新增/修改类型与 Git 一致",
+    "重新核对 V5 canonical 字段与 V5 schema constraints，确认旧 V3 字段只在兼容层存在",
+    "重新核对 V1/V2/V3 legacy mapping 的来源组、制冷机、目的、样品、测试项和成员关系，及重复启动保护",
+    "重新核对任务整体日期、sync_members、成员日期独立修改、版本冲突、冲突确认和 V1 assignment projection",
+    "重新核对资源 updated_at 并发校验、停用资源保护、V5 pre-migration backup、foreign_key_check 和 quick_check",
+    "重新核对 topic/sample/resource/task 的事件 before/after、状态优先级和执行查询过滤",
+    "重新核对 Release 验证证据、回归测试、范围外的手机端/AI/成果验收边界"
+  ],
+  "findings": [
+    "连续第二次最终内容复审未发现阻塞项。首轮发现的排期同步、V2 legacy mapping、资源并发、迁移备份和事件审计问题均已在最终代码中闭合。",
+    "V5 任务服务以 purpose、manual_phase、color 为唯一可写 canonical 字段，任务编号通过 legacy_task_id 保持稳定，样品编号可为空并支持 ETA/实际到样更新。",
+    "V5 状态展示只在读时计算，completed/testing/test-delayed/sample-delayed/waiting 优先级和固定颜色元数据一致；没有新增已到样待测试状态。",
+    "未发现范围漂移或实现者自审；审核只写入 TASK-129 证据目录，TASK-128 实现和测试路径未被审核任务修改。"
+  ],
+  "validation_evidence": [
+    "npm test：40 项通过。",
+    "node --check src/server.js、node --check src/v3/index.js：通过。",
+    "git diff --check：通过。",
+    "governance-release：错误数 0、警告数 0。",
+    "第二轮与第三轮内容指纹相同，未检测到两轮之间的交付内容变化。",
+    "TASK-128 第二轮 Verify 已生成 npm-test、server-syntax、v3-syntax、git-diff-check 四项证据并保持 verified。"
+  ],
+  "created_at": "2026-08-23T05:35:00Z"
+}
