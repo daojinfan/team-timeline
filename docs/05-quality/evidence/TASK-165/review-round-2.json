@@ -1,0 +1,44 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-165",
+  "reviewed_task_ids": ["TASK-164"],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-164",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "第二轮确认状态标题与非复选框相邻且同层，下拉框保持独立控件并由状态标签关联。"
+    },
+    {
+      "task_id": "TASK-164",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "第二轮确认标题行使用 flex 居中、10px 间距，非复选框采用固定 14px 尺寸与零外边距，不会和下拉框重叠。"
+    },
+    {
+      "task_id": "TASK-164",
+      "path": "tests/v5-inline-editor.test.js",
+      "change_type": "modified",
+      "summary": "第二轮确认同行结构及样式断言与所有既有 V5 筛选测试共同通过。"
+    }
+  ],
+  "change_summary": "第二轮对 TASK-164 同一最终内容执行全量复审；重新核对三文件 Git 清单、标签关联、标题行布局、复选框尺寸和既有反向筛选逻辑，内容指纹与第一轮一致，未发现问题。",
+  "scope_checked": [
+    "实际交付差异仅包含 public/index.html、public/styles.css 和 tests/v5-inline-editor.test.js。",
+    "状态文字与非复选框在同一 flex 行，非不再出现在下拉框下方或覆盖下拉框。",
+    "状态下拉框、非复选框的 ID 及事件入口保持不变，清空筛选仍可重置非。",
+    "来源小组、制冷机和整体工具栏布局未被本次修正改写。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "npm test：47 项全部通过。",
+    "node --check public/app.js：通过。",
+    "git diff --check d1d7064..HEAD：通过；与第一轮相同的三文件最终内容指纹。"
+  ],
+  "created_at": "2026-08-23T20:40:00+08:00"
+}

@@ -1,0 +1,59 @@
+
+> team-task-gantt@1.0.0 test
+> node --test tests/*.test.js
+
+✔ dashboard exposes seeded data, templates, checklist, and stats (126.015ms)
+✔ fresh database sample dates are relative to server-local today (98.9257ms)
+✔ reopening an existing database does not rewrite stored dates (97.6653ms)
+✔ structured filters return matching task ids (113.6476ms)
+✔ planned and active task statuses are derived from dates (83.8904ms)
+✔ completed task status survives title and description edits (86.0884ms)
+✔ batch completion preserves every personal assignment progress value (72.7229ms)
+✔ archived status filter can include archived tasks (97.2107ms)
+✔ template and checklist workflow works (101.1818ms)
+✔ archive area, trash, and restore workflow works (89.275ms)
+✔ task delete is a recoverable soft delete (79.1145ms)
+✔ deleted members can be restored from trash (73.0221ms)
+✔ maintenance preview and safer maintenance backups work (93.0694ms)
+✔ SQLite schema and CSV and JSON export formats remain compatible (69.8883ms)
+✔ core assignment behavior still works (70.5506ms)
+✔ gantt assignment adjustment only changes one member assignment (69.183ms)
+✔ V2 schema is exactly version 2 with 12 tables and 10 indexes (131.4024ms)
+✔ the guarded V2 endpoint surface is the exact frozen set of 34 method-path pairs (0.204ms)
+✔ a real V1-shaped database is backed up, migrated once, and reopened idempotently (170.5171ms)
+✔ checksum mismatch refuses startup without rewriting the database (172.4971ms)
+✔ resource, plan, test-item, template, event, archive, arrival, and backup APIs preserve canonical contracts (195.882ms)
+✔ manual task preview and confirm preserve progress while ETA and cryostat confirmations bind current facts (163.5591ms)
+✔ manual task cryostat conflicts only include other active plans (138.7633ms)
+✔ V2 plan-task text boundaries are enforced without changing the V1 task endpoint (98.0244ms)
+✔ submission checklist snapshots and manual returned/accepted reviews are authoritative and progress-independent (124.5467ms)
+✔ V1 primary guards, soft-delete restore, and reset preserve V2 lineage history without changing success shapes (167.8229ms)
+✔ V3 schema and endpoint surface are exact and re-open idempotently (138.5471ms)
+✔ V3.1 task details expose topic context and persist structured test intent (169.8555ms)
+✔ V3 topic source updates enforce contact ownership and sample initial ETA persists (169.7637ms)
+✔ topic, sample, task-chain, assignment and exact-set submission flow (181.6473ms)
+✔ cryostat preview warns only for overlapping tasks in another active topic (152.0144ms)
+✔ V4 compact task/topic buttons retain readable foregrounds (6.991ms)
+✔ V4 status chips expose all states and meet WCAG AA contrast (2.0387ms)
+✔ V4 workbench overview exposes summary, queue, timeline and desktop filters (3.1552ms)
+✔ workbench reuses V3 topic resources and renders safe, actionable projections (1.7882ms)
+✔ workbench layout constrains dense desktop content (0.6558ms)
+✔ topic planning renders a navigable topic list before a topic is selected (0.4024ms)
+✔ V5 schema is additive, exposes the frozen endpoint surface, and reopens idempotently (148.4172ms)
+✔ V5 task editor persists canonical fields and computes the five user-facing states (153.2912ms)
+✔ V5 supports topic regrouping, member schedule synchronization, and execution load projections (150.5451ms)
+✔ V5 task editor renders the existing test-item editor node (1.2393ms)
+✔ V5 task editor protects topic defaults and surfaces nested API errors (1.1185ms)
+✔ V5 selected-task summary renders inline editable task attributes (2.7656ms)
+✔ V5 inline task save uses preview, conflict acknowledgement and expected version (0.5593ms)
+✔ V5 inline editor keeps samples in the full editor and has compact responsive styles (0.3998ms)
+✔ V5 task status filter supports an accessible inverse mode (1.0542ms)
+✔ V5 editor layout keeps filters, task hierarchy, and metadata aligned (0.9132ms)
+ℹ tests 47
+ℹ suites 0
+ℹ pass 47
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1524.2963

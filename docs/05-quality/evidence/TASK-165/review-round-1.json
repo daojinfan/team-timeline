@@ -1,0 +1,44 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-165",
+  "reviewed_task_ids": ["TASK-164"],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-164",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "将状态标签和非复选框放入同一标题行，状态下拉框独立置于其下并保留原控件 ID。"
+    },
+    {
+      "task_id": "TASK-164",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "新增状态筛选标题行 flex 对齐规则，统一状态文字、复选框和非文字的字号、间距及复选框尺寸。"
+    },
+    {
+      "task_id": "TASK-164",
+      "path": "tests/v5-inline-editor.test.js",
+      "change_type": "modified",
+      "summary": "新增状态与非同行 DOM 结构及 flex 对齐规则的静态回归断言。"
+    }
+  ],
+  "change_summary": "第一轮独立复核确认 TASK-164 仅修改三项声明路径；“非”已从状态下拉框下方移至“状态”文字右侧，原筛选 ID、事件绑定和取反逻辑保持不变。",
+  "scope_checked": [
+    "状态与非使用独立标题行并采用 flex 横向对齐，下拉框仍占筛选列完整宽度。",
+    "label for=v5TaskStatusFilter 仍指向状态下拉框；v5TaskStatusNot 复选框 ID 未改变。",
+    "来源小组、制冷机和工具栏三列网格未修改，反向筛选 JavaScript 未修改。",
+    "复选框宽高和 margin 显式固定，避免受通用表单样式影响而与文字重叠。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "npm test：47 项全部通过。",
+    "node --check public/app.js：通过。",
+    "git diff --check d1d7064..HEAD：通过。"
+  ],
+  "created_at": "2026-08-23T20:36:00+08:00"
+}

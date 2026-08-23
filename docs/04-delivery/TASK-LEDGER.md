@@ -36,8 +36,8 @@ review_policy: independent-required
 
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| WP-009 | TASK-165 | pending | REVIEWER | 独立复审状态反向筛选控件同行布局 | BL-006 | pending | TASK-164 | pending | docs/05-quality/evidence/TASK-165 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
-| WP-009 | TASK-164 | pending | IMPLEMENTER | 修正状态反向筛选控件同行布局 | BL-006 | pending | n/a | running | public/index.html, public/styles.css, tests/v5-inline-editor.test.js | required-validation | TASK-165 | pending | pending | Plan 自动登记，等待调度 |
+| WP-009 | TASK-165 | pending | REVIEWER | 独立复审状态反向筛选控件同行布局 | BL-006 | pending | TASK-164 | completed | docs/05-quality/evidence/TASK-165 | required-validation | n/a | n/a | n/a | 两轮独立复审通过，等待用户验收 |
+| WP-009 | TASK-164 | pending | IMPLEMENTER | 修正状态反向筛选控件同行布局 | BL-006 | pending | n/a | completed | public/index.html, public/styles.css, tests/v5-inline-editor.test.js | required-validation | TASK-165 | passed | docs/05-quality/evidence/TASK-165/review-round-2.json | 实现与验证完成，两轮独立复审通过，等待用户验收 |
 | WP-009 | TASK-163 | pending | REVIEWER | 独立复审任务全量编辑台布局优化 | BL-006 | pending | TASK-162 | completed | docs/05-quality/evidence/TASK-163 | required-validation | n/a | n/a | n/a | 两轮独立复审通过，等待用户验收 |
 | WP-009 | TASK-162 | pending | IMPLEMENTER | 优化任务全量编辑台布局与视觉层级 | BL-006 | pending | n/a | replaced | public/index.html, public/app.js, public/styles.css, tests/v5-inline-editor.test.js | required-validation | TASK-163 | cancelled | docs/05-quality/evidence/TASK-163/review-cancelled-task162-status-inline-followup-20260823.json | 实现与验证完成，两轮独立复审通过，等待用户验收 |
 | WP-009 | TASK-161 | pending | REVIEWER | 独立复审任务状态反向筛选（重规划） | BL-006 | pending | TASK-160 | completed | docs/05-quality/evidence/TASK-161 | required-validation | n/a | n/a | n/a | 两轮独立复审通过，等待用户验收 |
