@@ -3404,6 +3404,21 @@ button.v3-task-card:disabled small {
 .v5-editor-fields label { display: grid; gap: 4px; min-width: 0; color: var(--muted); font-size: 12px; font-weight: 700; }
 .v5-editor-fields label.full { grid-column: 1 / -1; }
 .v5-editor-fields textarea { min-height: 65px; resize: vertical; }
+.v5-inline-task-form { display: grid; min-width: 0; }
+.v5-inline-task-form fieldset { min-width: 0; margin: 0; padding: 10px; border: 1px solid var(--border); border-radius: 9px; }
+.v5-inline-task-form legend { padding: 0 4px; color: var(--muted); font-size: 12px; font-weight: 800; }
+.v5-inline-test-items { display: grid; gap: 7px; }
+.v5-inline-test-item { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) max-content; }
+.v5-inline-test-item textarea { min-height: 34px; resize: vertical; }
+.v5-inline-member-fieldset { display: grid; gap: 8px; }
+.v5-inline-members { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.v5-inline-member { display: flex; align-items: center; gap: 6px; min-width: 0; padding: 7px 8px; border: 1px solid var(--border); border-radius: 7px; color: var(--text); font-size: 12px; }
+.v5-inline-member span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.v5-inline-member small { color: var(--muted); }
+.v5-inline-member.is-inactive { opacity: .62; }
+.v5-inline-actions { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 11px 17px; border-top: 1px solid var(--border); background: #fbfcfe; }
+.v5-inline-actions > div { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 7px; }
+.v5-inline-actions .v5-form-error { margin: 0; }
 .v5-editor-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; padding: 12px 17px; border-top: 1px solid var(--border); background: #fbfcfe; }
 .v5-editor-footer .actions { display: flex; flex-wrap: wrap; gap: 6px; }
 .v5-resource-intro { display: flex; justify-content: space-between; gap: 20px; padding: 2px 1px 12px; }
@@ -3489,4 +3504,7 @@ button.v3-task-card:disabled small {
 }
 @media (max-width: 520px) {
   .v5-resource-stats { grid-template-columns: minmax(0, 1fr); }
+  .v5-inline-test-item { grid-template-columns: minmax(0, 1fr); }
+  .v5-inline-members { grid-template-columns: minmax(0, 1fr); }
+  .v5-inline-actions { align-items: flex-start; flex-direction: column; }
 }
