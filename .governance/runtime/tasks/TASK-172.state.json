@@ -1,0 +1,50 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-172",
+  "work_package": "WP-009",
+  "contract_sha256": "5c448bed48a9ec3463b7bea073667bc2bfaa064adb2c210bc3eeb86bde2da39f",
+  "baseline": "BL-006",
+  "state": "verified",
+  "approval_id": "APR-128",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "280feba1b6ace461b63ba757596c38f77f6a3d74",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [],
+  "plan_checkpoint_git_commit": "280feba1b6ace461b63ba757596c38f77f6a3d74",
+  "plan_rebase_history": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-172/20260823T142800617Z-2f8cdc40-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-172/20260823T142800617Z-2f8cdc40-app-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-172/20260823T142800617Z-2f8cdc40-gantt-member-regression.evidence.json",
+    "docs/05-quality/evidence/TASK-172/20260823T142800617Z-2f8cdc40-git-diff-check.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-172/20260823T142322843Z-37d21903-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-172/20260823T142322843Z-37d21903-app-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-172/20260823T142322843Z-37d21903-gantt-member-regression.evidence.json",
+    "docs/05-quality/evidence/TASK-172/20260823T142322843Z-37d21903-git-diff-check.evidence.json",
+    "docs/05-quality/evidence/TASK-172/20260823T142800617Z-2f8cdc40-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-172/20260823T142800617Z-2f8cdc40-app-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-172/20260823T142800617Z-2f8cdc40-gantt-member-regression.evidence.json",
+    "docs/05-quality/evidence/TASK-172/20260823T142800617Z-2f8cdc40-git-diff-check.evidence.json"
+  ],
+  "review_history": [],
+  "review": {
+    "required": true,
+    "reviewer_task_id": "TASK-173",
+    "status": "passed",
+    "evidence": [
+      "docs/05-quality/evidence/TASK-173/review-round-2.json"
+    ],
+    "pass_streak": 2,
+    "subject_sha256": "34da7c4ab560a9b6779335139fe35dee04a16517254033c42a270cfafb68ac6d"
+  },
+  "last_error": "",
+  "created_at": "2026-08-23T14:19:52.5649591Z",
+  "updated_at": "2026-08-23T14:36:30.3322599Z"
+}

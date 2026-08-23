@@ -1,0 +1,21 @@
+{
+  "$schema": "schemas/validation-evidence.schema.json",
+  "schema_version": 1,
+  "task_id": "TASK-172",
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "contract_sha256": "5c448bed48a9ec3463b7bea073667bc2bfaa064adb2c210bc3eeb86bde2da39f",
+  "git_commit": "a72eba2eab04ffa15dfeb6a75221e12eab60220e",
+  "validation_id": "gantt-member-regression",
+  "command": "node",
+  "args": [
+    "--test",
+    "tests/v5-execution.test.js"
+  ],
+  "started_at": "2026-08-23T14:28:03.5848569Z",
+  "finished_at": "2026-08-23T14:28:03.8372314Z",
+  "exit_code": 0,
+  "redactions_applied": 0,
+  "output_path": "docs/05-quality/evidence/TASK-172/20260823T142800617Z-2f8cdc40-gantt-member-regression.output.txt",
+  "output_sha256": "56d82c13a5dce5aa92c83ca2ec86b7372bf3914c5fd7347afe91dd3b8c57f0ab"
+}

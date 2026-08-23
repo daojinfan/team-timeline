@@ -1,0 +1,129 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-173",
+  "work_package": "WP-009",
+  "title": "独立审核 V5 按成员排列的甘特图",
+  "goal": "对 TASK-172 的按成员甘特图最终实现执行独立 Release 双轮全量审核，确认成员行、任务分布、未分配任务和既有 V5 交互保持一致。",
+  "baseline": "BL-006",
+  "profile": "Release",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-173"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "tests",
+    "src/v3",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/05-quality",
+    "docs/08-changes"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-173"
+  ],
+  "out_of_scope": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "src/server.js",
+    "src/v3",
+    "data/team_tasks.sqlite",
+    "手机端",
+    "AI自动生成或分配任务",
+    "成果提交与验收"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [
+    "TASK-172"
+  ],
+  "acceptance_criteria": [
+    "独立核对 TASK-172 的实际 Git 变更清单与按成员甘特图设计，确认未越出允许路径。",
+    "独立验证成员行、任务条分布、多成员任务、未分配成员任务、内部滚动和任务/成员编辑入口。",
+    "核对组合筛选、任务选择、状态颜色、V5 负载与排期预览没有回归。",
+    "对 TASK-172 最终内容执行 Release 双轮全量审核，并记录两轮实际变更清单和验证证据。"
+  ],
+  "validations": [
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "gantt-member-regression",
+      "command": "node",
+      "args": [
+        "--test",
+        "tests/v5-execution.test.js"
+      ]
+    },
+    {
+      "id": "governance-release",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-ProjectPath",
+        ".",
+        "-Level",
+        "Release"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface",
+    "overall_architecture",
+    "scope",
+    "production_release"
+  ],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-23T14:20:39.0245466Z",
+  "release_controls": {
+    "target_environment": "本地桌面开发环境：D:\\Codex\\人员管理系统，审核当前 dev 分支最终内容",
+    "execution_window": "TASK-172 Verify 后执行第一轮审核；按 Release 规则重新开启并对同一最终内容执行第二轮全量审核",
+    "rollback_plan": "审核任务只写 docs/05-quality/evidence/TASK-173，不修改产品代码、服务端或数据库",
+    "observation_metrics": "实际 Git 变更清单、npm test、app syntax、V5 执行中心回归、治理 Release、按成员 DOM/CSS/JS 结构、多成员与未分配任务静态检查",
+    "stop_conditions": "发现变更越界、任务丢失、成员错配、交互回归、验证失败或两轮内容指纹不一致时停止",
+    "post_release_owner": "PM / human"
+  }
+}

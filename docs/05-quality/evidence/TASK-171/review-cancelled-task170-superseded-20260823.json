@@ -1,0 +1,51 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-171",
+  "reviewed_task_ids": ["TASK-170"],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "cancelled",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-170",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "历史审核对象：TASK-170 曾在此文件实现旧版式执行中心布局；本次取消登记不修改该文件。"
+    },
+    {
+      "task_id": "TASK-170",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "历史审核对象：TASK-170 曾在此文件实现成员侧栏与执行中心子视图逻辑；本次取消登记不修改该文件。"
+    },
+    {
+      "task_id": "TASK-170",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "历史审核对象：TASK-170 曾在此文件实现旧版工作区样式；本次取消登记不修改该文件。"
+    },
+    {
+      "task_id": "TASK-170",
+      "path": "tests/v5-execution.test.js",
+      "change_type": "modified",
+      "summary": "历史审核对象：TASK-170 曾在此文件补充布局回归断言；本次取消登记不修改该文件。"
+    }
+  ],
+  "change_summary": "取消 TASK-170 的历史审核关系。TASK-170 已被 TASK-172 的按成员甘特图实现 superseded；保留 TASK-170 代码、两轮历史审核证据和变更清单，仅将 TASK-171 的当前审核关系登记为 cancelled，不产生任何产品编辑。",
+  "scope_checked": [
+    "确认 TASK-170 运行状态为 superseded，替代原因为 TASK-172 将执行中心甘特图从任务行改为成员行。",
+    "取消动作只写入本审核任务的 evidence 目录及治理运行状态，不修改 public、tests、src、数据库或 API。",
+    "changes 清单逐项保留 TASK-170 历史审核过的四个产品路径，change_type 与历史净差异一致，并明确本次没有产品编辑。"
+  ],
+  "findings": [
+    "审核关系取消不是质量豁免：TASK-170 已被替代，后续以 TASK-172 及其独立审核 TASK-173 的最终内容为准。"
+  ],
+  "validation_evidence": [
+    "Get-Content .governance/runtime/tasks/TASK-170.state.json：state=superseded，last_error 记录 TASK-172 替代原因。",
+    "git diff --name-status 7a7211a5d7458ae1d66f778d6d3272fe98f812de HEAD -- public/index.html public/styles.css public/app.js tests/v5-execution.test.js：历史审核对象仍为四个 modified 路径；本次未修改产品文件。",
+    "取消登记文件位于 docs/05-quality/evidence/TASK-171，符合 TASK-171 allowed_paths/write_paths。"
+  ],
+  "created_at": "2026-08-23T22:25:00+08:00"
+}

@@ -1,0 +1,128 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-172",
+  "work_package": "WP-009",
+  "title": "按成员重构 V5 甘特图行维度",
+  "goal": "在已审核的 V5 执行中心旧版工作区布局上，将甘特图从任务行改为成员行，使用成员侧栏与成员时间轴展示各成员承担的任务，同时保持筛选、任务选择和排期编辑语义不变。",
+  "baseline": "BL-006",
+  "profile": "Release",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "tests"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "tests",
+    "src/v3",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/05-quality",
+    "docs/08-changes"
+  ],
+  "write_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "tests"
+  ],
+  "out_of_scope": [
+    "src/server.js",
+    "src/v3",
+    "data/team_tasks.sqlite",
+    "手机端",
+    "AI自动生成或分配任务",
+    "成果提交与验收",
+    "数据库结构和API"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [
+    "TASK-170",
+    "TASK-171"
+  ],
+  "acceptance_criteria": [
+    "甘特图按成员生成行：左侧显示成员，右侧时间轴显示该成员参与的多个任务。",
+    "同一任务的多个成员分别出现在各自成员行；成员排期使用成员自己的起止日期，任务颜色和状态继续可识别。",
+    "没有参与成员但有任务整体排期的任务进入“未分配成员”行，不在甘特图中丢失；点击任务条仍能查看详情，成员条仍可打开成员排期编辑。",
+    "来源小组、专题、状态、成员、样品、制冷机、关键词和日期筛选，以及甘特图/任务/负载分视图保持可用。",
+    "甘特图只在内部横向滚动，1280×720 与 1366×768 桌面页面不产生横向溢出。",
+    "npm test、客户端语法、V5 执行中心回归和差异检查通过。"
+  ],
+  "validations": [
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "gantt-member-regression",
+      "command": "node",
+      "args": [
+        "--test",
+        "tests/v5-execution.test.js"
+      ]
+    },
+    {
+      "id": "git-diff-check",
+      "command": "git",
+      "args": [
+        "diff",
+        "--check"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface",
+    "overall_architecture",
+    "scope"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-23T14:19:52.5649591Z",
+  "release_controls": {
+    "target_environment": "本地桌面开发环境：D:\\Codex\\人员管理系统，Node.js + SQLite，现有 localhost:3000 服务",
+    "execution_window": "取得本次执行确认后，从当前 dev 分支清洁提交点实现；完成后由独立 Release Reviewer 执行双轮全量复审",
+    "rollback_plan": "仅回退本次成员行甘特图修正涉及的 public/index.html、public/styles.css、public/app.js 和 tests/v5-execution.test.js；不修改服务端、数据库和其他 V5 模块",
+    "observation_metrics": "npm test、node --check public/app.js、V5 执行中心回归、成员行任务分布、未分配任务行、内部滚动、任务选择和成员排期入口",
+    "stop_conditions": "发现任务丢失、成员排期错配、筛选或编辑入口失效、页面横向溢出、旧模块回归或独立复审失败时停止",
+    "post_release_owner": "PM / human"
+  }
+}
