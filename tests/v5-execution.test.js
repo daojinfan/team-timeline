@@ -38,3 +38,11 @@ test("V5 execution center keeps internal gantt scrolling and synchronizes all V5
   assert.match(app, /if \(view === "execution"\) v5RenderExecution\(\)/);
   assert.match(app, /v5State\.execution\.selectedTaskId/);
 });
+
+test("V5 gantt is grouped by member and preserves unassigned work", () => {
+  assert.match(app, /v5ExecutionMemberGanttRows/);
+  assert.match(app, /v5ExecutionAssignmentLanes/);
+  assert.match(app, /ensure\("unassigned", null\)/);
+  assert.match(app, /成员 \/ 任务/);
+  assert.match(styles, /\.v5-execution-bar\.member-bar[^}]*background:\s*var\(--task-accent/);
+});

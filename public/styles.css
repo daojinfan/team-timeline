@@ -3612,6 +3612,9 @@ button.v3-task-card:disabled small {
 .v5-execution-gantt-header, .v5-execution-gantt-row { grid-template-columns: 168px var(--v5-exec-track-width); }
 .v5-execution-label-heading { padding-left: 12px; }
 .v5-execution-row-label { padding-left: 12px; }
+.v5-execution-row-label > button { min-height: 42px; }
+.v5-execution-bar.member-bar { border-left-color: var(--task-accent, #64748b); background: var(--task-accent, #64748b); color: #fff; opacity: .92; }
+.v5-execution-bar.member-bar:hover, .v5-execution-bar.member-bar:focus-visible { opacity: 1; }
 .v5-execution-detail-card { margin-top: 12px; overflow: hidden; }
 .v5-execution-load-table { width: 100%; border-collapse: collapse; font-size: 12px; }
 .v5-execution-load-table th { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--muted); font-size: 10px; text-align: left; }
