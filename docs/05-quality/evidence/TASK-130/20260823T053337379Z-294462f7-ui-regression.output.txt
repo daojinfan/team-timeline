@@ -1,0 +1,12 @@
+✔ V4 workbench overview exposes summary, queue, timeline and desktop filters (2.8944ms)
+✔ workbench reuses V3 topic resources and renders safe, actionable projections (1.4184ms)
+✔ workbench layout constrains dense desktop content (0.3821ms)
+✔ topic planning renders a navigable topic list before a topic is selected (0.2792ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 60.3492

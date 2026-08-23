@@ -22,6 +22,56 @@
     </header>
 
     <main class="page v2-page">
+      <section id="v5Shell" class="v5-shell" aria-label="V5 任务管理工作区">
+        <header class="v5-shell-header">
+          <div>
+            <span class="v5-eyebrow">V5 · 桌面工作区</span>
+            <h2 id="v5PageTitle">任务全量编辑台</h2>
+            <p id="v5PageHint">在一个页面补齐任务字段，专题、资源和任务始终使用同一份事实。</p>
+          </div>
+          <div class="v5-header-actions">
+            <span id="v5SyncStatus" class="v5-sync-status" role="status" aria-live="polite">正在读取 V5 数据…</span>
+            <button id="v5RefreshBtn" class="ghost-button" type="button">刷新</button>
+            <button id="v5NewTaskBtn" class="primary-action" type="button">＋ 新增任务</button>
+          </div>
+        </header>
+        <nav id="v5Nav" class="v5-nav" aria-label="主要模块" role="tablist">
+          <button type="button" class="active" data-v5-view="editor" role="tab" aria-selected="true" aria-controls="v5EditorView">任务全量编辑台</button>
+          <button type="button" data-v5-view="resources" role="tab" aria-selected="false" aria-controls="v5ResourcesView">资源维护</button>
+          <button type="button" data-v5-view="execution" role="tab" aria-selected="false" aria-controls="v5ExecutionView">执行中心</button>
+        </nav>
+        <section id="v5EditorView" class="v5-view active" data-v5-panel="editor" role="tabpanel" aria-label="任务全量编辑台">
+          <div class="v5-editor-toolbar">
+            <label class="v5-search-field">搜索任务、专题、样品或测试内容<input id="v5TaskSearch" type="search" placeholder="输入关键词…"></label>
+            <label>来源小组<select id="v5TaskSourceFilter"><option value="">全部来源小组</option></select></label>
+            <label>状态<select id="v5TaskStatusFilter"><option value="">全部状态</option><option value="waiting">等待样品</option><option value="sample-delayed">样品交付延期</option><option value="testing">正在测试</option><option value="test-delayed">测试延期</option><option value="completed">已完成</option></select></label>
+            <label>制冷机<select id="v5TaskCryostatFilter"><option value="">全部制冷机</option></select></label>
+            <button id="v5ClearTaskFilters" class="ghost-button" type="button">清除筛选</button>
+          </div>
+          <div class="v5-editor-layout">
+            <section class="v5-tree-card" aria-labelledby="v5TreeTitle">
+              <header class="v5-card-header"><div><span class="v5-eyebrow">结构化任务目录</span><h3 id="v5TreeTitle">专题 → 任务</h3></div><div class="v5-tree-actions"><span id="v5TreeCount" class="v5-muted">0 个任务</span><button id="v5ExpandAllBtn" class="small-button" type="button">全部展开</button><button id="v5CollapseAllBtn" class="small-button" type="button">全部收起</button><button id="v5NewTopicBtn" class="ghost-button" type="button">＋ 新增专题</button></div></header>
+              <div id="v5TreeNotice" class="v5-notice" role="status" aria-live="polite"></div>
+              <div id="v5TopicTaskTree" class="v5-topic-task-tree" aria-live="polite"><div class="v5-empty-state">正在读取专题和任务…</div></div>
+            </section>
+            <aside id="v5EditorPane" class="v5-editor-pane" aria-labelledby="v5EditorPaneTitle">
+              <div class="v5-empty-state"><span class="v5-empty-icon">✎</span><h3 id="v5EditorPaneTitle">选择任务开始编辑</h3><p>专题、来源小组、测试目的、样品、排期、制冷机和参与成员都可以在这里一次完成。</p><button id="v5EmptyNewTaskBtn" class="primary-action" type="button">新增任务</button></div>
+            </aside>
+          </div>
+        </section>
+        <section id="v5ResourcesView" class="v5-view" data-v5-panel="resources" role="tabpanel" aria-label="资源维护" hidden>
+          <div class="v5-resource-intro"><div><span class="v5-eyebrow">稳定 ID 资源</span><h3>资源维护</h3><p>维护来源小组、测控成员和制冷机。停用只影响新关联，历史任务仍保留当前名称。</p></div><span id="v5ResourceUpdated" class="v5-muted">—</span></div>
+          <div class="v5-resource-grid">
+            <article class="v5-resource-card"><header class="v5-card-header"><div><span class="v5-eyebrow">任务来源</span><h3>来源小组</h3></div><button class="small-button" type="button" data-v5-add-resource="source-groups">＋ 新增</button></header><label class="v5-resource-search">搜索<input type="search" data-v5-resource-search="source-groups" placeholder="小组名称"></label><div id="v5SourceGroupsList" class="v5-resource-list"></div></article>
+            <article class="v5-resource-card"><header class="v5-card-header"><div><span class="v5-eyebrow">执行人员</span><h3>测控成员</h3></div><button class="small-button" type="button" data-v5-add-resource="members">＋ 新增</button></header><label class="v5-resource-search">搜索<input type="search" data-v5-resource-search="members" placeholder="姓名或角色"></label><div id="v5MembersList" class="v5-resource-list"></div></article>
+            <article class="v5-resource-card"><header class="v5-card-header"><div><span class="v5-eyebrow">设备资源</span><h3>制冷机</h3></div><button class="small-button" type="button" data-v5-add-resource="cryostats">＋ 新增</button></header><label class="v5-resource-search">搜索<input type="search" data-v5-resource-search="cryostats" placeholder="制冷机名称"></label><div id="v5CryostatsList" class="v5-resource-list"></div></article>
+          </div>
+        </section>
+        <section id="v5ExecutionView" class="v5-view" data-v5-panel="execution" role="tabpanel" aria-label="执行中心" hidden>
+          <div class="v5-placeholder-card"><span class="v5-eyebrow">排期与负载</span><h3>执行中心</h3><p>甘特图和成员负载视图将在这里使用任务全量编辑台保存的同一份任务事实。当前版本先从编辑台维护任务，执行视图随后接入。</p><button class="ghost-button" type="button" data-v5-back-editor>返回任务编辑台</button></div>
+        </section>
+      </section>
+      <div id="legacyV2Content" hidden>
       <nav id="v2Nav" class="v2-navigation" aria-label="测控工作区">
         <div class="v2-tabs" role="tablist" aria-label="六区工作视图">
           <button class="active" data-v2-view="workbench" type="button" role="tab" aria-selected="true" aria-controls="workbenchView">工作台</button>
@@ -326,7 +376,44 @@
           </section>
         </section>
       </section>
+      </div>
     </main>
+
+    <dialog id="v5TaskDialog" class="v5-dialog" aria-labelledby="v5TaskDialogTitle">
+      <form id="v5TaskForm" class="v5-dialog-form">
+        <header class="v5-dialog-header"><div><span class="v5-eyebrow">任务全量编辑</span><h2 id="v5TaskDialogTitle">新增任务</h2><p>任务字段在同一面板完成；保存后任务树与执行中心共享最新事实。</p></div><button type="button" class="icon-button" data-v5-close-dialog="v5TaskDialog" aria-label="关闭任务编辑">×</button></header>
+        <div id="v5TaskFormError" class="v5-form-error" role="alert" hidden></div>
+        <div class="v5-dialog-body">
+          <fieldset><legend>归属</legend><div class="v5-form-grid"><label>所属专题<select id="v5TaskTopic" name="topic_id" required></select></label><label>来源小组<select id="v5TaskSource" name="source_group_id"><option value="">待补充</option></select></label></div></fieldset>
+          <fieldset><legend>基本信息</legend><div class="v5-form-grid"><label>任务编号<input id="v5TaskNumber" type="text" readonly placeholder="保存后生成"></label><label>任务颜色<input id="v5TaskColor" name="color" type="color" value="#2563eb"></label><label class="v5-span-2">任务名称<input id="v5TaskTitle" name="title" maxlength="200" required autofocus placeholder="例如：z4readout 样品测试"></label><label class="v5-span-2">备注<textarea id="v5TaskNotes" name="notes" rows="3" maxlength="4000"></textarea></label></div></fieldset>
+          <fieldset><legend>测试定义</legend><label>测试目的<textarea id="v5TaskPurpose" name="purpose" rows="3" maxlength="4000" placeholder="需要验证什么"></textarea></label><div class="v5-repeatable-header"><span>测试项</span><button id="v5AddTestItemBtn" class="small-button" type="button">＋ 添加测试项</button></div><div id="v5TestItemsEditor" class="v5-repeatable-list"></div></fieldset>
+          <fieldset><legend>样品集合</legend><p class="v5-field-hint">样品编号未知时先填写规划标签和型号，实际到样后在这里补录。</p><div id="v5TaskSamples" class="v5-choice-list"></div><div class="v5-inline-create"><input id="v5SampleLabel" placeholder="规划标签" maxlength="300"><input id="v5SampleModel" placeholder="样品型号" maxlength="200"><input id="v5SampleEta" type="date" aria-label="样品预期交付时间"><label class="v5-check-inline"><input id="v5SampleEtaPending" type="checkbox"> ETA 待确认</label><button id="v5AddSampleBtn" class="small-button" type="button">新增样品</button></div></fieldset>
+          <fieldset><legend>排期与设备</legend><div class="v5-form-grid"><label>计划开始<input id="v5TaskStart" name="start_date" type="date"></label><label>计划结束<input id="v5TaskEnd" name="end_date" type="date"></label><label>制冷机<select id="v5TaskCryostat" name="cryostat_id"><option value="">待补充</option></select></label></div></fieldset>
+          <fieldset><legend>参与成员</legend><div id="v5TaskMembers" class="v5-member-choice-list"></div><p class="v5-field-hint">不区分负责人，不填写工时；新增成员默认沿用任务日期。</p></fieldset>
+          <fieldset><legend>人工执行阶段</legend><div class="v5-phase-options"><label><input type="radio" name="manual_phase" value="waiting" checked> 等待样品</label><label><input type="radio" name="manual_phase" value="testing"> 正在测试</label><label><input type="radio" name="manual_phase" value="completed"> 已完成</label></div><p class="v5-field-hint">样品交付延期、测试延期由系统根据日期自动显示。</p></fieldset>
+          <section id="v5TaskPreview" class="v5-preview-box"><strong>保存检查</strong><p>保存前会校验日期、成员和制冷机冲突；信息缺失不会阻止保存，但会标记待补充。</p></section>
+        </div>
+        <footer class="v5-dialog-actions"><button type="button" class="ghost-button" data-v5-close-dialog="v5TaskDialog">取消</button><button id="v5TaskSaveBtn" class="primary-action" type="submit">保存任务</button></footer>
+      </form>
+    </dialog>
+
+    <dialog id="v5TopicDialog" class="v5-dialog" aria-labelledby="v5TopicDialogTitle">
+      <form id="v5TopicForm" class="v5-dialog-form v5-narrow-dialog-form">
+        <header class="v5-dialog-header"><div><span class="v5-eyebrow">专题管理</span><h2 id="v5TopicDialogTitle">新增专题</h2><p>专题只维护名称、目的、状态和备注。</p></div><button type="button" class="icon-button" data-v5-close-dialog="v5TopicDialog" aria-label="关闭专题编辑">×</button></header>
+        <div id="v5TopicFormError" class="v5-form-error" role="alert" hidden></div>
+        <div class="v5-dialog-body"><label>专题名称<input id="v5TopicName" name="name" maxlength="200" required autofocus></label><label>专题目的<textarea id="v5TopicPurpose" name="purpose" rows="4" maxlength="4000"></textarea></label><label>专题状态<select id="v5TopicStatus" name="status"><option value="active">正在进行</option><option value="archived">专题完成归档</option></select></label><label>备注<textarea id="v5TopicNotes" name="notes" rows="4" maxlength="4000"></textarea></label></div>
+        <footer class="v5-dialog-actions"><button type="button" class="ghost-button" data-v5-close-dialog="v5TopicDialog">取消</button><button class="primary-action" type="submit">保存专题</button></footer>
+      </form>
+    </dialog>
+
+    <dialog id="v5ResourceDialog" class="v5-dialog" aria-labelledby="v5ResourceDialogTitle">
+      <form id="v5ResourceForm" class="v5-dialog-form v5-narrow-dialog-form">
+        <header class="v5-dialog-header"><div><span class="v5-eyebrow">资源维护</span><h2 id="v5ResourceDialogTitle">新增资源</h2><p>资源名称修改后，任务和执行中心会按 ID 同步显示。</p></div><button type="button" class="icon-button" data-v5-close-dialog="v5ResourceDialog" aria-label="关闭资源编辑">×</button></header>
+        <div id="v5ResourceFormError" class="v5-form-error" role="alert" hidden></div>
+        <div class="v5-dialog-body"><input id="v5ResourceKind" type="hidden"><label>名称<input id="v5ResourceName" name="name" maxlength="100" required autofocus></label><label id="v5ResourceRoleWrap">基本角色<input id="v5ResourceRole" name="role" maxlength="100" placeholder="例如：实验负责人"></label><label>备注<textarea id="v5ResourceNote" name="note" rows="3" maxlength="1000"></textarea></label><label class="v5-check-inline"><input id="v5ResourceActive" name="is_active" type="checkbox" checked> 启用</label></div>
+        <footer class="v5-dialog-actions"><button type="button" class="ghost-button" data-v5-close-dialog="v5ResourceDialog">取消</button><button class="primary-action" type="submit">保存资源</button></footer>
+      </form>
+    </dialog>
 
     <dialog id="v3TopicDialog" class="v3-dialog" aria-labelledby="v3TopicDialogTitle">
       <form id="v3TopicForm" class="v3-dialog-form">
