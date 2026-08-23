@@ -1,0 +1,5 @@
+warning: in the working copy of 'docs/00-index/APPROVAL-LOG.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/04-delivery/WORK-STATUS.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/server.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/v3/index.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/v5-api.test.js', LF will be replaced by CRLF the next time Git touches it

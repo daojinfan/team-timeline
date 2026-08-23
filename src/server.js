@@ -673,6 +673,17 @@ async function createPreV3Backup(database, customPath) {
   return backupPath;
 }
 
+async function createPreV5Backup(database, customPath) {
+  const backupDir = path.join(path.dirname(customPath), "backups");
+  await mkdir(backupDir, { recursive: true });
+  const stamp = nowIso().replaceAll(":", "-").replaceAll(".", "-");
+  const backupPath = path.join(backupDir, `team_tasks.pre-v5-${stamp}.sqlite`);
+  database.exec(`VACUUM INTO '${backupPath.replaceAll("'", "''")}'`);
+  const backup = new DatabaseSync(backupPath, { readOnly: true });
+  try { assertDatabaseHealthy(backup); } finally { backup.close(); }
+  return backupPath;
+}
+
 function migrateV2Schema(database) {
   const names = new Set(databaseObjectNames(database, "table"));
   const hasVersionTable = names.has("app_schema_versions");
@@ -811,8 +822,10 @@ export async function initDatabase(customPath = dbPath) {
       if (hadVersion2) await createPreV3Backup(database, customPath);
       else if (!preV2BackupPath) await createPreV3Backup(database, customPath);
     }
+    const hadVersion3 = Boolean(database.prepare("SELECT 1 FROM sqlite_master WHERE type='table' AND name='app_schema_versions'").get() && database.prepare("SELECT 1 FROM app_schema_versions WHERE version=3").get());
     migrateV3Schema(database);
     seedIfEmpty(database, isNewDatabase ? todayIsoDate() : null);
+    if (hadVersion3 && !hasTable(database, "v5_schema_versions")) await createPreV5Backup(database, customPath);
     migrateV5Schema(database);
     validateV2Schema(database);
     return database;

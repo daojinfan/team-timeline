@@ -1,0 +1,57 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-129",
+  "reviewed_task_ids": ["TASK-128"],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "changes-required",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-128",
+      "path": "src/server.js",
+      "change_type": "modified",
+      "summary": "初始化 V5 增量迁移、注册 V5 路由，并在兼容性样例重置时清理 V5 投影。"
+    },
+    {
+      "task_id": "TASK-128",
+      "path": "src/v3/index.js",
+      "change_type": "modified",
+      "summary": "新增 V5 schema、迁移、资源/专题/样品/任务/排期/执行查询服务及状态计算。"
+    },
+    {
+      "task_id": "TASK-128",
+      "path": "tests/v5-api.test.js",
+      "change_type": "added",
+      "summary": "新增 V5 schema、任务状态、专题归类、成员排期和执行负载 API 回归测试。"
+    }
+  ],
+  "change_summary": "以 TASK-128 启动检查点 649cd6e1 到实现提交 7134d89 的 scoped manifest 复核，交付范围为 src/server.js、src/v3/index.js 和 tests/v5-api.test.js；治理状态、台账和 TASK-128 自动验证 evidence 属系统文件，不计入实现 write scope。",
+  "scope_checked": [
+    "TASK-128 Release 契约、BL-006、WP-009 依赖和 rollback controls",
+    "V5 canonical task fields purpose、manual_phase、color 与 V5 schema/route payload 的一致性",
+    "V5 manual_phase 与五类展示状态的优先级和本地日期计算",
+    "V5 事务命令、版本字段、预览令牌、停用资源保护和 V1/V2/V3 兼容调用",
+    "V5 migration 的 V3/V1 legacy mapping、重复执行和 SQLite foreign key integrity",
+    "ChangeTaskSchedule/ChangeMemberSchedule 对成员日期同步和冲突预览的实际行为",
+    "任务编辑台所需样品 ETA、到样、测试项和操作事件的服务端事实边界"
+  ],
+  "findings": [
+    "阻塞：ChangeTaskSchedule 路由没有实现 sync_members 语义。任务整体排期确认只更新 v5_tasks.start_date/end_date，既不按选项同步全部 v5_task_members，也没有在 preview token 中纳入同步后的成员日期；执行中心无法安全提供“同步所有成员/仅修改任务”的共用命令。",
+    "阻塞：V1/V2 legacy migration 对未被 V3 表表示的 tasks 统一写入无专题、空 source_group_id、空 cryostat_id 和空 purpose，且没有读取 v2_plan_tasks/v2_control_plans/v2_test_items 的任务归属、来源小组、制冷机、测试目的、样品和测试项关系；这会使现有执行中心任务的 V5 投影信息缺失。",
+    "需修正：V5 资源 PUT 命令没有资源版本字段或 expected_version 校验；TASK-128 acceptance 要求所有写命令使用版本校验，资源改名/停用在并发下可能被覆盖。",
+    "需修正：V5 migration 在已有 V3 数据库上没有创建 V5 专用 SQLite backup；仅依赖早于 V3 的备份不足以证明 V5 migration rollback control。",
+    "需修正：样品 ETA/到样更新、专题移动/删除和资源改名没有完整写入 v5_events 的 before/after 审计事件，无法满足样品变更和重要归类/资源操作的可追溯性。"
+  ],
+  "validation_evidence": [
+    "npm test：40 项通过（含新增 V5 API 回归）。",
+    "node --check src/server.js、node --check src/v3/index.js：通过。",
+    "git diff --check：通过；scoped manifest 仅包含上述三个实现/测试路径。",
+    "代码路径复核确认任务整体排期确认分支只 UPDATE v5_tasks 日期；不存在 sync_members 分支更新全部 v5_task_members。",
+    "代码路径复核确认 v5SyncLegacyData 的 V1 fallback 固定使用 unassigned/null/null/空目的，未查询 v2_plan_tasks、v2_control_plans 或 v2_test_items。",
+    "代码路径复核确认 migrateV5Schema 未调用 VACUUM INTO 或等价 V5 迁移前备份；资源、样品和专题变更分支也未统一写入 v5_events。",
+    "reviewer Verify：governance-release、npm-test、git-diff-check 均退出码 0。"
+  ],
+  "created_at": "2026-08-23T04:55:00Z"
+}

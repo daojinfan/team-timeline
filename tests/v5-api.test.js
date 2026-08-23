@@ -35,6 +35,11 @@ test("V5 schema is additive, exposes the frozen endpoint surface, and reopens id
     assert.equal(app.database.prepare("SELECT COUNT(*) AS count FROM v5_topics WHERE system_key='unassigned'").get().count, 1);
     const tables = app.database.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE 'v5_%'").all();
     assert.equal(tables.length, V5_TABLES.length);
+    const group = (await app.request("/api/v5/resources")).data.source_groups[0];
+    const renamed = (await app.request(`/api/v5/resources/source-groups/${group.id}`, { method: "PUT", body: { name: `${group.name}-复核`, expected_updated_at: group.updated_at } })).data;
+    assert.notEqual(renamed.updated_at, group.updated_at);
+    const stale = await app.request(`/api/v5/resources/source-groups/${group.id}`, { method: "PUT", body: { name: "过期改名", expected_updated_at: group.updated_at }, expected: [409] });
+    assert.equal(stale.error.code, "VERSION_CONFLICT");
   } finally { await app.close(); }
 });
 
@@ -77,9 +82,12 @@ test("V5 supports topic regrouping, member schedule synchronization, and executi
     const task = (await app.request("/api/v5/tasks", { method: "POST", body: { ...preview.normalized_input, preview_token: preview.preview_token }, expected: [201] })).data;
     const moved = (await app.request(`/api/v5/topics/${topicA.id}/move-tasks`, { method: "POST", body: { target_topic_id: topicB.id, task_ids: [task.id] } })).data;
     assert.equal(moved.moved, 1);
+    const schedulePreview = (await app.request(`/api/v5/tasks/${task.id}/schedule-preview`, { method: "POST", body: { start_date: "2099-02-04", end_date: "2099-02-06", sync_members: true } })).data;
+    const rescheduled = (await app.request(`/api/v5/tasks/${task.id}/schedule`, { method: "POST", body: { start_date: "2099-02-04", end_date: "2099-02-06", sync_members: true, preview_token: schedulePreview.preview_token, expected_version: (await app.request(`/api/v5/tasks/${task.id}`)).data.version } })).data;
+    assert.equal(rescheduled.participants[0].start_date, "2099-02-04");
     const currentTask = (await app.request(`/api/v5/tasks/${task.id}`)).data;
     const memberPreview = (await app.request(`/api/v5/tasks/${task.id}/member-schedule-preview`, { method: "POST", body: { member_id: resources.members[0].id, start_date: "2099-02-04", end_date: "2099-02-06" } })).data;
-    const scheduled = (await app.request(`/api/v5/tasks/${task.id}/member-schedule`, { method: "POST", body: { member_id: resources.members[0].id, start_date: "2099-02-04", end_date: "2099-02-06", preview_token: memberPreview.preview_token, expected_version: currentTask.version } })).data;
+    const scheduled = (await app.request(`/api/v5/tasks/${task.id}/member-schedule`, { method: "POST", body: { member_id: resources.members[0].id, start_date: "2099-02-04", end_date: "2099-02-06", preview_token: memberPreview.preview_token, expected_version: currentTask.version, ack: true } })).data;
     assert.equal(scheduled.participants[0].start_date, "2099-02-04");
     const execution = (await app.request("/api/v5/execution?topic_id=" + topicB.id)).data;
     assert.equal(execution.items.length, 1);

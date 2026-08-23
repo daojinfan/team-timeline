@@ -36,27 +36,33 @@
     }
   ],
   "evidence": [
-    "docs/05-quality/evidence/TASK-128/20260823T044530386Z-059958a1-npm-test.evidence.json",
-    "docs/05-quality/evidence/TASK-128/20260823T044530386Z-059958a1-server-syntax.evidence.json",
-    "docs/05-quality/evidence/TASK-128/20260823T044530386Z-059958a1-v3-syntax.evidence.json",
-    "docs/05-quality/evidence/TASK-128/20260823T044530386Z-059958a1-git-diff-check.evidence.json"
+    "docs/05-quality/evidence/TASK-128/20260823T051331703Z-74b67c52-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-128/20260823T051331703Z-74b67c52-server-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-128/20260823T051331703Z-74b67c52-v3-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-128/20260823T051331703Z-74b67c52-git-diff-check.evidence.json"
   ],
   "evidence_history": [
     "docs/05-quality/evidence/TASK-128/20260823T044530386Z-059958a1-npm-test.evidence.json",
     "docs/05-quality/evidence/TASK-128/20260823T044530386Z-059958a1-server-syntax.evidence.json",
     "docs/05-quality/evidence/TASK-128/20260823T044530386Z-059958a1-v3-syntax.evidence.json",
-    "docs/05-quality/evidence/TASK-128/20260823T044530386Z-059958a1-git-diff-check.evidence.json"
+    "docs/05-quality/evidence/TASK-128/20260823T044530386Z-059958a1-git-diff-check.evidence.json",
+    "docs/05-quality/evidence/TASK-128/20260823T051331703Z-74b67c52-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-128/20260823T051331703Z-74b67c52-server-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-128/20260823T051331703Z-74b67c52-v3-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-128/20260823T051331703Z-74b67c52-git-diff-check.evidence.json"
   ],
   "review_history": [],
   "review": {
     "required": true,
     "reviewer_task_id": "TASK-129",
-    "status": "pending",
-    "evidence": [],
+    "status": "changes-required",
+    "evidence": [
+      "docs/05-quality/evidence/TASK-129/review-round-1.json"
+    ],
     "pass_streak": 0,
     "subject_sha256": ""
   },
   "last_error": "",
   "created_at": "2026-08-23T04:23:28.09313Z",
-  "updated_at": "2026-08-23T04:45:33.7287344Z"
+  "updated_at": "2026-08-23T05:13:35.0682423Z"
 }
