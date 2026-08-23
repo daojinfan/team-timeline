@@ -1,0 +1,26 @@
+{
+    "$schema":  "schemas/validation-evidence.schema.json",
+    "schema_version":  1,
+    "task_id":  "TASK-127",
+    "work_package":  "WP-009",
+    "baseline":  "BL-005",
+    "contract_sha256":  "b43453f36ac77b2f914fb5e208fa4e007b6177008a33eea469b8fecba6b20e55",
+    "git_commit":  "7a2e2c42016019214e781af018c5772d022431fd",
+    "validation_id":  "v5-design-repair-review-governance",
+    "command":  "powershell",
+    "args":  [
+                 "-NoProfile",
+                 "-ExecutionPolicy",
+                 "Bypass",
+                 "-File",
+                 ".governance/tools/Test-ProjectGovernance.ps1",
+                 "-Level",
+                 "Release"
+             ],
+    "started_at":  "2026-08-23T03:23:56.8880141Z",
+    "finished_at":  "2026-08-23T03:24:08.9762308Z",
+    "exit_code":  0,
+    "redactions_applied":  0,
+    "output_path":  "docs/05-quality/evidence/TASK-127/20260823T032356883Z-43403479-v5-design-repair-review-governance.output.txt",
+    "output_sha256":  "f33c55b35e8b74aa4ccee37756e42ff6af438e5334cbbf55da913afba6d65779"
+}

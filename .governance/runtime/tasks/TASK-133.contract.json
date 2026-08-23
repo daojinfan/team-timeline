@@ -1,0 +1,123 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-133",
+  "work_package": "WP-009",
+  "title": "独立审核 V5 执行中心甘特图与时间同步",
+  "goal": "对 TASK-132 的最终甘特图交互、时间同步、冲突预览、筛选和状态计算展示执行独立 Release 审核，不修改产品代码。",
+  "baseline": "BL-006",
+  "profile": "Release",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-133"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "tests",
+    "src/v3",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/05-quality",
+    "docs/08-changes"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-133"
+  ],
+  "out_of_scope": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "src/server.js",
+    "src/v3",
+    "data",
+    "其他审核目录"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [
+    "TASK-132"
+  ],
+  "acceptance_criteria": [
+    "独立复核 TASK-132 甘特图、成员负载、筛选、时间同步预览和自动延期状态的实际变更。",
+    "Release 档位完成两轮全量审核；审核证据包含实际变更路径、变更类型、验证输出和最终内容指纹。"
+  ],
+  "validations": [
+    {
+      "id": "governance-release",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-Level",
+        "Release"
+      ]
+    },
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "git-diff-check",
+      "command": "git",
+      "args": [
+        "diff",
+        "--check"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface",
+    "overall_architecture",
+    "scope",
+    "production_release"
+  ],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-23T04:24:56.9267707Z",
+  "release_controls": {
+    "target_environment": "本地桌面开发环境：D:\\Codex\\人员管理系统，Node.js + SQLite",
+    "execution_window": "TASK-132 完成验证后，在同一最终内容上执行两轮审核",
+    "rollback_plan": "审核只写 docs/05-quality/evidence/TASK-133，不改产品代码或数据库",
+    "observation_metrics": "实际 Git 变更清单、npm/UI 回归、甘特图内部滚动、双分辨率布局和冲突预览",
+    "stop_conditions": "发现时间同步绕过服务端预览、成员/制冷机冲突遗漏、状态颜色错误或证据越界时结论为 changes-required",
+    "post_release_owner": "PM / human"
+  }
+}

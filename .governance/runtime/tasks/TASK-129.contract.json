@@ -1,0 +1,112 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-129",
+  "work_package": "WP-009",
+  "title": "独立审核 V5 领域模型与服务端实现",
+  "goal": "对 TASK-128 的最终代码、迁移、兼容性与验证证据进行独立 Release 审核，不修改实现范围；只有两轮全量通过才允许进入后续 UI 实施。",
+  "baseline": "BL-006",
+  "profile": "Release",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-129"
+  ],
+  "read_paths": [
+    "src/server.js",
+    "src/v3",
+    "tests",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/05-quality",
+    "docs/08-changes"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-129"
+  ],
+  "out_of_scope": [
+    "src/server.js",
+    "src/v3",
+    "tests",
+    "public",
+    "data",
+    "其他审核目录"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [
+    "TASK-128"
+  ],
+  "acceptance_criteria": [
+    "独立复核 TASK-128 实际代码与测试变更清单、V5 canonical 字段、迁移回滚和兼容性。",
+    "Release 档位完成两轮全量审核；每轮证据包含实际变更、diff_checked、验证结果和指纹。"
+  ],
+  "validations": [
+    {
+      "id": "governance-release",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-Level",
+        "Release"
+      ]
+    },
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "git-diff-check",
+      "command": "git",
+      "args": [
+        "diff",
+        "--check"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "data_model_or_migration",
+    "public_interface",
+    "overall_architecture",
+    "production_release"
+  ],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-23T04:23:43.9668043Z",
+  "release_controls": {
+    "target_environment": "本地桌面开发环境：D:\\Codex\\人员管理系统，Node.js + SQLite",
+    "execution_window": "TASK-128 完成验证后，在同一最终内容上执行两轮审核",
+    "rollback_plan": "审核只写 docs/05-quality/evidence/TASK-129，不改产品代码或数据库",
+    "observation_metrics": "实际 Git 变更清单、代码/测试验证、SQLite 完整性与兼容回归结果",
+    "stop_conditions": "发现实际变更越界、证据与 Git 差异不一致、迁移不可回滚或任一 V5 约束不满足时结论为 changes-required",
+    "post_release_owner": "PM / human"
+  }
+}

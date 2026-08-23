@@ -2,7 +2,7 @@
   "$schema": "schemas/work-package-context.schema.json",
   "schema_version": 1,
   "work_package": "WP-010",
-  "baseline": "BL-005",
+  "baseline": "BL-006",
   "scope": [
     "scripts/reconcile-web-data.mjs",
     "data/team_tasks.sqlite",

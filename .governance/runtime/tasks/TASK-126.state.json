@@ -1,0 +1,46 @@
+{
+    "$schema":  "schemas/governed-work-state.schema.json",
+    "schema_version":  2,
+    "task_id":  "TASK-126",
+    "work_package":  "WP-009",
+    "contract_sha256":  "2dab2c892c0d4ab77729b20d90213d17f3780d9cad93a8b6c1772b096b6a56bf",
+    "baseline":  "BL-005",
+    "state":  "superseded",
+    "approval_id":  "",
+    "acceptance_subject_sha256":  "",
+    "acceptance_evidence_sha256":  "",
+    "acceptance_git_commit":  "",
+    "start_git_commit":  "",
+    "execution_lease":  "",
+    "execution_lease_owner":  "",
+    "execution_lease_expires_at":  "",
+    "preexisting_changes":  [
+
+                            ],
+    "plan_checkpoint_git_commit":  "42307b6546b9be84b94d50a6be10fd06625542db",
+    "plan_rebase_history":  [
+
+                            ],
+    "evidence":  [
+
+                 ],
+    "evidence_history":  [
+
+                         ],
+    "review_history":  [
+
+                       ],
+    "review":  {
+                   "required":  false,
+                   "reviewer_task_id":  "",
+                   "status":  "not-applicable",
+                   "evidence":  [
+
+                                ],
+                   "pass_streak":  0,
+                   "subject_sha256":  ""
+               },
+    "last_error":  "审核任务契约遗漏对 TASK-125 的显式依赖，未启动，改由新契约替代。",
+    "created_at":  "2026-08-23T03:06:24.4834117Z",
+    "updated_at":  "2026-08-23T03:06:40.9127712Z"
+}

@@ -41,4 +41,5 @@ last_reviewed: 2026-08-20
 | BL-002 | superseded | baselines/BL-002/manifest.json | 8bd1a4ac80fcc71327a554b3bd4e2cc65268733d | APR-003 | 2026-08-20 | Corrected governed work package path scopes |
 | BL-003 | superseded | baselines/BL-003/manifest.json | ebb86f52ea84877fdc07127b7c752c11045e7963 | APR-044 | 2026-08-21 | Approved V2 control-plan, human assignment, deliverable acceptance, and desktop execution baseline |
 | BL-004 | superseded | baselines/BL-004/manifest.json | pending | APR-059 | 2026-08-21 | Approved V2.1 topic, sample-pool, linear task-chain, task cryostat, and V3 compatibility baseline |
-| BL-005 | active | baselines/BL-005/manifest.json | 328076e6d56687443c6f0f06ca1c1103510d7d85 | APR-083 | 2026-08-22 | V4 专题唯一工作区、样品规划、人工连续任务排序、状态窗口与跨入口同步基线 |
+| BL-005 | superseded | baselines/BL-005/manifest.json | 328076e6d56687443c6f0f06ca1c1103510d7d85 | APR-083 | 2026-08-22 | V4 专题唯一工作区、样品规划、人工连续任务排序、状态窗口与跨入口同步基线 |
+| BL-006 | active | baselines/BL-006/manifest.json | be88bd0c89fbd8bcb63a74b5a0784ebdfe970f07 | APR-103 | 2026-08-23 | V5 三模块任务管理与执行设计基线（资源维护、任务全量编辑台、执行中心） |

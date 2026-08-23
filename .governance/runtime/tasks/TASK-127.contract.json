@@ -1,0 +1,89 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-127",
+  "work_package": "WP-009",
+  "title": "独立复审 V5 设计修复与完整详设",
+  "goal": "独立复核 TASK-125 对 V5 设计审核发现的修正，检查实际变更清单、canonical 字段、状态颜色 token、追踪矩阵、范围和兼容边界，并完成完整 Release 审核。",
+  "baseline": "BL-005",
+  "profile": "Release",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-127"
+  ],
+  "read_paths": [
+    "docs/08-changes/CR-007.md",
+    "docs/02-product/requirements-v5.md",
+    "docs/03-architecture/overall-design-v5.md",
+    "docs/03-architecture/components/v5-detailed-design.md",
+    "docs/05-quality/traceability-v5.md",
+    "docs/00-index/DOC-REGISTRY.md",
+    "docs/05-quality/evidence/TASK-124"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-127"
+  ],
+  "out_of_scope": [
+    "product code",
+    "database migration",
+    "baseline activation",
+    "production release"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-125"
+  ],
+  "acceptance_criteria": [
+    "实际修复差异清单与 TASK-125 write scope 一致",
+    "canonical 字段命名已统一且追踪闭合",
+    "状态颜色 token、对比度与覆盖规则可实现可验收",
+    "三模块范围、停止条件和历史兼容未被扩大"
+  ],
+  "validations": [
+    {
+      "id": "v5-design-repair-review-governance",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-Level",
+        "Release"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "production_release"
+  ],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-23T03:06:54.5668297Z",
+  "release_controls": {
+    "target_environment": "协调工作树 V5 设计修复独立复审",
+    "execution_window": "TASK-125 修复完成后的完整复审窗口，不进入产品实现或发布",
+    "rollback_plan": "审核只写 TASK-127 证据目录；发现问题保留证据并退回 TASK-125 修复",
+    "observation_metrics": "实际 scoped diff、Release 治理校验、字段引用闭合、颜色 token 验收场景",
+    "stop_conditions": "发现修复越界、文档仍有 canonical 歧义或治理校验错误",
+    "post_release_owner": "项目经理"
+  }
+}

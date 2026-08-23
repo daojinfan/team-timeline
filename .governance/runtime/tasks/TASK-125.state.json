@@ -1,0 +1,38 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-125",
+  "work_package": "WP-009",
+  "contract_sha256": "3b98b4e85de966d7fe9bf843aa3d6f2c1b764c07145ec32c88815bfc0f924230",
+  "baseline": "BL-005",
+  "state": "superseded",
+  "approval_id": "APR-101",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "42307b6546b9be84b94d50a6be10fd06625542db",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [],
+  "plan_checkpoint_git_commit": "42307b6546b9be84b94d50a6be10fd06625542db",
+  "plan_rebase_history": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-125/20260823T031542075Z-61b3bff6-v5-design-repair-governance.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-125/20260823T031542075Z-61b3bff6-v5-design-repair-governance.evidence.json"
+  ],
+  "review_history": [],
+  "review": {
+    "required": true,
+    "reviewer_task_id": "TASK-127",
+    "status": "cancelled",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
+  },
+  "last_error": "BL-006 已激活；该任务属于旧 BL-005 执行批次，保留历史证据并终止旧批次，后续如需继续须按 BL-006 重新规划。",
+  "created_at": "2026-08-23T03:06:06.2174303Z",
+  "updated_at": "2026-08-23T03:56:21.5803819Z"
+}

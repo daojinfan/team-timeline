@@ -1,0 +1,118 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-128",
+  "work_package": "WP-009",
+  "title": "实现 V5 领域模型、增量迁移与服务端命令接口",
+  "goal": "在 BL-006 V5 设计约束下，把现有 V3 领域适配层扩展为可供三个桌面模块共用的唯一事实与命令服务，先完成资源、专题、任务、样品、测试项、成员日期、状态计算和版本冲突的可验证服务端基础。",
+  "baseline": "BL-006",
+  "profile": "Release",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "src/server.js",
+    "src/v3",
+    "tests"
+  ],
+  "read_paths": [
+    "src/server.js",
+    "src/v3",
+    "tests",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/05-quality",
+    "docs/08-changes"
+  ],
+  "write_paths": [
+    "src/server.js",
+    "src/v3",
+    "tests"
+  ],
+  "out_of_scope": [
+    "public",
+    "data/team_tasks.sqlite",
+    "手机端",
+    "AI 自动建任务",
+    "自动分配成员",
+    "成果提交/验收"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "以增量方式实现 V5 资源、专题、任务、样品、测试项、成员日期和状态计算所需的服务端事实与命令接口。",
+    "使用 purpose、manual_phase、color 等 V5 canonical 字段，禁止新增旧同义字段作为可写事实。",
+    "保留 V1/V2/V3 兼容接口和任务编号；数据库升级可重复、可回滚并通过完整性校验。",
+    "所有写命令使用版本校验和事务；返回字段校验、版本冲突、停用资源、预览过期等结构化错误。"
+  ],
+  "validations": [
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "server-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "src/server.js"
+      ]
+    },
+    {
+      "id": "v3-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "src/v3/index.js"
+      ]
+    },
+    {
+      "id": "git-diff-check",
+      "command": "git",
+      "args": [
+        "diff",
+        "--check"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "data_model_or_migration",
+    "public_interface",
+    "overall_architecture"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-23T04:23:28.0931300Z",
+  "release_controls": {
+    "target_environment": "本地桌面开发环境：D:\\Codex\\人员管理系统，Node.js + SQLite",
+    "execution_window": "取得本任务 execution 批准后，在 dev 分支执行；每次验证后形成独立可回滚提交点",
+    "rollback_plan": "保留现有代码与 SQLite 备份；失败时停止服务并回退本任务提交，数据库仅允许可回滚的增量迁移",
+    "observation_metrics": "npm test、V3/V5 API 契约、SQLite integrity_check、V1/V2/V3 兼容回归、迁移重启结果",
+    "stop_conditions": "发现 V1/V2/V3 兼容破坏、无备份迁移、不可逆数据删除、超出 BL-006 范围或治理/审核失败时立即停止",
+    "post_release_owner": "PM / human"
+  }
+}

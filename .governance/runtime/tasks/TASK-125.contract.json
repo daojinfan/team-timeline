@@ -1,0 +1,107 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-125",
+  "work_package": "WP-009",
+  "title": "修正 V5 设计审核发现并准备完整复审",
+  "goal": "修正首轮审核发现的 V5 canonical 字段命名不一致与状态颜色 token 缺失问题，保持三模块范围不变，并为独立完整复审提供可验证文档。",
+  "baseline": "BL-005",
+  "profile": "Release",
+  "role": "ARCHITECT",
+  "allowed_paths": [
+    "docs/08-changes/CR-007.md",
+    "docs/02-product/requirements-v5.md",
+    "docs/03-architecture/overall-design-v5.md",
+    "docs/03-architecture/components/v5-detailed-design.md",
+    "docs/05-quality/traceability-v5.md",
+    "docs/00-index/DOC-REGISTRY.md"
+  ],
+  "read_paths": [
+    "docs/08-changes/CR-007.md",
+    "docs/02-product/requirements-v5.md",
+    "docs/03-architecture/overall-design-v5.md",
+    "docs/03-architecture/components/v5-detailed-design.md",
+    "docs/05-quality/traceability-v5.md",
+    "docs/00-index/DOC-REGISTRY.md",
+    "docs/05-quality/evidence/TASK-124"
+  ],
+  "write_paths": [
+    "docs/08-changes/CR-007.md",
+    "docs/02-product/requirements-v5.md",
+    "docs/03-architecture/overall-design-v5.md",
+    "docs/03-architecture/components/v5-detailed-design.md",
+    "docs/05-quality/traceability-v5.md",
+    "docs/00-index/DOC-REGISTRY.md"
+  ],
+  "out_of_scope": [
+    "product code",
+    "database migration",
+    "baseline activation",
+    "production release",
+    "AI automation",
+    "mobile client"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-123"
+  ],
+  "acceptance_criteria": [
+    "ARC-OVERALL-V5-001 与 ARC-COMP-V5-001 使用同一套 canonical 任务字段名且无歧义映射",
+    "冻结五类状态及任务人工颜色的 token、对比度和覆盖规则",
+    "不改变用户已确认的三模块边界和范围外清单",
+    "新增验收场景覆盖字段一致性和颜色 token"
+  ],
+  "validations": [
+    {
+      "id": "v5-design-repair-governance",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-Level",
+        "Release"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "scope",
+    "overall_architecture",
+    "success_criteria",
+    "production_release"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-23T03:06:06.2174303Z",
+  "repair_of": [
+    "TASK-123"
+  ],
+  "release_controls": {
+    "target_environment": "协调工作树 V5 设计修复与审核准备",
+    "execution_window": "首轮审核发现修复窗口，不进入产品实现或发布",
+    "rollback_plan": "保留 TASK-123 首轮审核和 V5 原始提交；若修复失败，仅回退修复文档提交，不删除历史证据",
+    "observation_metrics": "canonical 字段全局引用一致、状态 token 表与验收场景闭合、Release 治理校验",
+    "stop_conditions": "范围扩展到代码/数据库/基线激活，或无法在 V5 文档内消除字段和颜色歧义",
+    "post_release_owner": "项目经理"
+  }
+}

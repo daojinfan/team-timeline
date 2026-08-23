@@ -1,0 +1,51 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-123",
+  "work_package": "WP-009",
+  "contract_sha256": "50166676a14815b20f094686e500c4b30d4d80e992a1bc7be03d2b7efcbd83b2",
+  "baseline": "BL-005",
+  "state": "superseded",
+  "approval_id": "APR-099",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "bb96e501ca3341b8a5875d14dc6d367c8004faa1",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [],
+  "plan_checkpoint_git_commit": "bb96e501ca3341b8a5875d14dc6d367c8004faa1",
+  "plan_rebase_history": [
+    {
+      "previous_changes": [
+        "docs/00-index/DOC-REGISTRY.md",
+        "docs/02-product/requirements-v5.md",
+        "docs/03-architecture/components/v5-detailed-design.md",
+        "docs/03-architecture/overall-design-v5.md",
+        "docs/05-quality/traceability-v5.md",
+        "docs/08-changes/CR-007.md"
+      ],
+      "checkpoint_git_commit": "bb96e501ca3341b8a5875d14dc6d367c8004faa1",
+      "rebased_at": "2026-08-23T02:31:24.6694044Z"
+    }
+  ],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-123/20260823T023927614Z-47f563b1-v5-design-governance.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-123/20260823T023927614Z-47f563b1-v5-design-governance.evidence.json"
+  ],
+  "review_history": [],
+  "review": {
+    "required": true,
+    "reviewer_task_id": "TASK-124",
+    "status": "cancelled",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
+  },
+  "last_error": "BL-006 已激活；该任务属于旧 BL-005 执行批次，保留历史证据并终止旧批次，后续如需继续须按 BL-006 重新规划。",
+  "created_at": "2026-08-22T17:25:59.8436343Z",
+  "updated_at": "2026-08-23T03:56:21.4123398Z"
+}

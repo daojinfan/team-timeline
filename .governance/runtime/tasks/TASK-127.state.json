@@ -1,0 +1,62 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-127",
+  "work_package": "WP-009",
+  "contract_sha256": "b43453f36ac77b2f914fb5e208fa4e007b6177008a33eea469b8fecba6b20e55",
+  "baseline": "BL-005",
+  "state": "superseded",
+  "approval_id": "APR-102",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "7a2e2c42016019214e781af018c5772d022431fd",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [],
+  "plan_checkpoint_git_commit": "7a2e2c42016019214e781af018c5772d022431fd",
+  "plan_rebase_history": [
+    {
+      "previous_changes": [],
+      "checkpoint_git_commit": "7a2e2c42016019214e781af018c5772d022431fd",
+      "rebased_at": "2026-08-23T03:16:26.5678488Z"
+    }
+  ],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-127/20260823T032356883Z-43403479-v5-design-repair-review-governance.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-127/20260823T032155622Z-ceb8a954-v5-design-repair-review-governance.evidence.json",
+    "docs/05-quality/evidence/TASK-127/review-round-1.json",
+    "docs/05-quality/evidence/TASK-127/20260823T032356883Z-43403479-v5-design-repair-review-governance.evidence.json",
+    "docs/05-quality/evidence/TASK-127/review-round-2.json"
+  ],
+  "review_history": [
+    {
+      "path": "docs/05-quality/evidence/TASK-127/review-round-1.json",
+      "sha256": "4755c3d167763ccd7df20251c204e1679186bf645f77800270d0a728436dc969",
+      "result": "passed",
+      "round_id": "RR-0f2dfb84b5104169a04032629e9595c2",
+      "recorded_at": "2026-08-23T03:22:26.5621608Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-127/review-round-2.json",
+      "sha256": "6bee7fd5a3ca62552593f85f57d2bcdd669b269d4ce7045dd77e0bf4e990a701",
+      "result": "passed",
+      "round_id": "RR-3ded5bd413e048ff838f1116ef0807bf",
+      "recorded_at": "2026-08-23T03:24:42.4383032Z"
+    }
+  ],
+  "review": {
+    "required": false,
+    "reviewer_task_id": "",
+    "status": "not-applicable",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
+  },
+  "last_error": "BL-006 已激活；该任务属于旧 BL-005 执行批次，保留历史证据并终止旧批次，后续如需继续须按 BL-006 重新规划。",
+  "created_at": "2026-08-23T03:06:54.5668297Z",
+  "updated_at": "2026-08-23T03:56:21.0892644Z"
+}

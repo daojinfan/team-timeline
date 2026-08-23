@@ -1,0 +1,60 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-124",
+  "work_package": "WP-009",
+  "contract_sha256": "3e3a8e536130a1a254db0e566a299852f3d81307f31dfae8ba26784f1ab0a9f5",
+  "baseline": "BL-005",
+  "state": "superseded",
+  "approval_id": "APR-100",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "711c65ef6afed98ebc7fb4cbe1e24417676b6cd9",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [],
+  "plan_checkpoint_git_commit": "711c65ef6afed98ebc7fb4cbe1e24417676b6cd9",
+  "plan_rebase_history": [
+    {
+      "previous_changes": [
+        "docs/00-index/DOC-REGISTRY.md",
+        "docs/02-product/requirements-v5.md",
+        "docs/03-architecture/components/v5-detailed-design.md",
+        "docs/03-architecture/overall-design-v5.md",
+        "docs/05-quality/traceability-v5.md",
+        "docs/08-changes/CR-007.md"
+      ],
+      "checkpoint_git_commit": "711c65ef6afed98ebc7fb4cbe1e24417676b6cd9",
+      "rebased_at": "2026-08-23T02:40:23.6327038Z"
+    }
+  ],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-124/20260823T024518540Z-e947a0ea-v5-design-review.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-124/20260823T024518540Z-e947a0ea-v5-design-review.evidence.json",
+    "docs/05-quality/evidence/TASK-124/review-round-1.json"
+  ],
+  "review_history": [
+    {
+      "path": "docs/05-quality/evidence/TASK-124/review-round-1.json",
+      "sha256": "944fd5ecd51c6eafc5bd0537d82fdc42f58024516b6353b316fa42fe06f93b6b",
+      "result": "changes-required",
+      "round_id": "RR-e7f724bf981c4471b9ae592827f5117b",
+      "recorded_at": "2026-08-23T02:45:47.2831006Z"
+    }
+  ],
+  "review": {
+    "required": false,
+    "reviewer_task_id": "",
+    "status": "not-applicable",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
+  },
+  "last_error": "BL-006 已激活；该任务属于旧 BL-005 执行批次，保留历史证据并终止旧批次，后续如需继续须按 BL-006 重新规划。",
+  "created_at": "2026-08-22T17:26:14.9449582Z",
+  "updated_at": "2026-08-23T03:56:21.7418238Z"
+}

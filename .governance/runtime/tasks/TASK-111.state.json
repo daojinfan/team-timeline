@@ -5,7 +5,7 @@
   "work_package": "WP-009",
   "contract_sha256": "a8a2ef862f177b9c4172a206db46d347d2b726c21c9969b9dc37be032a35fedc",
   "baseline": "BL-005",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "APR-091",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -65,7 +65,7 @@
     "pass_streak": 0,
     "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "BL-006 已激活；该任务属于旧 BL-005 执行批次，保留历史证据并终止旧批次，后续如需继续须按 BL-006 重新规划。",
   "created_at": "2026-08-22T06:32:33.0012134Z",
-  "updated_at": "2026-08-22T07:01:56.6971649Z"
+  "updated_at": "2026-08-23T03:56:22.0902042Z"
 }

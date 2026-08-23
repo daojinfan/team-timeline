@@ -1,0 +1,87 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-122",
+  "work_package": "WP-009",
+  "title": "独立审核三模块任务系统总体与详细设计",
+  "goal": "独立审查 TASK-121 新增的 V5 三模块需求、总体设计、详细设计、变更包和追踪矩阵，检查实际变更清单、边界、字段、流程、过滤搜索、甘特图时间同步、兼容与停止条件。",
+  "baseline": "BL-005",
+  "profile": "Release",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-122"
+  ],
+  "read_paths": [
+    "docs/08-changes/CR-007.md",
+    "docs/02-product/requirements-v5.md",
+    "docs/03-architecture/overall-design-v5.md",
+    "docs/03-architecture/components/v5-detailed-design.md",
+    "docs/05-quality/traceability-v5.md",
+    "docs/00-index/DOC-REGISTRY.md"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-122"
+  ],
+  "out_of_scope": [
+    "product code",
+    "data migration",
+    "server restart",
+    "production release"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-121"
+  ],
+  "acceptance_criteria": [
+    "实际新增文档清单与 Git 差异一致",
+    "三模块职责无重叠且与用户最新确认一致",
+    "任务字段和状态规则可实现、可验证",
+    "风险、兼容、回滚和后续实现边界完整"
+  ],
+  "validations": [
+    {
+      "id": "v5-design-review",
+      "command": "Test-ProjectGovernance.ps1",
+      "args": [
+        "-Level",
+        "Release"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "scope",
+    "overall_architecture",
+    "public_interface",
+    "data_model_or_migration",
+    "production_release"
+  ],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-22T17:15:01.7942789Z",
+  "release_controls": {
+    "target_environment": "协调工作树文档审查",
+    "execution_window": "当前设计审查窗口，不进入产品实现或发布",
+    "rollback_plan": "审核只写 TASK-122 证据目录，不修改设计交付文件。",
+    "observation_metrics": "文档变更清单、引用闭合、治理校验结果、设计缺陷清单",
+    "stop_conditions": "发现设计与用户最新确认冲突、文档之间不一致或治理校验错误。",
+    "post_release_owner": "项目经理"
+  }
+}
