@@ -1,0 +1,45 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-157",
+  "reviewed_task_ids": ["TASK-156"],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-156",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "第二轮复核确认成员摘要、展开/收起、姓名或角色搜索、勾选状态保留和停用成员标记逻辑与最终代码一致。"
+    },
+    {
+      "task_id": "TASK-156",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "第二轮复核确认紧凑摘要、滚动选择面板、两列桌面布局及 520px 单列响应式样式与最终代码一致。"
+    },
+    {
+      "task_id": "TASK-156",
+      "path": "tests/v5-inline-editor.test.js",
+      "change_type": "modified",
+      "summary": "第二轮复核确认新增静态断言覆盖成员选择器入口、搜索渲染和 CSS 选择器，且原有 preview/PUT/版本校验断言仍在。"
+    }
+  ],
+  "change_summary": "第二轮对 TASK-156 同一最终内容进行全量复审；重新核对启动提交后的 Git 清单、成员选择状态流转、保存 payload 和响应式布局，内容指纹与第一轮一致，未发现新增问题。",
+  "scope_checked": [
+    "重新核对实际 Git 差异仅包含 public/app.js、public/styles.css 和 tests/v5-inline-editor.test.js 三个 TASK-156 写入路径。",
+    "搜索过滤重绘使用表单当前已勾选集合，避免输入搜索词导致成员选择丢失；空结果有明确提示。",
+    "摘要只展示数量和有限名称预览，展开面板才加载全部成员，成员过多时由内部滚动承载。",
+    "停用但已选成员保留并标注，非当前停用成员禁用；现有成员 checkbox 类和保存读取链路未改变。",
+    "第二轮未发现任务树、全量编辑、执行中心、样品编辑或移动端范围外的变更。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "npm test：45 项全部通过。",
+    "node --check public/app.js：通过。",
+    "git diff --check 27fee3d5e472c8522f43c6fdfb7cd1cd716bfaa6..HEAD：通过；与第一轮相同的三文件内容指纹。"
+  ],
+  "created_at": "2026-08-23T18:40:00+08:00"
+}

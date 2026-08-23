@@ -1,0 +1,45 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-157",
+  "reviewed_task_ids": ["TASK-156"],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-156",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "摘要区成员由平铺 checkbox 改为紧凑摘要、可展开选择面板、姓名/角色搜索和状态保留；选择结果继续由现有 v5InlineTaskPayload 读取。"
+    },
+    {
+      "task_id": "TASK-156",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "新增成员摘要、选择面板、搜索框、滚动列表和移动端单列样式，限制成员较多时的面板高度与页面占用。"
+    },
+    {
+      "task_id": "TASK-156",
+      "path": "tests/v5-inline-editor.test.js",
+      "change_type": "modified",
+      "summary": "补充成员摘要、展开切换、搜索渲染和选择面板样式的静态回归断言，同时保留原有保存链路断言。"
+    }
+  ],
+  "change_summary": "第一轮全量复审确认成员选择器的三项实际代码变更与 TASK-156 启动提交后的 Git 差异一致；没有发现越界文件或保存链路漂移。",
+  "scope_checked": [
+    "成员默认摘要显示已选数量和最多三个成员名称，未再平铺全部成员。",
+    "展开按钮使用 aria-expanded/aria-controls，搜索按姓名或角色过滤，筛选重绘前保留当前勾选集合。",
+    "停用成员保持可见并标注“停用”，当前已选停用成员仍可取消选择，未选停用成员不可选。",
+    "v5InlineTaskPayload 仍从 .v5-inline-member-check:checked 读取，preview/PUT、expected_version、冲突确认和刷新同步未改变。",
+    "成员列表设置最大高度和响应式单列布局，旧全量编辑入口及样品编辑范围未被修改。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "npm test：45 项全部通过。",
+    "node --check public/app.js：通过。",
+    "git diff --check 27fee3d5e472c8522f43c6fdfb7cd1cd716bfaa6..HEAD：通过。"
+  ],
+  "created_at": "2026-08-23T18:30:00+08:00"
+}

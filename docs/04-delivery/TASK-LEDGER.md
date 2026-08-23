@@ -36,8 +36,8 @@ review_policy: independent-required
 
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| WP-009 | TASK-157 | pending | REVIEWER | 独立复审参与成员选择器优化 | BL-006 | pending | TASK-156 | pending | docs/05-quality/evidence/TASK-157 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
-| WP-009 | TASK-156 | pending | IMPLEMENTER | 优化摘要区参与成员选择器 | BL-006 | pending | n/a | running | public/app.js, public/styles.css, tests/v5-inline-editor.test.js | required-validation | TASK-157 | pending | pending | Plan 自动登记，等待调度 |
+| WP-009 | TASK-157 | pending | REVIEWER | 独立复审参与成员选择器优化 | BL-006 | pending | TASK-156 | completed | docs/05-quality/evidence/TASK-157 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-009 | TASK-156 | pending | IMPLEMENTER | 优化摘要区参与成员选择器 | BL-006 | pending | n/a | completed | public/app.js, public/styles.css, tests/v5-inline-editor.test.js | required-validation | TASK-157 | passed | docs/05-quality/evidence/TASK-157/review-round-2.json | 两轮独立复审通过，等待用户验收 |
 | WP-009 | TASK-155 | pending | REVIEWER | 独立复审摘要区任务直接编辑 | BL-006 | pending | TASK-153 | completed | docs/05-quality/evidence/TASK-155 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-009 | TASK-154 | pending | REVIEWER | 独立复审摘要区任务直接编辑 | BL-006 | pending | TASK-153 | replaced | docs/05-quality/evidence/TASK-154 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-009 | TASK-153 | pending | IMPLEMENTER | 摘要区任务直接编辑 | BL-006 | pending | n/a | replaced | public/app.js, public/styles.css, tests/v5-inline-editor.test.js | required-validation | TASK-155 | cancelled | docs/05-quality/evidence/TASK-155/review-cancelled-task153-member-ui-followup-20260823.json | 复审任务由 TASK-154 替换为 TASK-155，等待第二轮审核 |
