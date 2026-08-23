@@ -1,0 +1,70 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-127",
+  "reviewed_task_ids": ["TASK-125"],
+  "work_package": "WP-009",
+  "baseline": "BL-005",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-125",
+      "path": "docs/00-index/DOC-REGISTRY.md",
+      "change_type": "modified",
+      "summary": "复核 V5 注册表中五份文档的 1.2 版本、proposed 状态和 BL-005 绑定。"
+    },
+    {
+      "task_id": "TASK-125",
+      "path": "docs/02-product/requirements-v5.md",
+      "change_type": "modified",
+      "summary": "复核 REQ-V5-036/037 对 canonical 字段和状态颜色 token 的产品约束。"
+    },
+    {
+      "task_id": "TASK-125",
+      "path": "docs/03-architecture/components/v5-detailed-design.md",
+      "change_type": "modified",
+      "summary": "复核五种状态的 token、对比度、文字/图标和人工颜色 accent 的互不覆盖规则。"
+    },
+    {
+      "task_id": "TASK-125",
+      "path": "docs/03-architecture/overall-design-v5.md",
+      "change_type": "modified",
+      "summary": "复核任务事实字段已统一为 purpose、color、manual_phase，并且历史同义名仅作禁用说明。"
+    },
+    {
+      "task_id": "TASK-125",
+      "path": "docs/05-quality/traceability-v5.md",
+      "change_type": "modified",
+      "summary": "复核 REQ-V5-036/037、AT-V5-011/012 与总体/组件设计之间的双向追踪。"
+    },
+    {
+      "task_id": "TASK-125",
+      "path": "docs/08-changes/CR-007.md",
+      "change_type": "modified",
+      "summary": "复核修正内容没有扩大到产品代码、数据库、基线激活或 V5 范围外功能。"
+    }
+  ],
+  "change_summary": "第二轮对 TASK-125 最终内容执行全量 scoped manifest 复核：仍为 42307b6546b9be84b94d50a6be10fd06625542db..7a2e2c4 的 6 个 modified 文档（46 insertions、12 deletions），内容指纹与第一轮一致；治理状态和证据文件排除在交付 write scope 之外。",
+  "scope_checked": [
+    "重新读取 TASK-125/TASK-127 契约、依赖、repair_of、Release 控制和 BL-005 基线",
+    "重新核对 V5 三模块、资源维护、任务全量编辑台、执行中心及范围外清单没有被修复改写",
+    "重新核对 task 事实字段、topic purpose 与 task purpose 的实体边界以及 manual_phase 的三值约束",
+    "重新核对五类 status token 的 HEX 值、文字与图标要求、WCAG AA 门槛和任务 accent 显示层级",
+    "重新核对需求、总体设计、组件详设、CR-007、注册表和追踪矩阵的引用闭合",
+    "重新核对 1280×720/1366×768 桌面边界、兼容/停止条件和不进入实现/激活的治理门"
+  ],
+  "findings": [
+    "第二轮全量复核未发现阻塞项；所有业务字段定义均使用 purpose、manual_phase、color，旧名称没有作为可写事实重复出现。",
+    "第二轮全量复核未发现阻塞项；status.waiting、status.sample-delayed、status.testing、status.test-delayed、status.completed 五组 token 与文字/图标及任务 accent 规则一致。",
+    "第二轮全量复核未发现范围漂移；V5 仍为 proposed，BL-005 仍是 active 基线，进入实现前仍需单独批准并创建 BL-006。"
+  ],
+  "validation_evidence": [
+    "git diff --name-status 42307b6546b9be84b94d50a6be10fd06625542db 7a2e2c4 与第一轮一致，六个 V5 文档均为 M；未发现额外产品代码或数据库差异。",
+    "powershell -NoProfile -ExecutionPolicy Bypass -File .governance/tools/Test-ProjectGovernance.ps1 -Level Release：错误数 0、警告数 0。",
+    "重新检索业务字段定义，purpose/manual_phase/color 的命名与 ARC-OVERALL-V5-001 §9 对照一致；历史名称只出现在对照、变更说明和回归场景语境。",
+    "重新计算五组状态 token 前景/背景对比度：14.48:1、8.20:1、8.49:1、8.18:1、8.30:1，全部超过 4.5:1。",
+    "第二轮内容指纹与第一轮相同，未发生两轮之间的交付内容变化；git diff --check 通过。"
+  ],
+  "created_at": "2026-08-23T11:28:00+08:00"
+}

@@ -1,0 +1,71 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-127",
+  "reviewed_task_ids": ["TASK-125"],
+  "work_package": "WP-009",
+  "baseline": "BL-005",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-125",
+      "path": "docs/00-index/DOC-REGISTRY.md",
+      "change_type": "modified",
+      "summary": "将 V5 五份设计/变更文档注册版本更新为 1.2。"
+    },
+    {
+      "task_id": "TASK-125",
+      "path": "docs/02-product/requirements-v5.md",
+      "change_type": "modified",
+      "summary": "新增 REQ-V5-036 canonical 字段和 REQ-V5-037 状态颜色 token 要求。"
+    },
+    {
+      "task_id": "TASK-125",
+      "path": "docs/03-architecture/components/v5-detailed-design.md",
+      "change_type": "modified",
+      "summary": "新增五类状态的固定前景/背景色 token、图标和任务 accent 覆盖规则。"
+    },
+    {
+      "task_id": "TASK-125",
+      "path": "docs/03-architecture/overall-design-v5.md",
+      "change_type": "modified",
+      "summary": "将任务事实字段统一为 purpose、color、manual_phase，并增加 canonical 字段对照表。"
+    },
+    {
+      "task_id": "TASK-125",
+      "path": "docs/05-quality/traceability-v5.md",
+      "change_type": "modified",
+      "summary": "追踪 REQ-V5-036/037，并增加 AT-V5-011 字段回归和 AT-V5-012 状态 token 回归场景。"
+    },
+    {
+      "task_id": "TASK-125",
+      "path": "docs/08-changes/CR-007.md",
+      "change_type": "modified",
+      "summary": "记录 canonical 字段冻结和历史同义名禁用规则。"
+    }
+  ],
+  "change_summary": "从 TASK-125 启动前检查点 42307b6546b9be84b94d50a6be10fd06625542db 到 7a2e2c4 的 scoped manifest 为上述 6 个文档全部 modified，共 46 insertions、12 deletions；治理状态、审批、台账和自动验证 evidence 属系统文件，不属于 TASK-125 write scope。",
+  "scope_checked": [
+    "TASK-125/TASK-127 Release 契约、WP-009、BL-005 和 repair_of TASK-123 关系",
+    "ARC-OVERALL-V5-001 §3 与 §9 的任务事实字段，以及 ARC-COMP-V5-001 任务表单和命令边界",
+    "purpose、manual_phase、color 三个 canonical 名称在 V5 业务字段定义中的一致性",
+    "五类状态 token 的前景色、背景色、文字/图标要求和人工任务 accent 覆盖规则",
+    "五组 token 的静态对比度结果：14.48:1、8.20:1、8.49:1、8.18:1、8.30:1",
+    "REQ-V5-036/037 与追踪矩阵、AT-V5-011/012 验收场景的闭合关系",
+    "CR-007 的范围外、停止条件、BL-005 保留和不进入产品实现/基线激活的边界"
+  ],
+  "findings": [
+    "未发现阻塞项。首轮字段命名歧义已通过 canonical 对照表消除，业务字段定义统一使用 purpose、manual_phase、color。",
+    "未发现阻塞项。状态颜色已冻结为五组 token，保留中文文字和图标；任务自定义色仅作为 accent，不覆盖状态 chip。",
+    "AT-V5-011 的检索范围限定为业务字段定义；canonical 对照表、变更说明和回归场景中对历史名称的引用是有意且可审计的。"
+  ],
+  "validation_evidence": [
+    "git diff --name-status 42307b6546b9be84b94d50a6be10fd06625542db 7a2e2c4 -- 六个 V5 文档输出 6 个 M；git diff --stat 输出 46 insertions、12 deletions。",
+    "powershell -NoProfile -ExecutionPolicy Bypass -File .governance/tools/Test-ProjectGovernance.ps1 -Level Release：错误数 0、警告数 0。",
+    "业务字段定义检索确认 test_purpose、execution_state、task_color 不再出现在任务事实/表单字段中，仅保留在 canonical 对照、变更说明和回归场景的历史名称语境。",
+    "PowerShell 对五组前景/背景色计算的对比度均大于 8:1，超过设计要求 WCAG AA 4.5:1。",
+    "git diff --check 通过；复审任务只写入 docs/05-quality/evidence/TASK-127。"
+  ],
+  "created_at": "2026-08-23T11:21:14.5294886+08:00"
+}
