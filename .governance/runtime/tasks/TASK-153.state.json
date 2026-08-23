@@ -5,7 +5,7 @@
   "work_package": "WP-009",
   "contract_sha256": "a549201b5faf7a673476a6cec7156b46176dca413c41773fd6d37ae1d4abce13",
   "baseline": "BL-006",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "APR-119",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -37,14 +37,14 @@
   "review": {
     "required": true,
     "reviewer_task_id": "TASK-155",
-    "status": "passed",
+    "status": "cancelled",
     "evidence": [
-      "docs/05-quality/evidence/TASK-155/review-round-2.json"
+      "docs/05-quality/evidence/TASK-155/review-cancelled-task153-member-ui-followup-20260823.json"
     ],
-    "pass_streak": 2,
-    "subject_sha256": "57ee4d56493a1c1ea2b9d2e87d24eef929904139f555c279fa13545ffcc1d29a"
+    "pass_streak": 0,
+    "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "本次参与成员 UI 优化继续修改同一摘要区文件，旧 TASK-153 审核冻结点已无法代表当前最终差异；该未进入集成的旧交付链由新的独立任务承接，历史验证与审核证据保留。",
   "created_at": "2026-08-23T09:41:16.1380895Z",
-  "updated_at": "2026-08-23T09:50:02.6595585Z"
+  "updated_at": "2026-08-23T10:09:28.0484381Z"
 }

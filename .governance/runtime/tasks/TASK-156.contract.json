@@ -1,0 +1,86 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-156",
+  "work_package": "WP-009",
+  "title": "优化摘要区参与成员选择器",
+  "goal": "将摘要区参与成员由平铺列表改为紧凑摘要与可展开搜索选择器，保持成员保存、版本校验和模块同步行为不变。",
+  "baseline": "BL-006",
+  "profile": "Standard",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/app.js",
+    "public/styles.css",
+    "tests/v5-inline-editor.test.js"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "src/v3",
+    "tests",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/05-quality",
+    "docs/08-changes"
+  ],
+  "write_paths": [
+    "public/app.js",
+    "public/styles.css",
+    "tests/v5-inline-editor.test.js"
+  ],
+  "out_of_scope": [
+    "src/server.js",
+    "src/v3",
+    "data/team_tasks.sqlite",
+    "手机端",
+    "AI自动建任务",
+    "数据库删除或重置"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "参与成员默认显示紧凑摘要（已选数量、成员名称），不再平铺全部成员。",
+    "点击摘要可展开成员选择面板，支持按姓名或角色搜索、勾选和取消勾选。",
+    "停用但当前已选成员仍可见并标记；保存仍复用现有 V5 preview/PUT、expected_version 和刷新链路。",
+    "npm test、前端语法和差异检查通过。"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-23T10:01:51.3510863Z"
+}
