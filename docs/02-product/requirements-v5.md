@@ -2,7 +2,7 @@
 doc_id: REQ-V5-001
 type: product.requirements.v5
 status: proposed
-version: 1.1
+version: 1.2
 owner: human
 baseline: BL-005
 depends_on:
@@ -83,6 +83,8 @@ last_reviewed: 2026-08-23
 - REQ-V5-027：重要归类、时间、成员、制冷机和状态修改写入操作日志，并支持一次撤销最近修改。
 - REQ-V5-034：资源实体以稳定 ID 被任务引用；任意入口修改资源名称后，其他页面立即显示新名称，不复制出第二份名称。
 - REQ-V5-035：已停用资源不出现在新关联默认选项中，但历史任务仍可显示并允许用户将其替换为启用资源。
+- REQ-V5-036：任务测试目的、人工执行阶段和人工颜色的 canonical 名称分别为 `purpose`、`manual_phase` 和 `color`，不允许同一事实使用多套字段。
+- REQ-V5-037：五类展示状态必须使用已冻结的状态颜色 token，同时保留中文文字和图标；任务人工颜色只做 accent，不覆盖状态色。
 
 ## 8. 明确不建设
 

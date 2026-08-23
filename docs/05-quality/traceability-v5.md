@@ -2,7 +2,7 @@
 doc_id: QUAL-TRACE-V5-001
 type: quality.traceability.v5
 status: proposed
-version: 1.1
+version: 1.2
 owner: human
 baseline: BL-005
 depends_on:
@@ -29,6 +29,8 @@ last_reviewed: 2026-08-23
 | REQ-V5-030～031 多样品与到样进度 | ARC-COMP-V5-001 §3.3.2、§4.3.1 | 任一必需样品逾期、ETA 待确认、全部到样 |
 | REQ-V5-032～033 成员默认日期与日界 | ARC-COMP-V5-001 §4.1～4.2 | 新增成员、空排期、起止日包含 |
 | REQ-V5-034～035 资源 ID 同步与停用 | ARC-OVERALL-V5-001 §6～8、ARC-COMP-V5-001 §5.1 | 改名同步、历史引用、新选项排除停用资源 |
+| REQ-V5-036 canonical 字段 | ARC-OVERALL-V5-001 §3、§9、ARC-COMP-V5-001 §3.3.1 | 文档全局搜索不得出现禁用同义名；命令字段与表单字段一致 |
+| REQ-V5-037 状态颜色 token | ARC-COMP-V5-001 §7.1、ARC-OVERALL-V5-001 §9 | 五类状态 token、WCAG AA、文字/图标与 accent 覆盖测试 |
 | 桌面边界 | ARC-COMP-V5-001 §7 | 1280×720、1366×768、容器滚动和可访问状态 |
 
 ## 验收场景
@@ -45,6 +47,8 @@ last_reviewed: 2026-08-23
 | AT-V5-008 资源改名同步 | 制冷机已被多任务引用 | 资源维护中改名 | 任务树、表单和甘特图都显示新名称，关联 ID 不变 |
 | AT-V5-009 冲突预览 | 成员或制冷机已有重叠排期 | 保存或拖拽改期 | 显示具体冲突对象，确认前不写入 |
 | AT-V5-010 并发保护 | 两个页面同时打开一任务 | 后保存的页面使用旧版本 | 拒绝覆盖，展示已变更字段并要求重新确认 |
+| AT-V5-011 字段 canonical 回归 | 全部 V5 文档和命令边界 | 检索业务字段定义中的 `execution_state`、`test_purpose`、`task_color` | 禁用同义名不作为可写字段，只在 canonical 对照或回归场景中作为历史名称出现 |
+| AT-V5-012 状态 token 回归 | 五类状态和任务自定义色 | 检查 chip、任务行和甘特图 | 状态使用固定 token+文字/图标，任务色只作 accent，不覆盖状态色 |
 
 ## 质量门
 

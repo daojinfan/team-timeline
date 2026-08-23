@@ -2,7 +2,7 @@
 doc_id: ARC-COMP-V5-001
 type: architecture.component.v5-detailed-design
 status: proposed
-version: 1.1
+version: 1.2
 owner: human
 baseline: BL-005
 depends_on:
@@ -196,6 +196,20 @@ ETA 改动时保存原值、新值、修改时间和修改人。任务关联多�
 ## 7. 无障碍与桌面边界
 
 状态颜色必须同时显示中文标签；筛选结果、冲突预览和错误信息使用可访问文本。1280×720 和 1366×768 下页面无级联横向滚动，树和甘特图只在自身容器内滚动。
+
+### 7.1 状态颜色 token
+
+状态标签使用下列固定的前景色与背景色（轻色桌面）；实现不得用任务自定义色替换这些 token。配色的对比度应满足 WCAG AA 4.5:1；回归测试必须按 token 值检查。
+
+| 显示状态 | Token | 前景色 | 背景色 | 辅助标识 |
+| --- | --- | --- | --- | --- |
+| 等待样品 | `status.waiting` | `#0F172A` | `#E2E8F0` | 文字“等待样品” |
+| 样品交付延期 | `status.sample-delayed` | `#7F1D1D` | `#FEE2E2` | 文字+延期图标 |
+| 正在测试 | `status.testing` | `#1E3A8A` | `#DBEAFE` | 文字+进行中图标 |
+| 测试延期 | `status.test-delayed` | `#7C2D12` | `#FFEDD5` | 文字+警告图标 |
+| 已完成 | `status.completed` | `#14532D` | `#DCFCE7` | 文字+完成图标 |
+
+任务的 `color` 只渲染任务行和甘特图条左侧 4px accent 条；任务状态 chip 始终使用上表 token。任务颜色与状态色同时出现时，两者不覆盖；无任务颜色时隐藏 accent 条。
 
 ## 8. 页面级交互流程
 

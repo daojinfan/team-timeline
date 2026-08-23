@@ -2,7 +2,7 @@
 doc_id: ARC-OVERALL-V5-001
 type: architecture.overall.v5
 status: proposed
-version: 1.1
+version: 1.2
 owner: human
 baseline: BL-005
 depends_on:
@@ -62,8 +62,8 @@ name, purpose, status, notes, archived_at, version, created_at, updated_at
 任务保存：
 
 ~~~text
-task_id, topic_id, source_group_id, title, test_purpose, test_items,
-notes, cryostat_id, task_color, execution_state, start_date, end_date,
+task_id, topic_id, source_group_id, title, purpose, test_items,
+notes, cryostat_id, color, manual_phase, start_date, end_date,
 version, created_at, updated_at
 ~~~
 
@@ -128,3 +128,15 @@ V5 设计不授权立即改写产品代码或数据库。后续实现必须采�
 - 任务整体日期与成员日期的同步修改必须在同一事务中提交，不允许部分成员更新成功。
 - 所有更新携带对象版本号；版本不一致时不覆盖，返回变更字段供用户重新确认。
 - 资源改名只修改资源实体；任务、日志和投影使用 ID 重新解析显示名称。
+
+## 9. Canonical 字段和展示 token
+
+V5 只承认下表中的任务字段名，总体设计、详细设计、后续 API 和数据迁移文档必须使用同一名称，不设置隐式别名：
+
+| 业务含义 | Canonical 名称 | 禁止再用的同义名 |
+| --- | --- | --- |
+| 测试目的 | `purpose` | `test_purpose` |
+| 任务人工执行阶段 | `manual_phase` | `execution_state` |
+| 任务人工标记色 | `color` | `task_color` |
+
+`manual_phase` 仅保存 `waiting`、`testing`、`completed`；展示状态仍按§5 的优先级计算。
