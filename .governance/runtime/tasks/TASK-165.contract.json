@@ -1,0 +1,80 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-165",
+  "work_package": "WP-009",
+  "title": "独立复审状态反向筛选控件同行布局",
+  "goal": "独立复审 TASK-164 的状态筛选控件同行布局修正，确认其范围仅涉及声明文件，状态/非筛选可访问性、逻辑和其他筛选布局保持不变。",
+  "baseline": "BL-006",
+  "profile": "Standard",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-165"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "tests/v5-inline-editor.test.js",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/05-quality",
+    "docs/08-changes"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-165"
+  ],
+  "out_of_scope": [
+    "修改实现代码",
+    "public/app.js",
+    "src/server.js",
+    "src/v3",
+    "data/team_tasks.sqlite",
+    "手机端",
+    "AI自动建任务"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [
+    "TASK-164"
+  ],
+  "acceptance_criteria": [
+    "核对 TASK-164 实际 Git 变更清单与声明路径一致。",
+    "确认状态文字、非复选框和状态下拉框同行对齐且不重叠；其他两列筛选未被破坏。",
+    "运行 npm test、node --check public/app.js 和 git diff --check；确认既有反向筛选静态断言通过。"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-23T12:17:10.7039472Z"
+}

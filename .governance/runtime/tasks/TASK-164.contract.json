@@ -1,0 +1,85 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-164",
+  "work_package": "WP-009",
+  "title": "修正状态反向筛选控件同行布局",
+  "goal": "将任务全量编辑台状态筛选中的“非”复选框放到状态文字旁的同一行，避免与状态下拉框垂直重叠，同时保持反向筛选逻辑、可访问标签和其他筛选布局不变。",
+  "baseline": "BL-006",
+  "profile": "Standard",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "tests/v5-inline-editor.test.js"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "tests/v5-inline-editor.test.js",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/05-quality",
+    "docs/08-changes"
+  ],
+  "write_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "tests/v5-inline-editor.test.js"
+  ],
+  "out_of_scope": [
+    "public/app.js",
+    "src/server.js",
+    "src/v3",
+    "data/team_tasks.sqlite",
+    "任务筛选逻辑",
+    "手机端",
+    "AI自动建任务",
+    "数据库删除或重置"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "状态文字、非复选框和状态下拉框在同一筛选控件中清晰对齐，非不再占用状态下方独立一行。",
+    "保留 v5TaskStatusFilter、v5TaskStatusNot 及可访问标签，选择状态与勾选非的行为不变。",
+    "来源小组和制冷机筛选的三列布局不受影响；npm test、前端语法和差异检查通过。"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-23T12:16:57.2360994Z"
+}

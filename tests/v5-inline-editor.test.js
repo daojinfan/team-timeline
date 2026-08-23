@@ -45,11 +45,13 @@ test("V5 task status filter supports an accessible inverse mode", () => {
   const index = readFileSync(path.join(root, "public/index.html"), "utf8");
   assert.match(index, /id="v5TaskStatusFilter"/);
   assert.match(index, /id="v5TaskStatusNot" type="checkbox"/);
+  assert.match(index, /class="v5-status-filter-heading"><label for="v5TaskStatusFilter">状态<\/label><label class="v5-filter-negate">/);
   assert.match(index, /> 非<\/label>/);
   assert.match(app, /const statusNot = Boolean\(\$\("#v5TaskStatusNot"\)\?\.checked\)/);
   assert.match(app, /statusNot \? task\.status !== status : task\.status === status/);
   assert.match(app, /\$\("#v5TaskStatusNot"\)\.checked = false/);
   assert.match(styles, /\.v5-status-filter-control/);
+  assert.match(styles, /\.v5-status-filter-heading \{ display: flex; align-items: center;/);
 });
 
 test("V5 editor layout keeps filters, task hierarchy, and metadata aligned", () => {

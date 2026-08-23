@@ -1,0 +1,24 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-163",
+  "reviewed_task_ids": ["TASK-162"],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "cancelled",
+  "diff_checked": true,
+  "changes": [],
+  "change_summary": "TASK-162 已由项目经理标记为 superseded，原因是 TASK-164 继续调整其状态筛选同一前端文件，旧布局优化审核冻结点不再代表当前最终差异；本证据取消 TASK-163 对旧交付的当前审核资格，保留历史两轮审核证据。",
+  "scope_checked": [
+    "TASK-162.state.json：state=superseded，历史验证、执行批准和布局优化复审证据保持不变。",
+    "TASK-163 为 TASK-162 的独立审核任务，历史 round-1/round-2 证据保持不可变。",
+    "TASK-164/TASK-165 已建立新的状态与非同行布局交付及独立审核链。",
+    "changes=[]：本取消记录不新增、修改或删除产品交付内容。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "已核对 TASK-162 superseded 状态、TASK-163 历史审核证据及 TASK-164/TASK-165 新审核链。",
+    "当前同范围变更将由 TASK-165 对最终内容重新完成两轮审核，本记录不把旧任务重新声明为 passed。"
+  ],
+  "created_at": "2026-08-23T20:30:00+08:00"
+}
