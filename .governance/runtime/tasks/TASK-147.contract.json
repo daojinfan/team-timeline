@@ -1,0 +1,99 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-147",
+  "work_package": "WP-009",
+  "title": "修复任务全量编辑台与新增任务报错",
+  "goal": "修复 V5 任务全量编辑台打开和保存链路中的前端 DOM 节点错误、空专题提交以及 API 错误信息解析问题，确保编辑和新增任务在同一面板可靠完成。",
+  "baseline": "BL-006",
+  "profile": "Release",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/app.js",
+    "tests/v5-editor.test.js"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "src/v3",
+    "tests",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/05-quality",
+    "docs/08-changes"
+  ],
+  "write_paths": [
+    "public/app.js",
+    "tests/v5-editor.test.js"
+  ],
+  "out_of_scope": [
+    "src/server.js",
+    "data/team_tasks.sqlite",
+    "手机端",
+    "AI 自动建任务",
+    "数据库删除或重置"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [
+    "TASK-130",
+    "TASK-145"
+  ],
+  "acceptance_criteria": [
+    "任务全量编辑和新增任务均可打开并提交，测试项编辑器不再因 DOM 节点不存在而中断。",
+    "新增任务在专题尚未加载或专题选择为空时仍能安全使用“无专题”默认归属，不向服务端发送无效的 null topic_id。",
+    "编辑任务和新增任务的 API 预览/保存字段保持完整，错误响应显示可理解的服务端错误信息。",
+    "npm test、V5 编辑器回归、前端语法、差异检查和 Release 治理校验通过。"
+  ],
+  "validations": [
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "scope",
+    "public_interface",
+    "production_release"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-23T08:21:39.5387938Z",
+  "repair_of": [
+    "TASK-130"
+  ],
+  "release_controls": {
+    "target_environment": "本地桌面开发环境：D:\\Codex\\人员管理系统，Node.js + SQLite，dev 分支",
+    "execution_window": "在当前 V5 三模块最终代码上修复任务编辑台；修复后由独立 Reviewer 复审同一最终内容",
+    "rollback_plan": "仅回退 public/app.js 与 tests/v5-editor.test.js 的本次修复，不修改数据库和既有任务事实",
+    "observation_metrics": "新增/全量编辑入口、测试项编辑器渲染、topic_id 默认归属、保存预览错误信息、npm test、前端语法、Release 治理校验",
+    "stop_conditions": "任务编辑仍无法打开、保存发送无效 topic_id、服务端错误不可读、旧 V5 入口回归、越界修改或治理校验失败时停止",
+    "post_release_owner": "PM / human"
+  }
+}

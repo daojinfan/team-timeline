@@ -1,0 +1,97 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-148",
+  "work_package": "WP-009",
+  "title": "独立复审任务全量编辑台报错修复",
+  "goal": "独立复核 TASK-147 对任务全量编辑台和新增任务报错的修复，检查实际变更、回归验证和范围合规性。",
+  "baseline": "BL-006",
+  "profile": "Release",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-148"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "tests",
+    "src/v3",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/05-quality",
+    "docs/08-changes"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-148"
+  ],
+  "out_of_scope": [
+    "修改实现代码",
+    "数据库",
+    "手机端"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [
+    "TASK-147"
+  ],
+  "acceptance_criteria": [
+    "独立检查任务全量编辑和新增任务报错修复的实际变更清单与代码指纹。",
+    "复核测试项编辑器节点、默认专题提交和服务端错误解析修复，并执行 Release 验证。",
+    "仅在同一最终内容、实际变更清单完整且验证证据充分时给出通过结论。"
+  ],
+  "validations": [
+    {
+      "id": "governance-release",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-Level",
+        "Release"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "scope",
+    "public_interface",
+    "production_release",
+    "security_privacy_compliance"
+  ],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-23T08:24:03.8490506Z",
+  "release_controls": {
+    "target_environment": "本地桌面开发环境：D:\\Codex\\人员管理系统，dev 分支",
+    "execution_window": "TASK-147 验证后对同一最终内容执行两轮 Release 独立复审",
+    "rollback_plan": "审核任务仅写入 docs/05-quality/evidence/TASK-148，不修改实现范围",
+    "observation_metrics": "变更清单、代码指纹、编辑器入口、topic_id 默认、错误解析、npm test、语法和治理校验",
+    "stop_conditions": "发现变更越界、关键路径仍失败、证据不足或最终指纹不一致时给出 changes-required",
+    "post_release_owner": "PM / human"
+  }
+}

@@ -3981,9 +3981,10 @@ async function v5Api(path, options = {}) {
   const type = response.headers.get("content-type") || "";
   const payload = type.includes("application/json") ? await response.json() : await response.text();
   if (!response.ok) {
-    const error = new Error(payload?.error || "V5 请求失败");
-    error.code = payload?.code || "REQUEST_FAILED";
-    error.details = payload?.details || {};
+    const apiError = payload?.error;
+    const error = new Error(typeof apiError === "object" ? apiError?.message || "V5 请求失败" : apiError || "V5 请求失败");
+    error.code = (typeof apiError === "object" ? apiError?.code : payload?.code) || "REQUEST_FAILED";
+    error.details = (typeof apiError === "object" ? apiError?.details : payload?.details) || {};
     error.status = response.status;
     throw error;
   }
@@ -3993,6 +3994,7 @@ async function v5Api(path, options = {}) {
 function v5Json(method, payload) { return { method, body: JSON.stringify(payload) }; }
 function v5ErrorText(error) {
   const labels = { VERSION_CONFLICT: "数据已被其他操作更新，请刷新后重试。", STALE_PREVIEW: "保存预览已过期，请重新确认。", RESOURCE_DISABLED: "资源已停用，请重新选择启用资源。", CONFLICTS_NOT_ACKNOWLEDGED: "存在排期冲突，请确认后再保存。" };
+  if (error?.code === "VALIDATION_ERROR" && error.details?.field) return `${error.details.field}：${error.details.reason || "填写内容不符合要求"}`;
   return labels[error?.code] || error?.message || "操作失败";
 }
 function v5SetSync(message, isError = false) { const node = $("#v5SyncStatus"); if (node) { node.textContent = message; node.classList.toggle("is-error", isError); } }
@@ -4059,7 +4061,7 @@ function v5RenderTaskForm(task = null, defaultTopicId = null) {
   $("#v5TaskTopic").innerHTML = v5State.topics.map((topic) => v5Option(topic.id, `${topic.name}${topic.status === "archived" ? "（归档）" : ""}`, Number(topic.id) === Number(task?.topic_id ?? defaultTopicId ?? v5State.topics.find((row) => row.system_key === "unassigned")?.id))).join("");
   $("#v5TaskSource").innerHTML = v5Option("", "待补充") + v5State.resources.source_groups.filter((item) => v5ResourceActive("source-groups", item) || Number(item.id) === Number(task?.source_group_id)).map((item) => v5Option(item.id, `${item.name}${v5ResourceActive("source-groups", item) ? "" : "（停用）"}`, Number(item.id) === Number(task?.source_group_id))).join("");
   $("#v5TaskCryostat").innerHTML = v5Option("", "待补充") + v5State.resources.cryostats.filter((item) => v5ResourceActive("cryostats", item) || Number(item.id) === Number(task?.cryostat_id)).map((item) => v5Option(item.id, `${item.name}${v5ResourceActive("cryostats", item) ? "" : "（停用）"}`, Number(item.id) === Number(task?.cryostat_id))).join("");
-  $("#v5TaskItemsEditor").innerHTML = (task?.test_items?.length ? task.test_items : [{ name: "", acceptance_criteria: "", note: "" }]).map((item) => `<div class="v5-repeatable-item"><input data-test-item-field="name" value="${escapeHtml(item.name || "")}" placeholder="测试项名称"><input data-test-item-field="acceptance_criteria" value="${escapeHtml(item.acceptance_criteria || "")}" placeholder="测试要求"><textarea data-test-item-field="note" rows="1" placeholder="备注">${escapeHtml(item.note || "")}</textarea><button class="small-button danger-button" type="button" data-v5-remove-test-item>删除</button></div>`).join("");
+  $("#v5TestItemsEditor").innerHTML = (task?.test_items?.length ? task.test_items : [{ name: "", acceptance_criteria: "", note: "" }]).map((item) => `<div class="v5-repeatable-item"><input data-test-item-field="name" value="${escapeHtml(item.name || "")}" placeholder="测试项名称"><input data-test-item-field="acceptance_criteria" value="${escapeHtml(item.acceptance_criteria || "")}" placeholder="测试要求"><textarea data-test-item-field="note" rows="1" placeholder="备注">${escapeHtml(item.note || "")}</textarea><button class="small-button danger-button" type="button" data-v5-remove-test-item>删除</button></div>`).join("");
   $("#v5TaskMembers").innerHTML = v5State.resources.members.length ? v5State.resources.members.map((member) => { const current = task?.participants?.find((item) => Number(item.id) === Number(member.id)); const active = v5ResourceActive("members", member) || current; return `<div class="v5-member-choice-item${active ? "" : " is-inactive"}"><label class="v5-check-inline"><input class="v5-member-check" type="checkbox" value="${member.id}"${current ? " checked" : ""}${active ? "" : " disabled"}> ${escapeHtml(member.name)} <small>${escapeHtml(member.role || "")}</small></label><input class="v5-member-start" data-member-id="${member.id}" type="date" value="${escapeHtml(current?.start_date || task?.start_date || "")}" aria-label="${escapeHtml(member.name)}参与开始"><input class="v5-member-end" data-member-id="${member.id}" type="date" value="${escapeHtml(current?.end_date || task?.end_date || "")}" aria-label="${escapeHtml(member.name)}参与结束"></div>`; }).join("") : `<div class="v5-empty-state" style="padding:12px"><p>暂无可用测控成员，请先在资源维护中新增。</p></div>`;
   $("#v5TaskForm").querySelectorAll('[name="manual_phase"]').forEach((input) => { input.checked = input.value === (task?.manual_phase || "waiting"); });
   v5RenderSamplesInForm(task); v5SetFormError("#v5TaskFormError");
@@ -4074,7 +4076,10 @@ async function v5SaveTask(event) {
     const memberIds = $$("#v5TaskMembers .v5-member-check:checked").map((input) => Number(input.value));
     const memberDates = memberIds.map((memberId) => ({ member_id: memberId, start_date: $(`#v5TaskMembers .v5-member-start[data-member-id="${memberId}"]`)?.value || null, end_date: $(`#v5TaskMembers .v5-member-end[data-member-id="${memberId}"]`)?.value || null }));
     const testItems = $$("#v5TestItemsEditor .v5-repeatable-item").map((row) => ({ name: row.querySelector('[data-test-item-field="name"]')?.value.trim() || "", acceptance_criteria: row.querySelector('[data-test-item-field="acceptance_criteria"]')?.value.trim() || "", note: row.querySelector('[data-test-item-field="note"]')?.value.trim() || "" })).filter((item) => item.name);
-    const payload = { topic_id: Number($("#v5TaskTopic").value) || null, source_group_id: Number($("#v5TaskSource").value) || null, cryostat_id: Number($("#v5TaskCryostat").value) || null, title: $("#v5TaskTitle").value.trim(), purpose: $("#v5TaskPurpose").value.trim(), notes: $("#v5TaskNotes").value.trim(), color: $("#v5TaskColor").value, start_date: $("#v5TaskStart").value || null, end_date: $("#v5TaskEnd").value || null, sample_ids: sampleIds, participant_member_ids: memberIds, member_dates: memberDates, test_items: testItems, manual_phase: $("#v5TaskForm input[name=manual_phase]:checked")?.value || "waiting", actor: "本地用户" };
+    const selectedTopicId = Number($("#v5TaskTopic").value);
+    const fallbackTopicId = Number(v5State.topics.find((row) => row.system_key === "unassigned")?.id);
+    const topicId = Number.isInteger(selectedTopicId) && selectedTopicId > 0 ? selectedTopicId : Number.isInteger(fallbackTopicId) && fallbackTopicId > 0 ? fallbackTopicId : null;
+    const payload = { ...(topicId ? { topic_id: topicId } : {}), source_group_id: Number($("#v5TaskSource").value) || null, cryostat_id: Number($("#v5TaskCryostat").value) || null, title: $("#v5TaskTitle").value.trim(), purpose: $("#v5TaskPurpose").value.trim(), notes: $("#v5TaskNotes").value.trim(), color: $("#v5TaskColor").value, start_date: $("#v5TaskStart").value || null, end_date: $("#v5TaskEnd").value || null, sample_ids: sampleIds, participant_member_ids: memberIds, member_dates: memberDates, test_items: testItems, manual_phase: $("#v5TaskForm input[name=manual_phase]:checked")?.value || "waiting", actor: "本地用户" };
     if (!payload.title) throw new Error("请填写任务名称");
     const sampleRows = $$("#v5TaskSamples .v5-sample-edit-row");
     payload.sample_updates = sampleRows.map((row) => { const sampleId = Number(row.dataset.v5SampleRow); const sample = v5State.samples.find((item) => Number(item.id) === sampleId); return sample ? { sample_id: sampleId, planning_label: row.querySelector('[data-sample-field="planning_label"]')?.value.trim(), model: row.querySelector('[data-sample-field="model"]')?.value.trim(), sample_no: row.querySelector('[data-sample-field="sample_no"]')?.value.trim() || null, eta_date: row.querySelector('[data-sample-field="eta_date"]')?.value || null, arrival_date: row.querySelector('[data-sample-field="arrival_date"]')?.value || null, eta_pending: row.querySelector('[data-sample-field="eta_pending"]')?.checked || false, notes: sample.notes || "", expected_version: sample.version } : null; }).filter(Boolean);

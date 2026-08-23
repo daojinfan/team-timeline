@@ -1,0 +1,38 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-147",
+  "work_package": "WP-009",
+  "contract_sha256": "9cf32ebcc877b99445c80cda152d2c4b22fd2e5dd61d63fa2b36f690b466edb5",
+  "baseline": "BL-006",
+  "state": "implemented",
+  "approval_id": "APR-116",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "f141f567608f5132131965693fbec75281a50900",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [],
+  "plan_checkpoint_git_commit": "f141f567608f5132131965693fbec75281a50900",
+  "plan_rebase_history": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-147/20260823T082615941Z-fa9f4451-npm-test.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-147/20260823T082615941Z-fa9f4451-npm-test.evidence.json"
+  ],
+  "review_history": [],
+  "review": {
+    "required": true,
+    "reviewer_task_id": "TASK-148",
+    "status": "pending",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
+  },
+  "last_error": "Release governance validation failed before or after execution:\n项目：D:\\Codex\\人员管理系统\r\n级别：Release\r\n扫描文档数：53\r\n错误数：1\r\n警告数：0\r\n错误：独立审核证据与实际 Git 变更路径或类型不一致：TASK-130 -> docs/05-quality/evidence/TASK-131/review-round-1.json\r\n",
+  "created_at": "2026-08-23T08:21:39.5387938Z",
+  "updated_at": "2026-08-23T08:26:28.0182887Z"
+}

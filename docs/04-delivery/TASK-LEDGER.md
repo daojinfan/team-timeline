@@ -36,6 +36,8 @@ review_policy: independent-required
 
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| WP-009 | TASK-148 | pending | REVIEWER | 独立复审任务全量编辑台报错修复 | BL-006 | pending | TASK-147 | pending | docs/05-quality/evidence/TASK-148 | governance-release | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-009 | TASK-147 | pending | IMPLEMENTER | 修复任务全量编辑台与新增任务报错 | BL-006 | pending | TASK-130, TASK-145 | running | public/app.js, tests/v5-editor.test.js | npm-test | TASK-148 | pending | pending | Plan 自动登记，等待调度 |
 | WP-009 | TASK-146 | pending | REVIEWER | 独立复审来源小组资源映射修复 | BL-006 | pending | TASK-145 | pending | docs/05-quality/evidence/TASK-146 | governance-release, npm-test, app-syntax, git-diff-check | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-009 | TASK-145 | pending | IMPLEMENTER | 修复来源小组资源列表映射 | BL-006 | pending | TASK-143 | running | public/app.js | npm-test, app-syntax, git-diff-check, governance-release | TASK-146 | pending | pending | Plan 自动登记，等待调度 |
 | WP-009 | TASK-144 | pending | REVIEWER | 独立复审资源统计展示收尾 | BL-006 | pending | TASK-143 | completed | docs/05-quality/evidence/TASK-144 | governance-release, npm-test, app-syntax, git-diff-check | n/a | n/a | n/a | Plan 自动登记，等待调度 |
