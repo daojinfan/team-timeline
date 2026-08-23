@@ -1,0 +1,21 @@
+{
+  "$schema": "schemas/validation-evidence.schema.json",
+  "schema_version": 1,
+  "task_id": "TASK-144",
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "contract_sha256": "2e7f76caae083ee287cf88a67985c248430ae3bf59190d31882763a8f864f943",
+  "git_commit": "640b3ff0bd40e165abf064b565c974002661ab91",
+  "validation_id": "git-diff-check",
+  "command": "git",
+  "args": [
+    "diff",
+    "--check"
+  ],
+  "started_at": "2026-08-23T07:44:42.7896272Z",
+  "finished_at": "2026-08-23T07:44:42.9959548Z",
+  "exit_code": 0,
+  "redactions_applied": 0,
+  "output_path": "docs/05-quality/evidence/TASK-144/20260823T074419960Z-8033a226-git-diff-check.output.txt",
+  "output_sha256": "37abb32b4ac683761f1b06fd259efe4ce9ae204466420ff4203a5049e7252e10"
+}

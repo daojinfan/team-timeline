@@ -1,0 +1,38 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-144",
+  "reviewed_task_ids": ["TASK-143"],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-143",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "第二轮重新核对统计区的 aria-live=polite、aria-atomic=true 与四项统计卡片的最终 DOM 结构；变更类型仍为 modified。"
+    }
+  ],
+  "change_summary": "第二轮对同一最终内容执行全量复审。重新计算 TASK-143 启动提交 640b3ff 到当前提交的实现 scoped manifest，确认仍只有 public/index.html；第一轮与第二轮之间没有产品内容变化。",
+  "scope_checked": [
+    "重新逐项检查 TASK-143 的 acceptance criteria、out_of_scope、风险标志和 TASK-144 的独立审核范围",
+    "重新核对 v5RenderResourceStats 的四项数值来源仍为 v5State.resources，未引入第二份资源事实",
+    "重新核对 4 列、2 列和 1 列断点以及统计卡片 min-width:0，确认统计区不会扩大页面滚动宽度",
+    "重新核对任务编辑台、资源接口、来源小组存在性/启用状态和数据库文件未被本收尾任务修改",
+    "重新核对第一轮与第二轮的 Git 变更清单、内容指纹和验证证据"
+  ],
+  "findings": [
+    "第二轮未发现新增问题；动态播报语义、响应式布局、统计口径和范围边界均与已确认设计一致。",
+    "第一轮与第二轮实际产品内容一致，连续双轮审核要求满足。"
+  ],
+  "validation_evidence": [
+    "npm test：40 项通过。",
+    "node --check public/app.js：通过。",
+    "git diff --check：通过。",
+    "Test-ProjectGovernance.ps1 -Level Release：错误数 0、警告数 0。",
+    "第二轮内容指纹与第一轮最终内容一致，未发现两轮之间的产品变更。"
+  ],
+  "created_at": "2026-08-23T15:25:00+08:00"
+}

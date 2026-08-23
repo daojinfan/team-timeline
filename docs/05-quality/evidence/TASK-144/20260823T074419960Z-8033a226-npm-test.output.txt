@@ -1,0 +1,52 @@
+
+> team-task-gantt@1.0.0 test
+> node --test tests/*.test.js
+
+✔ dashboard exposes seeded data, templates, checklist, and stats (209.0809ms)
+✔ fresh database sample dates are relative to server-local today (182.0009ms)
+✔ reopening an existing database does not rewrite stored dates (123.3214ms)
+✔ structured filters return matching task ids (141.0356ms)
+✔ planned and active task statuses are derived from dates (100.1603ms)
+✔ completed task status survives title and description edits (96.2166ms)
+✔ batch completion preserves every personal assignment progress value (91.755ms)
+✔ archived status filter can include archived tasks (243.0038ms)
+✔ template and checklist workflow works (182.9891ms)
+✔ archive area, trash, and restore workflow works (107.3934ms)
+✔ task delete is a recoverable soft delete (73.9823ms)
+✔ deleted members can be restored from trash (161.8846ms)
+✔ maintenance preview and safer maintenance backups work (113.0072ms)
+✔ SQLite schema and CSV and JSON export formats remain compatible (73.4742ms)
+✔ core assignment behavior still works (89.6935ms)
+✔ gantt assignment adjustment only changes one member assignment (78.269ms)
+✔ V2 schema is exactly version 2 with 12 tables and 10 indexes (185.296ms)
+✔ the guarded V2 endpoint surface is the exact frozen set of 34 method-path pairs (0.4742ms)
+✔ a real V1-shaped database is backed up, migrated once, and reopened idempotently (323.159ms)
+✔ checksum mismatch refuses startup without rewriting the database (217.6081ms)
+✔ resource, plan, test-item, template, event, archive, arrival, and backup APIs preserve canonical contracts (235.5593ms)
+✔ manual task preview and confirm preserve progress while ETA and cryostat confirmations bind current facts (401.5733ms)
+✔ manual task cryostat conflicts only include other active plans (148.1401ms)
+✔ V2 plan-task text boundaries are enforced without changing the V1 task endpoint (172.9324ms)
+✔ submission checklist snapshots and manual returned/accepted reviews are authoritative and progress-independent (147.3878ms)
+✔ V1 primary guards, soft-delete restore, and reset preserve V2 lineage history without changing success shapes (193.312ms)
+✔ V3 schema and endpoint surface are exact and re-open idempotently (199.5731ms)
+✔ V3.1 task details expose topic context and persist structured test intent (320.9878ms)
+✔ V3 topic source updates enforce contact ownership and sample initial ETA persists (210.4007ms)
+✔ topic, sample, task-chain, assignment and exact-set submission flow (201.3442ms)
+✔ cryostat preview warns only for overlapping tasks in another active topic (383.4883ms)
+✔ V4 compact task/topic buttons retain readable foregrounds (19.5912ms)
+✔ V4 status chips expose all states and meet WCAG AA contrast (4.5835ms)
+✔ V4 workbench overview exposes summary, queue, timeline and desktop filters (6.3934ms)
+✔ workbench reuses V3 topic resources and renders safe, actionable projections (2.0285ms)
+✔ workbench layout constrains dense desktop content (0.7279ms)
+✔ topic planning renders a navigable topic list before a topic is selected (0.506ms)
+✔ V5 schema is additive, exposes the frozen endpoint surface, and reopens idempotently (229.6245ms)
+✔ V5 task editor persists canonical fields and computes the five user-facing states (277.5083ms)
+✔ V5 supports topic regrouping, member schedule synchronization, and execution load projections (187.0155ms)
+ℹ tests 40
+ℹ suites 0
+ℹ pass 40
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2196.0773
