@@ -1,0 +1,129 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-170",
+  "work_package": "WP-009",
+  "title": "将 V5 执行中心改为旧版工作区布局",
+  "goal": "在保留 V5 任务事实、组合筛选和排期预览能力的前提下，将执行中心展示与交互骨架调整为旧版的成员侧栏、甘特主区和甘特/任务/负载分视图，降低使用迁移成本。",
+  "baseline": "BL-006",
+  "profile": "Release",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "tests"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "tests",
+    "src/v3",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/05-quality",
+    "docs/08-changes"
+  ],
+  "write_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "tests"
+  ],
+  "out_of_scope": [
+    "src/server.js",
+    "src/v3",
+    "data/team_tasks.sqlite",
+    "手机端",
+    "AI自动生成或分配任务",
+    "成果提交与验收",
+    "数据库结构和API"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [
+    "TASK-166",
+    "TASK-131",
+    "TASK-165"
+  ],
+  "acceptance_criteria": [
+    "执行中心采用旧版成员侧栏与中间甘特工作区，成员、任务、时间轴在同一连续视野内展示。",
+    "保留 V5 的来源小组、专题、状态、成员、样品、制冷机、关键词和日期筛选，以及只看有任务成员、堆叠、粒度、范围、回到今天控制。",
+    "甘特图、任务列表、负载表使用旧版分视图交互；任务选择、成员排期编辑、全量编辑入口和预览保存能力保持可用。",
+    "1280×720 与 1366×768 桌面下页面主体不产生横向溢出，甘特图只在内部滚动。",
+    "npm test、客户端语法、V5 执行中心静态回归和差异检查通过。"
+  ],
+  "validations": [
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "gantt-layout-regression",
+      "command": "node",
+      "args": [
+        "--test",
+        "tests/v5-execution.test.js"
+      ]
+    },
+    {
+      "id": "git-diff-check",
+      "command": "git",
+      "args": [
+        "diff",
+        "--check"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface",
+    "overall_architecture",
+    "scope",
+    "data_model_or_migration"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-23T13:30:40.3421522Z",
+  "release_controls": {
+    "target_environment": "本地桌面开发环境：D:\\Codex\\人员管理系统，Node.js + SQLite，现有 localhost:3000 服务",
+    "execution_window": "取得本次执行确认后，从当前 dev 分支提交点实现；完成后绑定独立 Release Reviewer 对最终内容执行双轮全量复审",
+    "rollback_plan": "仅回退本次布局修正涉及的 public/index.html、public/styles.css、public/app.js 和 tests/v5-execution.test.js；不修改服务端、数据库和其他 V5 模块",
+    "observation_metrics": "npm test、node --check public/app.js、V5 静态回归、旧版布局 ID/行为映射、成员侧栏筛选、内部滚动、浏览器控制台错误",
+    "stop_conditions": "发现 V5 数据与旧版布局错位、筛选或排期预览失效、页面横向溢出、旧模块回归或独立复审失败时停止",
+    "post_release_owner": "PM / human"
+  }
+}

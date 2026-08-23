@@ -1,0 +1,39 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-168",
+  "work_package": "WP-009",
+  "contract_sha256": "8cf8e1e09a679003916b0bffc317d3c637b0d7655720a6bb04b2d0d67152dc78",
+  "baseline": "BL-006",
+  "state": "superseded",
+  "approval_id": "",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [
+    "public/app.js",
+    "public/index.html",
+    "public/styles.css",
+    "tests/v5-execution.test.js"
+  ],
+  "plan_checkpoint_git_commit": "3f43acc0c62fb7a851bce686f281e1e09d735661",
+  "plan_rebase_history": [],
+  "evidence": [],
+  "evidence_history": [],
+  "review_history": [],
+  "review": {
+    "required": false,
+    "reviewer_task_id": "",
+    "status": "not-applicable",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
+  },
+  "last_error": "历史清理任务在代码提交前规划，启动门拒绝其脏工作树；由 TASK-169 在当前提交点重新登记同一治理证据范围。",
+  "created_at": "2026-08-23T13:16:13.9302811Z",
+  "updated_at": "2026-08-23T13:16:43.9122568Z"
+}

@@ -1,0 +1,126 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-166",
+  "work_package": "WP-009",
+  "title": "实现 V5 执行中心甘特图与时间同步",
+  "goal": "在已验证的 V5 资源维护与任务全量编辑台之上，完成可直接使用的执行中心甘特图、成员负载、组合筛选以及任务/成员排期修改，并保证三个 V5 模块共享同一任务事实。",
+  "baseline": "BL-006",
+  "profile": "Release",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "tests"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "tests",
+    "src/v3",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/05-quality",
+    "docs/08-changes"
+  ],
+  "write_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "tests"
+  ],
+  "out_of_scope": [
+    "src/server.js",
+    "src/v3",
+    "data/team_tasks.sqlite",
+    "手机端",
+    "AI 自动生成或分配任务",
+    "成果提交/验收"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [
+    "TASK-131",
+    "TASK-165"
+  ],
+  "acceptance_criteria": [
+    "执行中心使用 V5 任务事实渲染真实甘特图，显示专题/任务日期、成员日期和负载，不再显示占位卡片。",
+    "支持来源小组、专题、状态、成员、样品、制冷机、关键词和日期范围组合筛选，并提供日/周/月、智能范围、只看有任务成员、堆叠和回到今天控制。",
+    "任务整体排期修改先调用现有 schedule-preview，再允许选择是否同步所有成员后保存；成员排期修改调用 member-schedule-preview，只修改目标成员，并显示冲突/越界提示。",
+    "保存后刷新执行中心、任务全量编辑台和资源统计，状态延期继续由服务端按当前日期计算。",
+    "1280×720 与 1366×768 下页面不产生横向溢出，甘特图仅在内部滚动；已有 npm、V5 API 与 V5 编辑台回归保持通过。"
+  ],
+  "validations": [
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "gantt-regression",
+      "command": "node",
+      "args": [
+        "--test",
+        "tests/v5-execution.test.js"
+      ]
+    },
+    {
+      "id": "git-diff-check",
+      "command": "git",
+      "args": [
+        "diff",
+        "--check"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface",
+    "overall_architecture",
+    "scope"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-23T13:00:35.2270392Z",
+  "release_controls": {
+    "target_environment": "本地桌面开发环境：D:\\Codex\\人员管理系统，Node.js + SQLite，现有 localhost:3000 服务",
+    "execution_window": "在本次执行确认后，从当前 dev 分支清洁提交点实现；完成后由 TASK-167 对最终内容执行 Release 双轮复审",
+    "rollback_plan": "仅回退本次执行中心交付涉及的 public/index.html、public/styles.css、public/app.js 和 tests/v5-execution.test.js；不修改服务端、数据库和既有资源/编辑台功能",
+    "observation_metrics": "npm test、app syntax、执行中心静态回归、任务/成员时间预览请求、筛选结果、状态颜色、内部滚动和浏览器控制台错误",
+    "stop_conditions": "发现 V5 事实与执行视图不一致、时间同步绕过预览、成员排期误改其他成员、状态计算错误、页面横向溢出、旧模块回归或独立复审失败时停止",
+    "post_release_owner": "PM / human"
+  }
+}

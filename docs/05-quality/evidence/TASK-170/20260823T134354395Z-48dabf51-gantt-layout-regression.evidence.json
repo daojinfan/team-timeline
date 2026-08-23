@@ -1,0 +1,21 @@
+{
+  "$schema": "schemas/validation-evidence.schema.json",
+  "schema_version": 1,
+  "task_id": "TASK-170",
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "contract_sha256": "eaad2b0dc6a4b7d6bf68641d3a65c5d30e5432e37b74ecffac294763ecf20d16",
+  "git_commit": "1c290ecbc76fa303a1e5cc28c79b9cbca1bbec12",
+  "validation_id": "gantt-layout-regression",
+  "command": "node",
+  "args": [
+    "--test",
+    "tests/v5-execution.test.js"
+  ],
+  "started_at": "2026-08-23T13:43:57.2535512Z",
+  "finished_at": "2026-08-23T13:43:57.4754271Z",
+  "exit_code": 0,
+  "redactions_applied": 0,
+  "output_path": "docs/05-quality/evidence/TASK-170/20260823T134354395Z-48dabf51-gantt-layout-regression.output.txt",
+  "output_sha256": "82011182616994671ec1e0a38d8a634c49a72125c947033842d35898156dd695"
+}

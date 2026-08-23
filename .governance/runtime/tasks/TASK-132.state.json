@@ -5,7 +5,7 @@
   "work_package": "WP-009",
   "contract_sha256": "5dcfcb20591e9dcf644924bbd997fd606a783bfa39dcdf9b88ef8f3271063346",
   "baseline": "BL-006",
-  "state": "planned",
+  "state": "superseded",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -40,7 +40,7 @@
     "pass_streak": 0,
     "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "旧任务依赖已被替代的 TASK-130，且执行中心实现改由 TASK-166 按当前验证过的 TASK-131 与 TASK-165 接续；保留旧计划和不可变证据。",
   "created_at": "2026-08-23T04:24:40.9574002Z",
-  "updated_at": "2026-08-23T04:25:04.0841829Z"
+  "updated_at": "2026-08-23T13:01:15.6794734Z"
 }

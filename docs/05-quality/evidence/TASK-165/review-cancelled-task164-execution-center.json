@@ -1,0 +1,26 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-165",
+  "reviewed_task_ids": ["TASK-164"],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "cancelled",
+  "diff_checked": true,
+  "changes": [
+    { "task_id": "TASK-164", "path": "public/index.html", "change_type": "modified", "summary": "历史任务曾修改 V5 编辑台状态筛选布局；该交付已被 TASK-166 的执行中心整体公共界面变更替代。" },
+    { "task_id": "TASK-164", "path": "public/styles.css", "change_type": "modified", "summary": "历史任务曾修改 V5 状态筛选控件样式；不再作为当前最终内容的审核依据。" },
+    { "task_id": "TASK-164", "path": "tests/v5-inline-editor.test.js", "change_type": "modified", "summary": "历史任务曾更新 V5 编辑台静态回归；当前最终内容由 TASK-167 重新复审。" }
+  ],
+  "change_summary": "TASK-164 已被 TASK-166 替代，原 TASK-165 审核指纹不再绑定当前最终公共文件；本记录仅取消旧审核关系，不否定历史代码或历史证据。",
+  "scope_checked": [
+    "TASK-164 状态为 superseded，替代原因为同一 public 文件进入 TASK-166 的最终交付范围。",
+    "TASK-166/TASK-167 是当前执行中心最终代码及其独立复审链。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "旧 TASK-164/TASK-165 关系与状态已核对。",
+    "取消只写治理审核证据，不修改产品代码、服务端或数据库。"
+  ],
+  "created_at": "2026-08-23T21:30:00+08:00"
+}
