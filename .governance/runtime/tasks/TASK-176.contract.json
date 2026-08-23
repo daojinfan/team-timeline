@@ -1,0 +1,149 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-176",
+  "work_package": "WP-009",
+  "title": "统一任务全量编辑台与执行中心组合筛选",
+  "goal": "为任务全量编辑台和执行中心建立统一的筛选条件模型，支持条件之间 AND/OR、非、多选和一键还原；日期条件只支持单值和 AND/OR。",
+  "baseline": "BL-006",
+  "profile": "Release",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "tests"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "tests",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/05-quality"
+  ],
+  "write_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "tests"
+  ],
+  "out_of_scope": [
+    "src/server.js",
+    "data/team_tasks.sqlite",
+    "手机端",
+    "任务数据结构",
+    "任务状态计算",
+    "甘特图日期语义",
+    "资源维护数据"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [
+    "TASK-174"
+  ],
+  "acceptance_criteria": [
+    "任务全量编辑台和执行中心共享统一的条件行模型；不同条件之间可选择 AND 或 OR，混合逻辑以条件组明确表达。",
+    "关键词、来源小组、专题、状态、成员、样品、制冷机支持按条件启用非；开始日期和结束日期不显示非且不支持多选。",
+    "来源小组、专题、状态、成员、样品、制冷机支持多选，并可选择任一或全部匹配；非作用于整条条件。",
+    "两个页面均提供一键还原，清空筛选条件但保留执行中心时间单位、粒度、范围、堆叠和当前子视图。",
+    "筛选结果、条件摘要、空条件和历史状态筛选行为均有静态回归覆盖，既有任务编辑、执行中心和甘特交互不回归。"
+  ],
+  "validations": [
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "v5-execution-regression",
+      "command": "node",
+      "args": [
+        "--test",
+        "tests/v5-execution.test.js"
+      ]
+    },
+    {
+      "id": "v5-inline-regression",
+      "command": "node",
+      "args": [
+        "--test",
+        "tests/v5-inline-editor.test.js"
+      ]
+    },
+    {
+      "id": "git-diff-check",
+      "command": "git",
+      "args": [
+        "diff",
+        "--check"
+      ]
+    },
+    {
+      "id": "governance-release",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-ProjectPath",
+        ".",
+        "-Level",
+        "Release"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface",
+    "overall_architecture",
+    "success_criteria",
+    "scope",
+    "production_release"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-23T16:20:08.9118685Z",
+  "release_controls": {
+    "target_environment": "本地桌面开发环境：D:\\Codex\\人员管理系统，当前 dev 分支",
+    "execution_window": "TASK-176 实现与 Verify 后执行独立双轮审核",
+    "rollback_plan": "仅回滚 public/index.html、public/styles.css、public/app.js、tests 与本任务证据，不触碰服务端和数据库",
+    "observation_metrics": "统一条件模型、条件组摘要、非/多选/AND/OR 接线、日期例外、一键还原、筛选结果和现有 V5 回归",
+    "stop_conditions": "发现筛选语义歧义、日期出现非/多选、条件混合逻辑无法解释、现有页面回归、验证失败或越界时停止",
+    "post_release_owner": "PM / human"
+  }
+}

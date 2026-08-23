@@ -1,0 +1,21 @@
+{
+    "$schema":  "schemas/validation-evidence.schema.json",
+    "schema_version":  1,
+    "task_id":  "TASK-176",
+    "work_package":  "WP-009",
+    "baseline":  "BL-006",
+    "contract_sha256":  "cb7458e48e1baeedeae5b9d366f9f086f9bd7fade3025ee18b11ade7a3b6650b",
+    "git_commit":  "555875a9d8398bb8ddf07e348dd5aa0dfdd02492",
+    "validation_id":  "v5-execution-regression",
+    "command":  "node",
+    "args":  [
+                 "--test",
+                 "tests/v5-execution.test.js"
+             ],
+    "started_at":  "2026-08-23T16:40:36.3205827Z",
+    "finished_at":  "2026-08-23T16:40:37.0444254Z",
+    "exit_code":  0,
+    "redactions_applied":  0,
+    "output_path":  "docs/05-quality/evidence/TASK-176/20260823T164030856Z-9ddb21a0-v5-execution-regression.output.txt",
+    "output_sha256":  "c23c2e2331ea51ff0d466f6642b8bc83bd0a3c8109060ad78d2b8a1b3ade9afb"
+}

@@ -1,0 +1,50 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-175",
+  "reviewed_task_ids": ["TASK-174"],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "cancelled",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-174",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "历史审核对象：TASK-174 曾在此文件实现甘特图粒度调节；本次取消登记不修改该文件。"
+    },
+    {
+      "task_id": "TASK-174",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "历史审核对象：TASK-174 曾在此文件加入粒度控件；本次取消登记不修改该文件。"
+    },
+    {
+      "task_id": "TASK-174",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "历史审核对象：TASK-174 曾在此文件加入粒度控件布局；本次取消登记不修改该文件。"
+    },
+    {
+      "task_id": "TASK-174",
+      "path": "tests/v5-execution.test.js",
+      "change_type": "modified",
+      "summary": "历史审核对象：TASK-174 曾在此文件加入粒度回归断言；本次取消登记不修改该文件。"
+    }
+  ],
+  "change_summary": "取消 TASK-174 的历史审核关系。TASK-176 在其最终版本上继续整合任务全量编辑台与执行中心的统一组合筛选，形成新的最终内容；保留 TASK-174/TASK-175 两轮历史审核证据，不将旧审核指纹绑定到 TASK-176 的最终内容。",
+  "scope_checked": [
+    "确认 TASK-174 运行状态将由治理动作标记为 superseded，替代原因为 TASK-176 扩展了执行中心筛选模型并修改同一产品路径。",
+    "取消动作只写入 TASK-175 自有审核证据目录及治理运行状态，不修改 public、tests、src、数据库或 API。",
+    "changes 清单逐项保留 TASK-174 历史审核过的四个产品路径，并明确本次没有产品编辑。"
+  ],
+  "findings": [
+    "审核关系取消不是质量豁免：TASK-174 的历史内容由 TASK-176 的新最终内容替代，后续应对 TASK-176 执行独立双轮审核。"
+  ],
+  "validation_evidence": [
+    "TASK-174 状态及替代关系将由 Supersede 治理动作登记。",
+    "取消登记文件位于 docs/05-quality/evidence/TASK-175，符合 TASK-175 allowed_paths/write_paths。"
+  ],
+  "created_at": "2026-08-24T00:40:00+08:00"
+}

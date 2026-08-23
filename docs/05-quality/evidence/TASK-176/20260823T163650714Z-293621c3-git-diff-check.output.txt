@@ -1,0 +1,8 @@
+git.exe : warning: in the working copy of 'docs/00-index/APPROVAL-LOG.md', LF will be replaced by CRLF the next time Gi
+t touches it
+At D:\Codex\人员管理系统\.governance\tools\Invoke-AIGovernedTask.ps1:1429 char:56
++ ... lobal:LASTEXITCODE = 0; $output = (& $command @arguments 2>&1 | Out-S ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (warning: in the... Git touches it:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 

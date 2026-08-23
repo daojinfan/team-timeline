@@ -43,13 +43,13 @@
         <section id="v5EditorView" class="v5-view active" data-v5-panel="editor" role="tabpanel" aria-label="任务全量编辑台">
           <div class="v5-editor-toolbar">
             <div class="v5-toolbar-primary">
-              <label class="v5-search-field">搜索任务、专题、样品或测试内容<input id="v5TaskSearch" type="search" placeholder="输入关键词…"></label>
-              <div class="v5-toolbar-actions"><label class="v5-archive-toggle"><input id="v5ShowArchivedTopics" type="checkbox"> 显示归档专题</label><button id="v5ClearTaskFilters" class="ghost-button" type="button">清除筛选</button></div>
+              <div class="v5-filter-field v5-search-field"><div class="v5-filter-heading"><label for="v5TaskSearch">搜索任务、专题、样品或测试内容</label><label class="v5-filter-negate"><input id="v5TaskSearchNot" type="checkbox"> 非</label></div><input id="v5TaskSearch" type="search" placeholder="输入关键词…"></div>
+              <div class="v5-toolbar-actions"><label class="v5-archive-toggle"><input id="v5ShowArchivedTopics" type="checkbox"> 显示归档专题</label><button id="v5OpenEditorFilters" class="ghost-button" type="button">组合筛选 <span id="v5EditorFilterSummary" class="v5-filter-summary">未设置</span></button><button id="v5ClearTaskFilters" class="ghost-button" type="button">一键还原</button></div>
             </div>
             <div class="v5-toolbar-filters" aria-label="任务筛选条件">
-              <label>来源小组<select id="v5TaskSourceFilter"><option value="">全部来源小组</option></select></label>
+              <div class="v5-filter-field"><div class="v5-filter-heading"><label for="v5TaskSourceFilter">来源小组</label><label class="v5-filter-negate"><input id="v5TaskSourceNot" type="checkbox"> 非</label></div><select id="v5TaskSourceFilter"><option value="">全部来源小组</option></select></div>
               <div class="v5-status-filter-control"><div class="v5-status-filter-heading"><label for="v5TaskStatusFilter">状态</label><label class="v5-filter-negate"><input id="v5TaskStatusNot" type="checkbox"> 非</label></div><select id="v5TaskStatusFilter"><option value="">全部状态</option><option value="waiting">等待样品</option><option value="sample-delayed">样品交付延期</option><option value="testing">正在测试</option><option value="test-delayed">测试延期</option><option value="completed">已完成</option></select></div>
-              <label>制冷机<select id="v5TaskCryostatFilter"><option value="">全部制冷机</option></select></label>
+              <div class="v5-filter-field"><div class="v5-filter-heading"><label for="v5TaskCryostatFilter">制冷机</label><label class="v5-filter-negate"><input id="v5TaskCryostatNot" type="checkbox"> 非</label></div><select id="v5TaskCryostatFilter"><option value="">全部制冷机</option></select></div>
             </div>
           </div>
           <div class="v5-editor-layout">
@@ -81,19 +81,19 @@
         <section id="v5ExecutionView" class="v5-view" data-v5-panel="execution" role="tabpanel" aria-label="执行中心" hidden>
           <div class="v5-execution-toolbar" aria-label="执行中心筛选与视图设置">
             <div class="v5-execution-filter-grid">
-              <label class="v5-search-field">搜索任务、样品或测试项<input id="v5ExecutionSearch" type="search" placeholder="任务名称、样品型号、测试项或成员"></label>
-              <label>来源小组<select id="v5ExecutionSource"><option value="">全部来源小组</option></select></label>
-              <label>专题<select id="v5ExecutionTopic"><option value="">全部专题</option></select></label>
-              <label class="v5-status-filter-control"><span class="v5-status-filter-heading"><span>状态</span></span><select id="v5ExecutionStatus"><option value="">全部状态</option><option value="waiting">等待样品</option><option value="sample-delayed">样品交付延期</option><option value="testing">正在测试</option><option value="test-delayed">测试延期</option><option value="completed">已完成</option></select></label>
-              <label>成员<select id="v5ExecutionMember"><option value="">全部成员</option></select></label>
-              <label>样品<select id="v5ExecutionSample"><option value="">全部样品</option></select></label>
-              <label>制冷机<select id="v5ExecutionCryostat"><option value="">全部制冷机</option></select></label>
+              <div class="v5-filter-field v5-search-field"><div class="v5-filter-heading"><label for="v5ExecutionSearch">搜索任务、样品或测试项</label><label class="v5-filter-negate"><input id="v5ExecutionSearchNot" type="checkbox"> 非</label></div><input id="v5ExecutionSearch" type="search" placeholder="任务名称、样品型号、测试项或成员"></div>
+              <div class="v5-filter-field"><div class="v5-filter-heading"><label for="v5ExecutionSource">来源小组</label><label class="v5-filter-negate"><input id="v5ExecutionSourceNot" type="checkbox"> 非</label></div><select id="v5ExecutionSource"><option value="">全部来源小组</option></select></div>
+              <div class="v5-filter-field"><div class="v5-filter-heading"><label for="v5ExecutionTopic">专题</label><label class="v5-filter-negate"><input id="v5ExecutionTopicNot" type="checkbox"> 非</label></div><select id="v5ExecutionTopic"><option value="">全部专题</option></select></div>
+              <div class="v5-status-filter-control"><div class="v5-status-filter-heading"><label for="v5ExecutionStatus">状态</label><label class="v5-filter-negate"><input id="v5ExecutionStatusNot" type="checkbox"> 非</label></div><select id="v5ExecutionStatus"><option value="">全部状态</option><option value="waiting">等待样品</option><option value="sample-delayed">样品交付延期</option><option value="testing">正在测试</option><option value="test-delayed">测试延期</option><option value="completed">已完成</option></select></div>
+              <div class="v5-filter-field"><div class="v5-filter-heading"><label for="v5ExecutionMember">成员</label><label class="v5-filter-negate"><input id="v5ExecutionMemberNot" type="checkbox"> 非</label></div><select id="v5ExecutionMember"><option value="">全部成员</option></select></div>
+              <div class="v5-filter-field"><div class="v5-filter-heading"><label for="v5ExecutionSample">样品</label><label class="v5-filter-negate"><input id="v5ExecutionSampleNot" type="checkbox"> 非</label></div><select id="v5ExecutionSample"><option value="">全部样品</option></select></div>
+              <div class="v5-filter-field"><div class="v5-filter-heading"><label for="v5ExecutionCryostat">制冷机</label><label class="v5-filter-negate"><input id="v5ExecutionCryostatNot" type="checkbox"> 非</label></div><select id="v5ExecutionCryostat"><option value="">全部制冷机</option></select></div>
               <label>开始不晚于<input id="v5ExecutionFrom" type="date"></label>
               <label>结束不早于<input id="v5ExecutionTo" type="date"></label>
             </div>
             <div class="v5-execution-toolbar-row">
               <div class="v5-toolbar-actions"><label class="v5-execution-unit-control">时间单位<select id="v5ExecutionScale"><option value="day">日</option><option value="week" selected>周</option><option value="month">月</option></select></label><label class="v5-execution-granularity-control" for="v5ExecutionGranularity"><span>粒度</span><input id="v5ExecutionGranularity" type="range" min="1" max="5" step="1" value="3" aria-label="甘特图时间粒度"><output id="v5ExecutionGranularityValue" for="v5ExecutionGranularity">标准</output></label><label>范围<select id="v5ExecutionRange"><option value="smart" selected>智能</option><option value="all">全部</option><option value="week">本周</option><option value="month">本月</option><option value="7">未来 7 天</option><option value="30">未来 30 天</option><option value="90">未来 90 天</option></select></label><button id="v5ExecutionToday" class="ghost-button" type="button">今天</button></div>
-              <div class="v5-toolbar-actions"><label class="v5-check-inline"><input id="v5ExecutionStack" type="checkbox" checked> 任务堆叠</label><button id="v5ExecutionClear" class="ghost-button" type="button">清除筛选</button></div>
+              <div class="v5-toolbar-actions"><label class="v5-check-inline"><input id="v5ExecutionStack" type="checkbox" checked> 任务堆叠</label><button id="v5OpenExecutionFilters" class="ghost-button" type="button">组合筛选 <span id="v5ExecutionFilterSummary" class="v5-filter-summary">未设置</span></button><button id="v5ExecutionClear" class="ghost-button" type="button">一键还原</button></div>
             </div>
           </div>
           <section id="v5ExecutionStats" class="v5-execution-stats" aria-label="执行中心汇总统计" aria-live="polite"></section>
@@ -479,6 +479,15 @@
         <div id="v5ScheduleFormError" class="v5-form-error" role="alert" hidden></div>
         <div class="v5-dialog-body"><div id="v5ScheduleTaskSummary" class="v5-preview-box"></div><div id="v5ScheduleMemberField" class="v5-form-grid" hidden><label class="v5-span-2">成员<select id="v5ScheduleMember"></select></label></div><div class="v5-form-grid"><label>开始日期<input id="v5ScheduleStart" type="date" required></label><label>结束日期<input id="v5ScheduleEnd" type="date" required></label></div><label id="v5ScheduleSyncField" class="v5-check-inline"><input id="v5ScheduleSync" type="checkbox"> 同步所有成员的排期</label><p id="v5ScheduleBoundaryHint" class="v5-field-hint"></p><section id="v5SchedulePreview" class="v5-preview-box" aria-live="polite"><strong>保存预览</strong><p>修改日期后点击“生成预览”。</p></section></div>
         <footer class="v5-dialog-actions"><button type="button" class="ghost-button" data-v5-close-dialog="v5ScheduleDialog">取消</button><button id="v5SchedulePreviewBtn" class="ghost-button" type="button">生成预览</button><button id="v5ScheduleSaveBtn" class="primary-action" type="submit" disabled>确认保存</button></footer>
+      </form>
+    </dialog>
+
+    <dialog id="v5FilterDialog" class="v5-dialog v5-filter-dialog" aria-labelledby="v5FilterDialogTitle">
+      <form id="v5FilterForm" class="v5-dialog-form">
+        <header class="v5-dialog-header"><div><span class="v5-eyebrow">组合筛选</span><h2 id="v5FilterDialogTitle">筛选条件</h2><p id="v5FilterDialogHint">不同条件之间可使用 AND / OR；非和多选作用于当前条件。</p></div><button type="button" class="icon-button" data-v5-close-dialog="v5FilterDialog" aria-label="关闭组合筛选">×</button></header>
+        <div id="v5FilterConditions" class="v5-filter-condition-groups"></div>
+        <div class="v5-filter-builder-actions"><select id="v5FilterAddField" aria-label="选择要添加的筛选字段"></select><button id="v5FilterAddCondition" class="ghost-button" type="button">＋ 添加条件</button><button id="v5FilterAddGroup" class="ghost-button" type="button">＋ 添加条件组</button><button id="v5FilterReset" class="ghost-button" type="button">一键还原</button></div>
+        <footer class="v5-dialog-actions"><button type="button" class="ghost-button" data-v5-close-dialog="v5FilterDialog">取消</button><button id="v5FilterApply" class="primary-action" type="submit">应用筛选</button></footer>
       </form>
     </dialog>
 

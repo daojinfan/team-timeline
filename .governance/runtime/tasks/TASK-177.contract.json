@@ -1,0 +1,133 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-177",
+  "work_package": "WP-009",
+  "title": "独立审核统一组合筛选",
+  "goal": "对 TASK-176 的任务全量编辑台与执行中心统一组合筛选实现执行独立 Release 双轮全量审核。",
+  "baseline": "BL-006",
+  "profile": "Release",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-177"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "tests",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/05-quality"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-177"
+  ],
+  "out_of_scope": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "src/server.js",
+    "data/team_tasks.sqlite",
+    "手机端"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [
+    "TASK-176"
+  ],
+  "acceptance_criteria": [
+    "核对 TASK-176 的实际 Git 变更路径与类型未越界。",
+    "独立验证不同条件之间 AND/OR、混合条件组、多选任一/全部、非的作用范围和日期条件例外。",
+    "验证任务全量编辑台与执行中心的一键还原不会重置甘特视图设置，且两个页面使用一致条件语义。",
+    "按 Release 规则对同一最终内容完成两轮全量审核并记录完整证据。"
+  ],
+  "validations": [
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "v5-execution-regression",
+      "command": "node",
+      "args": [
+        "--test",
+        "tests/v5-execution.test.js"
+      ]
+    },
+    {
+      "id": "v5-inline-regression",
+      "command": "node",
+      "args": [
+        "--test",
+        "tests/v5-inline-editor.test.js"
+      ]
+    },
+    {
+      "id": "governance-release",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-ProjectPath",
+        ".",
+        "-Level",
+        "Release"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface",
+    "overall_architecture",
+    "success_criteria",
+    "scope",
+    "production_release"
+  ],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-23T16:20:26.1424049Z",
+  "release_controls": {
+    "target_environment": "本地桌面开发环境：D:\\Codex\\人员管理系统，审核当前 dev 分支 TASK-176 最终内容",
+    "execution_window": "TASK-176 Verify 后执行第一轮；ReopenReview 后执行第二轮全量审核",
+    "rollback_plan": "审核只写 docs/05-quality/evidence/TASK-177，不修改产品代码",
+    "observation_metrics": "实际差异、组合筛选 DOM/CSS/JS、非/多选/AND/OR、日期例外、还原按钮、全量测试与 V5 回归",
+    "stop_conditions": "发现范围越界、混合逻辑歧义、日期错误支持非/多选、还原重置视图或验证失败时停止",
+    "post_release_owner": "PM / human"
+  }
+}
