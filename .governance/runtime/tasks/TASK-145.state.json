@@ -1,0 +1,48 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-145",
+  "work_package": "WP-009",
+  "contract_sha256": "972711b445c03db3c581836b49a15e7f7f30303784b9667cae5446b8b97353e7",
+  "baseline": "BL-006",
+  "state": "verified",
+  "approval_id": "APR-115",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "9ab92f5f685648f2c13ec51b9c60caeb89e22e8b",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [],
+  "plan_checkpoint_git_commit": "9ab92f5f685648f2c13ec51b9c60caeb89e22e8b",
+  "plan_rebase_history": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-145/20260823T075804995Z-722f9846-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-145/20260823T075804995Z-722f9846-app-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-145/20260823T075804995Z-722f9846-git-diff-check.evidence.json",
+    "docs/05-quality/evidence/TASK-145/20260823T075804995Z-722f9846-governance-release.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-145/20260823T075622917Z-0799e5fa-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-145/20260823T075622917Z-0799e5fa-app-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-145/20260823T075622917Z-0799e5fa-git-diff-check.evidence.json",
+    "docs/05-quality/evidence/TASK-145/20260823T075622917Z-0799e5fa-governance-release.evidence.json",
+    "docs/05-quality/evidence/TASK-145/20260823T075804995Z-722f9846-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-145/20260823T075804995Z-722f9846-app-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-145/20260823T075804995Z-722f9846-git-diff-check.evidence.json",
+    "docs/05-quality/evidence/TASK-145/20260823T075804995Z-722f9846-governance-release.evidence.json"
+  ],
+  "review_history": [],
+  "review": {
+    "required": true,
+    "reviewer_task_id": "TASK-146",
+    "status": "pending",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
+  },
+  "last_error": "",
+  "created_at": "2026-08-23T07:54:52.6555323Z",
+  "updated_at": "2026-08-23T07:58:22.1432907Z"
+}

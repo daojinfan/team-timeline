@@ -5,7 +5,7 @@
   "work_package": "WP-009",
   "contract_sha256": "986059c4f1502210045e9b8b9d79fb2b3167f1f088099fe8b8fc5e1bedacd4da",
   "baseline": "BL-006",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "APR-113",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -33,14 +33,14 @@
   "review": {
     "required": true,
     "reviewer_task_id": "TASK-144",
-    "status": "passed",
+    "status": "cancelled",
     "evidence": [
-      "docs/05-quality/evidence/TASK-144/review-round-2.json"
+      "docs/05-quality/evidence/TASK-144/review-cancelled-task143-source-group-fix.json"
     ],
-    "pass_streak": 2,
-    "subject_sha256": "bee39bf9d37b71a955c108002c733ccb0279fa78f97043afd87e231d1c6079bf"
+    "pass_streak": 0,
+    "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "用户确认的来源小组映射修复修改了同一 V5 前端交付范围；TASK-143 的旧双轮审核指纹不再代表当前内容，现由 TASK-145 修复任务承接。保留已验证代码和历史证据。",
   "created_at": "2026-08-23T07:39:03.3260402Z",
-  "updated_at": "2026-08-23T07:45:18.5620900Z"
+  "updated_at": "2026-08-23T07:57:49.0585826Z"
 }

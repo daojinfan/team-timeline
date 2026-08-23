@@ -1,0 +1,124 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-145",
+  "work_package": "WP-009",
+  "title": "修复来源小组资源列表映射",
+  "goal": "修复 V5 资源维护前端对 source_groups API 字段的键映射，使工艺组、读取组、量子门组、电子学组正确显示；不改变统计口径、资源接口和数据库数据。",
+  "baseline": "BL-006",
+  "profile": "Release",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/app.js"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "src/v3",
+    "tests",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/05-quality",
+    "docs/08-changes"
+  ],
+  "write_paths": [
+    "public/app.js"
+  ],
+  "out_of_scope": [
+    "数据库结构和数据",
+    "V5 资源接口",
+    "资源统计口径",
+    "手机端",
+    "AI 自动建任务"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [
+    "TASK-143"
+  ],
+  "acceptance_criteria": [
+    "资源维护的来源小组列表正确读取 source_groups 并显示四个已确认来源小组。",
+    "成员和制冷机列表、资源统计数字、任务编辑资源选择和接口契约保持不变。",
+    "npm test、前端语法、差异检查和 Release 治理校验通过。"
+  ],
+  "validations": [
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "git-diff-check",
+      "command": "git",
+      "args": [
+        "diff",
+        "--check"
+      ]
+    },
+    {
+      "id": "governance-release",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-Level",
+        "Release"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "scope",
+    "public_interface",
+    "production_release"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-23T07:54:52.6555323Z",
+  "repair_of": [
+    "TASK-143"
+  ],
+  "release_controls": {
+    "target_environment": "本地桌面开发环境：D:\\Codex\\人员管理系统，Node.js + SQLite，dev 分支",
+    "execution_window": "在当前已复审 V5 代码上修复来源小组列表映射，并由 TASK-146 独立复审",
+    "rollback_plan": "仅回退 public/app.js 的资源键映射修复，不修改数据库或 API",
+    "observation_metrics": "来源小组四项显示、成员/制冷机列表回归、统计数字不变、npm test、app syntax、Release governance",
+    "stop_conditions": "来源小组仍为空、其他资源列表回归、统计或接口变化、治理失败或越界变更时停止",
+    "post_release_owner": "PM / human"
+  }
+}

@@ -39,7 +39,8 @@
     "docs/05-quality/evidence/TASK-144/20260823T074419960Z-8033a226-npm-test.evidence.json",
     "docs/05-quality/evidence/TASK-144/20260823T074419960Z-8033a226-app-syntax.evidence.json",
     "docs/05-quality/evidence/TASK-144/20260823T074419960Z-8033a226-git-diff-check.evidence.json",
-    "docs/05-quality/evidence/TASK-144/review-round-2.json"
+    "docs/05-quality/evidence/TASK-144/review-round-2.json",
+    "docs/05-quality/evidence/TASK-144/review-cancelled-task143-source-group-fix.json"
   ],
   "review_history": [
     {
@@ -54,7 +55,14 @@
       "sha256": "e2081bfcaa8916a6c685d82c80c5660cf975cbf9f529f54dfcf6fb46ba0acf52",
       "result": "passed",
       "round_id": "RR-561a1319bde94b40bbf45ca229f5203c",
-      "recorded_at": "2026-08-23T07:45:18.3294650Z"
+      "recorded_at": "2026-08-23T07:45:18.329465Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-144/review-cancelled-task143-source-group-fix.json",
+      "sha256": "b045d7b9e3a4f9ef57186e61aece224534932afeb89b627925ba51b87cddfd54",
+      "result": "cancelled",
+      "round_id": "RR-ce2349fd849843fab09fa677e20ea62a",
+      "recorded_at": "2026-08-23T07:57:49.0141299Z"
     }
   ],
   "review": {
@@ -67,5 +75,5 @@
   },
   "last_error": "",
   "created_at": "2026-08-23T07:39:29.9058165Z",
-  "updated_at": "2026-08-23T07:45:18.7677543Z"
+  "updated_at": "2026-08-23T07:57:49.2182207Z"
 }

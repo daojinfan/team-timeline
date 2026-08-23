@@ -1,0 +1,39 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-144",
+  "reviewed_task_ids": ["TASK-143"],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "cancelled",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-143",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "TASK-143 启动提交 e0084ca 后的统计区动态播报语义变更保留在当前代码；旧审核不再绑定当前最终内容。"
+    },
+    {
+      "task_id": "TASK-143",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "后续 TASK-145 在同一 V5 前端范围修复 source_groups 与 source-groups 键映射，导致 TASK-143 的旧双轮审核指纹失效。"
+    }
+  ],
+  "change_summary": "TASK-143 已被用户确认的 TASK-145 来源小组映射修复替代。旧双轮审核只针对修复前的前端内容，本证据取消旧审核资格，不回退或改写产品代码。",
+  "scope_checked": [
+    "TASK-143/TASK-144 的 WP-009、BL-006、启动提交、审核范围和当前 superseded 状态",
+    "TASK-143 启动提交 e0084ca 至当前 HEAD 在其 public/index.html、public/styles.css、public/app.js 写入范围内的实际变更清单",
+    "TASK-144/review-round-1.json 与 review-round-2.json 的旧审核对象及 TASK-145 后续映射修复事实",
+    "取消范围仅针对 TASK-143 的历史审核；不修改数据库、资源接口或 TASK-145 的实施范围"
+  ],
+  "findings": [
+    "TASK-143 已由同范围的 TASK-145 修复任务替代，旧双轮审核指纹不应继续阻塞当前来源小组修复。"
+  ],
+  "validation_evidence": [
+    "git diff --name-status e0084ca..HEAD -- public/index.html public/styles.css public/app.js：实际路径为 public/index.html modified、public/app.js modified。",
+    "Test-ProjectGovernance.ps1 -Level Release 在替代前报告 TASK-143 审核证据清单/最终指纹不一致；本证据不把旧任务重新声明为 passed。"
+  ],
+  "created_at": "2026-08-23T15:55:00+08:00"
+}

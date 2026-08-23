@@ -36,8 +36,10 @@ review_policy: independent-required
 
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| WP-009 | TASK-146 | pending | REVIEWER | 独立复审来源小组资源映射修复 | BL-006 | pending | TASK-145 | pending | docs/05-quality/evidence/TASK-146 | governance-release, npm-test, app-syntax, git-diff-check | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-009 | TASK-145 | pending | IMPLEMENTER | 修复来源小组资源列表映射 | BL-006 | pending | TASK-143 | running | public/app.js | npm-test, app-syntax, git-diff-check, governance-release | TASK-146 | pending | pending | Plan 自动登记，等待调度 |
 | WP-009 | TASK-144 | pending | REVIEWER | 独立复审资源统计展示收尾 | BL-006 | pending | TASK-143 | completed | docs/05-quality/evidence/TASK-144 | governance-release, npm-test, app-syntax, git-diff-check | n/a | n/a | n/a | Plan 自动登记，等待调度 |
-| WP-009 | TASK-143 | pending | IMPLEMENTER | 资源统计展示可访问性与响应式收尾 | BL-006 | pending | TASK-140 | running | public/index.html, public/styles.css, public/app.js | npm-test, app-syntax, git-diff-check, governance-release | TASK-144 | passed | docs/05-quality/evidence/TASK-144/review-round-2.json | Plan 自动登记，等待调度 |
+| WP-009 | TASK-143 | pending | IMPLEMENTER | 资源统计展示可访问性与响应式收尾 | BL-006 | pending | TASK-140 | replaced | public/index.html, public/styles.css, public/app.js | npm-test, app-syntax, git-diff-check, governance-release | TASK-144 | cancelled | docs/05-quality/evidence/TASK-144/review-cancelled-task143-source-group-fix.json | Plan 自动登记，等待调度 |
 | WP-009 | TASK-142 | pending | REVIEWER | 独立复审资源维护汇总统计 | BL-006 | pending | TASK-140 | replaced | docs/05-quality/evidence/TASK-142 | governance-release, npm-test, app-syntax, git-diff-check | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-009 | TASK-141 | pending | REVIEWER | 独立复审资源维护汇总统计 | BL-006 | pending | TASK-140 | replaced | docs/05-quality/evidence/TASK-141 | governance-release, npm-test, app-syntax, git-diff-check | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-009 | TASK-140 | pending | IMPLEMENTER | 资源维护汇总统计与来源小组校验 | BL-006 | pending | TASK-130 | running | public/index.html, public/styles.css, public/app.js | npm-test, app-syntax, git-diff-check, governance-release | TASK-141 | pending | pending | Plan 自动登记，等待调度 |
