@@ -1,0 +1,69 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-124",
+  "reviewed_task_ids": ["TASK-123"],
+  "work_package": "WP-009",
+  "baseline": "BL-005",
+  "result": "changes-required",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-123",
+      "path": "docs/00-index/DOC-REGISTRY.md",
+      "change_type": "modified",
+      "summary": "更新 V5 需求、总体设计、详细设计、追踪矩阵和 CR-007 的注册版本至 1.1。"
+    },
+    {
+      "task_id": "TASK-123",
+      "path": "docs/02-product/requirements-v5.md",
+      "change_type": "modified",
+      "summary": "补充无专题、测试项、单页全量编辑、多样品状态、日期精度和资源 ID 同步需求。"
+    },
+    {
+      "task_id": "TASK-123",
+      "path": "docs/03-architecture/overall-design-v5.md",
+      "change_type": "modified",
+      "summary": "补充读写边界、逻辑数据模型、原子一致性、资源同步和状态计算规则。"
+    },
+    {
+      "task_id": "TASK-123",
+      "path": "docs/03-architecture/components/v5-detailed-design.md",
+      "change_type": "modified",
+      "summary": "补充专题删除迁移、任务字段矩阵、样品内联编辑、保存级别、甘特图同步算法、交互流程和命令边界。"
+    },
+    {
+      "task_id": "TASK-123",
+      "path": "docs/05-quality/traceability-v5.md",
+      "change_type": "modified",
+      "summary": "补充新增需求追踪关系和 10 个 V5 验收场景。"
+    },
+    {
+      "task_id": "TASK-123",
+      "path": "docs/08-changes/CR-007.md",
+      "change_type": "modified",
+      "summary": "补充逻辑模型与物理迁移的边界，并更新变更包版本。"
+    }
+  ],
+  "change_summary": "从 TASK-123 详设检查点 bb96e501ca3341b8a5875d14dc6d367c8004faa1 到提交 711c65e 的 scoped manifest 为上述 6 个文档全部 modified，共 192 insertions、17 deletions；治理运行状态、审批、台账和自动验证 evidence 属治理文件，不属于 TASK-123 write scope。",
+  "scope_checked": [
+    "TASK-123 和 TASK-124 的 Release 契约、WP-009、BL-005",
+    "三模块边界、专题属性、任务全量字段和单页编辑流程",
+    "多样品规划、ETA 变更、到样进度和五类展示状态的优先级",
+    "任务整体日期与成员日期的同步/不同步、冲突预览和原子提交",
+    "来源小组、成员、制冷机的 ID 引用、停用和改名同步",
+    "搜索过滤、专题树祖先保留、无专题迁移、日志和撤销",
+    "V5 与 V4 的兼容边界、停止条件、追踪矩阵和验收场景"
+  ],
+  "findings": [
+    "阻塞项：ARC-OVERALL-V5-001 §3 的任务事实列表使用 execution_state、test_purpose、task_color，而同一文件 §7 的规范化逻辑模型使用 manual_phase、purpose、color，ARC-COMP-V5-001 §3.3 的字段矩阵也采用后者。文档没有声明别名或唯一规范名，后续实现会产生不一致的 API/数据库字段，必须统一为一套 canonical 字段并在文档中全局替换或明确映射。",
+    "阻塞项：需求要求状态颜色固定映射且详设要求颜色与文字同时表达，但 ARC-COMP-V5-001 只规定“固定映射”而没有冻结五类状态的颜色 token、对比度和无色/人工任务颜色的优先显示规则。实现者无法据此写出可验收的视觉回归，必须增加状态颜色 token 表和覆盖关系。"
+  ],
+  "validation_evidence": [
+    "git diff --name-status bb96e501ca3341b8a5875d14dc6d367c8004faa1 711c65e -- 六个 V5 文档输出 6 个 M，git diff --stat 输出 192 insertions、17 deletions。",
+    "powershell -NoProfile -ExecutionPolicy Bypass -File .governance/tools/Test-ProjectGovernance.ps1 -Level Release：错误数 0、警告数 0。",
+    "静态交叉核对确认 ARC-OVERALL-V5-001 §3 与 §7 及 ARC-COMP-V5-001 §3.3 存在 execution_state/manual_phase、test_purpose/purpose、task_color/color 命名差异；状态颜色仅有文字性要求，没有 token 表。",
+    "reviewer 仅写入 docs/05-quality/evidence/TASK-124，未修改 TASK-123 交付文件。"
+  ],
+  "created_at": "2026-08-23T10:44:36.0346674+08:00"
+}
