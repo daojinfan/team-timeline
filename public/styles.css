@@ -3582,3 +3582,42 @@ button.v3-task-card:disabled small {
 .v5-execution-task-list-card { margin-top: 14px; overflow: hidden; }.v5-execution-task-list { display: grid; max-height: 340px; overflow: auto; }.v5-execution-task-list-row { display: grid; grid-template-columns: 5px minmax(220px, 1.4fr) max-content minmax(100px, .8fr); gap: 10px; align-items: center; min-width: 0; padding: 10px 16px 10px 0; border: 0; border-bottom: 1px solid #edf0f4; background: transparent; color: var(--text); text-align: left; cursor: pointer; }.v5-execution-task-list-row:hover, .v5-execution-task-list-row.is-selected { background: #f8fbff; }.v5-execution-task-list-row > span:nth-child(2) { display: grid; gap: 3px; min-width: 0; }.v5-execution-task-list-row strong, .v5-execution-task-list-row small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }.v5-execution-task-list-row strong { font-size: 12px; }.v5-execution-task-list-row small, .v5-execution-task-members { color: var(--muted); font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 @media (max-width: 1180px) { .v5-execution-filter-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }.v5-execution-filter-grid .v5-search-field { grid-column: 1 / -1; }.v5-execution-layout { grid-template-columns: minmax(0, 1fr); }.v5-execution-side { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }.v5-execution-detail-card { min-width: 0; } }
 @media (max-width: 720px) { .v5-execution-filter-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }.v5-execution-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }.v5-execution-toolbar-row { align-items: flex-start; flex-direction: column; }.v5-execution-side { grid-template-columns: minmax(0, 1fr); }.v5-execution-task-list-row { grid-template-columns: 5px minmax(0, 1fr) max-content; }.v5-execution-task-members { display: none; } }
+
+/* V5 execution center follows the legacy workspace: member rail, one main timeline,
+   and explicit Gantt / task / load subviews. The V5 data and schedule controls
+   remain unchanged; only the information architecture is familiarized. */
+.v5-execution-subnav { display: flex; gap: 4px; margin: 0 0 12px; padding: 4px; border: 1px solid var(--border); border-radius: 10px; background: #f5f7fa; width: fit-content; }
+.v5-execution-subnav button { min-width: 82px; padding: 7px 14px; border: 0; border-radius: 7px; background: transparent; color: var(--muted); font-size: 12px; font-weight: 800; cursor: pointer; }
+.v5-execution-subnav button:hover, .v5-execution-subnav button.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(15,23,42,.08); }
+.v5-execution-workspace { display: grid; grid-template-columns: 226px minmax(0, 1fr); gap: 12px; align-items: start; }
+.v5-execution-member-sidebar { position: sticky; top: 80px; display: flex; min-width: 0; max-height: calc(100vh - 122px); flex-direction: column; overflow: hidden; border: 1px solid var(--border); border-radius: 14px; background: var(--surface); box-shadow: var(--shadow); }
+.v5-execution-sidebar-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; padding: 13px 14px 10px; border-bottom: 1px solid #edf0f4; }
+.v5-execution-sidebar-heading h3 { margin: 2px 0 0; font-size: 15px; }
+.v5-execution-member-search { display: grid; gap: 5px; padding: 10px 12px 6px; color: var(--muted); font-size: 11px; font-weight: 700; }
+.v5-execution-member-search input { width: 100%; }
+.v5-execution-sidebar-option { margin: 3px 12px 8px; }
+.v5-execution-member-list { min-height: 100px; overflow: auto; padding: 0 6px 8px; }
+.v5-execution-member-item { display: grid; grid-template-columns: 28px minmax(0, 1fr) max-content; align-items: center; gap: 8px; width: 100%; padding: 8px 7px; border: 0; border-bottom: 1px solid #f0f2f5; border-radius: 7px; background: transparent; color: var(--text); text-align: left; cursor: pointer; }
+.v5-execution-member-item:hover, .v5-execution-member-item.is-selected { background: #eef6ff; }
+.v5-execution-member-avatar { display: grid; width: 27px; height: 27px; place-items: center; border-radius: 50%; background: #dbeafe; color: #1d4ed8; font-size: 11px; font-weight: 800; }
+.v5-execution-member-copy { display: grid; min-width: 0; gap: 2px; }
+.v5-execution-member-copy strong, .v5-execution-member-copy small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.v5-execution-member-copy strong { font-size: 12px; }.v5-execution-member-copy small { color: var(--muted); font-size: 10px; }
+.v5-execution-member-count { display: grid; justify-items: end; color: #1d4ed8; font-size: 13px; font-weight: 800; line-height: 1; }
+.v5-execution-member-count small { margin-top: 3px; color: var(--muted); font-size: 9px; font-weight: 600; }
+.v5-execution-main { min-width: 0; }
+.v5-execution-view-panel { min-width: 0; }
+.v5-execution-view-panel[hidden] { display: none; }
+.v5-execution-gantt-canvas { min-width: calc(var(--v5-exec-track-width) + 168px); }
+.v5-execution-gantt-header, .v5-execution-gantt-row { grid-template-columns: 168px var(--v5-exec-track-width); }
+.v5-execution-label-heading { padding-left: 12px; }
+.v5-execution-row-label { padding-left: 12px; }
+.v5-execution-detail-card { margin-top: 12px; overflow: hidden; }
+.v5-execution-load-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.v5-execution-load-table th { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--muted); font-size: 10px; text-align: left; }
+.v5-execution-load-table td { padding: 8px 12px; border-bottom: 1px solid #edf0f4; }
+.v5-execution-load-table tr.is-selected { background: #f0f7ff; }
+.v5-execution-load-table td:first-child button { display: grid; gap: 2px; padding: 0; border: 0; background: transparent; color: var(--text); text-align: left; cursor: pointer; }
+.v5-execution-load-table td:first-child strong { font-size: 12px; }.v5-execution-load-table td:first-child small { color: var(--muted); font-size: 10px; }
+@media (max-width: 1180px) { .v5-execution-workspace { grid-template-columns: 200px minmax(0, 1fr); } }
+@media (max-width: 720px) { .v5-execution-workspace { grid-template-columns: minmax(0, 1fr); }.v5-execution-member-sidebar { position: static; max-height: none; }.v5-execution-member-list { max-height: 250px; }.v5-execution-subnav { width: 100%; }.v5-execution-subnav button { flex: 1; } }

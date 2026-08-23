@@ -29,7 +29,11 @@ test("V5 execution center exposes the approved filters and schedule preview flow
 
 test("V5 execution center keeps internal gantt scrolling and synchronizes all V5 projections", () => {
   assert.match(styles, /\.v5-execution-gantt-scroll\s*\{[^}]*overflow-x:\s*auto/);
-  assert.match(styles, /\.v5-execution-layout\s*\{[^}]*grid-template-columns/);
+  assert.match(styles, /\.v5-execution-workspace\s*\{[^}]*grid-template-columns:\s*226px/);
+  assert.match(index, /id="v5ExecutionSubnav"/);
+  assert.match(index, /id="v5ExecutionMemberList"/);
+  assert.match(app, /v5SetExecutionSubView/);
+  assert.match(app, /v5RenderExecutionMemberList/);
   assert.match(app, /v5LoadAll\(\).*v5RenderExecution/s);
   assert.match(app, /if \(view === "execution"\) v5RenderExecution\(\)/);
   assert.match(app, /v5State\.execution\.selectedTaskId/);
