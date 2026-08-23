@@ -57,8 +57,8 @@ last_reviewed: 2026-08-20
 | CR-005 | docs/08-changes/CR-005.md | change-package | approved | 1.0 | BL-004 | human |
 | QUAL-TRACE-V4-001 | docs/05-quality/traceability-v4.md | quality.traceability.v4 | proposed | 1.0 | BL-005 | human |
 | CR-006 | docs/08-changes/CR-006.md | change-package | approved | 1.0 | BL-005 | human |
-| REQ-V5-001 | docs/02-product/requirements-v5.md | product.requirements.v5 | proposed | 1.0 | BL-005 | human |
-| ARC-OVERALL-V5-001 | docs/03-architecture/overall-design-v5.md | architecture.overall.v5 | proposed | 1.0 | BL-005 | human |
-| ARC-COMP-V5-001 | docs/03-architecture/components/v5-detailed-design.md | architecture.component.v5-detailed-design | proposed | 1.0 | BL-005 | human |
-| QUAL-TRACE-V5-001 | docs/05-quality/traceability-v5.md | quality.traceability.v5 | proposed | 1.0 | BL-005 | human |
-| CR-007 | docs/08-changes/CR-007.md | change-package | proposed | 1.0 | BL-005 | human |
+| REQ-V5-001 | docs/02-product/requirements-v5.md | product.requirements.v5 | proposed | 1.1 | BL-005 | human |
+| ARC-OVERALL-V5-001 | docs/03-architecture/overall-design-v5.md | architecture.overall.v5 | proposed | 1.1 | BL-005 | human |
+| ARC-COMP-V5-001 | docs/03-architecture/components/v5-detailed-design.md | architecture.component.v5-detailed-design | proposed | 1.1 | BL-005 | human |
+| QUAL-TRACE-V5-001 | docs/05-quality/traceability-v5.md | quality.traceability.v5 | proposed | 1.1 | BL-005 | human |
+| CR-007 | docs/08-changes/CR-007.md | change-package | proposed | 1.1 | BL-005 | human |

@@ -2,7 +2,7 @@
 doc_id: ARC-OVERALL-V5-001
 type: architecture.overall.v5
 status: proposed
-version: 1.0
+version: 1.1
 owner: human
 baseline: BL-005
 depends_on:
@@ -93,3 +93,38 @@ V5 设计不授权立即改写产品代码或数据库。后续实现必须采�
 ~~~
 
 状态显示必须同时提供文字、颜色和可访问名称。
+
+## 6. 读写边界与同步
+
+| 事实 | 唯一写入边界 | 其他模块的使用方式 |
+| --- | --- | --- |
+| 来源小组、成员、制冷机 | 资源维护 | 按稳定 ID 选择和显示，不缓存名称副本 |
+| 专题与任务完整信息 | 任务全量编辑台 | 执行中心只投影执行所需字段 |
+| 任务整体日期、成员日期 | 任务全量编辑台和执行中心共用同一命令服务 | 任一入口保存后同步刷新 |
+| 人工执行阶段 | 任务全量编辑台和执行中心共用同一状态命令 | 样品交付延期和测试延期不单独写入 |
+
+三个模块不使用独立的任务副本表。页面可使用读模型提升展示性能，但读模型必须能从主事实重建，不得被当作第二写入源。
+
+## 7. 逻辑数据模型
+
+| 实体/关系 | 关键字段 | 核心约束 |
+| --- | --- | --- |
+| `source_group` | id, name, enabled, version | 名称在启用资源中唯一 |
+| `member` | id, name, basic_role, enabled, version | 停用不断开历史关联 |
+| `cryostat` | id, name, enabled, version | 停用不断开历史关联 |
+| `topic` | id, name, purpose, status, notes, system_key, version | `system_key=unassigned` 全局唯一且不可删除 |
+| `task` | id, topic_id, source_group_id, title, purpose, notes, color, manual_phase, start_date, end_date, cryostat_id, version | 任务编号稳定；主题必须存在 |
+| `test_item` | id, task_id, name, notes, position | 仅用于稳定展示，position 不等于任务顺序 |
+| `sample` | id, planning_label, model, sample_no, eta_date, arrival_date, eta_pending, version | 正式编号可在到样后补录 |
+| `task_sample` | task_id, sample_id, required | 同一样品可被多个任务规划引用 |
+| `task_member` | task_id, member_id, start_date, end_date, version | 联合键唯一；日期可空 |
+| `task_event` | id, task_id, event_type, before, after, actor, occurred_at | 支持审计和最近一次可逆撤销 |
+
+`manual_phase` 只保存 `waiting`、`testing`、`completed`；“样品交付延期”和“测试延期”是读时计算的展示状态，避免日期变化后产生过期脏数据。
+
+## 8. 关键事务与一致性
+
+- 删除非空专题时，“迁移其中任务到目标专题”与“删除专题”必须在同一事务中完成；默认目标为“无专题”。
+- 任务整体日期与成员日期的同步修改必须在同一事务中提交，不允许部分成员更新成功。
+- 所有更新携带对象版本号；版本不一致时不覆盖，返回变更字段供用户重新确认。
+- 资源改名只修改资源实体；任务、日志和投影使用 ID 重新解析显示名称。
