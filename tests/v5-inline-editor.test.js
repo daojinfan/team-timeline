@@ -14,6 +14,7 @@ test("V5 selected-task summary renders inline editable task attributes", () => {
   assert.match(app, /v5-inline-member-check/);
   assert.match(app, /v5InlineTestItems/);
   assert.match(app, /data-v5-inline-add-test-item/);
+  assert.match(app, /id="v5InlineTaskFormError" role="alert" aria-live="polite"/);
 });
 
 test("V5 inline task save uses preview, conflict acknowledgement and expected version", () => {
