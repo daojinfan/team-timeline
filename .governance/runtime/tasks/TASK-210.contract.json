@@ -1,0 +1,81 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-210",
+  "work_package": "WP-009",
+  "title": "精简集成测试组-测控任务需求文档重复字段",
+  "goal": "根据用户反馈去除重复信息，不再保留覆盖范围字段，并合并测试对象、边界和测试条件的表达，使集成测试组-测控任务需求文档更简洁。",
+  "baseline": "BL-006",
+  "profile": "Standard",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md"
+  ],
+  "read_paths": [
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md",
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md",
+    "docs/02-product",
+    "docs/03-architecture"
+  ],
+  "write_paths": [
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md"
+  ],
+  "out_of_scope": [
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md",
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "src/server.js",
+    "系统功能修改",
+    "手机端"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "不再保留覆盖范围字段及相关重复提示。",
+    "测试对象字段能够承载样品、型号、版本、批次和必要条件。",
+    "不包含的内容仍能表达任务边界。",
+    "主要测试项保留与测试目的、测试条件、样品数/重复次数相关的信息，用于工作量评估。",
+    "模板继续使用数字化 Markdown 表格，无手写式下划线或日期占位；示例文件不变。"
+  ],
+  "validations": [
+    {
+      "id": "simplified-integration-template",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        "$p=\"docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md\"; if(!(Test-Path -LiteralPath $p -PathType Leaf)){throw \"missing template\"}; $t=Get-Content -LiteralPath $p -Raw; foreach($token in @(\"集成测试组-测控任务需求文档\",\"项目名称\",\"测试对象（必填）\",\"测试目的（必填）\",\"主要的测试项\")){if($t.IndexOf($token)-lt 0){throw (\"missing \"+$token)}}; if($t -match \"覆盖范围\"){throw \"redundant coverage field remains\"}; if($t -match \"_{3,}|____-__-__\"){throw \"handwritten placeholders remain\"}; Write-Output \"simplified integration request template ok\""
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-24T13:06:02.4159366Z"
+}

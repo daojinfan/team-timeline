@@ -5,7 +5,7 @@
   "work_package": "WP-009",
   "contract_sha256": "1830e6f29b84d55d76e58e41d332c4e171a8aff23c4e6647ae6b7fde48e8c143",
   "baseline": "BL-006",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -29,14 +29,14 @@
   "review": {
     "required": true,
     "reviewer_task_id": "TASK-209",
-    "status": "passed",
+    "status": "cancelled",
     "evidence": [
-      "docs/05-quality/evidence/TASK-209/review-round-2.json"
+      "docs/05-quality/evidence/TASK-209/review-cancelled-task208-simplify-boundary.json"
     ],
-    "pass_streak": 2,
-    "subject_sha256": "50677ac9b9c3e71c2a0b943ff49047b3695650123f9171ac30ca557269b05bce"
+    "pass_streak": 0,
+    "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "用户要求去除模板中重复的信息，删除覆盖范围并合并边界表达；当前版本由新的精简任务替代。",
   "created_at": "2026-08-24T12:12:45.3691129Z",
-  "updated_at": "2026-08-24T12:22:03.6482873Z"
+  "updated_at": "2026-08-24T13:04:31.1830069Z"
 }

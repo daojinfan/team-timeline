@@ -1,0 +1,24 @@
+{
+  "$schema": "schemas/validation-evidence.schema.json",
+  "schema_version": 1,
+  "task_id": "TASK-210",
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "contract_sha256": "d58ec72eb6d2dac6fa3de9ea7ea36a140f2ae36025cd1f9e7b9fafc5b97167bc",
+  "git_commit": "1998dcb38c6063b7652f42abdb507e24034e5b0b",
+  "validation_id": "simplified-integration-template",
+  "command": "powershell",
+  "args": [
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-Command",
+    "$p=\"docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md\"; if(!(Test-Path -LiteralPath $p -PathType Leaf)){throw \"missing template\"}; $t=Get-Content -LiteralPath $p -Raw; foreach($token in @(\"集成测试组-测控任务需求文档\",\"项目名称\",\"测试对象（必填）\",\"测试目的（必填）\",\"主要的测试项\")){if($t.IndexOf($token)-lt 0){throw (\"missing \"+$token)}}; if($t -match \"覆盖范围\"){throw \"redundant coverage field remains\"}; if($t -match \"_{3,}|____-__-__\"){throw \"handwritten placeholders remain\"}; Write-Output \"simplified integration request template ok\""
+  ],
+  "started_at": "2026-08-24T13:08:03.1718312Z",
+  "finished_at": "2026-08-24T13:08:03.5753726Z",
+  "exit_code": 0,
+  "redactions_applied": 0,
+  "output_path": "docs/05-quality/evidence/TASK-210/20260824T130803165Z-c920e042-simplified-integration-template.output.txt",
+  "output_sha256": "34d825f342ae13e30922138896d48e5a71bb2fbd078782348280b753ad4a6535"
+}

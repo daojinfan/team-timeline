@@ -1,0 +1,29 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-209",
+  "reviewed_task_ids": [
+    "TASK-208"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "cancelled",
+  "diff_checked": true,
+  "changes": [],
+  "change_summary": "TASK-208 已因用户要求删除重复的‘覆盖范围’并精简边界字段而被新的实现替代。本证据仅取消 TASK-209 对旧 TASK-208 交付的审核绑定，不撤销或覆盖 TASK-209 round 1/round 2 历史审核证据，也不包含任何产品文件或治理状态变更。",
+  "scope_checked": [
+    "TASK-208.state.json 标记为 superseded，并记录删除重复覆盖范围、合并边界表达的替代原因",
+    "取消范围仅限 TASK-209 对旧 TASK-208 主题的审核绑定",
+    "TASK-209 review-round-1.json 与 review-round-2.json 双轮历史证据保留且不被覆盖",
+    "changes 为空；本取消证据不修改产品文件、治理运行状态或台账"
+  ],
+  "findings": [
+    "取消原因：用户要求去除模板重复信息，删除覆盖范围并精简边界字段；旧版任务需求文档及其审核指纹不再代表当前交付，后续由新的精简任务实现和审核承载。"
+  ],
+  "validation_evidence": [
+    "PASS: TASK-208.state.json reports state=superseded and records the simplify-boundary replacement reason.",
+    "PASS: prior TASK-209 review-round-1.json and review-round-2.json remain present.",
+    "PASS: cancellation evidence contains no product paths in changes and does not alter governance runtime state."
+  ],
+  "created_at": "2026-08-24T20:30:00+08:00"
+}
