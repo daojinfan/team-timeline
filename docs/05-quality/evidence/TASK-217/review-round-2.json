@@ -1,0 +1,41 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-217",
+  "reviewed_task_ids": [
+    "TASK-216"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-216",
+      "path": "docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md",
+      "change_type": "modified",
+      "summary": "最终 Z4Readout BGA 露出样品填写示例，与当前四部分模板结构和字段对应。"
+    }
+  ],
+  "change_summary": "完成 Standard 第二轮完整独立审核。重新核对 TASK-216 start_git_commit b4af165f42bde06949eea3ae46959b036f4f77b3 到当前最终内容，实际产品 diff 仅示例一个 modified 文件，模板未改；最终内容与 round 1 为同一审核对象。",
+  "scope_checked": [
+    "示例四部分结构与当前模板一致，包含必要性说明、基本信息、测试目的以及测试对象和主要测试项",
+    "基本信息完整覆盖项目、来源小组、任务、样品类型/型号、数量、编号、交付时间和制冷机协调",
+    "测试目的完整覆盖背景或重要性、测试目的和预期结论/结果用途",
+    "测试对象完整给出样品、4 路读取、2 个比特、具体 BGA/引脚/通道对象以及装样和接线信息",
+    "主要测试项体现目的关系、通断/Q 值/读取适配性工作、预期输出和测试大纲确认要求",
+    "示例明确为填写示例且不直接写入系统；没有请填写提示、手写下划线/日期占位或旧版多区块需求字段",
+    "示例数据前后一致：2 个样品、4 路读取/2 比特、Z4 BGA 露出对象、通断/Q 值/读取设计目标和输出互相匹配",
+    "TASK-216 scoped manifest 仅示例文件变更，模板保持不变"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: git diff --name-status b4af165f42bde06949eea3ae46959b036f4f77b3 HEAD -- docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md returned exactly one M example path; no template diff.",
+    "PASS: full heading/table audit confirms four sections and current-template field correspondence.",
+    "PASS: example contains no 请填写, three-or-more underscores, or ____-__-__; frontmatter and body identify it as illustrative data, not system-registered data.",
+    "PASS: content consistency audit confirms sample count, route/bit plan, object details, purpose, outputs, wiring and test-outline handoff agree.",
+    "PASS: no obsolete source-group request fields such as专题建议、其他说明、样品代称 or old task-management tables were retained.",
+    "PASS: git diff --check returned no whitespace errors; final subject is unchanged from round 1."
+  ],
+  "created_at": "2026-08-24T21:50:00+08:00"
+}

@@ -5,15 +5,15 @@
   "work_package": "WP-009",
   "contract_sha256": "6e61a001c3b934e6d0a6cfb51b5d2dc111e492ad8a8fd598964a68ca5dac9f95",
   "baseline": "BL-006",
-  "state": "in-progress",
+  "state": "verified",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
   "acceptance_git_commit": "",
   "start_git_commit": "d2889c4e8a519482b5013462a002e2e18b236b99",
-  "execution_lease": "003462ff8732490181da338a86b8c04b",
-  "execution_lease_owner": "REVIEWER-TASK-217-R2",
-  "execution_lease_expires_at": "2026-08-24T16:34:05.5653668Z",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
   "preexisting_changes": [],
   "plan_checkpoint_git_commit": "db3e826641d8354fdb7242503940051e05781f5c",
   "plan_rebase_history": [
@@ -23,10 +23,14 @@
       "rebased_at": "2026-08-24T14:33:39.1368801Z"
     }
   ],
-  "evidence": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-217/20260824T143525178Z-78224932-current-template-example-review.evidence.json"
+  ],
   "evidence_history": [
     "docs/05-quality/evidence/TASK-217/20260824T143312024Z-93cb4757-current-template-example-review.evidence.json",
-    "docs/05-quality/evidence/TASK-217/review-round-1.json"
+    "docs/05-quality/evidence/TASK-217/review-round-1.json",
+    "docs/05-quality/evidence/TASK-217/20260824T143525178Z-78224932-current-template-example-review.evidence.json",
+    "docs/05-quality/evidence/TASK-217/review-round-2.json"
   ],
   "review_history": [
     {
@@ -35,6 +39,13 @@
       "result": "passed",
       "round_id": "RR-26fad3a34d4c40b49e81c0030c4708f8",
       "recorded_at": "2026-08-24T14:33:25.0012543Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-217/review-round-2.json",
+      "sha256": "6e209e6b338cab7d425809912cac1848ea45d0827947082f2f864c5bcd8b3922",
+      "result": "passed",
+      "round_id": "RR-c962d747d2ef49909eb44dd987751c60",
+      "recorded_at": "2026-08-24T14:35:38.1990188Z"
     }
   ],
   "review": {
@@ -47,5 +58,5 @@
   },
   "last_error": "",
   "created_at": "2026-08-24T14:28:23.4244189Z",
-  "updated_at": "2026-08-24T14:34:05.5664618Z"
+  "updated_at": "2026-08-24T14:35:38.5939045Z"
 }
