@@ -1,0 +1,7 @@
+missing 为什么需要这个文档
+At line:1 char:283
++ ... 的测试项")){if($t.IndexOf($token)-lt 0){throw ("missing "+$token)}}; if($ ...
++                                         ~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (missing 为什么需要这个文档:String) [], RuntimeException
+    + FullyQualifiedErrorId : missing 为什么需要这个文档
+ 

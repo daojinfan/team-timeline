@@ -5,7 +5,7 @@
   "work_package": "WP-009",
   "contract_sha256": "f322a897fc91b5fb54532ae477a7705b5b64c6b558067d97e03709394ccf8f08",
   "baseline": "BL-006",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -28,14 +28,14 @@
   "review": {
     "required": true,
     "reviewer_task_id": "TASK-205",
-    "status": "passed",
+    "status": "cancelled",
     "evidence": [
-      "docs/05-quality/evidence/TASK-205/review-round-2.json"
+      "docs/05-quality/evidence/TASK-205/review-cancelled-task204-formal-request-doc.json"
     ],
-    "pass_streak": 2,
-    "subject_sha256": "8238d1a90eae69b4207feb64a6cc9d5806d6601cdfc01b79f6138c58a00f3d41"
+    "pass_streak": 0,
+    "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "用户补充正式的集成测试组-测控任务需求文档结构，当前数字填写版被新的三层需求结构替代。",
   "created_at": "2026-08-24T11:37:49.7547628Z",
-  "updated_at": "2026-08-24T11:47:02.0956842Z"
+  "updated_at": "2026-08-24T12:16:13.2912687Z"
 }

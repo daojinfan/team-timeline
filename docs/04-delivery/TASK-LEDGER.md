@@ -36,8 +36,12 @@ review_policy: independent-required
 
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| WP-009 | TASK-209 | pending | REVIEWER | 独立审核集成测试组-测控任务需求文档模板 | BL-006 | pending | TASK-208 | pending | docs/05-quality/evidence/TASK-209 | integration-req-template-review | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-009 | TASK-208 | pending | IMPLEMENTER | 重构集成测试组-测控任务需求文档模板 | BL-006 | pending | n/a | running | docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md | integration-req-template | TASK-209 | pending | pending | Plan 自动登记，等待调度 |
+| WP-009 | TASK-207 | pending | REVIEWER | 独立审核集成测试组-测控任务需求文档模板 | BL-006 | pending | TASK-206 | replaced | docs/05-quality/evidence/TASK-207 | integration-req-template-review | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-009 | TASK-206 | pending | IMPLEMENTER | 重构集成测试组-测控任务需求文档模板 | BL-006 | pending | n/a | replaced | docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md | integration-req-template | TASK-207 | pending | pending | Plan 自动登记，等待调度 |
 | WP-009 | TASK-205 | pending | REVIEWER | 独立审核数字化需求模板填写体验 | BL-006 | pending | TASK-204 | completed | docs/05-quality/evidence/TASK-205 | digital-template | n/a | n/a | n/a | Plan 自动登记，等待调度 |
-| WP-009 | TASK-204 | pending | IMPLEMENTER | 优化需求模板为数字化表格填写形式 | BL-006 | pending | TASK-202 | running | docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md | digital-template | TASK-205 | passed | docs/05-quality/evidence/TASK-205/review-round-2.json | Plan 自动登记，等待调度 |
+| WP-009 | TASK-204 | pending | IMPLEMENTER | 优化需求模板为数字化表格填写形式 | BL-006 | pending | TASK-202 | replaced | docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md | digital-template | TASK-205 | cancelled | docs/05-quality/evidence/TASK-205/review-cancelled-task204-formal-request-doc.json | Plan 自动登记，等待调度 |
 | WP-009 | TASK-203 | pending | REVIEWER | 独立审核需求模板说明与填写提醒 | BL-006 | pending | TASK-202 | completed | docs/05-quality/evidence/TASK-203 | template-overview-reminders | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-009 | TASK-202 | pending | IMPLEMENTER | 补充外部需求模板总体说明与不明确项填写提醒 | BL-006 | pending | TASK-200 | replaced | docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md | template-overview-reminders | TASK-203 | cancelled | docs/05-quality/evidence/TASK-203/review-cancelled-task202-digital-template.json | Plan 自动登记，等待调度 |
 | WP-009 | TASK-201 | pending | REVIEWER | 独立审核精简外部需求模板与实例 | BL-006 | pending | TASK-200 | completed | docs/05-quality/evidence/TASK-201 | markdown-minimal | n/a | n/a | n/a | Plan 自动登记，等待调度 |

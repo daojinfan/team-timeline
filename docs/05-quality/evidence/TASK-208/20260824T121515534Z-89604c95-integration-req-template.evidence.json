@@ -1,0 +1,24 @@
+{
+  "$schema": "schemas/validation-evidence.schema.json",
+  "schema_version": 1,
+  "task_id": "TASK-208",
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "contract_sha256": "1830e6f29b84d55d76e58e41d332c4e171a8aff23c4e6647ae6b7fde48e8c143",
+  "git_commit": "5e2af62d22524b3308d07bb2e5a95833d28bffc1",
+  "validation_id": "integration-req-template",
+  "command": "powershell",
+  "args": [
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-Command",
+    "$p=\"docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md\"; if(!(Test-Path -LiteralPath $p -PathType Leaf)){throw \"missing template\"}; $t=Get-Content -LiteralPath $p -Raw; foreach($token in @(\"集成测试组-测控任务需求文档\",\"为什么需要这个文档\",\"项目名称\",\"测试目的\",\"主要的测试项\")){if($t.IndexOf($token)-lt 0){throw (\"missing \"+$token)}}; if($t -match \"_{3,}|____-__-__\"){throw \"handwritten placeholders remain\"}; Write-Output \"integration request template structure ok\""
+  ],
+  "started_at": "2026-08-24T12:15:15.5409813Z",
+  "finished_at": "2026-08-24T12:15:15.9603695Z",
+  "exit_code": 0,
+  "redactions_applied": 0,
+  "output_path": "docs/05-quality/evidence/TASK-208/20260824T121515534Z-89604c95-integration-req-template.output.txt",
+  "output_sha256": "a2694bcc6449efd06cc68e8e7521f65d2e187b96716e40f95f85c1d1e92cc2b0"
+}

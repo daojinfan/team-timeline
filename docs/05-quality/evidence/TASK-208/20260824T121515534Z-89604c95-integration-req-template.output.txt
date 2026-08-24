@@ -1,0 +1,1 @@
+integration request template structure ok

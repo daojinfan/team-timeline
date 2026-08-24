@@ -1,0 +1,85 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-207",
+  "work_package": "WP-009",
+  "title": "独立审核集成测试组-测控任务需求文档模板",
+  "goal": "独立复核新版集成测试组-测控任务需求文档是否准确表达正式承接与能力评估目的、信息分层、测试边界和工作量评估要求，并确认数字化表格填写体验与示例文件不变。",
+  "baseline": "BL-006",
+  "profile": "Standard",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-207"
+  ],
+  "read_paths": [
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md",
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/05-quality"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-207"
+  ],
+  "out_of_scope": [
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md",
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md",
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "src/server.js",
+    "data/team_tasks.sqlite"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [
+    "TASK-206"
+  ],
+  "acceptance_criteria": [
+    "确认文档必要性说明覆盖正式承接、避免口头化、资源有限和能力评估。",
+    "确认基本信息、测试对象与目的、主要测试项三块结构清楚且边界合理。",
+    "确认测试目的能支撑测试项和总体工作量评估。",
+    "确认数字化表格可直接填写且没有手写式占位。",
+    "确认实际产品变更只有模板，示例文件不变。",
+    "完成 Standard 双轮独立审核并生成结构化证据。"
+  ],
+  "validations": [
+    {
+      "id": "integration-req-template-review",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        "$p=\"docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md\"; if(!(Test-Path -LiteralPath $p -PathType Leaf)){throw \"missing template\"}; Write-Output \"template present\""
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-24T12:11:52.9733825Z"
+}

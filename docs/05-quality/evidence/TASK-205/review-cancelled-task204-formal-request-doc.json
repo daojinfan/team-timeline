@@ -1,0 +1,32 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-205",
+  "reviewed_task_ids": [
+    "TASK-204"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "cancelled",
+  "diff_checked": true,
+  "changes": [],
+  "change_summary": "TASK-204 已因用户补充正式的集成测试组-测控任务需求文档结构而被 TASK-208/209 承接的新版交付替代；当前旧模板指纹不再适用。本证据仅取消 TASK-205 对旧 TASK-204 交付的审核绑定，不撤销或覆盖 round 1/round 2 历史审核证据，也不包含任何产品文件或治理状态变更。",
+  "scope_checked": [
+    "TASK-204.state.json 标记为 superseded，last_error 记录正式需求文档结构替代原因",
+    "TASK-208 承接新版模板实现，TASK-209 承接其独立审核",
+    "取消范围仅限 TASK-205 对旧 TASK-204 主题的审核绑定",
+    "TASK-205 review-round-1.json 与 review-round-2.json 历史证据保留且不被覆盖",
+    "changes 为空；本取消证据不修改产品文件、治理运行状态或台账"
+  ],
+  "findings": [
+    "取消原因：用户新增正式的集成测试组-测控任务需求文档结构，旧数字填写版交付及其审核指纹不再适用于当前范围；新实现由 TASK-208 和审核任务 TASK-209 承接。"
+  ],
+  "validation_evidence": [
+    "PASS: TASK-204.state.json reports state=superseded and identifies the formal request-document structure as the replacement reason.",
+    "PASS: TASK-208.contract.json defines the new integration-test-group request-document structure and template-only implementation scope.",
+    "PASS: TASK-209.contract.json defines independent review of TASK-208 and preserves the example file as unchanged.",
+    "PASS: prior TASK-205 review-round-1.json and review-round-2.json remain present.",
+    "PASS: cancellation evidence contains no product paths in changes and does not alter governance runtime state."
+  ],
+  "created_at": "2026-08-24T20:00:00+08:00"
+}
