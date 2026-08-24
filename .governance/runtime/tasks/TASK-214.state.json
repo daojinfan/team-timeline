@@ -5,7 +5,7 @@
   "work_package": "WP-009",
   "contract_sha256": "d4a2c850980fd94b97a7fa844f88ebbfced824f5fc37e4e293554ba59b34a59c",
   "baseline": "BL-006",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -34,7 +34,7 @@
     "pass_streak": 2,
     "subject_sha256": "67ce9e3bc6f54515d37e917645e8cddf6d02887be3043b99e83175e4b4b5c613"
   },
-  "last_error": "",
+  "last_error": "用户继续微调模板第3部分和第4部分措辞，示例需按当前最新模板生成；当前交付由新示例任务承接。",
   "created_at": "2026-08-24T14:05:48.3467433Z",
-  "updated_at": "2026-08-24T14:11:59.7588272Z"
+  "updated_at": "2026-08-24T14:26:53.8413018Z"
 }
