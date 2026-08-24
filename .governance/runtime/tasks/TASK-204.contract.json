@@ -1,0 +1,85 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-204",
+  "work_package": "WP-009",
+  "title": "优化需求模板为数字化表格填写形式",
+  "goal": "仅修改外部小组需求模板，移除下划线和手写式空白，将需求信息、测试项和样品表格改成可直接在 Markdown 中替换填写的数字化提示，并进一步压缩和优化填写体验。",
+  "baseline": "BL-006",
+  "profile": "Standard",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md"
+  ],
+  "read_paths": [
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md",
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md",
+    "docs/02-product",
+    "docs/03-architecture"
+  ],
+  "write_paths": [
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md"
+  ],
+  "out_of_scope": [
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md",
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "src/server.js",
+    "data/team_tasks.sqlite",
+    "系统功能修改",
+    "数据库迁移",
+    "手机端"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [
+    "TASK-202"
+  ],
+  "acceptance_criteria": [
+    "需求信息继续使用表格，所有填写位置适合键盘直接编辑。",
+    "模板不包含连续下划线、手写日期横线或其他纸质表单式占位。",
+    "测试项和样品表格使用明确的可替换提示，并说明可复制行增加内容。",
+    "不确定项提醒保持简洁且可直接复制填写。",
+    "只修改模板文件，实例保持不变；Markdown、差异和 Strict 治理检查通过。"
+  ],
+  "validations": [
+    {
+      "id": "digital-template",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        "$p=\"docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md\"; $t=Get-Content -LiteralPath $p -Raw; foreach($token in @(\"需求信息\",\"请填写需求名称\",\"请填写测试项\",\"请填写样品型号\",\"待定，交付后补\")){if($t.IndexOf($token)-lt 0){throw (\"missing \"+$token)}}; if($t -match \"_{3,}\"){throw \"handwriting underscore placeholders remain\"}; Write-Output \"digital template placeholders ok\" "
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-24T11:37:49.7547628Z"
+}

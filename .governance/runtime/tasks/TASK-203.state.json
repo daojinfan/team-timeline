@@ -30,7 +30,8 @@
     "docs/05-quality/evidence/TASK-203/20260824T110510584Z-e1ccc329-template-overview-reminders.evidence.json",
     "docs/05-quality/evidence/TASK-203/review-round-1.json",
     "docs/05-quality/evidence/TASK-203/20260824T110716211Z-c0863df5-template-overview-reminders.evidence.json",
-    "docs/05-quality/evidence/TASK-203/review-round-2.json"
+    "docs/05-quality/evidence/TASK-203/review-round-2.json",
+    "docs/05-quality/evidence/TASK-203/review-cancelled-task202-digital-template.json"
   ],
   "review_history": [
     {
@@ -46,6 +47,13 @@
       "result": "passed",
       "round_id": "RR-93866ce8f66d4217b07f5b0b31375735",
       "recorded_at": "2026-08-24T11:07:28.6496604Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-203/review-cancelled-task202-digital-template.json",
+      "sha256": "e5124d5c3cb2a4bb98d9184baa596103169a35c702481197b745bb977300a263",
+      "result": "cancelled",
+      "round_id": "RR-edd4e203c98147448fb918c4ceead601",
+      "recorded_at": "2026-08-24T11:41:20.3441895Z"
     }
   ],
   "review": {
@@ -58,5 +66,5 @@
   },
   "last_error": "",
   "created_at": "2026-08-24T11:00:15.4777638Z",
-  "updated_at": "2026-08-24T11:07:29.0492202Z"
+  "updated_at": "2026-08-24T11:41:20.6557050Z"
 }

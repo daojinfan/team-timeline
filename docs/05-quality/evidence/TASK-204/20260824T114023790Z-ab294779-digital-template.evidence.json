@@ -1,0 +1,24 @@
+{
+  "$schema": "schemas/validation-evidence.schema.json",
+  "schema_version": 1,
+  "task_id": "TASK-204",
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "contract_sha256": "f322a897fc91b5fb54532ae477a7705b5b64c6b558067d97e03709394ccf8f08",
+  "git_commit": "3b83ecce50eb539a8efee19971a40f50f9f796af",
+  "validation_id": "digital-template",
+  "command": "powershell",
+  "args": [
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-Command",
+    "$p=\"docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md\"; $t=Get-Content -LiteralPath $p -Raw; foreach($token in @(\"需求信息\",\"请填写需求名称\",\"请填写测试项\",\"请填写样品型号\",\"待定，交付后补\")){if($t.IndexOf($token)-lt 0){throw (\"missing \"+$token)}}; if($t -match \"_{3,}\"){throw \"handwriting underscore placeholders remain\"}; Write-Output \"digital template placeholders ok\" "
+  ],
+  "started_at": "2026-08-24T11:40:23.7985668Z",
+  "finished_at": "2026-08-24T11:40:24.2178286Z",
+  "exit_code": 0,
+  "redactions_applied": 0,
+  "output_path": "docs/05-quality/evidence/TASK-204/20260824T114023790Z-ab294779-digital-template.output.txt",
+  "output_sha256": "a577c8e4a6b8ba9da396b110de6f9c45036f7464badb4c40381eaaf2563264e8"
+}

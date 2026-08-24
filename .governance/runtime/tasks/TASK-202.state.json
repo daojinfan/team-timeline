@@ -5,7 +5,7 @@
   "work_package": "WP-009",
   "contract_sha256": "819ff930560af046a57faf708498a7b3c984b80a6216d3ae357a9eb76c814f49",
   "baseline": "BL-006",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -28,14 +28,14 @@
   "review": {
     "required": true,
     "reviewer_task_id": "TASK-203",
-    "status": "passed",
+    "status": "cancelled",
     "evidence": [
-      "docs/05-quality/evidence/TASK-203/review-round-2.json"
+      "docs/05-quality/evidence/TASK-203/review-cancelled-task202-digital-template.json"
     ],
-    "pass_streak": 2,
-    "subject_sha256": "5eb00fc5b216c649d00e86b6a2da8b42f8f4146cee157a199cd2bd73ac851c10"
+    "pass_streak": 0,
+    "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "用户要求将模板改为数字化表格填写形式，移除手写式占位，由 TASK-204 替代。",
   "created_at": "2026-08-24T10:59:59.6368707Z",
-  "updated_at": "2026-08-24T11:07:28.8355375Z"
+  "updated_at": "2026-08-24T11:41:20.3960908Z"
 }

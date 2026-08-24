@@ -1,0 +1,31 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-203",
+  "reviewed_task_ids": [
+    "TASK-202"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "cancelled",
+  "diff_checked": true,
+  "changes": [],
+  "change_summary": "TASK-202 已因用户要求将模板改为数字化表格填写形式而被 TASK-204 superseded。本证据仅取消 TASK-203 对过时 TASK-202 交付的审核绑定，不撤销或覆盖 TASK-203 round 1/round 2 历史审核证据，也不包含任何产品文件或治理状态变更。",
+  "scope_checked": [
+    "TASK-202.state.json 标记为 superseded，并说明由 TASK-204 替代",
+    "TASK-204 仅承接外部小组需求模板的数字化表格填写优化，实例文件保持 out of scope",
+    "取消范围仅限 TASK-203 对旧 TASK-202 主题的审核绑定",
+    "TASK-203 review-round-1.json 和 review-round-2.json 历史证据保留且不被覆盖",
+    "changes 为空；本取消证据不修改产品文件、治理运行状态或台账"
+  ],
+  "findings": [
+    "取消原因：用户新增数字化表格填写要求，要求移除下划线和手写式占位并优化可直接编辑提示；TASK-202 的已审核内容不再代表当前交付，后续由 TASK-204 及其独立审核任务承载。"
+  ],
+  "validation_evidence": [
+    "PASS: TASK-202.state.json reports state=superseded and records TASK-204 as the replacement task.",
+    "PASS: TASK-204.contract.json limits implementation scope to the template and defines digital-table acceptance criteria.",
+    "PASS: prior TASK-203 review-round-1.json and review-round-2.json remain present.",
+    "PASS: cancellation evidence has no product paths in changes and does not alter governance runtime state."
+  ],
+  "created_at": "2026-08-24T19:30:00+08:00"
+}
