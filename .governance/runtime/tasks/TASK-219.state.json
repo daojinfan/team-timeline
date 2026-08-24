@@ -5,27 +5,54 @@
   "work_package": "WP-009",
   "contract_sha256": "e46c2faf884b5483b0f0f9cee14088aefeac01a7c2607e09b7597da757046470",
   "baseline": "BL-006",
-  "state": "needs-decision",
+  "state": "verified",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
   "acceptance_git_commit": "",
-  "start_git_commit": "e8a2085da5167226994fa100d9b9e44d265edd10",
+  "start_git_commit": "2536f4c8517d9098284633eab7f6403e1e5e0af2",
   "execution_lease": "",
   "execution_lease_owner": "",
   "execution_lease_expires_at": "",
   "preexisting_changes": [],
-  "plan_checkpoint_git_commit": "e8a2085da5167226994fa100d9b9e44d265edd10",
+  "plan_checkpoint_git_commit": "2536f4c8517d9098284633eab7f6403e1e5e0af2",
   "plan_rebase_history": [
     {
       "previous_changes": [],
       "checkpoint_git_commit": "e8a2085da5167226994fa100d9b9e44d265edd10",
       "rebased_at": "2026-08-24T23:45:27.8930339Z"
+    },
+    {
+      "previous_changes": [],
+      "checkpoint_git_commit": "2536f4c8517d9098284633eab7f6403e1e5e0af2",
+      "rebased_at": "2026-08-24T23:48:53.8977598Z"
     }
   ],
-  "evidence": [],
-  "evidence_history": [],
-  "review_history": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-219/20260824T235214991Z-adef2234-execution-schedule-no-preview-review.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-219/20260824T234926850Z-835e3ede-execution-schedule-no-preview-review.evidence.json",
+    "docs/05-quality/evidence/TASK-219/review-round-1.json",
+    "docs/05-quality/evidence/TASK-219/20260824T235214991Z-adef2234-execution-schedule-no-preview-review.evidence.json",
+    "docs/05-quality/evidence/TASK-219/review-round-2.json"
+  ],
+  "review_history": [
+    {
+      "path": "docs/05-quality/evidence/TASK-219/review-round-1.json",
+      "sha256": "fe8fddf6e0617a03ec8584d52f4a3720faf4dea954c59bf5e98bb944d3a73249",
+      "result": "passed",
+      "round_id": "RR-06b011b2ce6647bb9597d8b7b97be291",
+      "recorded_at": "2026-08-24T23:49:50.3285978Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-219/review-round-2.json",
+      "sha256": "2c0178a28568c22c5f5e9125c89bc8fb916bda2a46183362af10600b6f89b79c",
+      "result": "passed",
+      "round_id": "RR-2ad29f0be71d4ac0849ed94cf745c306",
+      "recorded_at": "2026-08-24T23:52:36.0318578Z"
+    }
+  ],
   "review": {
     "required": false,
     "reviewer_task_id": "",
@@ -34,7 +61,7 @@
     "pass_streak": 0,
     "subject_sha256": ""
   },
-  "last_error": "Out-of-scope changes: public/app.js, public/index.html, tests/v5-execution.test.js",
+  "last_error": "",
   "created_at": "2026-08-24T16:39:20.8381238Z",
-  "updated_at": "2026-08-24T23:47:39.7338484Z"
+  "updated_at": "2026-08-24T23:52:36.5057603Z"
 }

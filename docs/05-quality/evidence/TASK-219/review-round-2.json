@@ -1,0 +1,53 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-219",
+  "reviewed_task_ids": [
+    "TASK-218"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-218",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "执行中心 v5 排期对话框移除手动预览控件和预览内容，仅保留直接确认保存。"
+    },
+    {
+      "task_id": "TASK-218",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "v5 任务/成员排期保存时自动调用各自预检接口，携带 preview_token、expected_version、ack，处理冲突确认和错误提示。"
+    },
+    {
+      "task_id": "TASK-218",
+      "path": "tests/v5-execution.test.js",
+      "change_type": "modified",
+      "summary": "回归测试覆盖排期无手动预览、直接保存自动预检及安全提交字段。"
+    }
+  ],
+  "change_summary": "完成 Standard 第二轮从头独立复核。以 TASK-219 start_git_commit e8a2085da5167226994fa100d9b9e44d265edd10 对照当前工作树，实际产品 scoped manifest 与 round 1 相同，恰为上述三个 modified 文件；本轮审核对象与 round 1 为同一最终内容。",
+  "scope_checked": [
+    "重新核对实际三文件变更清单，未将治理状态、台账或其他证据文件列入 TASK-218 changes",
+    "精确检查 v5ScheduleDialog：无手动生成预览按钮、生成预览文案、保存预览区域或 ack 复选框，确认保存可直接提交",
+    "任务排期保存路径自动请求 /schedule-preview，并继续使用 preview.preview_token、task.version 和 ack 调用 /schedule",
+    "成员排期保存路径自动请求 /member-schedule-preview，并继续使用 preview.preview_token、task.version 和 ack 调用 /member-schedule",
+    "冲突通过 window.confirm 确认，拒绝时不提交并显示可理解错误；日期/API异常通过 catch 保留错误处理",
+    "任务同步成员和成员边界提示未被移除，后端安全校验字段未被放宽",
+    "新增回归断言与实现内容一致，最终内容与 round 1 相同"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: git diff --name-status e8a2085da5167226994fa100d9b9e44d265edd10 -- public/index.html public/app.js tests/v5-execution.test.js returned exactly public/index.html, public/app.js and tests/v5-execution.test.js as modified.",
+    "PASS: v5ScheduleDialog-scoped static audit found no v5SchedulePreviewBtn, 生成预览, 保存预览 or data-v5-schedule-ack; confirmed 确认保存 remains.",
+    "PASS: automatic-preview static audit found both schedule-preview endpoints, preview_token, expected_version, window.confirm and catch handling in app.js; regression assertions cover the same flow.",
+    "PASS: targeted `node --test tests/v5-execution.test.js`; 5 tests passed, 0 failed.",
+    "PASS: full `npm test`; 58 tests passed, 0 failed.",
+    "PASS: `node --check public/app.js` and `node --check tests/v5-execution.test.js` completed without syntax errors.",
+    "PASS: git diff --check for the TASK-218 allowed paths returned no whitespace errors."
+  ],
+  "created_at": "2026-08-25T00:20:00+08:00"
+}

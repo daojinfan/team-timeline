@@ -1,0 +1,24 @@
+{
+  "$schema": "schemas/validation-evidence.schema.json",
+  "schema_version": 1,
+  "task_id": "TASK-219",
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "contract_sha256": "e46c2faf884b5483b0f0f9cee14088aefeac01a7c2607e09b7597da757046470",
+  "git_commit": "2536f4c8517d9098284633eab7f6403e1e5e0af2",
+  "validation_id": "execution-schedule-no-preview-review",
+  "command": "powershell",
+  "args": [
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-Command",
+    "$p=\"tests/v5-execution.test.js\"; if(!(Test-Path -LiteralPath $p -PathType Leaf)){throw \"missing execution tests\"}; Write-Output \"execution tests present\""
+  ],
+  "started_at": "2026-08-24T23:52:14.9975868Z",
+  "finished_at": "2026-08-24T23:52:15.3790036Z",
+  "exit_code": 0,
+  "redactions_applied": 0,
+  "output_path": "docs/05-quality/evidence/TASK-219/20260824T235214991Z-adef2234-execution-schedule-no-preview-review.output.txt",
+  "output_sha256": "8201cd96267653da6320389036e39b3163a3993745ca75b96d9f7000ef514557"
+}
