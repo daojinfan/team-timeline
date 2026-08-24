@@ -29,14 +29,12 @@
   "review": {
     "required": true,
     "reviewer_task_id": "TASK-209",
-    "status": "provisional-passed",
-    "evidence": [
-      "docs/05-quality/evidence/TASK-209/review-round-1.json"
-    ],
+    "status": "pending",
+    "evidence": [],
     "pass_streak": 1,
     "subject_sha256": "50677ac9b9c3e71c2a0b943ff49047b3695650123f9171ac30ca557269b05bce"
   },
   "last_error": "",
   "created_at": "2026-08-24T12:12:45.3691129Z",
-  "updated_at": "2026-08-24T12:19:49.9840619Z"
+  "updated_at": "2026-08-24T12:20:30.0676016Z"
 }
