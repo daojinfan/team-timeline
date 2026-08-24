@@ -1,0 +1,40 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-211",
+  "reviewed_task_ids": [
+    "TASK-210"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-210",
+      "path": "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md",
+      "change_type": "modified",
+      "summary": "精简集成测试组-测控任务需求文档，移除独立覆盖范围字段并将边界与测试对象、必要条件合并。"
+    }
+  ],
+  "change_summary": "从 TASK-210 start_git_commit 1998dcb38c6063b7652f42abdb507e24034e5b0b 到当前最终内容核对，实际 scoped diff 仅包含模板一个 modified 文件；REQ-SOURCE-GROUP-EXAMPLE-V5-001.md 未修改。",
+  "scope_checked": [
+    "覆盖范围不再作为独立字段，必要边界由测试对象及不包含内容表达",
+    "测试对象字段包含样品、型号、版本、批次和必要条件",
+    "不包含的内容字段保留为可选边界表达，缺省可填无",
+    "主要测试项保留与测试目的关联、测试条件或限制、样品数/重复次数和备注，支持总体工作量评估",
+    "正式承接必要性说明、基本信息、测试目的和提交流程均保留",
+    "全篇使用可直接替换的数字化 Markdown 表格提示，未出现三连下划线、____-__-__ 或手写式占位",
+    "TASK-210 scoped Git manifest 及示例文件完整性"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: git diff --name-status 1998dcb38c6063b7652f42abdb507e24034e5b0b HEAD -- docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md returned exactly one M template path; example absent.",
+    "PASS: template no longer contains 覆盖范围 and the object row explicitly requests sample, model, version, batch and necessary conditions.",
+    "PASS: boundary row 不包含的内容 remains available and main test-item table retains purpose linkage, test conditions/limits, sample count/repetitions and notes.",
+    "PASS: formal handoff, basic information and purpose sections remain present and concise.",
+    "PASS: placeholder audit found no three-or-more underscores or ____-__-__; all fields remain digital Markdown tables.",
+    "PASS: git diff --check returned no whitespace errors."
+  ],
+  "created_at": "2026-08-24T20:40:00+08:00"
+}

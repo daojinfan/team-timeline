@@ -1,0 +1,24 @@
+{
+  "$schema": "schemas/validation-evidence.schema.json",
+  "schema_version": 1,
+  "task_id": "TASK-211",
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "contract_sha256": "c6becab756637741d64a6eeb3d39ca1412235969a3c0c2ce889efcf4fdc366b4",
+  "git_commit": "213820d6e81799073a48727f16a1e8f0522c06c0",
+  "validation_id": "simplified-integration-template-review",
+  "command": "powershell",
+  "args": [
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-Command",
+    "$p=\"docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md\"; if(!(Test-Path -LiteralPath $p -PathType Leaf)){throw \"missing template\"}; Write-Output \"template present\""
+  ],
+  "started_at": "2026-08-24T13:09:53.8992124Z",
+  "finished_at": "2026-08-24T13:09:54.2672876Z",
+  "exit_code": 0,
+  "redactions_applied": 0,
+  "output_path": "docs/05-quality/evidence/TASK-211/20260824T130953893Z-88d96ea4-simplified-integration-template-review.output.txt",
+  "output_sha256": "fbf8299de261d8fefce40c249e410260027f9b246f8661a8e7e637a0e3911c1b"
+}
