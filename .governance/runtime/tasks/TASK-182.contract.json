@@ -1,0 +1,134 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-182",
+  "work_package": "WP-009",
+  "title": "重新规划 V5 筛选运行时错误修复",
+  "goal": "以已验证的 V5 组合筛选实现为依赖，重新验证并补充 task is not defined 回归保护，确保 v5FilteredTasks 始终通过统一表达式匹配任务。",
+  "baseline": "BL-006",
+  "profile": "Standard",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/app.js",
+    "tests/v5-filter-combo.test.js",
+    "tests/v5-inline-editor.test.js"
+  ],
+  "read_paths": [
+    "public/app.js",
+    "public/index.html",
+    "tests",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/05-quality"
+  ],
+  "write_paths": [
+    "public/app.js",
+    "tests/v5-filter-combo.test.js",
+    "tests/v5-inline-editor.test.js"
+  ],
+  "out_of_scope": [
+    "src/server.js",
+    "data/team_tasks.sqlite",
+    "筛选产品设计",
+    "任务数据",
+    "手机端"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [
+    "TASK-176"
+  ],
+  "acceptance_criteria": [
+    "V5 初始化和 v5FilteredTasks 不再访问未定义的 task 变量，页面可正常读取并渲染数据。",
+    "状态筛选的 非 语义继续由统一筛选表达式执行，不回退为独立旧分支。",
+    "新增回归断言捕获 v5FilteredTasks 的未定义变量和统一表达式旁路问题。",
+    "node 语法检查、全量测试、V5 筛选与内联编辑回归、差异检查和 Strict 治理校验全部通过。"
+  ],
+  "validations": [
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "v5-filter-regression",
+      "command": "node",
+      "args": [
+        "--test",
+        "tests/v5-filter-combo.test.js"
+      ]
+    },
+    {
+      "id": "v5-inline-regression",
+      "command": "node",
+      "args": [
+        "--test",
+        "tests/v5-inline-editor.test.js"
+      ]
+    },
+    {
+      "id": "git-diff-check",
+      "command": "git",
+      "args": [
+        "diff",
+        "--check"
+      ]
+    },
+    {
+      "id": "governance-strict",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-ProjectPath",
+        ".",
+        "-Level",
+        "Strict"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-24T01:37:13.6061348Z",
+  "repair_of": [
+    "TASK-176"
+  ]
+}

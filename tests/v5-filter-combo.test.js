@@ -38,6 +38,14 @@ test("V5 filter groups make AND\/OR explicit and keep date exceptions", () => {
   assert.match(app, /日期不支持非\/多选/);
 });
 
+test("V5 editor projection cannot regress to an out-of-scope task reference", () => {
+  const source = app.match(/function v5FilteredTasks\(\) \{[\s\S]*?\n\}/)?.[0] || "";
+  assert.match(source, /v5EnsureFilterExpression\("editor"\)/);
+  assert.match(source, /v5State\.tasks\.filter\(\(task\) => v5FilterExpressionMatches\(task, expression\)\)/);
+  assert.doesNotMatch(source, /task\.status/);
+  assert.doesNotMatch(source, /legacyStatusMatcher/);
+});
+
 test("V5 filter styling keeps builder groups readable on narrow screens", () => {
   for (const selector of [".v5-filter-dialog", ".v5-filter-group", ".v5-filter-condition", ".v5-filter-group-connector", ".v5-filter-builder-actions"]) {
     assert.match(styles, new RegExp(selector.replace(/[.]/g, "\\.")));

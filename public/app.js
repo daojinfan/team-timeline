@@ -4097,7 +4097,12 @@ function v5FilterQuickConfig(surface) {
 }
 function v5FilterExpressionFromQuick(surface) { const group = { id: `group-${Date.now()}`, logic: "and", connector: "and", conditions: [] }; v5FilterQuickConfig(surface).forEach(({ field, selector, negate }) => { const node = $(selector); const value = node?.value || ""; if (!value) return; const schema = v5FilterSchema(surface, field); group.conditions.push({ id: `condition-${field}-${Date.now()}-${group.conditions.length}`, surface, field, value: schema?.kind === "multi" ? [String(value)] : value, match: "any", negate: Boolean(negate && $(negate)?.checked) }); }); return group.conditions.length ? { groups: [group] } : v5EmptyFilterExpression(); }
 function v5EnsureFilterExpression(surface) { if (!v5State.filterExpressions[surface] || !Array.isArray(v5State.filterExpressions[surface].groups) || !v5State.filterExpressions[surface].groups.length) v5State.filterExpressions[surface] = v5FilterExpressionFromQuick(surface); return v5State.filterExpressions[surface]; }
-function v5FilteredTasks() { const expression = v5EnsureFilterExpression("editor"); return v5State.tasks.filter((task) => v5FilterExpressionMatches(task, expression)); }
+function v5FilteredTasks() {
+  // The editor projection has one filter source of truth; do not reintroduce
+  // a legacy status branch that can run outside the task callback scope.
+  const expression = v5EnsureFilterExpression("editor");
+  return v5State.tasks.filter((task) => v5FilterExpressionMatches(task, expression));
+}
 function v5FilterFieldConditions(surface, field, expression = v5EnsureFilterExpression(surface)) { return (expression.groups || []).flatMap((group) => group.conditions || []).filter((condition) => condition.field === field && v5FilterConditionHasValue(condition)); }
 function v5RenderQuickFilterState(surface) {
   const expression = v5EnsureFilterExpression(surface); const summary = v5FilterExpressionSummary(expression); const summaryNode = surface === "editor" ? $("#v5EditorFilterSummary") : $("#v5ExecutionFilterSummary"); if (summaryNode) summaryNode.textContent = summary;

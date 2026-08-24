@@ -1,0 +1,48 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-182",
+  "work_package": "WP-009",
+  "contract_sha256": "2d9849afe3df6af2f8e7037f45898ff92970a269da0f9bd29796ab51223338de",
+  "baseline": "BL-006",
+  "state": "verified",
+  "approval_id": "APR-135",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "441082c83ded439e048702920cd8f84e09cf4318",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [],
+  "plan_checkpoint_git_commit": "441082c83ded439e048702920cd8f84e09cf4318",
+  "plan_rebase_history": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-182/20260824T014027211Z-7e52f898-app-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-182/20260824T014027211Z-7e52f898-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-182/20260824T014027211Z-7e52f898-v5-filter-regression.evidence.json",
+    "docs/05-quality/evidence/TASK-182/20260824T014027211Z-7e52f898-v5-inline-regression.evidence.json",
+    "docs/05-quality/evidence/TASK-182/20260824T014027211Z-7e52f898-git-diff-check.evidence.json",
+    "docs/05-quality/evidence/TASK-182/20260824T014027211Z-7e52f898-governance-strict.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-182/20260824T014027211Z-7e52f898-app-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-182/20260824T014027211Z-7e52f898-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-182/20260824T014027211Z-7e52f898-v5-filter-regression.evidence.json",
+    "docs/05-quality/evidence/TASK-182/20260824T014027211Z-7e52f898-v5-inline-regression.evidence.json",
+    "docs/05-quality/evidence/TASK-182/20260824T014027211Z-7e52f898-git-diff-check.evidence.json",
+    "docs/05-quality/evidence/TASK-182/20260824T014027211Z-7e52f898-governance-strict.evidence.json"
+  ],
+  "review_history": [],
+  "review": {
+    "required": true,
+    "reviewer_task_id": "TASK-183",
+    "status": "pending",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
+  },
+  "last_error": "",
+  "created_at": "2026-08-24T01:37:13.6061348Z",
+  "updated_at": "2026-08-24T01:40:50.5547916Z"
+}
