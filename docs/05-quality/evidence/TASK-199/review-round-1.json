@@ -1,0 +1,53 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-199",
+  "reviewed_task_ids": [
+    "TASK-198"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "changes-required",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-198",
+      "path": "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md",
+      "change_type": "added",
+      "summary": "新增外部小组测试需求提出模板，包含需求方区、测控组内部确认区、专题/任务/样品层级、映射和状态说明。"
+    },
+    {
+      "task_id": "TASK-198",
+      "path": "docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md",
+      "change_type": "added",
+      "summary": "新增工艺组 Z4 Readout 示例，演示两个连续任务、多样品、内部专题/制冷机/成员/排期/状态和变更记录。"
+    }
+  ],
+  "change_summary": "从 TASK-198 start_git_commit e941a50663fa415545f4a6f3fadf1a04e3cbab9c 到当前 HEAD 的 scoped Git 差异恰为上述两个新增 Markdown 文件；两条路径在起始提交中均不存在。治理运行记录和审核证据不计入产品变更清单。",
+  "scope_checked": [
+    "需求方填写区与测控组内部确认区的字段边界",
+    "专题→连续任务→样品层级、多个任务/多个样品和样品编号待定/TBD",
+    "ETA 变化、制冷机最终确认/变化、成员/任务时间/任务颜色/状态维护",
+    "四个来源小组：工艺组、读取组、量子门组、电子学组",
+    "无联系人、前置任务、任务顺序、每人工时和成果提交字段",
+    "模板到任务全量编辑台、专题管理和执行中心的映射",
+    "完整工艺组 Z4 Readout 示例及其状态/变更流程"
+  ],
+  "findings": [
+    "需求方/测控组任务拆分边界仍冲突：模板第 2.3 节位于“需求方填写区”，要求提出方复制并填写多个“连续任务区块”；但当前 V5 方法要求任务拆分由测控组内部完成。第 4 步虽写“测控组按连续任务建立任务记录”，没有把需求方的测试内容建议与测控组最终任务拆分明确分开，示例也把两个任务直接作为需求方提交内容展示。",
+    "内部确认区缺少按任务填写人工阶段/当前展示状态的字段。第 3.2 任务系统属性表没有人工阶段或系统状态列，第 3.4 只有通用规则表，不能在模板中记录每个任务由测控组确认的状态；当前 V5 要求状态由测控组维护，示例虽另有状态示例，但模板本身的内部录入映射不完整。",
+    "第 3.4“等待样品”规则没有明确当前 V5 的无样品、ETA 待确认、全部样品已到但尚未开始测试仍显示等待样品等判定情形；仅写人工阶段保持等待且尚未开始测试，状态映射不够可执行。",
+    "样品实际到样记录在第 3.3 只有按任务的一行“实际到样日期”，无法为一个任务中的多个样品分别记录不同到样日期；内部区也没有逐样品补录正式/临时编号的字段，流程第 4 步仅文字要求到样后补充，难以完整维护样品事实。",
+    "示例的 ETA 变更记录与初始数据不一致：任务-A 样品在需求方区的预计交付日期为 2026-09-04，但第 2.5 变更记录把变更前写成 2026-09-01、变更后写成 2026-09-04；无法形成从示例初始值到最终值的可追溯变更链。"
+  ],
+  "validation_evidence": [
+    "PASS: TASK-198/TASK-199 markdown-structural command; output `source-group documents present`.",
+    "PASS: `git diff --check` on current worktree; no whitespace errors.",
+    "PASS: `powershell -NoProfile -ExecutionPolicy Bypass -File .governance/tools/Test-ProjectGovernance.ps1 -ProjectPath . -Level Strict`; 56 documents scanned, 0 errors, 0 warnings.",
+    "PASS: template token audit found demand/internal boundary headings, all four source groups, topic/task/sample hierarchy, 待定/TBD, ETA and cryostat change text, members, colors, statuses, actual arrival, formal/temporary identifiers, mappings and change records.",
+    "PASS: example audit found a 工艺组 request, two continuous tasks, multiple samples per task, unknown IDs, 祖4 confirmation, multiple members, member dates/colors, five-state flow and ETA/cryostat change rows.",
+    "PASS: forbidden-field audit found no table label containing 联系人、前置任务、任务顺序、每人工时 or 成果提交 in either artifact.",
+    "PASS: `git diff --name-status e941a50663fa415545f4a6f3fadf1a04e3cbab9c HEAD -- docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md` returned exactly two `A` entries listed above; both paths were absent at the start commit."
+  ],
+  "created_at": "2026-08-24T14:06:00+08:00"
+}
