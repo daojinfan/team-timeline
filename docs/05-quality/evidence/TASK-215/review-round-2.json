@@ -1,0 +1,38 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-215",
+  "reviewed_task_ids": [
+    "TASK-214"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-214",
+      "path": "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md",
+      "change_type": "modified",
+      "summary": "最终第三部分测试目的填写表格，补充背景/重要性、测试目的及预期结论/结果用途字段。"
+    }
+  ],
+  "change_summary": "完成 Standard 第二轮完整独立审核。重新核对 TASK-214 start_git_commit 5db8cefbbdf29c99fc7d0d598de09e1f87991d14 到当前内容，实际 diff 仅模板一个 modified 文件，示例未改；最终内容与 round 1 为同一审核对象。",
+  "scope_checked": [
+    "第三部分存在可直接填写的测试任务背景或重要性、测试目的、预期结论或结果用途三项表格字段",
+    "第三部分无覆盖范围字段；其说明与第4部分测试对象/主要测试项保持分工，不重复对象、测试项或条件内容",
+    "第1、2、4部分及提交流程等用户既有修改在 TASK-214 起始提交到当前 diff 中未被改写，仅第三部分发生补充",
+    "实际 scoped manifest 仅模板变更，REQ-SOURCE-GROUP-EXAMPLE-V5-001.md 保持不变",
+    "新增内容和现有填写位置均为数字化 Markdown 表格/提示，无三连下划线、____-__-__ 或手写式占位"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: git diff --name-status 5db8cefbbdf29c99fc7d0d598de09e1f87991d14 HEAD -- docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md returned exactly one M template path; no example diff.",
+    "PASS: full third-section audit confirms all three required/optional purpose fields and concise guidance are present.",
+    "PASS: no 覆盖范围 field/token was introduced; section 4 remains the separate object/main-test description area.",
+    "PASS: diff inspection shows TASK-214 changed only the prior third-section sentence and added its table, preserving all other user modifications.",
+    "PASS: placeholder audit found no three-or-more underscores or ____-__-__; git diff --check returned no whitespace errors.",
+    "PASS: final content and subject are unchanged from TASK-215 round 1."
+  ],
+  "created_at": "2026-08-24T21:20:00+08:00"
+}
