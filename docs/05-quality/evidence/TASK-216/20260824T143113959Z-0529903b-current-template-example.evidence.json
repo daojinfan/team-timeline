@@ -1,0 +1,24 @@
+{
+  "$schema": "schemas/validation-evidence.schema.json",
+  "schema_version": 1,
+  "task_id": "TASK-216",
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "contract_sha256": "7af233ad107ce635312ca9a8f2cd899392659a42d9a023b84a2e899767f4d142",
+  "git_commit": "b4af165f42bde06949eea3ae46959b036f4f77b3",
+  "validation_id": "current-template-example",
+  "command": "powershell",
+  "args": [
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-Command",
+    "$p=\"docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md\"; $t=Get-Content -LiteralPath $p -Raw; foreach($token in @(\"集成测试组-测控任务需求文档\",\"项目名称（必填）\",\"测试任务背景或重要性（必填）\",\"测试对象描述\",\"主要的测试项\",\"Z4Readout\",\"祖4\")){if($t.IndexOf($token)-lt 0){throw (\"missing \"+$token)}}; if($t -match \"请填写|_{3,}|____-__-__\"){throw \"unfilled or handwritten placeholders remain\"}; Write-Output \"example follows current template\""
+  ],
+  "started_at": "2026-08-24T14:31:13.9647187Z",
+  "finished_at": "2026-08-24T14:31:14.3563614Z",
+  "exit_code": 0,
+  "redactions_applied": 0,
+  "output_path": "docs/05-quality/evidence/TASK-216/20260824T143113959Z-0529903b-current-template-example.output.txt",
+  "output_sha256": "244e5a36dc7e411fb99a6a16be5bbdac286d749fc5a4b53828ce1bf7141ab737"
+}
