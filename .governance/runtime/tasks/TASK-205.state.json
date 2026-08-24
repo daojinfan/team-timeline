@@ -5,7 +5,7 @@
   "work_package": "WP-009",
   "contract_sha256": "f32d9e602f90b832cbda1b72442cc290717a0062afadd8c9d9e63d64a8a336d6",
   "baseline": "BL-006",
-  "state": "verified",
+  "state": "planned",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -15,11 +15,15 @@
   "execution_lease_owner": "",
   "execution_lease_expires_at": "",
   "preexisting_changes": [],
-  "plan_checkpoint_git_commit": "3b83ecce50eb539a8efee19971a40f50f9f796af",
-  "plan_rebase_history": [],
-  "evidence": [
-    "docs/05-quality/evidence/TASK-205/20260824T114404888Z-f787920b-digital-template.evidence.json"
+  "plan_checkpoint_git_commit": "92cf46b5ef56ec86ae4fd69b37303da7ed2de6b1",
+  "plan_rebase_history": [
+    {
+      "previous_changes": [],
+      "checkpoint_git_commit": "92cf46b5ef56ec86ae4fd69b37303da7ed2de6b1",
+      "rebased_at": "2026-08-24T11:45:12.4171396Z"
+    }
   ],
+  "evidence": [],
   "evidence_history": [
     "docs/05-quality/evidence/TASK-205/20260824T114404888Z-f787920b-digital-template.evidence.json",
     "docs/05-quality/evidence/TASK-205/review-round-1.json"
@@ -43,5 +47,5 @@
   },
   "last_error": "",
   "created_at": "2026-08-24T11:38:05.5218155Z",
-  "updated_at": "2026-08-24T11:44:24.8024583Z"
+  "updated_at": "2026-08-24T11:45:12.4249858Z"
 }
