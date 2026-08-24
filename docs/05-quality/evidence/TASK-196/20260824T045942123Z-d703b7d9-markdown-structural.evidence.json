@@ -1,0 +1,24 @@
+{
+  "$schema": "schemas/validation-evidence.schema.json",
+  "schema_version": 1,
+  "task_id": "TASK-196",
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "contract_sha256": "3b35b9e6ea6b05c5ae299aa024ff3131fe661fb8e0e3b78dcc1588c6ccf357ab",
+  "git_commit": "ae7963088c3f520a4b1cba5efdb98dc33190fd19",
+  "validation_id": "markdown-structural",
+  "command": "powershell",
+  "args": [
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-Command",
+    "$p='docs/09-reports/templates/REQ-TEMPLATE-V5-001.md'; if (-not (Test-Path -LiteralPath $p -PathType Leaf)) { throw 'Markdown template is missing' }; $t=Get-Content -LiteralPath $p -Raw; foreach ($h in @('# 小组任务管理与甘特图系统','## 1. 需求概览','## 2. 专题信息','## 4. 任务详细信息','## 5. 样品规划','## 8. 系统状态规则')) { if ($t.IndexOf($h) -lt 0) { throw ('Missing heading: ' + $h) } }; foreach ($token in @('工艺组','读取组','量子门组','电子学组','样品编号','待补/TBD','预计样品交付','制冷机','参与成员','样品交付延期','测试延期')) { if ($t.IndexOf($token) -lt 0) { throw ('Missing field token: ' + $token) } }; Write-Output 'Markdown structure ok'"
+  ],
+  "started_at": "2026-08-24T04:59:42.1285642Z",
+  "finished_at": "2026-08-24T04:59:42.4853273Z",
+  "exit_code": 0,
+  "redactions_applied": 0,
+  "output_path": "docs/05-quality/evidence/TASK-196/20260824T045942123Z-d703b7d9-markdown-structural.output.txt",
+  "output_sha256": "02db540562482bd3c6105ddd8c64452b178734ed5effae44d11afa91989237c9"
+}
