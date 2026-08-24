@@ -1,0 +1,120 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-188",
+  "work_package": "WP-009",
+  "title": "生成小组任务管理系统需求文档模板",
+  "goal": "根据 V5 当前系统结构生成一份可直接填写的 Word 需求文档模板，覆盖来源小组、专题、连续任务、样品规划、制冷机、测试计划、参与成员和变更记录。",
+  "baseline": "BL-006",
+  "profile": "Standard",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "docs/09-reports/templates/需求文档模板-小组任务管理与甘特图系统.docx"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/05-quality",
+    "docs/09-reports"
+  ],
+  "write_paths": [
+    "docs/09-reports/templates/需求文档模板-小组任务管理与甘特图系统.docx"
+  ],
+  "out_of_scope": [
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "src/server.js",
+    "data/team_tasks.sqlite",
+    "数据库迁移",
+    "系统功能修改",
+    "手机端"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [
+    "TASK-186"
+  ],
+  "acceptance_criteria": [
+    "模板字段与当前 V5 结构一致，至少覆盖来源小组、专题属性、任务属性、样品计划、制冷机、参与成员和时间计划。",
+    "模板明确支持样品编号未知、样品预计交付日期可变更、制冷机可变更以及一个任务包含多个样品。",
+    "模板包含状态规则说明，等待样品、样品交付延期、正在测试、测试延期和已完成与当前系统定义一致。",
+    "Word 文档可直接填写，表格和留白区域清晰可读；文档结构检查、渲染检查和 Strict 治理校验通过。"
+  ],
+  "validations": [
+    {
+      "id": "docx-structural",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        "$doc = Get-Item 'docs/09-reports/templates/需求文档模板-小组任务管理与甘特图系统.docx'; if ($doc.Length -le 0) { throw 'DOCX is empty' }; Write-Output $doc.Length"
+      ]
+    },
+    {
+      "id": "docx-render",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        "$pngs = Get-ChildItem 'docs/09-reports/templates/qa' -Filter 'page-*.png'; if ($pngs.Count -lt 1) { throw 'No rendered pages' }; Write-Output $pngs.Count"
+      ]
+    },
+    {
+      "id": "git-diff-check",
+      "command": "git",
+      "args": [
+        "diff",
+        "--check"
+      ]
+    },
+    {
+      "id": "governance-strict",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-ProjectPath",
+        ".",
+        "-Level",
+        "Strict"
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-24T04:34:06.7091427Z"
+}

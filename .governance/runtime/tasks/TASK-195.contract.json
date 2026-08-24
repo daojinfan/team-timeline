@@ -1,0 +1,100 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-195",
+  "work_package": "WP-009",
+  "title": "独立审核 Markdown 需求文档模板（模板文件豁免）",
+  "goal": "独立审核 TASK-194 生成的 Markdown 需求文档模板，确认字段、状态规则、填写体验与当前 V5 系统一致。",
+  "baseline": "BL-006",
+  "profile": "Standard",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-195"
+  ],
+  "read_paths": [
+    "docs/09-reports/templates/REQ-TEMPLATE-V5-001-小组任务管理与甘特图系统.md",
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/05-quality",
+    "docs/09-reports"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-195"
+  ],
+  "out_of_scope": [
+    "docs/09-reports/templates/REQ-TEMPLATE-V5-001-小组任务管理与甘特图系统.md",
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "src/server.js",
+    "data/team_tasks.sqlite"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [
+    "TASK-194"
+  ],
+  "acceptance_criteria": [
+    "核对 Markdown 模板实际内容与 TASK-194 允许范围。",
+    "确认字段覆盖来源小组、专题、任务、样品、制冷机、成员与时间计划，且没有引入已排除的联系人、前置任务或成果提交字段。",
+    "确认模板对编号待补、ETA 变更和制冷机变更有清晰说明，状态规则与当前系统一致。",
+    "完成 Standard 双轮审核并生成结构化证据。"
+  ],
+  "validations": [
+    {
+      "id": "markdown-structural",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        "$p='docs/09-reports/templates/REQ-TEMPLATE-V5-001-小组任务管理与甘特图系统.md'; if (-not (Test-Path -LiteralPath $p -PathType Leaf)) { throw 'Markdown template is missing' }; $t=Get-Content -LiteralPath $p -Raw; foreach ($h in @('# 小组任务管理与甘特图系统','## 1. 需求概览','## 2. 专题信息','## 4. 任务详细信息','## 5. 样品规划','## 8. 系统状态规则')) { if ($t.IndexOf($h) -lt 0) { throw ('Missing heading: ' + $h) } }; Write-Output 'Markdown structure ok'"
+      ]
+    },
+    {
+      "id": "governance-strict",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-ProjectPath",
+        ".",
+        "-Level",
+        "Strict"
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-24T04:45:47.1882113Z"
+}
