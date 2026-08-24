@@ -1,0 +1,42 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-197",
+  "reviewed_task_ids": [
+    "TASK-196"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-196",
+      "path": "docs/09-reports/templates/REQ-TEMPLATE-V5-001.md",
+      "change_type": "added",
+      "summary": "V5 桌面端 Markdown 需求模板的最终产品文件，覆盖来源小组、专题、全量任务、系统关联样品、编号类型、排期、成员和计划变更。"
+    }
+  ],
+  "change_summary": "本轮重新从头审查 TASK-196 允许范围内的最终 Markdown 内容及当前 V5 需求/详设。TASK-196 start_git_commit c4aae7b77d01bcdaf9ba77283e4488a41963933b 中不存在目标路径，因此从该提交到当前 HEAD 的实际 scoped change_type 是 added；清单只有这一项，治理运行记录和审核证据不属于产品变更。",
+  "scope_checked": [
+    "来源小组四项：工艺组、读取组、量子门组、电子学组",
+    "专题名称、专题目的、专题状态（正在进行/专题完成归档）、专题备注和无专题归类提示",
+    "任务编号（系统生成只读）、所属专题、样品集合系统关联、任务名称、来源小组、人工阶段、五类展示状态、测试目的、测试项名称/备注、任务日期、预计样品交付、制冷机、参与成员、备注和人工颜色",
+    "样品规划的规划标签、型号、编号类型（正式/临时/待定）、样品编号、预计交付、实际到样、绑定成员、备注及多样品绑定说明",
+    "任务整体时间、成员开始/结束时间、是否同步成员、ETA/制冷机/测试时间的前后值变更记录",
+    "状态判定：无样品/ETA 待确认/全部到样但未开始仍等待样品；已确认 ETA 过期且未到样显示样品交付延期；仅 manual_phase=testing 且超过结束日显示测试延期；已完成优先级最高；无已到样待测试状态",
+    "排除项：联系人、前置任务、任务顺序、每人工时和成果提交没有作为字段或表格列出现"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: TASK-197 contract markdown-structural command; output `Markdown structure ok`.",
+    "PASS: TASK-196 contract token check for 工艺组、读取组、量子门组、电子学组、样品编号、待补/TBD、预计样品交付、制冷机、参与成员、样品交付延期 and 测试延期.",
+    "PASS: `git diff --check` on current worktree; no errors.",
+    "PASS: `powershell -NoProfile -ExecutionPolicy Bypass -File .governance/tools/Test-ProjectGovernance.ps1 -ProjectPath . -Level Strict`; 54 documents scanned, 0 errors, 0 warnings.",
+    "PASS: full field audit found task-level 样品集合（系统关联） and sample 编号类型 with 正式编号 / 临时编号 / 待定, plus all required task/sample/schedule/member/change fields.",
+    "PASS: full status audit found five status rows and all current V5 semantic guards; 已到样待测试 appears only in the explicit prohibition note, never as a selectable or status-table row.",
+    "PASS: forbidden-field audit found no table label containing 联系人、前置任务、任务顺序、每人工时 or 成果提交; their only occurrence is the explicit exclusion explanation.",
+    "PASS: `git diff --name-status c4aae7b77d01bcdaf9ba77283e4488a41963933b HEAD -- docs/09-reports/templates/REQ-TEMPLATE-V5-001.md` returned exactly `A docs/09-reports/templates/REQ-TEMPLATE-V5-001.md`; `git show c4aae7b77d01bcdaf9ba77283e4488a41963933b:docs/09-reports/templates/REQ-TEMPLATE-V5-001.md` confirmed the path was absent at the task start commit."
+  ],
+  "created_at": "2026-08-24T13:48:00+08:00"
+}
