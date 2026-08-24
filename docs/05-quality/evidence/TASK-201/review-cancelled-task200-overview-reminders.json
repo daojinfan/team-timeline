@@ -1,0 +1,31 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-201",
+  "reviewed_task_ids": [
+    "TASK-200"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "cancelled",
+  "diff_checked": true,
+  "changes": [],
+  "change_summary": "TASK-200 已被用户要求补充总体必要性说明、填写要求和不明确项具体提醒的 TASK-202 superseded。本证据仅取消 TASK-201 对已过时 TASK-200 交付的审核绑定，不撤销或覆盖 TASK-201 round 1 至 round 3 的历史证据，也不包含任何产品文件或治理状态变更。",
+  "scope_checked": [
+    "TASK-200 state.json 标记为 superseded，last_error 说明其由 TASK-202 替代",
+    "TASK-202 仅修改 REQ-SOURCE-GROUP-TEMPLATE-V5-001.md，并要求增加总体说明、填写要求和不明确项提醒",
+    "取消范围仅限 TASK-201 对 obsolete TASK-200 的 passed review binding",
+    "TASK-201 review-round-1.json、review-round-2.json 和 review-round-3.json 历史证据保留且不被覆盖",
+    "changes 为空；本取消证据不修改产品文件或治理状态"
+  ],
+  "findings": [
+    "取消原因：用户新增模板总体必要性、填写要求及不明确项提醒范围，TASK-200 的已审核主题不再代表当前交付；后续应由 TASK-202 及其独立审核任务承载。"
+  ],
+  "validation_evidence": [
+    "PASS: TASK-200.state.json reports state=superseded and names TASK-202 as the replacement scope.",
+    "PASS: TASK-202.contract.json limits product write scope to the template and includes the newly requested overview/reminder acceptance criteria.",
+    "PASS: prior TASK-201 review-round-1.json, review-round-2.json and review-round-3.json remain present.",
+    "PASS: cancellation evidence contains no product paths in changes and does not alter governance runtime state."
+  ],
+  "created_at": "2026-08-24T19:00:00+08:00"
+}

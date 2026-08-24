@@ -5,7 +5,7 @@
   "work_package": "WP-009",
   "contract_sha256": "7d3a97b097ae04c41b985290af7d5b644bb885efd5fd1d3be53dbf21afa2ca84",
   "baseline": "BL-006",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -30,14 +30,14 @@
   "review": {
     "required": true,
     "reviewer_task_id": "TASK-201",
-    "status": "passed",
+    "status": "cancelled",
     "evidence": [
-      "docs/05-quality/evidence/TASK-201/review-round-3.json"
+      "docs/05-quality/evidence/TASK-201/review-cancelled-task200-overview-reminders.json"
     ],
-    "pass_streak": 2,
-    "subject_sha256": "39e5b1c3f4e6f09f09c378e6e90601df2980285f22a20d6e396448786e752942"
+    "pass_streak": 0,
+    "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "用户要求在一页式模板前增加总体必要性说明、填写要求和不明确项填写提醒，由 TASK-202 替代。",
   "created_at": "2026-08-24T08:55:09.6802499Z",
-  "updated_at": "2026-08-24T09:19:20.0889755Z"
+  "updated_at": "2026-08-24T11:02:54.5928879Z"
 }

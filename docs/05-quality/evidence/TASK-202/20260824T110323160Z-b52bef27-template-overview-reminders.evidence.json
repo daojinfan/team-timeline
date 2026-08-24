@@ -1,0 +1,24 @@
+{
+  "$schema": "schemas/validation-evidence.schema.json",
+  "schema_version": 1,
+  "task_id": "TASK-202",
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "contract_sha256": "819ff930560af046a57faf708498a7b3c984b80a6216d3ae357a9eb76c814f49",
+  "git_commit": "f108d8cd7e64b790ad2a87b7efc4e151adbab6f1",
+  "validation_id": "template-overview-reminders",
+  "command": "powershell",
+  "args": [
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-Command",
+    "$p=\"docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md\"; if(!(Test-Path -LiteralPath $p -PathType Leaf)){throw \"missing template\"}; $t=Get-Content -LiteralPath $p -Raw; foreach($token in @(\"为什么需要\",\"填写要求\",\"不明确时\",\"提出小组\",\"测试目的\",\"测试项\",\"样品型号\",\"预计交付\")){if($t.IndexOf($token)-lt 0){throw (\"missing \"+$token)}}; Write-Output \"template overview and reminders present\" "
+  ],
+  "started_at": "2026-08-24T11:03:23.1686597Z",
+  "finished_at": "2026-08-24T11:03:23.7400066Z",
+  "exit_code": 0,
+  "redactions_applied": 0,
+  "output_path": "docs/05-quality/evidence/TASK-202/20260824T110323160Z-b52bef27-template-overview-reminders.output.txt",
+  "output_sha256": "528bb46c3532d968845801e7f7385ebb840ce5d0af0c7d8eb0a0461803ed1307"
+}
