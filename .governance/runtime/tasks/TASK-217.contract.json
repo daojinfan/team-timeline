@@ -1,0 +1,84 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-217",
+  "work_package": "WP-009",
+  "title": "独立审核最新测控任务需求示例",
+  "goal": "独立审核按最新模板生成的集成测试组-测控任务需求示例，确认结构、字段和示例内容完整、可读且无旧版字段残留。",
+  "baseline": "BL-006",
+  "profile": "Standard",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-217"
+  ],
+  "read_paths": [
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md",
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/05-quality"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-217"
+  ],
+  "out_of_scope": [
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md",
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md",
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "src/server.js",
+    "data/team_tasks.sqlite"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [
+    "TASK-216"
+  ],
+  "acceptance_criteria": [
+    "确认示例与当前模板四部分结构一致。",
+    "确认基本信息和测试目的字段完整。",
+    "确认测试对象和主要测试项体现读取/比特/接线与工作量相关信息。",
+    "确认示例无请填写提示、手写式占位和旧版字段。",
+    "完成 Standard 双轮独立审核并生成结构化证据。"
+  ],
+  "validations": [
+    {
+      "id": "current-template-example-review",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        "$p=\"docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md\"; if(!(Test-Path -LiteralPath $p -PathType Leaf)){throw \"missing example\"}; Write-Output \"example present\""
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-24T14:28:23.4244189Z"
+}

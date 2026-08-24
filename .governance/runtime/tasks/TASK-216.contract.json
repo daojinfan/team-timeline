@@ -1,0 +1,84 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-216",
+  "work_package": "WP-009",
+  "title": "按最新模板生成测控任务需求示例",
+  "goal": "根据用户当前版本的集成测试组-测控任务需求文档模板，将旧版示例重构为同样的四部分结构，并使用 Z4Readout BGA 露出样品测试场景填写完整示例。",
+  "baseline": "BL-006",
+  "profile": "Standard",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md"
+  ],
+  "read_paths": [
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md",
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md",
+    "docs/02-product",
+    "docs/03-architecture"
+  ],
+  "write_paths": [
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md"
+  ],
+  "out_of_scope": [
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md",
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "src/server.js",
+    "data/team_tasks.sqlite",
+    "系统功能修改",
+    "数据库迁移",
+    "手机端"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "示例结构与当前模板一致，包含为什么需要文档、基本信息、测试目的、测试对象和主要测试项。",
+    "示例覆盖项目名称、来源小组、任务名称、样品类型/型号/数量/编号/交付时间、制冷机协调等基本信息。",
+    "测试目的包含背景或重要性、测试目的和预期结论。",
+    "测试对象包含读取路数、比特数量、具体测试对象及装样/接线信息。",
+    "主要测试项能体现测试目的、测试工作和需要确认的特别要求。",
+    "示例不保留请填写提示、手写占位或旧版需求单字段。"
+  ],
+  "validations": [
+    {
+      "id": "current-template-example",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        "$p=\"docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md\"; $t=Get-Content -LiteralPath $p -Raw; foreach($token in @(\"集成测试组-测控任务需求文档\",\"项目名称（必填）\",\"测试任务背景或重要性（必填）\",\"测试对象描述\",\"主要的测试项\",\"Z4Readout\",\"祖4\")){if($t.IndexOf($token)-lt 0){throw (\"missing \"+$token)}}; if($t -match \"请填写|_{3,}|____-__-__\"){throw \"unfilled or handwritten placeholders remain\"}; Write-Output \"example follows current template\""
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-24T14:28:10.4380561Z"
+}
