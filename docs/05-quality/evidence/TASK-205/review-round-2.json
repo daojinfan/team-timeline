@@ -1,0 +1,40 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-205",
+  "reviewed_task_ids": [
+    "TASK-204"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-204",
+      "path": "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md",
+      "change_type": "modified",
+      "summary": "最终数字填写版外部小组需求模板，使用可替换提示表格并保留不明确项提醒与测控组内部流程。"
+    }
+  ],
+  "change_summary": "完成 Standard 第二轮独立全量审核。以 TASK-204 start_git_commit 3b83ecce50eb539a8efee19971a40f50f9f796af 为起点，实际 manifest 仍仅为模板一个 modified 文件，示例无差异；当前最终内容与 round 1 审核对象为同一最终内容。",
+  "scope_checked": [
+    "从起始提交重新核对 TASK-204 实际变更清单，排除治理状态、台账和 TASK-203 取消证据",
+    "需求信息、测试项、样品信息三块均为 Markdown 表格，填写位置使用请填写提示，支持键盘直接替换",
+    "完整检查无三连下划线、无 ____-__-__ 或其他手写式占位",
+    "不明确项提醒覆盖目的、测试项、专题、样品编号、数量、交付时间和制冷机，并给出可直接复制文字",
+    "必填/可选字段、样品编号待定、数量范围和 ETA 待定写法清晰且内容保持简洁",
+    "提交流程明确测控组确认信息、归类专题、拆分任务、安排成员/制冷机/状态/颜色/甘特图，不转嫁内部管理要求",
+    "示例文档自 TASK-204 start_git_commit 起未发生变更"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: git diff --name-status 3b83ecce50eb539a8efee19971a40f50f9f796af HEAD -- docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md returned exactly one M template path; no example diff.",
+    "PASS: full table audit confirms all three requester sections use replaceable digital prompts and copy-row instructions.",
+    "PASS: placeholder audit found no matches for three-or-more underscores or ____-__-__.",
+    "PASS: required fields, optional fields, unknown sample-ID instruction, and concrete unclear-field reminders are all present.",
+    "PASS: internal ownership line and submission workflow assign topic, task, member, cryostat, status, color and Gantt management to the measurement team.",
+    "PASS: git diff --check returned no whitespace errors; reviewed subject is unchanged from round 1."
+  ],
+  "created_at": "2026-08-24T19:50:00+08:00"
+}
