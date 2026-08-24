@@ -1,0 +1,39 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-203",
+  "reviewed_task_ids": [
+    "TASK-202"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-202",
+      "path": "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md",
+      "change_type": "modified",
+      "summary": "在一页式外部小组需求模板中补充需求必要性、填写要求、不明确项提醒及提交后测控组处理流程。"
+    }
+  ],
+  "change_summary": "按 TASK-202 start_git_commit f108d8cd7e64b790ad2a87b7efc4e151adbab6f1 核对实际 scoped Git manifest，仅模板文件为 modified；REQ-SOURCE-GROUP-EXAMPLE-V5-001.md 无差异。",
+  "scope_checked": [
+    "开头说明需求单用于避免口头/聊天记录遗漏，并收集测控组开始规划所需的目的、测试项、样品和时间信息",
+    "填写要求区分已明确内容直接填写与不明确内容按具体提醒填写，并提供可直接复制的示例",
+    "不明确项提醒覆盖测试目的、测试项、专题、样品编号、数量、预计交付时间和制冷机要求",
+    "必填字段明确为提出小组、需求名称、测试目的、至少一项测试项、样品型号、数量、样品编号和预计交付时间；可选字段明确为专题建议、制冷机要求、其他说明、样品代称和备注",
+    "样品编号未知时明确填写待定；数量允许暂定数量或范围；交付时间允许范围或待定并说明原因",
+    "提交后流程简洁说明测控组确认需求、专题归类、任务拆分、成员安排、制冷机选择及正式测试时间排期",
+    "TASK-202 scoped Git manifest 及实例文件未变更"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: 模板包含‘为什么需要’、‘填写要求’和‘不明确时’等新增说明，并清楚描述提交后进入测控组规划流程。",
+    "PASS: 不明确项表格为目的、测试项、专题、样品编号、数量、预计交付时间和制冷机分别提供具体填写方式和示例。",
+    "PASS: 需求、测试项、样品表格的必填/可选标识完整；样品编号表头注明未知填待定，测试项要求至少填写一项。",
+    "PASS: git diff --name-status f108d8cd7e64b790ad2a87b7efc4e151adbab6f1 HEAD -- docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md 返回仅模板一个 M 路径，实例无 diff。",
+    "PASS: git diff --check；未发现空白错误。"
+  ],
+  "created_at": "2026-08-24T19:10:00+08:00"
+}
