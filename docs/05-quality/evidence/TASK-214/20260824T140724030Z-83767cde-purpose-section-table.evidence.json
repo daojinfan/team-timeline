@@ -1,0 +1,24 @@
+{
+  "$schema": "schemas/validation-evidence.schema.json",
+  "schema_version": 1,
+  "task_id": "TASK-214",
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "contract_sha256": "d4a2c850980fd94b97a7fa844f88ebbfced824f5fc37e4e293554ba59b34a59c",
+  "git_commit": "5db8cefbbdf29c99fc7d0d598de09e1f87991d14",
+  "validation_id": "purpose-section-table",
+  "command": "powershell",
+  "args": [
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-Command",
+    "$p=\"docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md\"; $t=Get-Content -LiteralPath $p -Raw; foreach($token in @(\"## 3. 测试目的\",\"测试任务背景或重要性\",\"测试目的（必填）\",\"预期结论或结果用途\")){if($t.IndexOf($token)-lt 0){throw (\"missing \"+$token)}}; if($t -match \"覆盖范围\"){throw \"coverage field should remain absent\"}; if($t -match \"_{3,}|____-__-__\"){throw \"handwritten placeholders remain\"}; Write-Output \"purpose section table ok\""
+  ],
+  "started_at": "2026-08-24T14:07:24.0354947Z",
+  "finished_at": "2026-08-24T14:07:24.4089657Z",
+  "exit_code": 0,
+  "redactions_applied": 0,
+  "output_path": "docs/05-quality/evidence/TASK-214/20260824T140724030Z-83767cde-purpose-section-table.output.txt",
+  "output_sha256": "47ea2aace1f5f85a2ee7d6e4ae3816e68cb19b482e3ff6563115c55cd2b3c8b0"
+}

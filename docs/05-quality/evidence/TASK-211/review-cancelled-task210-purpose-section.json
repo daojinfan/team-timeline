@@ -1,0 +1,29 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-211",
+  "reviewed_task_ids": [
+    "TASK-210"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "cancelled",
+  "diff_checked": true,
+  "changes": [],
+  "change_summary": "TASK-210 已因用户继续调整模板并要求补充第三部分测试目的而被新任务替代。本证据仅取消 TASK-211 对旧 TASK-210 交付的审核绑定，不撤销或覆盖 TASK-211 round 1/round 2 历史审核证据，也不包含任何产品文件或治理状态变更。",
+  "scope_checked": [
+    "TASK-210.state.json 标记为 superseded，并记录补充第三部分测试目的的替代原因",
+    "取消范围仅限 TASK-211 对旧 TASK-210 主题的审核绑定",
+    "TASK-211 review-round-1.json 与 review-round-2.json 双轮历史证据保留且不被覆盖",
+    "changes 为空；本取消证据不修改产品文件、治理运行状态或台账"
+  ],
+  "findings": [
+    "取消原因：用户在精简版模板基础上继续调整并要求补充第三部分测试目的；旧 TASK-210 版本及其审核指纹不再代表当前交付，后续由新的实现和审核任务承载。"
+  ],
+  "validation_evidence": [
+    "PASS: TASK-210.state.json reports state=superseded and records the additional purpose-section request as replacement reason.",
+    "PASS: prior TASK-211 review-round-1.json and review-round-2.json remain present.",
+    "PASS: cancellation evidence contains no product paths in changes and does not alter governance runtime state."
+  ],
+  "created_at": "2026-08-24T21:00:00+08:00"
+}
