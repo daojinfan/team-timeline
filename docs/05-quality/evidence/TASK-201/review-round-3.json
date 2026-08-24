@@ -1,0 +1,46 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-201",
+  "reviewed_task_ids": [
+    "TASK-200"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-200",
+      "path": "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md",
+      "change_type": "modified",
+      "summary": "一页式外部小组需求模板，明确必要需求字段、可选字段和测控组内部处理边界。"
+    },
+    {
+      "task_id": "TASK-200",
+      "path": "docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md",
+      "change_type": "modified",
+      "summary": "工艺组 Z4 Readout BGA 露出样品测试的具体填写实例，字段与模板对应。"
+    }
+  ],
+  "change_summary": "按 TASK-200 start_git_commit a182c13ed5620f5ac7c85ae59a3f8414459d81e3 核对 scoped Git manifest，实际恰为上述两个 modified Markdown 文件，无新增、删除或重命名。",
+  "scope_checked": [
+    "模板为一页式最小填写单，结构简洁且需求方可在一个位置完成填写",
+    "必填字段：提出小组、需求名称、测试目的、至少一项测试项、样品型号、数量、样品编号和预计交付时间",
+    "样品编号明确标为必填，未知时填写待定；专题建议、制冷机要求和其他说明明确标为可选",
+    "模板和实例均明确专题、连续任务拆分、成员、制冷机、状态、颜色和正式甘特图排期由测控组内部处理",
+    "实例为具体可读的工艺组 Z4 Readout BGA 露出场景，含测试目的、四项测试项、两件样品、数量、待定编号和交付日期",
+    "实例字段与模板的需求、测试项和样品信息相互对应，未保留不必要的联系人、前置/顺序、工时或成果提交字段",
+    "TASK-200 scoped Git 变更清单"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: git diff --check; 无空白错误。",
+    "PASS: Test-ProjectGovernance.ps1 -ProjectPath . -Level Strict；扫描 56 个文档，错误 0，警告 0。",
+    "PASS: 模板逐项审查确认提出小组、需求名称、测试目的、测试项、样品型号/数量/编号和预计交付均有必填标识；样品编号表头注明未知填待定；专题建议、制冷机要求和其他说明均有可选标识。",
+    "PASS: 实例审查确认工艺组 Z4 Readout BGA 露出具体场景，测试目的和测试项可读，两个样品数量为 1，样品编号为待定，预计交付时间为 2026-09-04。",
+    "PASS: 实例交接说明明确测控组负责专题、建立/拆分任务、安排成员、制冷机、状态、颜色和甘特图测试时间，需求方无需填写这些执行字段。",
+    "PASS: git diff --name-status a182c13ed5620f5ac7c85ae59a3f8414459d81e3 HEAD -- docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md 返回恰好两个 M 路径，无新增、删除或重命名。"
+  ],
+  "created_at": "2026-08-24T17:40:00+08:00"
+}

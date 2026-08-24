@@ -5,12 +5,12 @@
   "work_package": "WP-009",
   "contract_sha256": "be268a0f8604160d3046638aa9ec1b8119d6d49bf848d2a5313c112b54de5b84",
   "baseline": "BL-006",
-  "state": "planned",
+  "state": "verified",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
   "acceptance_git_commit": "",
-  "start_git_commit": "5cf95a0892d0d677f3176bb7c53d39a004c289d9",
+  "start_git_commit": "26a04e895815b0fb423760ac3a1659b159193a32",
   "execution_lease": "",
   "execution_lease_owner": "",
   "execution_lease_expires_at": "",
@@ -28,12 +28,16 @@
       "rebased_at": "2026-08-24T09:12:32.3467818Z"
     }
   ],
-  "evidence": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-201/20260824T091907151Z-94900dbf-markdown-minimal.evidence.json"
+  ],
   "evidence_history": [
     "docs/05-quality/evidence/TASK-201/20260824T090644932Z-eaf6ff7e-markdown-minimal.evidence.json",
     "docs/05-quality/evidence/TASK-201/review-round-1.json",
     "docs/05-quality/evidence/TASK-201/20260824T091149912Z-c716d1ac-markdown-minimal.evidence.json",
-    "docs/05-quality/evidence/TASK-201/review-round-2.json"
+    "docs/05-quality/evidence/TASK-201/review-round-2.json",
+    "docs/05-quality/evidence/TASK-201/20260824T091907151Z-94900dbf-markdown-minimal.evidence.json",
+    "docs/05-quality/evidence/TASK-201/review-round-3.json"
   ],
   "review_history": [
     {
@@ -49,6 +53,13 @@
       "result": "passed",
       "round_id": "RR-26eb69ad971845aaa6be16711ea916b1",
       "recorded_at": "2026-08-24T09:12:02.7296801Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-201/review-round-3.json",
+      "sha256": "8143d3f1422c392ac1a26b31e04a52f196be5e8873dc8cffc9011cea53b2dd9e",
+      "result": "passed",
+      "round_id": "RR-4342c6e4863e4fa58852fde7ded32167",
+      "recorded_at": "2026-08-24T09:19:19.8862653Z"
     }
   ],
   "review": {
@@ -61,5 +72,5 @@
   },
   "last_error": "",
   "created_at": "2026-08-24T08:56:04.7653486Z",
-  "updated_at": "2026-08-24T09:12:32.3500591Z"
+  "updated_at": "2026-08-24T09:19:20.3153192Z"
 }
