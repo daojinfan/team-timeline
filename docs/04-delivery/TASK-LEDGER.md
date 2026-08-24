@@ -36,8 +36,8 @@ review_policy: independent-required
 
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| WP-009 | TASK-211 | pending | REVIEWER | 独立审核精简后的测控任务需求文档模板 | BL-006 | pending | TASK-210 | pending | docs/05-quality/evidence/TASK-211 | simplified-integration-template-review | n/a | n/a | n/a | Plan 自动登记，等待调度 |
-| WP-009 | TASK-210 | pending | IMPLEMENTER | 精简集成测试组-测控任务需求文档重复字段 | BL-006 | pending | n/a | running | docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md | simplified-integration-template | TASK-211 | pending |  | Plan 自动登记，等待调度 |
+| WP-009 | TASK-211 | pending | REVIEWER | 独立审核精简后的测控任务需求文档模板 | BL-006 | pending | TASK-210 | completed | docs/05-quality/evidence/TASK-211 | simplified-integration-template-review | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-009 | TASK-210 | pending | IMPLEMENTER | 精简集成测试组-测控任务需求文档重复字段 | BL-006 | pending | n/a | running | docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md | simplified-integration-template | TASK-211 | passed | docs/05-quality/evidence/TASK-211/review-round-2.json | Plan 自动登记，等待调度 |
 | WP-009 | TASK-209 | pending | REVIEWER | 独立审核集成测试组-测控任务需求文档模板 | BL-006 | pending | TASK-208 | completed | docs/05-quality/evidence/TASK-209 | integration-req-template-review | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-009 | TASK-208 | pending | IMPLEMENTER | 重构集成测试组-测控任务需求文档模板 | BL-006 | pending | n/a | replaced | docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md | integration-req-template | TASK-209 | cancelled | docs/05-quality/evidence/TASK-209/review-cancelled-task208-simplify-boundary.json | Plan 自动登记，等待调度 |
 | WP-009 | TASK-207 | pending | REVIEWER | 独立审核集成测试组-测控任务需求文档模板 | BL-006 | pending | TASK-206 | replaced | docs/05-quality/evidence/TASK-207 | integration-req-template-review | n/a | n/a | n/a | Plan 自动登记，等待调度 |

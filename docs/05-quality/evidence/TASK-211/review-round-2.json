@@ -1,0 +1,39 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-211",
+  "reviewed_task_ids": [
+    "TASK-210"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-210",
+      "path": "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md",
+      "change_type": "modified",
+      "summary": "最终精简版集成测试组-测控任务需求文档，合并测试对象与边界表达并保留工作量评估字段。"
+    }
+  ],
+  "change_summary": "完成 Standard 第二轮完整独立审核。按本轮指定的 TASK-210 起始基点 5e2af62d22524b3308d07bb2e5a95833d28bffc1 重新核对到当前最终内容，scoped diff 仅有模板一个 modified 文件，示例未改；本轮审核对象与 round 1 为同一最终内容。",
+  "scope_checked": [
+    "完整复核覆盖范围已不存在独立字段，且无重复覆盖范围表达",
+    "测试对象字段承载样品、型号、版本、批次和必要条件；不包含内容继续表达任务边界",
+    "主要测试项表保留测试目的关联、测试条件或限制、样品数/重复次数和备注，用于工作量评估",
+    "正式承接必要性说明、基本信息、测试目的和提交后处理流程均保留",
+    "全部填写位置均为数字化 Markdown 表格提示，无三连下划线、____-__-__ 或手写式占位",
+    "实际 scoped manifest 仅模板变更，示例文件保持不变"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: git diff --name-status 5e2af62d22524b3308d07bb2e5a95833d28bffc1 HEAD -- docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md returned exactly one M template path; no example diff.",
+    "PASS: full content audit confirms no 覆盖范围 field/token and no duplicated boundary field; object and 不包含的内容 rows are complementary.",
+    "PASS: test-item table retains the purpose/question, test conditions or limits, and sample-count/repetition columns.",
+    "PASS: title, formal acceptance explanation, basic information, purpose section and digital table structure remain intact.",
+    "PASS: placeholder audit found no three-or-more underscores or ____-__-__; git diff --check returned no whitespace errors.",
+    "PASS: final content is unchanged from TASK-211 round 1 subject."
+  ],
+  "created_at": "2026-08-24T20:50:00+08:00"
+}
