@@ -10,23 +10,30 @@
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
   "acceptance_git_commit": "",
-  "start_git_commit": "089c6152d7965bc49ddc97399afb5dbc67419f93",
+  "start_git_commit": "5cf95a0892d0d677f3176bb7c53d39a004c289d9",
   "execution_lease": "",
   "execution_lease_owner": "",
   "execution_lease_expires_at": "",
   "preexisting_changes": [],
-  "plan_checkpoint_git_commit": "0a2e61e2fe50dc7264042e5ee0acc8a29c07f8ba",
+  "plan_checkpoint_git_commit": "5cf95a0892d0d677f3176bb7c53d39a004c289d9",
   "plan_rebase_history": [
     {
       "previous_changes": [],
       "checkpoint_git_commit": "0a2e61e2fe50dc7264042e5ee0acc8a29c07f8ba",
       "rebased_at": "2026-08-24T09:08:20.7030145Z"
+    },
+    {
+      "previous_changes": [],
+      "checkpoint_git_commit": "5cf95a0892d0d677f3176bb7c53d39a004c289d9",
+      "rebased_at": "2026-08-24T09:12:32.3467818Z"
     }
   ],
   "evidence": [],
   "evidence_history": [
     "docs/05-quality/evidence/TASK-201/20260824T090644932Z-eaf6ff7e-markdown-minimal.evidence.json",
-    "docs/05-quality/evidence/TASK-201/review-round-1.json"
+    "docs/05-quality/evidence/TASK-201/review-round-1.json",
+    "docs/05-quality/evidence/TASK-201/20260824T091149912Z-c716d1ac-markdown-minimal.evidence.json",
+    "docs/05-quality/evidence/TASK-201/review-round-2.json"
   ],
   "review_history": [
     {
@@ -35,6 +42,13 @@
       "result": "changes-required",
       "round_id": "RR-782777b6f5a64772891b05772dc0e4db",
       "recorded_at": "2026-08-24T09:06:57.6504366Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-201/review-round-2.json",
+      "sha256": "710b9b92f2fd5647ce41af84e38405b16d1edb42cf1cb0792e10d6c4b7a74f30",
+      "result": "passed",
+      "round_id": "RR-26eb69ad971845aaa6be16711ea916b1",
+      "recorded_at": "2026-08-24T09:12:02.7296801Z"
     }
   ],
   "review": {
@@ -47,5 +61,5 @@
   },
   "last_error": "",
   "created_at": "2026-08-24T08:56:04.7653486Z",
-  "updated_at": "2026-08-24T09:08:20.7110473Z"
+  "updated_at": "2026-08-24T09:12:32.3500591Z"
 }

@@ -1,0 +1,50 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-201",
+  "reviewed_task_ids": [
+    "TASK-200"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-200",
+      "path": "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md",
+      "change_type": "modified",
+      "summary": "最终一页式简版需求模板：必填需求字段、可选专题/制冷机/备注及测控组内部处理说明。"
+    },
+    {
+      "task_id": "TASK-200",
+      "path": "docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md",
+      "change_type": "modified",
+      "summary": "最终工艺组 Z4 Readout BGA 露出填写实例，字段与简版模板对应并说明测控组处理范围。"
+    }
+  ],
+  "change_summary": "从 TASK-200 start_git_commit a182c13ed5620f5ac7c85ae59a3f8414459d81e3 到当前 HEAD 的实际 scoped manifest 恰为上述两个 modified Markdown 文件；没有新增、删除或重命名。第一轮的必填标识、实例元数据范围和内部交接说明问题已全部修正。",
+  "scope_checked": [
+    "一页式、非正式填写体验和简洁章节结构",
+    "必填：提出小组、需求名称、测试目的、至少一项测试项、样品型号、数量、样品编号（未知填待定）和预计交付时间",
+    "可选：专题建议、制冷机要求和其他说明",
+    "需求方不填写任务拆分、参与成员、任务状态、颜色和正式测试排期；测控组负责这些内部信息",
+    "工艺组 Z4 Readout BGA 露出实例与模板的需求/测试项/样品列对应",
+    "多样品、编号待定、ETA 待定和后续制冷机/ETA 更新提醒",
+    "治理所需的最小实例 frontmatter 与无 frontmatter 的用户模板边界",
+    "TASK-200 scoped Git manifest"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: TASK-201 markdown-minimal presence validation; output `minimal source-group documents present`.",
+    "PASS: TASK-200 markdown-minimal token validation; both files contain 提出小组、需求名称、测试目的、测试项、样品型号 and 预计交付; output `minimal source-group documents ok`.",
+    "PASS: `git diff --check` on current worktree; no whitespace errors.",
+    "PASS: `powershell -NoProfile -ExecutionPolicy Bypass -File .governance/tools/Test-ProjectGovernance.ps1 -ProjectPath . -Level Strict`; 56 documents scanned, 0 errors, 0 warnings.",
+    "PASS: template audit confirms every essential field is explicitly marked 必填, including `样品编号（必填，未知填“待定”）`; optional fields are explicitly marked 可选.",
+    "PASS: example audit confirms concrete 工艺组 request with matching request name/purpose, four test items, two BGA samples, quantities, pending IDs and 2026-09-04 ETA; handoff explicitly delegates topic, tasks, members, cryostat, status, color and Gantt schedule to the measurement team.",
+    "PASS: example frontmatter is limited to governance-required minimum metadata (doc_id/type/status/version/owner/baseline/last_reviewed); no obsolete dependency or workflow sections remain.",
+    "PASS: excluded-field audit found no contact, prerequisite, task-order, per-person-hours or results-submission fields.",
+    "PASS: `git diff --name-status a182c13ed5620f5ac7c85ae59a3f8414459d81e3 HEAD -- docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md` returned exactly the two modified paths listed above."
+  ],
+  "created_at": "2026-08-24T17:36:00+08:00"
+}
