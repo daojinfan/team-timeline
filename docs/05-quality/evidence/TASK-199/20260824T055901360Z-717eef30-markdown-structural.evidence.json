@@ -1,0 +1,24 @@
+{
+  "$schema": "schemas/validation-evidence.schema.json",
+  "schema_version": 1,
+  "task_id": "TASK-199",
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "contract_sha256": "94c151b6bf247ad1b880d6469d27b5b65c2444223ec79a1227f8bf8697a95883",
+  "git_commit": "52ec86b786950c6ff2a381d36847c38030d3cf32",
+  "validation_id": "markdown-structural",
+  "command": "powershell",
+  "args": [
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-Command",
+    "$files=@(\"docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md\",\"docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md\"); foreach($p in $files){ if(!(Test-Path -LiteralPath $p -PathType Leaf)){ throw (\"missing \" + $p) } }; Write-Output \"source-group documents present\" "
+  ],
+  "started_at": "2026-08-24T05:59:01.3661603Z",
+  "finished_at": "2026-08-24T05:59:01.7922845Z",
+  "exit_code": 0,
+  "redactions_applied": 0,
+  "output_path": "docs/05-quality/evidence/TASK-199/20260824T055901360Z-717eef30-markdown-structural.output.txt",
+  "output_sha256": "e7d664fd8bce229c05ecc1834cdea048366da3bfbeb7605b9a95231528603063"
+}

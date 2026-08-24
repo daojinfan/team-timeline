@@ -1,0 +1,53 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-199",
+  "reviewed_task_ids": [
+    "TASK-198"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-198",
+      "path": "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md",
+      "change_type": "added",
+      "summary": "最终外部小组需求内容模板，明确需求方/测控组边界，并覆盖任务、样品、资源、成员排期、状态和变更映射。"
+    },
+    {
+      "task_id": "TASK-198",
+      "path": "docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md",
+      "change_type": "added",
+      "summary": "最终工艺组 Z4 Readout 示例，完整演示需求内容到连续任务、样品级系统记录、成员排期、状态与变更流程。"
+    }
+  ],
+  "change_summary": "从 TASK-198 start_git_commit e941a50663fa415545f4a6f3fadf1a04e3cbab9c 到当前 HEAD 的实际 scoped Git manifest 恰为上述两个 added Markdown 文件；两条路径在起始提交中不存在。已对两份最终文件做全量独立复审，round1/round2 的所有发现均已修正。",
+  "scope_checked": [
+    "需求方填写区仅描述需求内容、目的、测试项、样品和交付预期；明确不预先决定连续任务边界",
+    "测控组内部区明确专题确认、按需求内容拆分连续任务、制冷机、任务 ETA/日期/颜色、人工阶段和计算展示状态",
+    "内部成员表按成员逐行记录参与成员、负责范围/样品、成员排期开始/结束及样品规划标签",
+    "样品级表按样品逐行记录规划标签、型号、正式/临时/待定编号、预计交付、实际到样、绑定成员和备注",
+    "专题→连续任务→样品关系、多个需求内容/任务/样品、无样品/ETA 待确认/未过 ETA/全部到样未开始的等待规则",
+    "样品交付延期、正在测试、测试延期、已完成优先级及已到样待测试排除",
+    "ETA/制冷机变更前后值、系统同步标记、任务全量编辑台/专题管理/执行中心映射",
+    "工艺组示例的内容-A/B→任务-A/B 拆分、祖4、成员日期、逐样品编号/到样、状态和 ETA/制冷机变更",
+    "联系人、前置任务、任务顺序、每人工时和成果提交排除边界"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: TASK-198/TASK-199 markdown-structural command; output `source-group documents present`.",
+    "PASS: `git diff --check` on current worktree; no whitespace errors.",
+    "PASS: `powershell -NoProfile -ExecutionPolicy Bypass -File .governance/tools/Test-ProjectGovernance.ps1 -ProjectPath . -Level Strict`; 56 documents scanned, 0 errors, 0 warnings.",
+    "PASS: requester-boundary audit found no task-A/task-B system labels or task fields in the example's demand-side section before internal confirmation; the only pre-boundary TASK-EXAMPLE-* text is an explanatory system-generated-ID note, not a requester field.",
+    "PASS: template audit found explicit measurement-team task splitting, internal task ETA/manual phase/computed status fields, and member rows with member start/end dates.",
+    "PASS: sample audit found per-sample formal/temporary/TBD identifier type, expected delivery, actual arrival, member binding and sample notes in both template and example; example includes a temporary-ID arrival补录.",
+    "PASS: status audit found waiting-sample coverage for no sample, ETA pending, ETA not passed and all arrived/not started; sample-delay confirmed overdue ETA; test-delay manual testing prerequisite; completed highest priority; no selectable 已到样待测试.",
+    "PASS: mapping audit confirms 3.2 covers task ETA, cryostat, dates, color, manual phase and computed display status; 3.3/3.4 covers member dates and sample-level records; 3.6 covers change synchronization.",
+    "PASS: example consistency audit confirms initial BGA ETA 2026-09-01 and change log 2026-09-01 → 2026-09-04; task ETA/status/date/cryostat/member/sample mappings are coherent.",
+    "PASS: forbidden-field audit found zero Markdown table labels containing 联系人、前置任务、任务顺序、每人工时 or 成果提交 in either artifact.",
+    "PASS: `git diff --name-status e941a50663fa415545f4a6f3fadf1a04e3cbab9c HEAD -- docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md` returned exactly the two added paths listed above."
+  ],
+  "created_at": "2026-08-24T14:42:00+08:00"
+}
