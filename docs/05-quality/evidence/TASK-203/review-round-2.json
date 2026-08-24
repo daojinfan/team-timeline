@@ -1,0 +1,40 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-203",
+  "reviewed_task_ids": [
+    "TASK-202"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-202",
+      "path": "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md",
+      "change_type": "modified",
+      "summary": "一页式外部小组需求模板及新增总体说明、填写要求、不明确项提醒和提交后处理流程。"
+    }
+  ],
+  "change_summary": "完成 Standard 第二轮全量复核。TASK-202 start_git_commit f108d8cd7e64b790ad2a87b7efc4e151adbab6f1 至当前 HEAD 的 scoped manifest 仍仅包含模板一个 modified 文件；实例文件保持无差异。",
+  "scope_checked": [
+    "完整核对需求单必要性说明、必填/可选字段、测试项和样品表格",
+    "完整核对不明确项提醒表，覆盖目的、测试项、专题、样品编号、数量、预计交付时间和制冷机",
+    "核对样品编号未知填待定、ETA 可填待定并说明原因、数量可填暂定数量或范围等可执行提示",
+    "核对提交后测控组确认需求、专题归类、任务拆分、成员安排、制冷机选择和正式测试排期的简洁流程",
+    "确认模板保持一页式、表格化和直接可填写；需求方与内部处理边界清楚",
+    "确认 REQ-SOURCE-GROUP-EXAMPLE-V5-001.md 自 TASK-202 起始提交未发生变更",
+    "TASK-202 scoped Git 变更清单"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: ‘这份文档为什么需要’说明避免口头/聊天记录遗漏，并解释样品未正式编号也可提前规划。",
+    "PASS: ‘填写要求’明确已知信息直接填写、不明确内容按提醒填写；提醒表为各类不明确情况提供可复制文案。",
+    "PASS: 必填字段和可选字段标识完整；测试项要求至少一项；样品编号明确必填且未知填待定。",
+    "PASS: 提交后流程明确测控组承接确认、归类、任务拆分、成员/制冷机安排和正式测试排期，整体简洁。",
+    "PASS: git diff --check 无空白错误。",
+    "PASS: git diff --name-status f108d8cd7e64b790ad2a87b7efc4e151adbab6f1 HEAD -- docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md 返回仅模板一个 M 路径；实例无 diff。"
+  ],
+  "created_at": "2026-08-24T19:20:00+08:00"
+}

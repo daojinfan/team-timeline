@@ -1,0 +1,24 @@
+{
+  "$schema": "schemas/validation-evidence.schema.json",
+  "schema_version": 1,
+  "task_id": "TASK-203",
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "contract_sha256": "4140a27e29269bfc1d518fe12bbf21532bcac3373c453bf3561bd1027c210818",
+  "git_commit": "881aacb0f7c484f5657f40f7d6212ad2506ceea1",
+  "validation_id": "template-overview-reminders",
+  "command": "powershell",
+  "args": [
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-Command",
+    "$p=\"docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md\"; if(!(Test-Path -LiteralPath $p -PathType Leaf)){throw \"missing template\"}; Write-Output \"template present\" "
+  ],
+  "started_at": "2026-08-24T11:07:16.2166645Z",
+  "finished_at": "2026-08-24T11:07:16.5863537Z",
+  "exit_code": 0,
+  "redactions_applied": 0,
+  "output_path": "docs/05-quality/evidence/TASK-203/20260824T110716211Z-c0863df5-template-overview-reminders.output.txt",
+  "output_sha256": "fbf8299de261d8fefce40c249e410260027f9b246f8661a8e7e637a0e3911c1b"
+}
