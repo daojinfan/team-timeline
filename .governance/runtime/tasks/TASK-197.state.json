@@ -10,12 +10,12 @@
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
   "acceptance_git_commit": "",
-  "start_git_commit": "b0f3423c5fc7b20a0da6852b936318e76eec7699",
+  "start_git_commit": "8c954fccdbe7f8cfee4e4eedf6e620b29dc9b460",
   "execution_lease": "",
   "execution_lease_owner": "",
   "execution_lease_expires_at": "",
   "preexisting_changes": [],
-  "plan_checkpoint_git_commit": "a682c74ca3d5adbbd1c952ad63f401eb2b324119",
+  "plan_checkpoint_git_commit": "8c954fccdbe7f8cfee4e4eedf6e620b29dc9b460",
   "plan_rebase_history": [
     {
       "previous_changes": [],
@@ -31,6 +31,11 @@
       "previous_changes": [],
       "checkpoint_git_commit": "a682c74ca3d5adbbd1c952ad63f401eb2b324119",
       "rebased_at": "2026-08-24T05:08:20.9276991Z"
+    },
+    {
+      "previous_changes": [],
+      "checkpoint_git_commit": "8c954fccdbe7f8cfee4e4eedf6e620b29dc9b460",
+      "rebased_at": "2026-08-24T05:12:09.6399681Z"
     }
   ],
   "evidence": [],
@@ -40,7 +45,10 @@
     "docs/05-quality/evidence/TASK-197/review-round-1.json",
     "docs/05-quality/evidence/TASK-197/20260824T050359341Z-434bcfa0-markdown-structural.evidence.json",
     "docs/05-quality/evidence/TASK-197/20260824T050359341Z-434bcfa0-governance-strict.evidence.json",
-    "docs/05-quality/evidence/TASK-197/review-round-2.json"
+    "docs/05-quality/evidence/TASK-197/review-round-2.json",
+    "docs/05-quality/evidence/TASK-197/20260824T051103363Z-11797d8d-markdown-structural.evidence.json",
+    "docs/05-quality/evidence/TASK-197/20260824T051103363Z-11797d8d-governance-strict.evidence.json",
+    "docs/05-quality/evidence/TASK-197/review-round-3.json"
   ],
   "review_history": [
     {
@@ -56,6 +64,13 @@
       "result": "changes-required",
       "round_id": "RR-d6a551ee088a448a9493440ef866f560",
       "recorded_at": "2026-08-24T05:05:37.8437085Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-197/review-round-3.json",
+      "sha256": "6efe4112cd4112577a9f99971d86f0f665d671e49a99b4bcc7b57db0f4730568",
+      "result": "passed",
+      "round_id": "RR-0d8890f5e3ec4cf0bd68be6fc36ffb57",
+      "recorded_at": "2026-08-24T05:11:41.469941Z"
     }
   ],
   "review": {
@@ -68,5 +83,5 @@
   },
   "last_error": "",
   "created_at": "2026-08-24T04:47:55.6892957Z",
-  "updated_at": "2026-08-24T05:08:20.9370489Z"
+  "updated_at": "2026-08-24T05:12:09.6475558Z"
 }
