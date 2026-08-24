@@ -1,0 +1,21 @@
+{
+  "$schema": "schemas/validation-evidence.schema.json",
+  "schema_version": 1,
+  "task_id": "TASK-178",
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "contract_sha256": "4de5f16beaac53bbd265410b67f5ae40b050eacda5f2953928c799ea135c871f",
+  "git_commit": "88f4c0555ec4476e3b6e0105e04a24152b531e6d",
+  "validation_id": "v5-filter-regression",
+  "command": "node",
+  "args": [
+    "--test",
+    "tests/v5-filter-combo.test.js"
+  ],
+  "started_at": "2026-08-24T00:32:53.1940451Z",
+  "finished_at": "2026-08-24T00:32:53.4502583Z",
+  "exit_code": 0,
+  "redactions_applied": 0,
+  "output_path": "docs/05-quality/evidence/TASK-178/20260824T003250127Z-6d80870d-v5-filter-regression.output.txt",
+  "output_sha256": "e9e20fc8d445c2da9ee2e886c413433ca07c0cbf8bf284b15bb10a9dfa555f0b"
+}

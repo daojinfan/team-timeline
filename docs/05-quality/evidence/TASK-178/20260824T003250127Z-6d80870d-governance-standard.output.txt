@@ -1,0 +1,6 @@
+D:\Codex\人员管理系统\.governance\tools\Test-ProjectGovernance.ps1 : Cannot validate argument on parameter 'Level'. The argum
+ent "Standard" does not belong to the set "Basic,Strict,Release" specified by the ValidateSet attribute. Supply an argu
+ment that is in the set and then try the command again.
+    + CategoryInfo          : InvalidData: (:) [Test-ProjectGovernance.ps1], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : ParameterArgumentValidationError,Test-ProjectGovernance.ps1
+ 

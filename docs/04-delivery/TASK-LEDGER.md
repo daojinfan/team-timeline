@@ -36,6 +36,8 @@ review_policy: independent-required
 
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| WP-009 | TASK-179 | pending | REVIEWER | 独立审核 V5 task 未定义修复 | BL-006 | pending | TASK-178 | replaced | docs/05-quality/evidence/TASK-179 | app-syntax, npm-test, v5-filter-regression, v5-inline-regression, governance-standard | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-009 | TASK-178 | pending | IMPLEMENTER | 修复 V5 筛选初始化 task 未定义错误 | BL-006 | pending | TASK-176 | replaced | public/app.js, tests/v5-inline-editor.test.js, tests/v5-filter-combo.test.js | app-syntax, npm-test, v5-filter-regression, v5-inline-regression, git-diff-check, governance-standard | TASK-179 | pending | pending | Plan 自动登记，等待调度 |
 | WP-009 | TASK-177 | pending | REVIEWER | 独立审核统一组合筛选 | BL-006 | pending | TASK-176 | pending | docs/05-quality/evidence/TASK-177 | app-syntax, npm-test, v5-execution-regression, v5-inline-regression, governance-release | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-009 | TASK-176 | pending | IMPLEMENTER | 统一任务全量编辑台与执行中心组合筛选 | BL-006 | pending | TASK-174 | running | public/index.html, public/styles.css, public/app.js, tests | app-syntax, npm-test, v5-execution-regression, v5-inline-regression, git-diff-check, governance-release | TASK-177 | pending | pending | Plan 自动登记，等待调度 |
 | WP-009 | TASK-175 | pending | REVIEWER | 独立审核执行中心甘特图粒度调节条 | BL-006 | pending | TASK-174 | completed | docs/05-quality/evidence/TASK-175 | app-syntax, npm-test, v5-execution-regression, governance-release | n/a | n/a | n/a | Plan 自动登记，等待调度 |

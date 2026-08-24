@@ -1,0 +1,12 @@
+✔ V5 editor and execution center expose the shared filter builder (2.0145ms)
+✔ V5 filters support per-condition inverse matching and multi-select (0.5786ms)
+✔ V5 filter groups make AND/OR explicit and keep date exceptions (0.6606ms)
+✔ V5 filter styling keeps builder groups readable on narrow screens (0.4593ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 61.575
