@@ -1,0 +1,56 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-187",
+  "reviewed_task_ids": ["TASK-186"],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-186",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "任务全量编辑台四个快速筛选标题和执行中心七个快速筛选标题统一为相邻的“非复选框 → 筛选项名称”，包括搜索、来源小组、专题、状态、成员、样品和制冷机；日期筛选未改动。"
+    },
+    {
+      "task_id": "TASK-186",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "将普通和状态快速筛选标题统一为 flex-start、6px 紧邻间距，并通过 :not(.v5-filter-negate) 选择筛选名称，保留省略和响应式行为。"
+    },
+    {
+      "task_id": "TASK-186",
+      "path": "tests/v5-filter-combo.test.js",
+      "change_type": "modified",
+      "summary": "新增 11 个任务编辑台/执行中心快速筛选标题的相邻关系、普通/状态标题布局和样式断言，同时保留组合筛选 AND/OR、日期例外和反向语义断言。"
+    },
+    {
+      "task_id": "TASK-186",
+      "path": "tests/v5-inline-editor.test.js",
+      "change_type": "modified",
+      "summary": "更新任务状态反向筛选的静态断言，匹配新的“非 → 状态”标题顺序；筛选表达式和反向匹配行为断言未被删除。"
+    }
+  ],
+  "change_summary": "第一轮独立审核以 TASK-186 start_git_commit a9ff4f6d7171f9b14cbf811d38af5bf4afde134f 为基准核对到当前 HEAD 824c6e5。产品净差异准确为四个契约允许路径，均为 modified，无新增、删除或重命名；public/app.js 未改变，治理运行记录不计为产品变更。",
+  "scope_checked": [
+    "任务全量编辑台的搜索、来源小组、状态、制冷机标题均使用同一 v5-filter-heading/v5-status-filter-heading 结构，非复选框位于左侧且紧邻筛选名称。",
+    "执行中心的搜索、来源小组、专题、状态、成员、样品、制冷机标题同样全部为非复选框在左、筛选名称在右；状态控件没有单独的右对齐分支。",
+    "普通筛选和状态筛选 CSS 均使用 justify-content:flex-start、gap:6px，筛选名称使用 :not(.v5-filter-negate) 规则；日期 from/to 控件没有被改动。",
+    "public/app.js 在 a9ff4f6 到 HEAD 的产品差异为空，组合筛选、日期例外、非语义、清除/一键还原和执行中心筛选事件保持原实现；测试仍覆盖 v5FilterExpressionMatches 与 negate 逻辑。",
+    "实际变更清单与 TASK-186 allowed_paths 一致，未发现服务端、数据库、API、移动端或任务数据变更。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "git diff --name-status a9ff4f6d7171f9b14cbf811d38af5bf4afde134f HEAD -- public/index.html public/styles.css public/app.js tests/v5-filter-combo.test.js tests/v5-inline-editor.test.js：public/index.html、public/styles.css、tests/v5-filter-combo.test.js、tests/v5-inline-editor.test.js 均 modified；public/app.js 无差异。",
+    "node --check public/app.js：通过。",
+    "npm test：58 项全部通过。",
+    "node --test tests/v5-filter-combo.test.js：6 项全部通过。",
+    "node --test tests/v5-inline-editor.test.js：5 项全部通过。",
+    "git diff --check：通过（仅已有治理文档换行风格提示，无差异错误）。",
+    "Test-ProjectGovernance.ps1 -ProjectPath . -Level Strict：扫描 53 份文档，0 errors、0 warnings。",
+    "独立 DOM 静态检查：11/11 快速筛选标题均验证为非复选框与筛选名称紧邻；AppChanged=False、FilterHandlerPresent=True、DateExceptionsPresent=True。"
+  ],
+  "created_at": "2026-08-24T12:35:00+08:00"
+}

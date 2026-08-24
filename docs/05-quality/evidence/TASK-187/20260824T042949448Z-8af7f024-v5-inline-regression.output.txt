@@ -1,0 +1,13 @@
+✔ V5 selected-task summary renders inline editable task attributes (1.7592ms)
+✔ V5 inline task save uses preview, conflict acknowledgement and expected version (0.4967ms)
+✔ V5 inline editor keeps samples in the full editor and has compact responsive styles (0.3431ms)
+✔ V5 task status filter supports an accessible inverse mode (1.0094ms)
+✔ V5 editor layout keeps filters, task hierarchy, and metadata aligned (0.7051ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 64.8126

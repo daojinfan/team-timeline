@@ -1,0 +1,21 @@
+{
+  "$schema": "schemas/validation-evidence.schema.json",
+  "schema_version": 1,
+  "task_id": "TASK-187",
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "contract_sha256": "b4f6234210e4ca2af7b6411ef5484be61acb524ab1ac27894e5088690f29c81e",
+  "git_commit": "824c6e57126b2be0b8df22d9f313a60d4c5bd99c",
+  "validation_id": "v5-inline-regression",
+  "command": "node",
+  "args": [
+    "--test",
+    "tests/v5-inline-editor.test.js"
+  ],
+  "started_at": "2026-08-24T04:29:53.4965112Z",
+  "finished_at": "2026-08-24T04:29:53.7215572Z",
+  "exit_code": 0,
+  "redactions_applied": 0,
+  "output_path": "docs/05-quality/evidence/TASK-187/20260824T042949448Z-8af7f024-v5-inline-regression.output.txt",
+  "output_sha256": "cc692a719bc5c75e44421013b506b9abb6ec269ec68933508841f0c1ce73b0a7"
+}

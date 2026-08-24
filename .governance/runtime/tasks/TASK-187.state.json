@@ -5,12 +5,12 @@
   "work_package": "WP-009",
   "contract_sha256": "b4f6234210e4ca2af7b6411ef5484be61acb524ab1ac27894e5088690f29c81e",
   "baseline": "BL-006",
-  "state": "planned",
+  "state": "verified",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
   "acceptance_git_commit": "",
-  "start_git_commit": "",
+  "start_git_commit": "824c6e57126b2be0b8df22d9f313a60d4c5bd99c",
   "execution_lease": "",
   "execution_lease_owner": "",
   "execution_lease_expires_at": "",
@@ -23,9 +23,43 @@
       "rebased_at": "2026-08-24T04:22:48.0900391Z"
     }
   ],
-  "evidence": [],
-  "evidence_history": [],
-  "review_history": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-187/20260824T042949448Z-8af7f024-app-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-187/20260824T042949448Z-8af7f024-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-187/20260824T042949448Z-8af7f024-v5-filter-regression.evidence.json",
+    "docs/05-quality/evidence/TASK-187/20260824T042949448Z-8af7f024-v5-inline-regression.evidence.json",
+    "docs/05-quality/evidence/TASK-187/20260824T042949448Z-8af7f024-governance-strict.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-187/20260824T042619694Z-9e43a546-app-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-187/20260824T042619694Z-9e43a546-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-187/20260824T042619694Z-9e43a546-v5-filter-regression.evidence.json",
+    "docs/05-quality/evidence/TASK-187/20260824T042619694Z-9e43a546-v5-inline-regression.evidence.json",
+    "docs/05-quality/evidence/TASK-187/20260824T042619694Z-9e43a546-governance-strict.evidence.json",
+    "docs/05-quality/evidence/TASK-187/review-round-1.json",
+    "docs/05-quality/evidence/TASK-187/20260824T042949448Z-8af7f024-app-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-187/20260824T042949448Z-8af7f024-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-187/20260824T042949448Z-8af7f024-v5-filter-regression.evidence.json",
+    "docs/05-quality/evidence/TASK-187/20260824T042949448Z-8af7f024-v5-inline-regression.evidence.json",
+    "docs/05-quality/evidence/TASK-187/20260824T042949448Z-8af7f024-governance-strict.evidence.json",
+    "docs/05-quality/evidence/TASK-187/review-round-2.json"
+  ],
+  "review_history": [
+    {
+      "path": "docs/05-quality/evidence/TASK-187/review-round-1.json",
+      "sha256": "1b7a388342604b93c59c82ac628c59a57dc3126e9093c5cdc9989ad3a98c1804",
+      "result": "passed",
+      "round_id": "RR-cd91c41d825a4db2a204439b6aa57744",
+      "recorded_at": "2026-08-24T04:27:07.0050115Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-187/review-round-2.json",
+      "sha256": "4da69b9616740971f8697b66de7a01efd8582f4d4c68d6373738f45b084294e1",
+      "result": "passed",
+      "round_id": "RR-23d7bd3b2f4a454eab2ef0c777d39a59",
+      "recorded_at": "2026-08-24T04:30:34.6156762Z"
+    }
+  ],
   "review": {
     "required": false,
     "reviewer_task_id": "",
@@ -36,5 +70,5 @@
   },
   "last_error": "",
   "created_at": "2026-08-24T04:20:50.5702629Z",
-  "updated_at": "2026-08-24T04:22:48.0988626Z"
+  "updated_at": "2026-08-24T04:30:35.1248194Z"
 }

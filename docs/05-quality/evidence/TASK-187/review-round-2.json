@@ -1,0 +1,56 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-187",
+  "reviewed_task_ids": ["TASK-186"],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-186",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "第二轮重新核对任务全量编辑台和执行中心全部 11 个快速筛选标题，非复选框均紧邻置于对应筛选名称左侧；状态、普通筛选和日期控件的 DOM 关系保持完整。"
+    },
+    {
+      "task_id": "TASK-186",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "第二轮重新核对普通/状态标题均使用 flex-start 与 6px 间距，筛选名称均由非复选框排除选择器承载，未出现两端分散布局。"
+    },
+    {
+      "task_id": "TASK-186",
+      "path": "tests/v5-filter-combo.test.js",
+      "change_type": "modified",
+      "summary": "第二轮确认 11 个快速筛选标题顺序和布局断言，以及组合筛选、AND/OR、多选、日期例外和非语义断言仍共同通过。"
+    },
+    {
+      "task_id": "TASK-186",
+      "path": "tests/v5-inline-editor.test.js",
+      "change_type": "modified",
+      "summary": "第二轮确认状态反向筛选顺序断言与任务摘要、保存、响应式和状态行为断言共同通过。"
+    }
+  ],
+  "change_summary": "第二轮从头复核 TASK-186 start_git_commit a9ff4f6d7171f9b14cbf811d38af5bf4afde134f 到当前 HEAD/工作树 824c6e5 的同一最终内容。产品净差异仍准确为上述四个 modified 路径，无新增、删除或重命名；第一轮与第二轮审核对象内容一致，public/app.js 仍无差异。",
+  "scope_checked": [
+    "第二轮独立确认任务全量编辑台的搜索、来源小组、状态、制冷机和执行中心的搜索、来源小组、专题、状态、成员、样品、制冷机共 11/11 对均为“非复选框 → 筛选名称”且 DOM 相邻。",
+    "第二轮确认普通与状态标题都采用 justify-content:flex-start、gap:6px，筛选名称选择器都使用 label:not(.v5-filter-negate)，状态没有独立的两端分散分支。",
+    "第二轮确认 public/app.js 在 start 到 HEAD 的 scoped diff 为空；v5FilterExpressionMatches、condition.negate、日期 start/end、v5ClearTaskFilters 和组合筛选流程均保持原逻辑。",
+    "第二轮确认日期例外仍由组合筛选规则保留，非语义和一键还原未由本次布局任务改写；任务与执行中心其他筛选值和事件入口未改名。",
+    "第二轮 scoped Git 清单仍与 TASK-186 allowed_paths 完全一致，非产品治理记录不计入 changes。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "第二轮 git diff --name-status a9ff4f6d7171f9b14cbf811d38af5bf4afde134f HEAD -- scoped paths：仍为 public/index.html、public/styles.css、tests/v5-filter-combo.test.js、tests/v5-inline-editor.test.js 四个 modified 路径；public/app.js 无差异。",
+    "第二轮 node --check public/app.js：通过。",
+    "第二轮 npm test：58 项全部通过。",
+    "第二轮 node --test tests/v5-filter-combo.test.js：6 项全部通过。",
+    "第二轮 node --test tests/v5-inline-editor.test.js：5 项全部通过。",
+    "第二轮 git diff --check：通过（仅已有治理文档换行风格提示，无差异错误）。",
+    "第二轮 Test-ProjectGovernance.ps1 -ProjectPath . -Level Strict：扫描 53 份文档，0 errors、0 warnings。",
+    "第二轮独立 DOM/CSS/语义静态检查：PairsPassed=11、PairsTotal=11、AppChanged=False、CommonHeading=True、StatusHeading=True、NegateRule=True、FilterHandlerPresent=True、DateExceptionsPresent=True、ClearActionPresent=True。"
+  ],
+  "created_at": "2026-08-24T12:45:00+08:00"
+}
