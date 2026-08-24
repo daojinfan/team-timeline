@@ -1,0 +1,43 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-197",
+  "reviewed_task_ids": [
+    "TASK-196"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "changes-required",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-196",
+      "path": "docs/09-reports/templates/REQ-TEMPLATE-V5-001.md",
+      "change_type": "added",
+      "summary": "V5 桌面端需求录入模板最终内容；相对 TASK-196 start_git_commit c4aae7b77d01bcdaf9ba77283e4488a41963933b，模板路径在基准提交中不存在，故 Git 实际类型为 added。"
+    }
+  ],
+  "change_summary": "本轮从头复核当前最终模板及 TASK-196 允许范围。真实 scoped diff 仍只有一个 Markdown 产品文件且 change_type=added（不能将基准中不存在的文件伪报为 modified）；治理运行记录和审核证据不计入产品变更。第一轮提出的任务编号/专题/人工阶段、测试项备注、实际到样及状态语义问题均已修正。",
+  "scope_checked": [
+    "任务总览和重复任务详细区块：系统任务编号、所属专题、任务名、来源小组、人工阶段、系统展示状态、测试目的、测试项名称/备注、计划日期、预计交付、制冷机、参与成员、备注、任务颜色",
+    "样品规划：规划标签、型号、编号、预计交付、实际到样、绑定成员、多样品关系",
+    "成员时间计划和任务整体时间、同步选择、ETA/制冷机/测试时间变更记录",
+    "状态规则：无样品、ETA 待确认、全部到样未开始、样品交付延期、manual_phase=testing 的测试延期、已完成优先级",
+    "排除字段：联系人、前置任务、任务顺序、每人工时、成果提交",
+    "TASK-196 Standard allowed_paths 与 TASK-197 review scope"
+  ],
+  "findings": [
+    "任务详细信息缺少显式的“样品集合”字段/关联入口。REQ-V5-008 将样品集合列为任务属性；当前任务基本信息区没有该字段，仅在后续第 5 节以“一个任务可填写多行样品”间接描述，复制填写时无法在任务区明确记录样品集合关联。",
+    "样品表仅有“样品编号”列，没有“编号类型”或正式/临时编号选项。REQ-V5-011/ARC-COMP-V5-001 3.3.2 要求支持正式编号与临时编号区分；当前模板只能填写一个无法区分类型的编号。"
+  ],
+  "validation_evidence": [
+    "PASS: TASK-197 markdown-structural contract command; output `Markdown structure ok`.",
+    "PASS: `git diff --check` on current worktree; no unstaged whitespace errors.",
+    "PASS: `powershell -NoProfile -ExecutionPolicy Bypass -File .governance/tools/Test-ProjectGovernance.ps1 -ProjectPath . -Level Strict`; 54 documents scanned, 0 errors, 0 warnings.",
+    "PASS: required-field audit found source groups 工艺组/读取组/量子门组/电子学组, topic fields, task number/topic/manual phase/display status, purpose, test item name+remark, dates, ETA, cryostat, members, notes, color, sample label/model/identifier/ETA/actual arrival/member binding, change log and all five statuses.",
+    "PASS: status semantic audit found 无样品、ETA 待确认、全部样品已到、已确认 ETA、人工阶段已切换为“正在测试”和已完成优先级最高; no 已到样待测试 status row.",
+    "PASS: exclusion audit found 联系人、前置任务、任务顺序、每人工时、成果提交 only in the explicit explanatory exclusion sentence and not as table field labels.",
+    "PASS: scoped `git diff --name-status c4aae7b77d01bcdaf9ba77283e4488a41963933b HEAD -- docs/09-reports/templates/REQ-TEMPLATE-V5-001.md` returned exactly `A docs/09-reports/templates/REQ-TEMPLATE-V5-001.md`; baseline lookup confirmed the path did not exist at c4aae7b."
+  ],
+  "created_at": "2026-08-24T13:24:00+08:00"
+}

@@ -1,0 +1,24 @@
+{
+  "$schema": "schemas/validation-evidence.schema.json",
+  "schema_version": 1,
+  "task_id": "TASK-197",
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "contract_sha256": "c48892b233c18ee121914c310cdc3408f83efd4e2b7fbfb678cc5a38287737ea",
+  "git_commit": "b0f3423c5fc7b20a0da6852b936318e76eec7699",
+  "validation_id": "markdown-structural",
+  "command": "powershell",
+  "args": [
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-Command",
+    "$p='docs/09-reports/templates/REQ-TEMPLATE-V5-001.md'; if (-not (Test-Path -LiteralPath $p -PathType Leaf)) { throw 'Markdown template is missing' }; $t=Get-Content -LiteralPath $p -Raw; foreach ($h in @('# 小组任务管理与甘特图系统','## 1. 需求概览','## 2. 专题信息','## 4. 任务详细信息','## 5. 样品规划','## 8. 系统状态规则')) { if ($t.IndexOf($h) -lt 0) { throw ('Missing heading: ' + $h) } }; Write-Output 'Markdown structure ok'"
+  ],
+  "started_at": "2026-08-24T05:03:59.3484042Z",
+  "finished_at": "2026-08-24T05:03:59.7872027Z",
+  "exit_code": 0,
+  "redactions_applied": 0,
+  "output_path": "docs/05-quality/evidence/TASK-197/20260824T050359341Z-434bcfa0-markdown-structural.output.txt",
+  "output_sha256": "02db540562482bd3c6105ddd8c64452b178734ed5effae44d11afa91989237c9"
+}

@@ -1,0 +1,44 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-197",
+  "reviewed_task_ids": [
+    "TASK-196"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "changes-required",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-196",
+      "path": "docs/09-reports/templates/REQ-TEMPLATE-V5-001.md",
+      "change_type": "added",
+      "summary": "新增 V5 桌面端需求录入 Markdown 模板，包含专题、连续任务、样品规划、任务/成员排期、变更记录和状态规则章节。"
+    }
+  ],
+  "change_summary": "从 TASK-196 start_git_commit c4aae7b77d01bcdaf9ba77283e4488a41963933b 到当前 HEAD 的 TASK-196 允许范围净差异只有上述一个新增 Markdown 文件；治理运行记录和审核证据不计入产品变更清单。",
+  "scope_checked": [
+    "TASK-196 Standard contract allowed_paths/write_paths 与实际 scoped Git diff",
+    "来源小组、专题属性、任务基本信息、测试目的/测试项、样品规划、制冷机、参与成员",
+    "任务整体排期、成员排期与同步选项、ETA/制冷机计划变更记录",
+    "样品编号待补/TBD、样品 ETA 变化、制冷机变化、多样品及样品绑定成员",
+    "五类状态文字和状态判定说明，以及已排除字段的实际表格/字段标签",
+    "REQ-V5-001 与 ARC-COMP-V5-001 的任务/样品/状态字段约束"
+  ],
+  "findings": [
+    "任务全量字段覆盖不完整：REQ-V5-008/ARC-COMP-V5-001 规定任务编号（只读）、所属专题和人工阶段/任务状态是任务属性；模板的重复任务区块没有任务编号、所属专题或任务状态/人工阶段字段，只有需求概览的单个“对应专题”和第 8 节说明，无法逐任务填写这些属性。",
+    "样品规划表缺少实际到样日期/到样信息。REQ-V5-011 和 ARC-COMP-V5-001 3.3.2 要求样品记录在到样后补充正式编号和实际到样日期；当前第 5 节只有预计交付，没有实际到样列。",
+    "测试项不是完整的结构化条目：REQ-V5-028 和 ARC-COMP-V5-001 要求每项至少保存项目名称和备注；当前第 4.2 节只有四行未标注的自由文本，没有每项备注字段。",
+    "状态规则与当前 V5 判定矩阵不完全一致：第 8 节“测试延期”仅写当前日期超过计划结束且未完成，遗漏必须已人工切换到“正在测试”的前提，可能把等待样品任务误判为测试延期；“等待样品”行也未覆盖无样品、ETA 待确认或全部到样但未开始测试等系统定义情形（虽有后置说明提到全部到样）。"
+  ],
+  "validation_evidence": [
+    "PASS: TASK-197 contract markdown-structural command; output `Markdown structure ok`.",
+    "PASS: TASK-196 token coverage command; all required tokens (工艺组、读取组、量子门组、电子学组、样品编号、待补/TBD、预计样品交付、制冷机、参与成员、样品交付延期、测试延期) found.",
+    "PASS: `git diff --check` on current worktree; no unstaged whitespace errors.",
+    "PASS: `powershell -NoProfile -ExecutionPolicy Bypass -File .governance/tools/Test-ProjectGovernance.ps1 -ProjectPath . -Level Strict`; 54 documents scanned, 0 errors, 0 warnings.",
+    "PASS: `git diff --name-status c4aae7b77d01bcdaf9ba77283e4488a41963933b HEAD -- docs/09-reports/templates/REQ-TEMPLATE-V5-001.md` returned exactly `A docs/09-reports/templates/REQ-TEMPLATE-V5-001.md`.",
+    "PASS: exclusion audit; 联系人、前置任务、任务顺序、每人工时、成果提交 occur only in the explanatory exclusion sentence and do not occur as table field labels."
+  ],
+  "created_at": "2026-08-24T13:08:00+08:00"
+}
