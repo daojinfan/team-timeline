@@ -1,0 +1,40 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-209",
+  "reviewed_task_ids": [
+    "TASK-208"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-208",
+      "path": "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md",
+      "change_type": "modified",
+      "summary": "最终集成测试组-测控任务需求文档模板，包含正式承接评估说明、信息表格、测试边界、主要测试项和承接流程。"
+    }
+  ],
+  "change_summary": "完成 Standard 第二轮完整独立审核。以 TASK-208 start_git_commit 5e2af62d22524b3308d07bb2e5a95833d28bffc1 重新核对，实际 scoped diff 仍仅模板一个 modified 文件，示例未改；本轮审核对象与 round 1 为同一最终内容。",
+  "scope_checked": [
+    "标题为集成测试组-测控任务需求文档，且四块主体结构清楚",
+    "必要性说明覆盖避免口头化、正式承接、资源有限、能力评估，并明确文档回答来源/项目、目的、边界、主要工作和工作量评估问题",
+    "基本信息完整包含项目、来源小组、任务、样品类型/型号、数量、编号、交付时间和制冷机协调信息",
+    "测试对象与目的表明确对象、覆盖范围、不包含内容、目的、判定方向和结果用途",
+    "主要测试项逐行关联测试目的，并包含条件/范围、样品数/重复次数和备注以支持总体工作量评估",
+    "全部填写位置为可直接替换的数字化 Markdown 表格提示，无三连下划线、____-__-__ 或手写式占位",
+    "提交后由集成测试组确认边界、评估资源并在承接后建立专题/任务/成员/甘特图，未将内部要求转嫁给来源方",
+    "TASK-208 scoped Git manifest 及示例文件完整性"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: git diff --name-status 5e2af62d22524b3308d07bb2e5a95833d28bffc1 HEAD -- docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md returned exactly one M template path; example absent.",
+    "PASS: full content recheck confirms all four structural sections and the formal handoff/acceptance flow.",
+    "PASS: table audit confirms basic information, object/purpose boundary, and purpose-linked workload fields are keyboard-editable prompts.",
+    "PASS: placeholder audit found no three-or-more underscores or ____-__-__.",
+    "PASS: git diff --check returned no whitespace errors; subject fingerprint/content is unchanged from round 1."
+  ],
+  "created_at": "2026-08-24T20:20:00+08:00"
+}
