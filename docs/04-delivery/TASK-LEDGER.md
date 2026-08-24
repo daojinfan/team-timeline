@@ -36,8 +36,8 @@ review_policy: independent-required
 
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| WP-009 | TASK-217 | pending | REVIEWER | 独立审核最新测控任务需求示例 | BL-006 | pending | TASK-216 | pending | docs/05-quality/evidence/TASK-217 | current-template-example-review | n/a | n/a | n/a | Plan 自动登记，等待调度 |
-| WP-009 | TASK-216 | pending | IMPLEMENTER | 按最新模板生成测控任务需求示例 | BL-006 | pending | n/a | running | docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md | current-template-example | TASK-217 | pending | pending | Plan 自动登记，等待调度 |
+| WP-009 | TASK-217 | pending | REVIEWER | 独立审核最新测控任务需求示例 | BL-006 | pending | TASK-216 | completed | docs/05-quality/evidence/TASK-217 | current-template-example-review | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-009 | TASK-216 | pending | IMPLEMENTER | 按最新模板生成测控任务需求示例 | BL-006 | pending | n/a | running | docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md | current-template-example | TASK-217 | provisional-passed | docs/05-quality/evidence/TASK-217/review-round-1.json | Plan 自动登记，等待调度 |
 | WP-009 | TASK-215 | pending | REVIEWER | 独立审核测试目的填写区 | BL-006 | pending | TASK-214 | completed | docs/05-quality/evidence/TASK-215 | purpose-section-review | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-009 | TASK-214 | pending | IMPLEMENTER | 补充测控任务需求文档测试目的填写区 | BL-006 | pending | n/a | replaced | docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md | purpose-section-table | TASK-215 | cancelled | docs/05-quality/evidence/TASK-215/review-cancelled-task214-latest-template-example.json | Plan 自动登记，等待调度 |
 | WP-009 | TASK-213 | pending | REVIEWER | 独立审核测试目的填写区 | BL-006 | pending | TASK-212 | replaced | docs/05-quality/evidence/TASK-213 | purpose-section-review | n/a | n/a | n/a | Plan 自动登记，等待调度 |

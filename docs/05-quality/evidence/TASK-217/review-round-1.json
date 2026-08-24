@@ -1,0 +1,40 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-217",
+  "reviewed_task_ids": [
+    "TASK-216"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-216",
+      "path": "docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md",
+      "change_type": "modified",
+      "summary": "按当前集成测试组-测控任务需求文档模板重构 Z4Readout BGA 露出样品测控测试示例，补齐四部分结构和具体填写内容。"
+    }
+  ],
+  "change_summary": "从 TASK-216 start_git_commit b4af165f42bde06949eea3ae46959b036f4f77b3 到当前最终内容核对，实际 scoped diff 仅包含示例一个 modified 文件；REQ-SOURCE-GROUP-TEMPLATE-V5-001.md 未修改。",
+  "scope_checked": [
+    "示例具有与当前模板一致的四部分结构：为什么需要这个文档、基本信息、测试目的、测试对象和主要的测试项",
+    "基本信息包含项目名称、来源小组、任务名称、样品类型、样品型号/版本、数量、编号、交付时间和制冷机协调信息",
+    "测试目的包含测试任务背景或重要性、测试目的和预期结论三个对应字段",
+    "测试对象包含样品描述、4 路读取、2 个比特、具体 BGA/引脚/通道对象以及装样和接线安排",
+    "主要测试项逐项体现与测试目的关系和预期输出，并说明由测控工程师据此形成测试大纲、与需求方确认",
+    "示例不含请填写提示、三连下划线、____-__-__ 日期占位或旧版需求单字段，内容在样品数量、目标通道、目的和输出之间前后一致",
+    "实际交付 manifest 仅示例文件变更，模板保持不变"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: git diff --name-status b4af165f42bde06949eea3ae46959b036f4f77b3 HEAD -- docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md returned exactly one M path for the example; no template path.",
+    "PASS: example section audit confirms four numbered sections and matching current-template headings/fields.",
+    "PASS: basic-information audit confirms project/source/task/sample/ID/ETA/cryostat values are concrete and internally consistent.",
+    "PASS: purpose/object/test audit confirms background, purpose, expected conclusion, 4-route/2-bit scope, concrete object, loading/wiring, purpose-linked outputs and test-outline confirmation.",
+    "PASS: placeholder audit found no 请填写, three-or-more underscores, or ____-__-__; no obsolete multi-block request fields were retained.",
+    "PASS: git diff --check returned no whitespace errors."
+  ],
+  "created_at": "2026-08-24T21:40:00+08:00"
+}

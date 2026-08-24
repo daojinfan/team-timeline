@@ -1,0 +1,24 @@
+{
+  "$schema": "schemas/validation-evidence.schema.json",
+  "schema_version": 1,
+  "task_id": "TASK-217",
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "contract_sha256": "6e61a001c3b934e6d0a6cfb51b5d2dc111e492ad8a8fd598964a68ca5dac9f95",
+  "git_commit": "36721e7d44a6880f9094a160d673a88968022cbc",
+  "validation_id": "current-template-example-review",
+  "command": "powershell",
+  "args": [
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-Command",
+    "$p=\"docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md\"; if(!(Test-Path -LiteralPath $p -PathType Leaf)){throw \"missing example\"}; Write-Output \"example present\""
+  ],
+  "started_at": "2026-08-24T14:33:12.0302718Z",
+  "finished_at": "2026-08-24T14:33:12.4529114Z",
+  "exit_code": 0,
+  "redactions_applied": 0,
+  "output_path": "docs/05-quality/evidence/TASK-217/20260824T143312024Z-93cb4757-current-template-example-review.output.txt",
+  "output_sha256": "57ca972c737710420b531c0fc74d18f739f6fb3a4b00ce6af2f0afddbe2bc845"
+}
