@@ -1,0 +1,52 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-201",
+  "reviewed_task_ids": [
+    "TASK-200"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "changes-required",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-200",
+      "path": "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md",
+      "change_type": "modified",
+      "summary": "将原多区块外部需求模板精简为单页简版，只保留需求信息、测试项、样品和提交说明。"
+    },
+    {
+      "task_id": "TASK-200",
+      "path": "docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md",
+      "change_type": "modified",
+      "summary": "将原完整流程实例精简为工艺组 Z4 Readout BGA 露出的一页填写实例。"
+    }
+  ],
+  "change_summary": "从 TASK-200 start_git_commit a182c13ed5620f5ac7c85ae59a3f8414459d81e3 到当前 HEAD 的 scoped Git manifest 恰为上述两个 modified Markdown 文件，没有新增、删除或重命名。主体模板已经显著精简且必要业务字段基本保留，但必填标识、非正式外观和实例交接说明仍需修正。",
+  "scope_checked": [
+    "单页简版模板的来源小组、需求名称、测试目的、测试项、样品型号/数量/编号/预计交付字段",
+    "专题建议、制冷机要求和备注的可选标识",
+    "任务拆分、成员、状态、颜色和正式排期交由测控组的边界",
+    "工艺组 Z4 Readout BGA 露出实例与模板字段的一一对应",
+    "简洁度、非正式文档体验、多样品和编号待定/ETA 待定能力",
+    "TASK-200 scoped Git 变更清单和项目治理校验"
+  ],
+  "findings": [
+    "样品编号未标记为必填，与模板自身“带必填的内容需要填写”说明及 TASK-200 验收标准“样品型号/数量/编号和预计交付时间为必填”不一致。当前表头只有“样品编号”，按说明会被理解为可不填；应标为“样品编号（必填，未知填待定）”或等价文案。",
+    "实例仍保留完整治理式 YAML frontmatter（doc_id、type、status、version、owner、baseline、depends_on 等），与用户要求的最小、非正式填写文档及无 frontmatter 的简版模板不匹配；这段元数据增加明显形式负担，应从用户可复制实例中移除。",
+    "实例第 4 节的内部交接说明只提专题、建任务、成员、制冷机和甘特图时间，遗漏模板第 4 节明确交给测控组的任务状态和颜色；为保证实例真正镜像模板，应补充状态和颜色也由测控组维护。"
+  ],
+  "validation_evidence": [
+    "PASS: TASK-201 markdown-minimal command; output `minimal source-group documents present`.",
+    "PASS: TASK-200 markdown-minimal token command; both files contain 提出小组、需求名称、测试目的、测试项、样品型号 and 预计交付; output `minimal source-group documents ok`.",
+    "PASS: `git diff --check` on current worktree; no whitespace errors.",
+    "PASS: `powershell -NoProfile -ExecutionPolicy Bypass -File .governance/tools/Test-ProjectGovernance.ps1 -ProjectPath . -Level Strict`; 56 documents scanned, 0 errors, 0 warnings.",
+    "PASS: template field audit found all essential fields, optional topic/cryostat/notes, and explicit delegation of task split/members/status/color/formal schedule to the measurement team.",
+    "PASS: template/example table comparison found matching demand, test-item and sample columns; example is concrete with 工艺组, four test items, two BGA samples, pending IDs and 2026-09-04 ETA.",
+    "FAIL: mandatory-marker audit found 样品编号 lacks `必填` while the template declares all unlabeled fields optional/skippable.",
+    "FAIL: non-formal/mirror audit found the example starts with governance YAML frontmatter while the template does not, and the example handoff omits status/color delegation.",
+    "PASS: `git diff --name-status a182c13ed5620f5ac7c85ae59a3f8414459d81e3 HEAD -- docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md` returned exactly two `M` paths listed above."
+  ],
+  "created_at": "2026-08-24T17:12:00+08:00"
+}
