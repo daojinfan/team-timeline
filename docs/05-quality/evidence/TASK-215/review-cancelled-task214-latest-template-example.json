@@ -1,0 +1,29 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-215",
+  "reviewed_task_ids": [
+    "TASK-214"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "cancelled",
+  "diff_checked": true,
+  "changes": [],
+  "change_summary": "TASK-214 已因用户继续微调模板第3/4部分措辞，并要求按当前最新模板生成示例，而被新的示例交付任务替代。本证据仅取消 TASK-215 对旧 TASK-214 交付的审核绑定，不撤销或覆盖 TASK-215 round 1/round 2 历史审核证据，也不包含任何产品文件或治理状态变更。",
+  "scope_checked": [
+    "TASK-214.state.json 标记为 superseded，并记录第3/4部分措辞微调及新示例任务承接原因",
+    "取消范围仅限 TASK-215 对旧 TASK-214 主题的审核绑定",
+    "TASK-215 review-round-1.json 与 review-round-2.json 双轮历史证据保留且不被覆盖",
+    "changes 为空；本取消证据不修改产品文件、治理运行状态、台账或其他文件"
+  ],
+  "findings": [
+    "取消原因：用户继续微调模板第3/4部分措辞，且示例必须按当前最新模板重新生成；旧 TASK-214 版本及其审核指纹不再代表当前交付，后续由新的示例任务承载。"
+  ],
+  "validation_evidence": [
+    "PASS: TASK-214.state.json reports state=superseded and records the latest-template/example replacement reason.",
+    "PASS: prior TASK-215 review-round-1.json and review-round-2.json remain present.",
+    "PASS: cancellation evidence contains no product paths in changes and does not alter governance runtime state."
+  ],
+  "created_at": "2026-08-24T21:30:00+08:00"
+}
