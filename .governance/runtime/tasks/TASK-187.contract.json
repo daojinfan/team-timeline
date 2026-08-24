@@ -1,0 +1,118 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-187",
+  "work_package": "WP-009",
+  "title": "独立审核 V5 快速筛选非控件布局（重规划）",
+  "goal": "独立核对 TASK-186 的快速筛选标题布局，确认任务全量编辑台和执行中心统一为左侧非、右侧紧接筛选项名称且既有筛选行为不回归。",
+  "baseline": "BL-006",
+  "profile": "Standard",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-187"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "tests",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/05-quality"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-187"
+  ],
+  "out_of_scope": [
+    "public/index.html",
+    "public/styles.css",
+    "public/app.js",
+    "src/server.js",
+    "data/team_tasks.sqlite"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [
+    "TASK-186"
+  ],
+  "acceptance_criteria": [
+    "核对 TASK-186 从启动提交到最终内容的实际 Git 变更路径、类型和范围。",
+    "确认两个页面所有快速筛选项均为非复选框在左、筛选项名称在右且紧邻，状态控件没有单独布局分支。",
+    "确认组合筛选、日期例外、非语义、一键还原和既有回归均未受影响。",
+    "对同一最终内容完成 Standard 双轮全量审核并记录结构化证据。"
+  ],
+  "validations": [
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "v5-filter-regression",
+      "command": "node",
+      "args": [
+        "--test",
+        "tests/v5-filter-combo.test.js"
+      ]
+    },
+    {
+      "id": "v5-inline-regression",
+      "command": "node",
+      "args": [
+        "--test",
+        "tests/v5-inline-editor.test.js"
+      ]
+    },
+    {
+      "id": "governance-strict",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-ProjectPath",
+        ".",
+        "-Level",
+        "Strict"
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-24T04:20:50.5702629Z"
+}

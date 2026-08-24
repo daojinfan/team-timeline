@@ -45,7 +45,7 @@ test("V5 task status filter supports an accessible inverse mode", () => {
   const index = readFileSync(path.join(root, "public/index.html"), "utf8");
   assert.match(index, /id="v5TaskStatusFilter"/);
   assert.match(index, /id="v5TaskStatusNot" type="checkbox"/);
-  assert.match(index, /class="v5-status-filter-heading"><label for="v5TaskStatusFilter">状态<\/label><label class="v5-filter-negate">/);
+  assert.match(index, /class="v5-status-filter-heading"><label class="v5-filter-negate"><input id="v5TaskStatusNot" type="checkbox"> 非<\/label><label for="v5TaskStatusFilter">状态<\/label>/);
   assert.match(index, /> 非<\/label>/);
   assert.match(app, /v5FilterExpressionMatches\(task, expression\)/);
   assert.match(app, /condition\.negate \? !matches : matches/);

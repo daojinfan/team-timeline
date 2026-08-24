@@ -27,6 +27,29 @@ test("V5 filters support per-condition inverse matching and multi-select", () =>
   assert.match(app, /match === "all"/);
 });
 
+test("V5 quick filter headings keep 非 immediately before the filter label", () => {
+  const filterIds = [
+    "v5TaskSearchNot",
+    "v5TaskSourceNot",
+    "v5TaskStatusNot",
+    "v5TaskCryostatNot",
+    "v5ExecutionSearchNot",
+    "v5ExecutionSourceNot",
+    "v5ExecutionTopicNot",
+    "v5ExecutionStatusNot",
+    "v5ExecutionMemberNot",
+    "v5ExecutionSampleNot",
+    "v5ExecutionCryostatNot",
+  ];
+  for (const id of filterIds) {
+    assert.match(index, new RegExp(`class="v5-(?:status-)?filter-heading"><label class="v5-filter-negate"><input id="${id}" type="checkbox"> 非</label><label for=`), id);
+  }
+  assert.match(styles, /\.v5-filter-heading \{[^}]*justify-content: flex-start/);
+  assert.match(styles, /\.v5-status-filter-heading \{[^}]*justify-content: flex-start/);
+  assert.match(styles, /\.v5-filter-heading > label:not\(\.v5-filter-negate\)/);
+  assert.match(styles, /\.v5-status-filter-heading > label:not\(\.v5-filter-negate\)/);
+});
+
 test("V5 filter groups make AND\/OR explicit and keep date exceptions", () => {
   assert.match(app, /connector: group\.connector === "or" \? "or" : "and"/);
   assert.match(app, /logic: group\.logic === "or" \? "or" : "and"/);

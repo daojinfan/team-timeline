@@ -1,0 +1,46 @@
+{
+    "$schema":  "schemas/governed-work-state.schema.json",
+    "schema_version":  2,
+    "task_id":  "TASK-184",
+    "work_package":  "WP-009",
+    "contract_sha256":  "6d5e2ef4a59aa2eb1cdf126f4b5b47361578af0c5eef375f2146e40da67f6378",
+    "baseline":  "BL-006",
+    "state":  "superseded",
+    "approval_id":  "APR-136",
+    "acceptance_subject_sha256":  "",
+    "acceptance_evidence_sha256":  "",
+    "acceptance_git_commit":  "",
+    "start_git_commit":  "a9ff4f6d7171f9b14cbf811d38af5bf4afde134f",
+    "execution_lease":  "",
+    "execution_lease_owner":  "",
+    "execution_lease_expires_at":  "",
+    "preexisting_changes":  [
+
+                            ],
+    "plan_checkpoint_git_commit":  "a9ff4f6d7171f9b14cbf811d38af5bf4afde134f",
+    "plan_rebase_history":  [
+
+                            ],
+    "evidence":  [
+
+                 ],
+    "evidence_history":  [
+
+                         ],
+    "review_history":  [
+
+                       ],
+    "review":  {
+                   "required":  true,
+                   "reviewer_task_id":  "TASK-185",
+                   "status":  "pending",
+                   "evidence":  [
+
+                                ],
+                   "pass_streak":  0,
+                   "subject_sha256":  ""
+               },
+    "last_error":  "Verification detected an attempted public/app.js change outside the approved scope. That change was reverted; replace this task with a cleanly scoped implementation task.",
+    "created_at":  "2026-08-24T01:42:12.7294124Z",
+    "updated_at":  "2026-08-24T04:19:47.8380897Z"
+}
