@@ -1,0 +1,36 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-213",
+  "work_package": "WP-009",
+  "contract_sha256": "8bf29089331b9fe52fa2010980df516828043c6161c60429b3de82f725858edb",
+  "baseline": "BL-006",
+  "state": "superseded",
+  "approval_id": "",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md"
+  ],
+  "plan_checkpoint_git_commit": "89ef93e45cebdd15117625023fba153212f2bf46",
+  "plan_rebase_history": [],
+  "evidence": [],
+  "evidence_history": [],
+  "review_history": [],
+  "review": {
+    "required": false,
+    "reviewer_task_id": "",
+    "status": "not-applicable",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
+  },
+  "last_error": "实现任务 TASK-212 因用户修改处于脏工作树，改由新的干净检查点任务执行；未开始审核。",
+  "created_at": "2026-08-24T14:04:38.8573017Z",
+  "updated_at": "2026-08-24T14:05:15.6804729Z"
+}

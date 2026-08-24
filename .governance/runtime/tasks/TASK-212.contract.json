@@ -1,0 +1,82 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-212",
+  "work_package": "WP-009",
+  "title": "补充测控任务需求文档测试目的填写区",
+  "goal": "在用户当前模板基础上，仅补充第三部分测试目的的数字化表格，记录测试背景或重要性、具体测试目的和预期结论或结果用途，避免重新引入覆盖范围等重复字段。",
+  "baseline": "BL-006",
+  "profile": "Standard",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md"
+  ],
+  "read_paths": [
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md",
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md",
+    "docs/02-product",
+    "docs/03-architecture"
+  ],
+  "write_paths": [
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md"
+  ],
+  "out_of_scope": [
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md",
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "src/server.js",
+    "data/team_tasks.sqlite",
+    "系统功能修改",
+    "数据库迁移",
+    "手机端"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "第三部分包含可直接填写的测试背景或重要性、测试目的和预期结论或结果用途字段。",
+    "补充内容不重新引入覆盖范围字段，不与测试对象和主要测试项重复。",
+    "继续使用数字化 Markdown 表格，不使用手写式下划线或日期占位；示例文件不变。",
+    "只补充第三部分，保留用户对其他部分的现有修改。"
+  ],
+  "validations": [
+    {
+      "id": "purpose-section-table",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        "$p=\"docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md\"; $t=Get-Content -LiteralPath $p -Raw; foreach($token in @(\"## 3. 测试目的\",\"测试任务背景或重要性\",\"测试目的（必填）\",\"预期结论或结果用途\")){if($t.IndexOf($token)-lt 0){throw (\"missing \"+$token)}}; if($t -match \"覆盖范围\"){throw \"coverage field should remain absent\"}; if($t -match \"_{3,}|____-__-__\"){throw \"handwritten placeholders remain\"}; Write-Output \"purpose section table ok\""
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-24T14:04:25.5202543Z"
+}
