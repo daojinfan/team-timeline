@@ -1,0 +1,54 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-199",
+  "reviewed_task_ids": [
+    "TASK-198"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "changes-required",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-198",
+      "path": "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md",
+      "change_type": "added",
+      "summary": "外部小组需求内容模板的最终净新增文件；需求方填写需求内容和样品，测控组补充专题、任务、样品级事实、资源、排期与状态。"
+    },
+    {
+      "task_id": "TASK-198",
+      "path": "docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md",
+      "change_type": "added",
+      "summary": "工艺组 Z4 Readout 完整实例的最终净新增文件；演示需求内容、多样品、内部任务拆分、样品逐行补录、状态和 ETA/制冷机变更。"
+    }
+  ],
+  "change_summary": "本轮对两个最终文件重新从头审核。相对 TASK-198 start_git_commit e941a50663fa415545f4a6f3fadf1a04e3cbab9c，实际 scoped manifest 仍只有上述两个 added Markdown 文件；两条路径在起始提交中均不存在。前轮关于模板任务拆分边界、任务状态字段、等待样品判定、样品逐行记录及 ETA 变更链的主体修正均已落实，但仍有边界和映射完整性问题。",
+  "scope_checked": [
+    "需求方只填写需求内容，测控组内部确认专题并拆分连续任务",
+    "专题→连续任务→样品层级、多需求内容、多任务、多样品及任务/样品关联",
+    "内部任务表的系统编号、来源、专题、制冷机、任务 ETA、计划日期、颜色、人工阶段和计算展示状态",
+    "样品级正式/临时/待定编号、逐样品预计交付、实际到样和绑定成员",
+    "等待样品、样品交付延期、正在测试、测试延期、已完成及无已到样待测试状态",
+    "ETA/制冷机变化记录、系统映射和工艺组示例的完整流转",
+    "联系人、前置任务、任务顺序、每人工时和成果提交的排除边界",
+    "TASK-198 scoped Git change manifest"
+  ],
+  "findings": [
+    "实例的需求方填写区仍泄漏了测控组拆分后的任务标签：内容-B 的制冷机偏好写“如与任务-A冲突”，WB-SP-02 备注写“不影响任务-A”。在内部确认区之前并不存在任务-A，且模板已规定需求方只填写内容-A/内容-B、连续任务由测控组拆分；这两处应引用“内容-A”或需求内容关系，避免需求方预设任务边界。",
+    "测控组内部区仍没有成员级时间填写字段。模板仅记录任务整体开始/结束，并在映射和流程中声称“成员时间由测控组维护”，但 3.3 没有成员开始/成员结束或成员排期列，实例也没有展示任一成员在任务中的日期范围；因此“成员、时间由测控组补充”和当前 V5 的成员任务时间管理未被完整演示。",
+    "系统录入映射第 3.2 行只说明制冷机、计划测试时间和任务颜色，遗漏同一表新增的预计样品交付、人工阶段和当前展示状态字段；修复后的内部任务表与映射说明仍不完全一致。"
+  ],
+  "validation_evidence": [
+    "PASS: TASK-198/TASK-199 markdown-structural command; output `source-group documents present`.",
+    "PASS: `git diff --check` on current worktree; no whitespace errors.",
+    "PASS: `powershell -NoProfile -ExecutionPolicy Bypass -File .governance/tools/Test-ProjectGovernance.ps1 -ProjectPath . -Level Strict`; 56 documents scanned, 0 errors, 0 warnings.",
+    "PASS: repaired-field audit found explicit requester content blocks, measurement-team task split, manual phase/computed status fields, full waiting-sample cases, per-sample identifier/arrival/member fields and the 2026-09-01 to 2026-09-04 ETA history.",
+    "PASS: hierarchy/example audit found two demand-content blocks mapped internally to two tasks, four samples, unknown IDs, one temporary-ID/arrival example, two members, task dates/colors/statuses and cryostat/ETA changes.",
+    "PASS: forbidden-field audit found zero Markdown table fields for 联系人、前置任务、任务顺序、每人工时 or 成果提交 in both files.",
+    "FAIL: requester-boundary static audit found `任务-A` in the demand-side example before the internal confirmation section at lines 79 and 95.",
+    "FAIL: member-time/mapping audit found no 成员开始/成员结束 fields; template mentions member time only in prose/mapping, and mapping row 3.2 omits the added ETA/manual-phase/display-status fields.",
+    "PASS: `git diff --name-status e941a50663fa415545f4a6f3fadf1a04e3cbab9c HEAD -- docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md` returned exactly two added paths listed above."
+  ],
+  "created_at": "2026-08-24T14:24:00+08:00"
+}
