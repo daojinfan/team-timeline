@@ -1,0 +1,41 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-197",
+  "reviewed_task_ids": [
+    "TASK-196"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-196",
+      "path": "docs/09-reports/templates/REQ-TEMPLATE-V5-001.md",
+      "change_type": "added",
+      "summary": "新增并最终完善 V5 桌面端需求录入 Markdown 模板，覆盖专题、任务全量字段、系统关联样品、样品编号类型、排期、成员与变更记录。"
+    }
+  ],
+  "change_summary": "从 TASK-196 start_git_commit c4aae7b77d01bcdaf9ba77283e4488a41963933b 到当前 HEAD 的 scoped Git 差异真实只有一个文件；该路径在起始提交中不存在，因此 change_type 按实际 Git 状态记录为 added。治理运行记录和审核证据不计入产品变更。已对当前最终内容重新执行全量审核，前两轮问题均已修正。",
+  "scope_checked": [
+    "来源小组：工艺组、读取组、量子门组、电子学组",
+    "专题名称、专题目的、专题状态（正在进行/专题完成归档）和备注",
+    "任务总览及任务详细区块：系统任务编号、所属专题、样品集合（系统关联）、任务名称、来源小组、人工阶段、系统展示状态、测试目的、结构化测试项名称与备注、计划测试日期、预计样品交付、制冷机、参与成员、备注和任务颜色",
+    "样品规划：规划标签、样品型号、编号类型（正式编号/临时编号/待定）、样品编号、预计交付、实际到样、绑定成员和样品备注；支持一个任务多样品",
+    "成员时间计划、任务整体时间、整体时间修改时的成员同步选择和 ETA/制冷机/测试时间变更记录",
+    "状态规则：无样品、ETA 待确认、全部到样未开始、样品交付延期、manual_phase=testing 前提的测试延期、已完成最高优先级；没有已到样待测试状态",
+    "明确排除联系人、前置任务、任务顺序、每人工时和成果提交字段"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: TASK-197 markdown-structural validation command; output `Markdown structure ok`.",
+    "PASS: `git diff --check` on current worktree; no whitespace errors.",
+    "PASS: `powershell -NoProfile -ExecutionPolicy Bypass -File .governance/tools/Test-ProjectGovernance.ps1 -ProjectPath . -Level Strict`; 54 documents scanned, 0 errors, 0 warnings.",
+    "PASS: required-field audit found all source-group, topic, task, sample, schedule, member, cryostat, change-log and status tokens, including `样品集合（系统关联）`, `编号类型`, `正式编号`, `临时编号`, `待补/TBD`, and `实际到样`.",
+    "PASS: state-table audit found exactly the five display states; waiting-sample row covers no sample/ETA pending/all samples arrived but not started, sample-delay row requires confirmed overdue ETA and waiting phase, test-delay row requires manual phase testing and end-date overrun, and completed is highest priority. `已到样待测试` appears only in the explicit prohibition note and not as a status option/table row.",
+    "PASS: exclusion audit found no forbidden terms as Markdown table field labels; the terms appear only in the explicit non-requirement explanation.",
+    "PASS: `git diff --name-status c4aae7b77d01bcdaf9ba77283e4488a41963933b HEAD -- docs/09-reports/templates/REQ-TEMPLATE-V5-001.md` returned exactly `A docs/09-reports/templates/REQ-TEMPLATE-V5-001.md`; baseline lookup confirmed the path was absent at c4aae7b."
+  ],
+  "created_at": "2026-08-24T13:36:00+08:00"
+}
