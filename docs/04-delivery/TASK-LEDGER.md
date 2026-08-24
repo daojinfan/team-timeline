@@ -36,8 +36,8 @@ review_policy: independent-required
 
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| WP-009 | TASK-197 | pending | REVIEWER | 独立审核 Markdown 需求文档模板（ASCII 路径） | BL-006 | pending | TASK-196 | pending | docs/05-quality/evidence/TASK-197 | markdown-structural, governance-strict | n/a | n/a | n/a | Plan 自动登记，等待调度 |
-| WP-009 | TASK-196 | pending | IMPLEMENTER | 生成 Markdown 需求文档模板（ASCII 路径） | BL-006 | pending | TASK-186 | running | docs/09-reports/templates/REQ-TEMPLATE-V5-001.md | markdown-structural, git-diff-check, governance-strict | TASK-197 | pending |  | Plan 自动登记，等待调度 |
+| WP-009 | TASK-197 | pending | REVIEWER | 独立审核 Markdown 需求文档模板（ASCII 路径） | BL-006 | pending | TASK-196 | completed | docs/05-quality/evidence/TASK-197 | markdown-structural, governance-strict | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-009 | TASK-196 | pending | IMPLEMENTER | 生成 Markdown 需求文档模板（ASCII 路径） | BL-006 | pending | TASK-186 | running | docs/09-reports/templates/REQ-TEMPLATE-V5-001.md | markdown-structural, git-diff-check, governance-strict | TASK-197 | passed | docs/05-quality/evidence/TASK-197/review-round-4.json | Plan 自动登记，等待调度 |
 | WP-009 | TASK-195 | pending | REVIEWER | 独立审核 Markdown 需求文档模板（模板文件豁免） | BL-006 | pending | TASK-194 | replaced | docs/05-quality/evidence/TASK-195 | markdown-structural, governance-strict | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-009 | TASK-194 | pending | IMPLEMENTER | 生成 Markdown 需求文档模板（模板文件豁免） | BL-006 | pending | TASK-186 | replaced | docs/09-reports/templates/REQ-TEMPLATE-V5-001-小组任务管理与甘特图系统.md | markdown-structural, git-diff-check, governance-strict | TASK-195 | pending | pending | Plan 自动登记，等待调度 |
 | WP-009 | TASK-193 | pending | REVIEWER | 独立审核 Markdown 需求文档模板 | BL-006 | pending | TASK-192 | replaced | docs/05-quality/evidence/TASK-193 | markdown-structural, governance-strict | n/a | n/a | n/a | Plan 自动登记，等待调度 |
