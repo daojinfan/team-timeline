@@ -5,12 +5,12 @@
   "work_package": "WP-009",
   "contract_sha256": "94c151b6bf247ad1b880d6469d27b5b65c2444223ec79a1227f8bf8697a95883",
   "baseline": "BL-006",
-  "state": "planned",
+  "state": "verified",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
   "acceptance_git_commit": "",
-  "start_git_commit": "52ec86b786950c6ff2a381d36847c38030d3cf32",
+  "start_git_commit": "633ecc96e23d17dde84251034f05cd8aeeef11ee",
   "execution_lease": "",
   "execution_lease_owner": "",
   "execution_lease_expires_at": "",
@@ -33,14 +33,18 @@
       "rebased_at": "2026-08-24T05:59:53.6668829Z"
     }
   ],
-  "evidence": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-199/20260824T060311973Z-11713185-markdown-structural.evidence.json"
+  ],
   "evidence_history": [
     "docs/05-quality/evidence/TASK-199/20260824T054255355Z-206290b0-markdown-structural.evidence.json",
     "docs/05-quality/evidence/TASK-199/review-round-1.json",
     "docs/05-quality/evidence/TASK-199/20260824T055348129Z-28b537e2-markdown-structural.evidence.json",
     "docs/05-quality/evidence/TASK-199/review-round-2.json",
     "docs/05-quality/evidence/TASK-199/20260824T055901360Z-717eef30-markdown-structural.evidence.json",
-    "docs/05-quality/evidence/TASK-199/review-round-3.json"
+    "docs/05-quality/evidence/TASK-199/review-round-3.json",
+    "docs/05-quality/evidence/TASK-199/20260824T060311973Z-11713185-markdown-structural.evidence.json",
+    "docs/05-quality/evidence/TASK-199/review-round-4.json"
   ],
   "review_history": [
     {
@@ -63,6 +67,13 @@
       "result": "passed",
       "round_id": "RR-dd380d642fa14b60838a063a764e1372",
       "recorded_at": "2026-08-24T05:59:22.591027Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-199/review-round-4.json",
+      "sha256": "02172a795afd84c731a2a06c30b89f2574eb0fdd78884374ce14aaf205c22dbe",
+      "result": "passed",
+      "round_id": "RR-00d5492beba0485693ddc87bff9b19ef",
+      "recorded_at": "2026-08-24T06:03:31.8688194Z"
     }
   ],
   "review": {
@@ -75,5 +86,5 @@
   },
   "last_error": "",
   "created_at": "2026-08-24T05:31:40.7612005Z",
-  "updated_at": "2026-08-24T05:59:53.6745809Z"
+  "updated_at": "2026-08-24T06:03:32.2957621Z"
 }
