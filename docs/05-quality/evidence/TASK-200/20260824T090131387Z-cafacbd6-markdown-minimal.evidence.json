@@ -1,0 +1,24 @@
+{
+  "$schema": "schemas/validation-evidence.schema.json",
+  "schema_version": 1,
+  "task_id": "TASK-200",
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "contract_sha256": "7d3a97b097ae04c41b985290af7d5b644bb885efd5fd1d3be53dbf21afa2ca84",
+  "git_commit": "a182c13ed5620f5ac7c85ae59a3f8414459d81e3",
+  "validation_id": "markdown-minimal",
+  "command": "powershell",
+  "args": [
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-Command",
+    "$files=@(\"docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md\",\"docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md\"); foreach($p in $files){ if(!(Test-Path -LiteralPath $p -PathType Leaf)){ throw (\"missing \" + $p) }; $t=Get-Content -LiteralPath $p -Raw; foreach($token in @(\"提出小组\",\"需求名称\",\"测试目的\",\"测试项\",\"样品型号\",\"预计交付\")){ if($t.IndexOf($token)-lt 0){ throw ($p + \" missing \" + $token) } } }; Write-Output \"minimal source-group documents ok\" "
+  ],
+  "started_at": "2026-08-24T09:01:31.3932609Z",
+  "finished_at": "2026-08-24T09:01:31.7613362Z",
+  "exit_code": 0,
+  "redactions_applied": 0,
+  "output_path": "docs/05-quality/evidence/TASK-200/20260824T090131387Z-cafacbd6-markdown-minimal.output.txt",
+  "output_sha256": "982877b379df23d008cc19e638096ab2d5ad09c4096850cffd37a99dcabf6360"
+}

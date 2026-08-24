@@ -1,0 +1,88 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-200",
+  "work_package": "WP-009",
+  "title": "精简外部小组需求模板与实例",
+  "goal": "将外部小组需求提出文档收敛为一页式最小模板，仅保留来源小组、需求名称、测试目的、测试项、样品信息和预计交付时间，并保留可选专题建议、制冷机要求和备注。",
+  "baseline": "BL-006",
+  "profile": "Standard",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md",
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md"
+  ],
+  "read_paths": [
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md",
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md",
+    "docs/09-reports/templates/REQ-TEMPLATE-V5-001.md",
+    "docs/02-product",
+    "docs/03-architecture"
+  ],
+  "write_paths": [
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md",
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md"
+  ],
+  "out_of_scope": [
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "src/server.js",
+    "data/team_tasks.sqlite",
+    "系统功能修改",
+    "数据库迁移",
+    "手机端"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [
+    "TASK-198"
+  ],
+  "acceptance_criteria": [
+    "模板为一页式，需求方可在一个位置填写完成。",
+    "必填字段只保留提出小组、需求名称、测试目的、测试项、样品型号/数量/编号和预计交付时间。",
+    "专题建议、制冷机要求和备注为可选字段。",
+    "模板明确连续任务拆分、成员、状态、颜色和正式排期由测控组内部处理。",
+    "具体实例与精简模板字段一致，使用工艺组 Z4 Readout BGA 露出样品测试场景。",
+    "Markdown 结构检查和 Strict 治理检查通过。"
+  ],
+  "validations": [
+    {
+      "id": "markdown-minimal",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        "$files=@(\"docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md\",\"docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md\"); foreach($p in $files){ if(!(Test-Path -LiteralPath $p -PathType Leaf)){ throw (\"missing \" + $p) }; $t=Get-Content -LiteralPath $p -Raw; foreach($token in @(\"提出小组\",\"需求名称\",\"测试目的\",\"测试项\",\"样品型号\",\"预计交付\")){ if($t.IndexOf($token)-lt 0){ throw ($p + \" missing \" + $token) } } }; Write-Output \"minimal source-group documents ok\" "
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-24T08:55:09.6802499Z"
+}

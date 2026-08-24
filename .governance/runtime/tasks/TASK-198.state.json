@@ -5,7 +5,7 @@
   "work_package": "WP-009",
   "contract_sha256": "30a49ef0f471318adb94b818bfe96d18b5862e19a3929501bf8073a7c82796e7",
   "baseline": "BL-006",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -31,14 +31,14 @@
   "review": {
     "required": true,
     "reviewer_task_id": "TASK-199",
-    "status": "passed",
+    "status": "cancelled",
     "evidence": [
-      "docs/05-quality/evidence/TASK-199/review-round-4.json"
+      "docs/05-quality/evidence/TASK-199/review-cancelled-task198-minimal-template.json"
     ],
-    "pass_streak": 2,
-    "subject_sha256": "a1959a1a7f647eebdebe699e1eb37490b853f33846353f7d70188dcb6918240c"
+    "pass_streak": 0,
+    "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "用户要求将原完整外部需求文档改为一页式最小模板，由 TASK-200 替代。",
   "created_at": "2026-08-24T05:31:26.2643425Z",
-  "updated_at": "2026-08-24T06:03:32.0783720Z"
+  "updated_at": "2026-08-24T09:01:13.2276156Z"
 }

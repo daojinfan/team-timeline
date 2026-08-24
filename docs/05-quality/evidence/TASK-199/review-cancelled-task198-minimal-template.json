@@ -1,0 +1,29 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-199",
+  "reviewed_task_ids": [
+    "TASK-198"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "cancelled",
+  "diff_checked": true,
+  "changes": [],
+  "change_summary": "TASK-198 已被用户采用的一页式精简模板任务 TASK-200 superseded；本证据仅取消 TASK-199 对 TASK-198 旧交付主题的绑定，不撤销或覆盖历史审核结果，也不包含任何产品文件变更。TASK-198 的 round1 至 round4 审核证据仍保留在 docs/05-quality/evidence/TASK-199/。",
+  "scope_checked": [
+    "TASK-198 运行状态为 superseded，替代任务为 TASK-200 的一页式精简模板",
+    "取消范围仅限历史审核主题绑定；不修改模板、实例、治理状态或历史证据",
+    "TASK-198 历史 review-round-1.json、review-round-2.json、review-round-3.json 和 review-round-4.json 均保留"
+  ],
+  "findings": [
+    "取消原因：TASK-198 的多区块需求模板已被用户替换为 TASK-200 的一页式最小模板；TASK-198 不再是当前交付主题。"
+  ],
+  "validation_evidence": [
+    "PASS: TASK-198 state.json reports state=superseded and retains historical review metadata.",
+    "PASS: TASK-200 contract identifies the one-page minimal template as the replacement scope and is the current successor task.",
+    "PASS: no product paths are listed in changes; this cancellation evidence does not alter product files or governance state.",
+    "PASS: prior TASK-199 review evidence files remain present and are not overwritten."
+  ],
+  "created_at": "2026-08-24T15:14:00+08:00"
+}
