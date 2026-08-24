@@ -1,0 +1,85 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-219",
+  "work_package": "WP-009",
+  "title": "独立审核执行中心排期免预览修复",
+  "goal": "独立审核执行中心排期编辑是否已移除手动预览操作，并确认自动校验、冲突确认、版本校验和成员排期路径未被破坏。",
+  "baseline": "BL-006",
+  "profile": "Standard",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-219"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/app.js",
+    "tests/v5-execution.test.js",
+    "tests/v5-api.test.js",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/05-quality"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-219"
+  ],
+  "out_of_scope": [
+    "public/index.html",
+    "public/app.js",
+    "tests/v5-execution.test.js",
+    "src/server.js",
+    "src/v3/index.js",
+    "data/team_tasks.sqlite"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [
+    "TASK-218"
+  ],
+  "acceptance_criteria": [
+    "确认排期对话框无生成预览按钮和手动预览前置步骤。",
+    "确认任务排期和成员排期保存都在提交时自动完成预检并继续使用 preview_token 和 expected_version。",
+    "确认冲突和错误提示仍可理解，未放宽后端安全校验。",
+    "确认实际变更仅限允许路径。",
+    "完成 Standard 双轮独立审核并生成结构化证据。"
+  ],
+  "validations": [
+    {
+      "id": "execution-schedule-no-preview-review",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        "$p=\"tests/v5-execution.test.js\"; if(!(Test-Path -LiteralPath $p -PathType Leaf)){throw \"missing execution tests\"}; Write-Output \"execution tests present\""
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-24T16:39:20.8381238Z"
+}

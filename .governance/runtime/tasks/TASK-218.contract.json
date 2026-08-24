@@ -1,0 +1,89 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-218",
+  "work_package": "WP-009",
+  "title": "移除执行中心排期的手动预览操作",
+  "goal": "修复执行中心排期编辑体验：移除生成预览按钮和前置步骤，用户点击确认保存后由前端自动请求排期校验并提交保存，同时保留冲突校验、版本校验和成员同步能力。",
+  "baseline": "BL-006",
+  "profile": "Standard",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/index.html",
+    "public/app.js",
+    "tests/v5-execution.test.js"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "tests/v5-execution.test.js",
+    "tests/v5-api.test.js",
+    "docs/02-product",
+    "docs/03-architecture"
+  ],
+  "write_paths": [
+    "public/index.html",
+    "public/app.js",
+    "tests/v5-execution.test.js"
+  ],
+  "out_of_scope": [
+    "src/server.js",
+    "src/v3/index.js",
+    "data/team_tasks.sqlite",
+    "public/styles.css",
+    "手机端",
+    "任务全量编辑台其他保存流程"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "执行中心排期对话框不再显示生成预览按钮，也不要求用户执行预览。",
+    "点击确认保存时自动完成排期预检并提交任务或成员排期。",
+    "保留后端 preview_token、expected_version、冲突和成员同步校验。",
+    "任务排期和成员排期两种模式都能直接保存，日期校验和错误提示仍有效。",
+    "新增回归测试验证无手动预览操作且保存流程仍使用自动校验。"
+  ],
+  "validations": [
+    {
+      "id": "execution-schedule-no-preview",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        "$index=Get-Content -LiteralPath \"public/index.html\" -Raw; $app=Get-Content -LiteralPath \"public/app.js\" -Raw; $test=Get-Content -LiteralPath \"tests/v5-execution.test.js\" -Raw; if($index -match \"v5SchedulePreviewBtn|生成预览\"){throw \"explicit schedule preview operation remains\"}; if($index -notmatch \"id=\\\"v5ScheduleSaveBtn\\\"[^>]*>确认保存\"){throw \"schedule save action missing\"}; foreach($token in @(\"schedule-preview\",\"member-schedule-preview\",\"v5PreviewSchedule\",\"preview_token\")){if($app.IndexOf($token)-lt 0){throw (\"automatic validation token missing \"+$token)}}; if($test -notmatch \"direct save|不需要生成预览\"){throw \"regression assertion missing\"}; Write-Output \"schedule save without explicit preview checks ok\""
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-24T16:39:06.2907700Z"
+}

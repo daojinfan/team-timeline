@@ -3,7 +3,7 @@
   "schema_version": 2,
   "task_id": "TASK-059",
   "work_package": "WP-009",
-  "contract_sha256": "ef71b3c1d1b61402cd0631cf20fa01a440343473578baff19c1aa0955a457584",
+  "contract_sha256": "7be73715fc2a35c5b609bd402e39c692e634a7b1e1381a42cff8f7f785f2240d",
   "baseline": "BL-004",
   "state": "superseded",
   "approval_id": "APR-060",
@@ -57,5 +57,5 @@
   },
   "last_error": "Replaced by consolidated V2.1 integration task after shared-worktree scope collision.",
   "created_at": "2026-08-21T00:17:14.5794097Z",
-  "updated_at": "2026-08-21T00:42:07.2090990Z"
+  "updated_at": "2026-08-21T00:42:07.209099Z"
 }
