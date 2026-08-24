@@ -1,0 +1,38 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-215",
+  "reviewed_task_ids": [
+    "TASK-214"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-214",
+      "path": "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md",
+      "change_type": "modified",
+      "summary": "仅补充第三部分测试目的的数字化表格，包含测试任务背景或重要性、测试目的和预期结论或结果用途。"
+    }
+  ],
+  "change_summary": "从 TASK-214 start_git_commit 5db8cefbbdf29c99fc7d0d598de09e1f87991d14 到当前最终内容核对，实际 scoped diff 仅为模板一个 modified 文件；REQ-SOURCE-GROUP-EXAMPLE-V5-001.md 未修改。",
+  "scope_checked": [
+    "第三部分包含测试任务背景或重要性、测试目的、预期结论或结果用途三个可直接填写字段",
+    "说明文字简洁，指导填写为什么测、要判断什么及结果支持什么决定",
+    "补充内容未重新引入覆盖范围字段，也未重复测试对象/主要测试项的职责",
+    "第三部分仍为数字化 Markdown 表格，提示文字可直接替换",
+    "模板无三连下划线、____-__-__ 或其他手写式下划线/日期占位",
+    "实际交付 changes 仅模板文件；示例文件保持不变"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: git diff --name-status 5db8cefbbdf29c99fc7d0d598de09e1f87991d14 HEAD -- docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md returned exactly one M path for the template; no example path.",
+    "PASS: third section contains the required three fields: 测试任务背景或重要性（必填）, 测试目的（必填）, and 预期结论或结果用途（可选）.",
+    "PASS: purpose-section guidance is concise and does not add a 覆盖范围 field or duplicate section 4 object/test-item content.",
+    "PASS: all added inputs are in a replaceable Markdown table; no three-or-more underscores or ____-__-__ date placeholders found.",
+    "PASS: git diff --check returned no whitespace errors."
+  ],
+  "created_at": "2026-08-24T21:10:00+08:00"
+}
