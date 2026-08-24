@@ -1,0 +1,85 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-199",
+  "work_package": "WP-009",
+  "title": "独立审核外部小组需求提出模板与实例",
+  "goal": "独立复核外部小组需求提出 Markdown 模板及具体实例，确认其与当前 V5 管理办法、专题—连续任务—样品层级和内部补充边界一致。",
+  "baseline": "BL-006",
+  "profile": "Standard",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-199"
+  ],
+  "read_paths": [
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md",
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md",
+    "docs/09-reports/templates/REQ-TEMPLATE-V5-001.md",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/05-quality",
+    "docs/09-reports"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-199"
+  ],
+  "out_of_scope": [
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md",
+    "docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md",
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "src/server.js",
+    "data/team_tasks.sqlite"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [
+    "TASK-198"
+  ],
+  "acceptance_criteria": [
+    "逐项核对模板和实例的字段、填写边界、流程与当前 V5 管理办法一致。",
+    "确认需求方只填写需求侧信息，测控组补充专题确认、任务拆分、制冷机、成员和排期。",
+    "确认支持一个需求包含多个连续任务、每个任务包含多个样品，编号未知可待定。",
+    "完成 Standard 双轮独立审核并生成结构化证据。"
+  ],
+  "validations": [
+    {
+      "id": "markdown-structural",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        "$files=@(\"docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md\",\"docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md\"); foreach($p in $files){ if(!(Test-Path -LiteralPath $p -PathType Leaf)){ throw (\"missing \" + $p) } }; Write-Output \"source-group documents present\" "
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-24T05:31:40.7612005Z"
+}
