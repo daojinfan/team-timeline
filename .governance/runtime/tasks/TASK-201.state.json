@@ -15,8 +15,14 @@
   "execution_lease_owner": "",
   "execution_lease_expires_at": "",
   "preexisting_changes": [],
-  "plan_checkpoint_git_commit": "a182c13ed5620f5ac7c85ae59a3f8414459d81e3",
-  "plan_rebase_history": [],
+  "plan_checkpoint_git_commit": "0a2e61e2fe50dc7264042e5ee0acc8a29c07f8ba",
+  "plan_rebase_history": [
+    {
+      "previous_changes": [],
+      "checkpoint_git_commit": "0a2e61e2fe50dc7264042e5ee0acc8a29c07f8ba",
+      "rebased_at": "2026-08-24T09:08:20.7030145Z"
+    }
+  ],
   "evidence": [],
   "evidence_history": [
     "docs/05-quality/evidence/TASK-201/20260824T090644932Z-eaf6ff7e-markdown-minimal.evidence.json",
@@ -41,5 +47,5 @@
   },
   "last_error": "",
   "created_at": "2026-08-24T08:56:04.7653486Z",
-  "updated_at": "2026-08-24T09:08:03.8133254Z"
+  "updated_at": "2026-08-24T09:08:20.7110473Z"
 }
