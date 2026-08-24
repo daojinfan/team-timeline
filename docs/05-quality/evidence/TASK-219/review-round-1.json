@@ -1,0 +1,51 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-219",
+  "reviewed_task_ids": [
+    "TASK-218"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-218",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "执行中心排期对话框移除手动生成预览按钮和预览前置区域，确认保存保留为唯一提交动作。"
+    },
+    {
+      "task_id": "TASK-218",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "任务和成员排期提交时自动调用对应 schedule-preview/member-schedule-preview，按冲突确认结果携带 preview_token、expected_version 和 ack 保存，并保留错误处理。"
+    },
+    {
+      "task_id": "TASK-218",
+      "path": "tests/v5-execution.test.js",
+      "change_type": "modified",
+      "summary": "新增回归断言验证无手动预览操作、直接保存自动预检、preview_token、expected_version 和冲突确认路径。"
+    }
+  ],
+  "change_summary": "从 TASK-219 start_git_commit e8a2085da5167226994fa100d9b9e44d265edd10 到当前工作树核对，实际 scoped manifest 恰为上述三个允许路径 modified 文件；未将治理状态、台账或其他证据文件计入 TASK-218 产品交付 changes。",
+  "scope_checked": [
+    "排期对话框无 v5SchedulePreviewBtn、生成预览、保存预览或手动预览确认区域，确认保存按钮直接提交",
+    "任务排期保存自动调用 /schedule-preview，再以 preview_token、expected_version 和 ack 调用 /schedule",
+    "成员排期保存自动调用 /member-schedule-preview，再以 preview_token、expected_version 和 ack 调用 /member-schedule",
+    "自动预检返回冲突时通过 window.confirm 让用户确认；取消会显示错误并不提交，API/日期异常由统一 catch 错误提示处理",
+    "任务同步成员、成员日期边界提示及后端安全校验所需字段仍保留",
+    "回归测试覆盖无手动预览、自动预检和保存安全字段"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: git diff --name-status e8a2085da5167226994fa100d9b9e44d265edd10 -- public/index.html public/app.js tests/v5-execution.test.js returned exactly the three listed M paths.",
+    "PASS: targeted `node --test tests/v5-execution.test.js`; 5 tests passed, 0 failed.",
+    "PASS: full `npm test`; 58 tests passed, 0 failed.",
+    "PASS: `node --check public/app.js` and `node --check tests/v5-execution.test.js` completed without syntax errors.",
+    "PASS: `git diff --check` for the TASK-218 allowed paths returned no whitespace errors.",
+    "PASS: static audit confirms index contains only 确认保存 for the schedule dialog; app contains both preview endpoint calls, automatic `const preview = await v5PreviewSchedule()`, preview_token, expected_version, window.confirm and catch error handling."
+  ],
+  "created_at": "2026-08-25T00:10:00+08:00"
+}

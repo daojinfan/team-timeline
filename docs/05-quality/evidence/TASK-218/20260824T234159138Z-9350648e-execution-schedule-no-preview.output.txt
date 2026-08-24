@@ -1,0 +1,1 @@
+schedule save without explicit preview checks ok

@@ -475,10 +475,10 @@
 
     <dialog id="v5ScheduleDialog" class="v5-dialog" aria-labelledby="v5ScheduleDialogTitle">
       <form id="v5ScheduleForm" class="v5-dialog-form v5-narrow-dialog-form">
-        <header class="v5-dialog-header"><div><span class="v5-eyebrow">执行中心排期</span><h2 id="v5ScheduleDialogTitle">修改任务时间</h2><p id="v5ScheduleDialogHint">保存前先生成预览；冲突需要明确确认。</p></div><button type="button" class="icon-button" data-v5-close-dialog="v5ScheduleDialog" aria-label="关闭排期编辑">×</button></header>
+        <header class="v5-dialog-header"><div><span class="v5-eyebrow">执行中心排期</span><h2 id="v5ScheduleDialogTitle">修改任务时间</h2><p id="v5ScheduleDialogHint">保存时自动检查排期冲突。</p></div><button type="button" class="icon-button" data-v5-close-dialog="v5ScheduleDialog" aria-label="关闭排期编辑">×</button></header>
         <div id="v5ScheduleFormError" class="v5-form-error" role="alert" hidden></div>
-        <div class="v5-dialog-body"><div id="v5ScheduleTaskSummary" class="v5-preview-box"></div><div id="v5ScheduleMemberField" class="v5-form-grid" hidden><label class="v5-span-2">成员<select id="v5ScheduleMember"></select></label></div><div class="v5-form-grid"><label>开始日期<input id="v5ScheduleStart" type="date" required></label><label>结束日期<input id="v5ScheduleEnd" type="date" required></label></div><label id="v5ScheduleSyncField" class="v5-check-inline"><input id="v5ScheduleSync" type="checkbox"> 同步所有成员的排期</label><p id="v5ScheduleBoundaryHint" class="v5-field-hint"></p><section id="v5SchedulePreview" class="v5-preview-box" aria-live="polite"><strong>保存预览</strong><p>修改日期后点击“生成预览”。</p></section></div>
-        <footer class="v5-dialog-actions"><button type="button" class="ghost-button" data-v5-close-dialog="v5ScheduleDialog">取消</button><button id="v5SchedulePreviewBtn" class="ghost-button" type="button">生成预览</button><button id="v5ScheduleSaveBtn" class="primary-action" type="submit" disabled>确认保存</button></footer>
+        <div class="v5-dialog-body"><div id="v5ScheduleTaskSummary" class="v5-preview-box"></div><div id="v5ScheduleMemberField" class="v5-form-grid" hidden><label class="v5-span-2">成员<select id="v5ScheduleMember"></select></label></div><div class="v5-form-grid"><label>开始日期<input id="v5ScheduleStart" type="date" required></label><label>结束日期<input id="v5ScheduleEnd" type="date" required></label></div><label id="v5ScheduleSyncField" class="v5-check-inline"><input id="v5ScheduleSync" type="checkbox"> 同步所有成员的排期</label><p id="v5ScheduleBoundaryHint" class="v5-field-hint"></p></div>
+        <footer class="v5-dialog-actions"><button type="button" class="ghost-button" data-v5-close-dialog="v5ScheduleDialog">取消</button><button id="v5ScheduleSaveBtn" class="primary-action" type="submit">确认保存</button></footer>
       </form>
     </dialog>
 

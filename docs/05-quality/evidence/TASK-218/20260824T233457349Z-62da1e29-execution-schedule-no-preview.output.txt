@@ -1,0 +1,7 @@
+powershell.exe : schedule save action missing
+At D:\Codex\人员管理系统\.governance\tools\Invoke-AIGovernedTask.ps1:1429 char:56
++ ... lobal:LASTEXITCODE = 0; $output = (& $command @arguments 2>&1 | Out-S ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (schedule save action missing:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 

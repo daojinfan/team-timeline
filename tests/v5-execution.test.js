@@ -18,13 +18,18 @@ test("V5 execution center is a real projection, not the legacy placeholder", () 
   assert.match(app, /v5RenderExecutionTaskList/);
 });
 
-test("V5 execution center exposes the approved filters and schedule preview flow", () => {
+test("V5 execution center direct save uses an automatic conflict check without manual preview", () => {
   for (const id of ["v5ExecutionSearch", "v5ExecutionSource", "v5ExecutionTopic", "v5ExecutionStatus", "v5ExecutionMember", "v5ExecutionSample", "v5ExecutionCryostat", "v5ExecutionFrom", "v5ExecutionTo", "v5ExecutionScale", "v5ExecutionGranularity", "v5ExecutionGranularityValue", "v5ExecutionRange", "v5ExecutionOnlyBusy", "v5ExecutionStack"]) assert.match(index, new RegExp(`id="${id}"`));
+  assert.doesNotMatch(index, /v5SchedulePreviewBtn/);
+  assert.doesNotMatch(index, /生成预览/);
+  assert.match(index, /id="v5ScheduleSaveBtn"[^>]*>确认保存/);
   assert.match(app, /schedule-preview/);
   assert.match(app, /member-schedule-preview/);
-  assert.match(app, /preview_token: schedule\.preview\.preview_token/);
+  assert.match(app, /async function v5PreviewSchedule/);
+  assert.match(app, /const preview = await v5PreviewSchedule\(\)/);
+  assert.match(app, /preview_token: preview\.preview_token/);
   assert.match(app, /expected_version: task\.version/);
-  assert.match(app, /data-v5-schedule-ack/);
+  assert.match(app, /window\.confirm/);
 });
 
 test("V5 execution center keeps internal gantt scrolling and synchronizes all V5 projections", () => {

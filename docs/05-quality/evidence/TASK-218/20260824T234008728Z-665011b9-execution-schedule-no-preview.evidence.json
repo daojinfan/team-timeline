@@ -1,0 +1,24 @@
+{
+    "$schema":  "schemas/validation-evidence.schema.json",
+    "schema_version":  1,
+    "task_id":  "TASK-218",
+    "work_package":  "WP-009",
+    "baseline":  "BL-006",
+    "contract_sha256":  "083769d4acc0011cb94a7edaf49ce3bf3d7887bfa1a51af5b66fd7a5aabafd81",
+    "git_commit":  "e8a2085da5167226994fa100d9b9e44d265edd10",
+    "validation_id":  "execution-schedule-no-preview",
+    "command":  "powershell",
+    "args":  [
+                 "-NoProfile",
+                 "-ExecutionPolicy",
+                 "Bypass",
+                 "-Command",
+                 "$index=Get-Content -LiteralPath \u0027public/index.html\u0027 -Raw; $app=Get-Content -LiteralPath \u0027public/app.js\u0027 -Raw; $test=Get-Content -LiteralPath \u0027tests/v5-execution.test.js\u0027 -Raw; if($index -match \u0027v5SchedulePreviewBtn|生成预览\u0027){throw \u0027explicit schedule preview operation remains\u0027}; if($index -notmatch \u0027id=\"v5ScheduleSaveBtn\"[^\u003e]*\u003e确认保存\u0027){throw \u0027schedule save action missing\u0027}; foreach($token in @(\u0027schedule-preview\u0027,\u0027member-schedule-preview\u0027,\u0027v5PreviewSchedule\u0027,\u0027preview_token\u0027)){if($app.IndexOf($token)-lt 0){throw (\u0027automatic validation token missing \u0027+$token)}}; if($test -notmatch \u0027direct save|不需要生成预览\u0027){throw \u0027regression assertion missing\u0027}; Write-Output \u0027schedule save without explicit preview checks ok\u0027"
+             ],
+    "started_at":  "2026-08-24T23:40:08.7334753Z",
+    "finished_at":  "2026-08-24T23:40:09.7705831Z",
+    "exit_code":  1,
+    "redactions_applied":  0,
+    "output_path":  "docs/05-quality/evidence/TASK-218/20260824T234008728Z-665011b9-execution-schedule-no-preview.output.txt",
+    "output_sha256":  "84a42ba32607d603563a91e08c5ea2b6e8d4f2ec43af2b5f7d85c1f0610c39c1"
+}

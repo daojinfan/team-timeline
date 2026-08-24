@@ -5,7 +5,7 @@
   "work_package": "WP-009",
   "contract_sha256": "b4f6234210e4ca2af7b6411ef5484be61acb524ab1ac27894e5088690f29c81e",
   "baseline": "BL-006",
-  "state": "verified",
+  "state": "planned",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -23,13 +23,7 @@
       "rebased_at": "2026-08-24T04:22:48.0900391Z"
     }
   ],
-  "evidence": [
-    "docs/05-quality/evidence/TASK-187/20260824T042949448Z-8af7f024-app-syntax.evidence.json",
-    "docs/05-quality/evidence/TASK-187/20260824T042949448Z-8af7f024-npm-test.evidence.json",
-    "docs/05-quality/evidence/TASK-187/20260824T042949448Z-8af7f024-v5-filter-regression.evidence.json",
-    "docs/05-quality/evidence/TASK-187/20260824T042949448Z-8af7f024-v5-inline-regression.evidence.json",
-    "docs/05-quality/evidence/TASK-187/20260824T042949448Z-8af7f024-governance-strict.evidence.json"
-  ],
+  "evidence": [],
   "evidence_history": [
     "docs/05-quality/evidence/TASK-187/20260824T042619694Z-9e43a546-app-syntax.evidence.json",
     "docs/05-quality/evidence/TASK-187/20260824T042619694Z-9e43a546-npm-test.evidence.json",
@@ -70,5 +64,5 @@
   },
   "last_error": "",
   "created_at": "2026-08-24T04:20:50.5702629Z",
-  "updated_at": "2026-08-24T04:30:35.1248194Z"
+  "updated_at": "2026-08-24T23:44:13.9362889Z"
 }

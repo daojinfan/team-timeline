@@ -3,22 +3,44 @@
   "schema_version": 2,
   "task_id": "TASK-218",
   "work_package": "WP-009",
-  "contract_sha256": "f75ae500d9f26986908c3c0519432bbf0cdf4cfbe6163fb34e1636bfb56615d4",
+  "contract_sha256": "083769d4acc0011cb94a7edaf49ce3bf3d7887bfa1a51af5b66fd7a5aabafd81",
   "baseline": "BL-006",
-  "state": "planned",
-  "approval_id": "",
+  "state": "verified",
+  "approval_id": "APR-139",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
   "acceptance_git_commit": "",
-  "start_git_commit": "",
+  "start_git_commit": "e8a2085da5167226994fa100d9b9e44d265edd10",
   "execution_lease": "",
   "execution_lease_owner": "",
   "execution_lease_expires_at": "",
   "preexisting_changes": [],
-  "plan_checkpoint_git_commit": "273943f8fd962daa76d539a9560602a5d7f468a1",
-  "plan_rebase_history": [],
-  "evidence": [],
-  "evidence_history": [],
+  "plan_checkpoint_git_commit": "e8a2085da5167226994fa100d9b9e44d265edd10",
+  "plan_rebase_history": [
+    {
+      "previous_changes": [],
+      "checkpoint_git_commit": "e8a2085da5167226994fa100d9b9e44d265edd10",
+      "rebased_at": "2026-08-24T17:02:22.4120819Z"
+    },
+    {
+      "previous_changes": [],
+      "checkpoint_git_commit": "e8a2085da5167226994fa100d9b9e44d265edd10",
+      "rebased_at": "2026-08-24T23:32:49.0352542Z"
+    }
+  ],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-218/20260824T234447717Z-da0481b2-execution-schedule-no-preview.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-218/20260824T233457349Z-62da1e29-execution-schedule-no-preview.evidence.json",
+    "docs/05-quality/evidence/TASK-218/20260824T233543243Z-9a86ba18-execution-schedule-no-preview.evidence.json",
+    "docs/05-quality/evidence/TASK-218/20260824T233803850Z-111c6757-execution-schedule-no-preview.evidence.json",
+    "docs/05-quality/evidence/TASK-218/20260824T233854263Z-bf050d67-execution-schedule-no-preview.evidence.json",
+    "docs/05-quality/evidence/TASK-218/20260824T234008728Z-665011b9-execution-schedule-no-preview.evidence.json",
+    "docs/05-quality/evidence/TASK-218/20260824T234124037Z-c2bd7f0e-execution-schedule-no-preview.evidence.json",
+    "docs/05-quality/evidence/TASK-218/20260824T234159138Z-9350648e-execution-schedule-no-preview.evidence.json",
+    "docs/05-quality/evidence/TASK-218/20260824T234447717Z-da0481b2-execution-schedule-no-preview.evidence.json"
+  ],
   "review_history": [],
   "review": {
     "required": true,
@@ -30,5 +52,5 @@
   },
   "last_error": "",
   "created_at": "2026-08-24T16:39:06.29077Z",
-  "updated_at": "2026-08-24T16:42:20.4918750Z"
+  "updated_at": "2026-08-24T23:44:48.7431660Z"
 }

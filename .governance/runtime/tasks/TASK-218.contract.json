@@ -75,7 +75,7 @@
         "-ExecutionPolicy",
         "Bypass",
         "-Command",
-        "$index=Get-Content -LiteralPath \"public/index.html\" -Raw; $app=Get-Content -LiteralPath \"public/app.js\" -Raw; $test=Get-Content -LiteralPath \"tests/v5-execution.test.js\" -Raw; if($index -match \"v5SchedulePreviewBtn|生成预览\"){throw \"explicit schedule preview operation remains\"}; if($index -notmatch \"id=\\\"v5ScheduleSaveBtn\\\"[^>]*>确认保存\"){throw \"schedule save action missing\"}; foreach($token in @(\"schedule-preview\",\"member-schedule-preview\",\"v5PreviewSchedule\",\"preview_token\")){if($app.IndexOf($token)-lt 0){throw (\"automatic validation token missing \"+$token)}}; if($test -notmatch \"direct save|不需要生成预览\"){throw \"regression assertion missing\"}; Write-Output \"schedule save without explicit preview checks ok\""
+        "$index=Get-Content -LiteralPath 'public/index.html' -Raw; $app=Get-Content -LiteralPath 'public/app.js' -Raw; $test=Get-Content -LiteralPath 'tests/v5-execution.test.js' -Raw; if($index -match 'v5SchedulePreviewBtn|生成预览'){throw 'explicit schedule preview operation remains'}; if($index -notmatch 'id=\"v5ScheduleSaveBtn\"[^>]*>确认保存'){throw 'schedule save action missing'}; foreach($token in @('schedule-preview','member-schedule-preview','v5PreviewSchedule','preview_token')){if($app.IndexOf($token)-lt 0){throw ('automatic validation token missing '+$token)}}; if($test -notmatch 'direct save|不需要生成预览'){throw 'regression assertion missing'}; Write-Output 'schedule save without explicit preview checks ok'"
       ]
     }
   ],
