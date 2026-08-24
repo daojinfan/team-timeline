@@ -1,0 +1,41 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-209",
+  "reviewed_task_ids": [
+    "TASK-208"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-208",
+      "path": "docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md",
+      "change_type": "modified",
+      "summary": "重构为集成测试组-测控任务需求文档，包含正式承接与能力评估说明、基本信息、测试对象与目的、主要测试项及提交流程。"
+    }
+  ],
+  "change_summary": "从 TASK-208 start_git_commit 5e2af62d22524b3308d07bb2e5a95833d28bffc1 到当前最终内容核对，实际 scoped manifest 仅包含模板一个 modified 文件；REQ-SOURCE-GROUP-EXAMPLE-V5-001.md 未修改。",
+  "scope_checked": [
+    "标题明确为集成测试组-测控任务需求文档，结构依次覆盖必要性、基本信息、测试对象与目的、主要测试项和提交处理",
+    "开头说明避免口头/聊天需求遗漏，支持正式承接，考虑组内资源有限，并用于评估测试范围、总体工作量、资源和承接能力",
+    "开头问题表明确要求回答需求来源/项目、测试目的、测试边界、主要工作和总体承接评估",
+    "基本信息包含项目名称、来源小组、任务名称、样品类型、型号/版本、数量、编号、交付时间、制冷机协调和已协调制冷机",
+    "测试对象与目的表包含对象、覆盖范围、不包含内容、目的、判定方向和预期结果用途，能明确边界",
+    "主要测试项表要求逐项关联测试目的，并填写条件/范围、样品数/重复次数和备注，以支持总体工作量评估",
+    "所有填写内容使用数字化 Markdown 表格提示，可直接替换；模板没有三连下划线、____-__-__ 或纸质手写占位",
+    "内部专题、任务、成员和甘特图仅在承接后由集成测试组建立维护，未转嫁给需求来源方"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: git diff --name-status 5e2af62d22524b3308d07bb2e5a95833d28bffc1 HEAD -- docs/09-reports/templates/REQ-SOURCE-GROUP-TEMPLATE-V5-001.md docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md returned exactly one M path for the template; example absent.",
+    "PASS: title and four-section structure match the formal integration-test-group request-document intent.",
+    "PASS: all requester fields are represented as Markdown tables with replaceable prompts, including sample type/model, quantity/ID/ETA and cryostat coordination.",
+    "PASS: purpose/boundary table and test-item-to-purpose columns provide an explicit basis for scope and workload assessment.",
+    "PASS: placeholder audit found no three-or-more underscores or ____-__-__; prompts remain concise and non-formalized.",
+    "PASS: git diff --check returned no whitespace errors."
+  ],
+  "created_at": "2026-08-24T20:10:00+08:00"
+}
