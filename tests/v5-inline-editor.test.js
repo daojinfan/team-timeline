@@ -53,6 +53,9 @@ test("V5 sample editor exposes only the four current sample fields", () => {
   for (const legacy of ["v5SampleLabel", "规划标签", "实际到样"]) assert.doesNotMatch(dialog, new RegExp(legacy));
   assert.doesNotMatch(dialog, /样品数量/);
   assert.match(app, /data-sample-field="notes"/);
+  assert.match(app, /class="v5-repeatable-header" style="grid-column:1\/-1"/);
+  assert.match(app, /data-v5-task-remove-sample="\$\{sample\.id\}"[^>]*aria-label="从任务中移除样品/);
+  assert.match(app, />移除样品<\/button>/);
   assert.doesNotMatch(app, /data-sample-field="arrival_date"/);
   assert.doesNotMatch(app, /data-sample-field="planning_label"/);
   assert.doesNotMatch(app, /v5TaskRenderMultiPicker\("samples"/);
