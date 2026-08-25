@@ -1,0 +1,59 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-229",
+  "reviewed_task_ids": [
+    "TASK-228"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-228",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "将资源维护来源小组/成员/制冷机搜索、执行中心成员负载搜索、专题状态/目标专题和排期成员选择改为自定义联想输入结构，同时保留日期及时间控件。"
+    },
+    {
+      "task_id": "TASK-228",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "补充内联编辑、专题管理、排期、资源维护和执行中心搜索的候选生成、实时过滤、选择/清空、保存映射、统一关闭及专门键盘交互处理。"
+    },
+    {
+      "task_id": "TASK-228",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "扩展资源搜索联想容器和输入样式，复用候选菜单、焦点态、选中态及标签样式。"
+    },
+    {
+      "task_id": "TASK-228",
+      "path": "tests/v5-filter-combo.test.js",
+      "change_type": "modified",
+      "summary": "新增全部资源检索型联想控件标记、原生 select 例外、保存辅助函数和样式回归断言。"
+    }
+  ],
+  "change_summary": "从 TASK-228 start_git_commit 1ae069b6653aa878097ee957c6de883f1d15dce9 对照当前最终 HEAD 83214b108274213b971daab864721f9f421bf528，实际 scoped manifest 恰为上述四个 modified 文件；治理状态、台账及其他证据不计为 TASK-228 产品交付 changes。",
+  "scope_checked": [
+    "任务全量编辑台内联专题、来源小组、制冷机和参与成员均为自定义单选/多选联想控件；输入变化清除旧单选 ID，保存从选中候选同步数据。",
+    "专题管理目标专题和专题状态均为自定义选择控件；目标专题预览、移动/归档保存和专题状态保存仍读取选中候选并保持原逻辑。",
+    "执行中心排期成员和成员负载搜索均为自定义联想控件；成员排期保存继续使用成员 ID、日期、预览令牌和版本校验。",
+    "资源维护来源小组、成员和制冷机搜索实时按当前资源名称/角色/备注匹配，点击候选或清空会同步搜索状态并保持原列表过滤语义。",
+    "所有资源检索型控件均有鼠标点击、专门或统一的 ArrowDown/ArrowUp 键盘导航、候选按钮键盘激活、Escape 和外部点击关闭处理；通用事件与资源专用事件分别覆盖对应 data 属性。",
+    "日期输入、执行中心时间单位、时间范围、甘特图粒度以及 AND/OR、任一/全部等逻辑控件均保持原生行为；未改 V2/V3 历史模块。",
+    "无 datalist 或 select multiple size=4 旧实现；样式提供资源搜索联想容器和输入宽度支持。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: git rev-parse HEAD 为 83214b108274213b971daab864721f9f421bf528；git diff --name-status 1ae069b6653aa878097ee957c6de883f1d15dce9 HEAD -- public/index.html public/app.js public/styles.css tests/v5-filter-combo.test.js 返回且仅包含四个 M 路径。",
+    "PASS: node --test tests/v5-filter-combo.test.js；9 tests passed, 0 failed。",
+    "PASS: npm test；61 tests passed, 0 failed。",
+    "PASS: node --check public/app.js 完成且无语法错误。",
+    "PASS: git diff --check 1ae069b6653aa878097ee957c6de883f1d15dce9 -- 四个 TASK-228 允许路径无空白错误。",
+    "PASS: 静态复核确认资源维护与执行中心资源搜索使用 data-v5-resource-option/data-v5-execution-member-option-value，并由独立资源 keydown 处理器覆盖输入框 Escape、Arrow 导航和候选按钮移动；任务/筛选控件由对应通用处理器覆盖。",
+    "PASS: 静态禁用项检查未发现 <datalist> 或 select multiple size=4；原生 date、时间单位、范围、粒度和逻辑控件仍存在。"
+  ],
+  "created_at": "2026-08-25T11:09:46+08:00"
+}

@@ -5,26 +5,33 @@
   "work_package": "WP-009",
   "contract_sha256": "dd9e9e250b2eeaf036e94f17ce27f5011a093cf541ee79056baa810cd6c861fa",
   "baseline": "BL-006",
-  "state": "planned",
+  "state": "verified",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
   "acceptance_git_commit": "",
-  "start_git_commit": "1bb9d2a501ee367cb354c84f67c71c07c086fa3c",
+  "start_git_commit": "83214b108274213b971daab864721f9f421bf528",
   "execution_lease": "",
   "execution_lease_owner": "",
   "execution_lease_expires_at": "",
   "preexisting_changes": [],
   "plan_checkpoint_git_commit": "7710e434d1fd3dc3358363026452dd71e1e0e7c6",
   "plan_rebase_history": [],
-  "evidence": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-225/20260825T030712422Z-7b542e6c-filter-task-form-combobox-review.evidence.json"
+  ],
   "evidence_history": [
     "docs/05-quality/evidence/TASK-225/20260825T015757806Z-8acaba93-filter-task-form-combobox-review.evidence.json",
     "docs/05-quality/evidence/TASK-225/review-round-1.json",
     "docs/05-quality/evidence/TASK-225/20260825T020551065Z-8a40f489-filter-task-form-combobox-review.evidence.json",
     "docs/05-quality/evidence/TASK-225/review-round-2.json",
     "docs/05-quality/evidence/TASK-225/20260825T021032282Z-bdc64d73-filter-task-form-combobox-review.evidence.json",
-    "docs/05-quality/evidence/TASK-225/review-round-3.json"
+    "docs/05-quality/evidence/TASK-225/review-round-3.json",
+    "docs/05-quality/evidence/TASK-225/20260825T024625166Z-e3ddea49-filter-task-form-combobox-review.evidence.json",
+    "docs/05-quality/evidence/TASK-225/20260825T030433680Z-0dfee2b1-filter-task-form-combobox-review.evidence.json",
+    "docs/05-quality/evidence/TASK-225/review-round-4.json",
+    "docs/05-quality/evidence/TASK-225/20260825T030712422Z-7b542e6c-filter-task-form-combobox-review.evidence.json",
+    "docs/05-quality/evidence/TASK-225/review-round-5.json"
   ],
   "review_history": [
     {
@@ -47,6 +54,20 @@
       "result": "passed",
       "round_id": "RR-47ca2f8dd26e4d42bdccf4dd78b2abae",
       "recorded_at": "2026-08-25T02:10:53.3440614Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-225/review-round-4.json",
+      "sha256": "7cb9ee91480526efff7d525fbfe0b3dd8c8bff3356472e2b9d673a0964306e3a",
+      "result": "passed",
+      "round_id": "RR-107b5a2e687846fbbeacfe1d8ae69c85",
+      "recorded_at": "2026-08-25T03:04:57.1080418Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-225/review-round-5.json",
+      "sha256": "143575da3a4e100540897237ece5fce1288551eb755e804ef91650e0e750ac4a",
+      "result": "passed",
+      "round_id": "RR-bb3ffb356eb8426084c742b94ac4ebfb",
+      "recorded_at": "2026-08-25T03:07:33.2874300Z"
     }
   ],
   "review": {
@@ -59,5 +80,5 @@
   },
   "last_error": "",
   "created_at": "2026-08-25T01:28:23.6578914Z",
-  "updated_at": "2026-08-25T02:41:03.2213351Z"
+  "updated_at": "2026-08-25T03:07:33.7853397Z"
 }

@@ -1,0 +1,58 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-229",
+  "reviewed_task_ids": [
+    "TASK-228"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-228",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "最终资源维护三类资源搜索、执行中心成员负载搜索、专题状态/目标专题和排期成员选择均为自定义联想输入；日期、时间单位、范围和甘特粒度仍为原生控件。"
+    },
+    {
+      "task_id": "TASK-228",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "最终资源检索型控件候选过滤、点击/清空、单选 ID 同步、内联/专题/排期保存映射、外部关闭及资源专用键盘处理均完整。"
+    },
+    {
+      "task_id": "TASK-228",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "最终复用统一联想菜单和候选样式，并补齐资源搜索联想容器及输入布局。"
+    },
+    {
+      "task_id": "TASK-228",
+      "path": "tests/v5-filter-combo.test.js",
+      "change_type": "modified",
+      "summary": "最终专项断言覆盖全部资源检索控件标记、原生控件例外、保存辅助函数和样式。"
+    }
+  ],
+  "change_summary": "TASK-228 Standard 第二轮从头完整复审，以 start_git_commit 1ae069b6653aa878097ee957c6de883f1d15dce9 对照最终 HEAD 83214b108274213b971daab864721f9f421bf528；实际产品 scoped manifest 与 round 1 相同，恰为上述四个 modified 文件。",
+  "scope_checked": [
+    "任务全量编辑台内联专题、来源小组、制冷机和参与成员为自定义单选/多选联想；输入改变清除旧 dataset ID，候选重新选择后保存读取有效 ID，成员多选标签可添加/移除。",
+    "专题管理目标专题和专题状态为自定义选择；目标专题预览随选择更新，移动/归档和状态保存读取候选值并保留原接口语义。",
+    "执行中心排期成员选择和成员负载搜索为自定义联想；排期日期及冲突预览/确认、preview token、expected version 保存路径保持不变。",
+    "资源维护来源小组、测控成员、制冷机搜索按当前名称/角色/备注实时筛选；候选点击、全部清空与列表过滤状态同步。",
+    "所有资源检索型控件均覆盖点击、ArrowDown/ArrowUp、候选按钮键盘激活、Escape 和外部点击关闭：任务/筛选使用通用处理器，资源维护/执行成员搜索使用 data-v5-resource-search 专用处理器。",
+    "日期输入、时间单位、时间范围、甘特图粒度和 AND/OR/任一/全部等原生逻辑例外保持；没有引入 datalist 或 select multiple size=4。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: git rev-parse HEAD 为 83214b108274213b971daab864721f9f421bf528；git diff --name-status 1ae069b6653aa878097ee957c6de883f1d15dce9 HEAD -- 四个 TASK-228 允许路径返回且仅包含 public/app.js、public/index.html、public/styles.css、tests/v5-filter-combo.test.js 四个 M。",
+    "PASS: node --test tests/v5-filter-combo.test.js；9 tests passed, 0 failed。",
+    "PASS: npm test；61 tests passed, 0 failed。",
+    "PASS: node --check public/app.js 完成且无语法错误。",
+    "PASS: git diff --check 1ae069b6653aa878097ee957c6de883f1d15dce9 -- 四个 TASK-228 允许路径无空白错误。",
+    "PASS: 静态复核重新确认资源搜索输入及选项 data 属性、独立资源 keydown 处理器、统一 click/Escape/外部关闭处理、单选/多选保存映射及原生例外均在最终代码中。",
+    "PASS: 从总体目标、各资源检索表面、候选和清空同步、键盘/鼠标交互、保存路径和回归测试重新全量复核；未发现 changes-required 问题。"
+  ],
+  "created_at": "2026-08-25T11:12:15+08:00"
+}

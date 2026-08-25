@@ -1,0 +1,59 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-225",
+  "reviewed_task_ids": [
+    "TASK-224"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-224",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "最终将任务全量编辑台、执行中心和任务表单的目标筛选/资源选择表面改为自定义联想输入结构；日期输入、时间单位、范围和甘特粒度仍保留原生控件。"
+    },
+    {
+      "task_id": "TASK-224",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "最终实现筛选组合、快捷过滤、任务全量/内联表单、专题管理、排期成员和资源搜索的候选生成、选择、关闭和保存映射；输入变化会清除单选旧 ID。"
+    },
+    {
+      "task_id": "TASK-224",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "新增统一联想菜单、候选项、选中态、筛选/任务多选标签和资源搜索联想控件样式。"
+    },
+    {
+      "task_id": "TASK-224",
+      "path": "tests/v5-filter-combo.test.js",
+      "change_type": "modified",
+      "summary": "覆盖组合筛选、关键词、快捷筛选、任务表单及全部资源检索型联想控件的结构与回归断言，并确认无 datalist/旧多选控件。"
+    }
+  ],
+  "change_summary": "依赖审核从 TASK-224 start_git_commit 7710e434d1fd3dc3358363026452dd71e1e0e7c6 对照当前最终 HEAD 83214b108274213b971daab864721f9f421bf528；scoped Git manifest 恰为上述四个 modified 文件。后续合并实现扩展了内联编辑、专题管理、执行中心成员排期/搜索和资源维护的联想表面，但仍在同一四文件 scoped manifest 内；治理状态、台账及其他证据不计为 TASK-224 产品交付 changes。",
+  "scope_checked": [
+    "TASK-224 目标范围完整保留：任务全量编辑台与执行中心顶部快捷筛选、组合筛选以及新建/编辑任务表单专题、来源小组、制冷机、样品和参与成员均使用自定义联想控件。",
+    "关键词联想候选来自当前任务事实（任务号、任务名、专题、来源小组、制冷机、样品、测试项和成员），关键词仍允许候选外自由输入并执行包含匹配；资源/枚举选择只写入候选值。",
+    "组合筛选仍支持实时候选匹配、多选标签添加/移除、任一/全部、非、组内 AND/OR、组间 AND/OR、清空和应用，过滤表达式与编辑台/执行中心投影保持同步。",
+    "任务全量表单的专题、来源小组和制冷机单选、样品和成员多选均保留候选选择；样品规划标签/型号/编号/ETA/到样编辑、成员日期和冲突校验保存路径保持可用。",
+    "输入变化会清除任务表单、内联编辑及其他单选联想控件的旧 dataset ID，重新点击候选才写入有效值；内联保存、专题状态/迁移和排期成员保存均从自定义控件读取数据。",
+    "鼠标点击、ArrowDown/ArrowUp 基本键盘导航、候选按钮默认键盘激活、Escape 和外部点击关闭在筛选/任务/资源联想控件事件中保留；无 datalist 或 select multiple size=4 实现依赖。",
+    "日期和时间例外保持：任务/样品/成员/排期日期仍为 date 输入，执行中心时间单位、范围、甘特粒度仍为原控件，日期组合条件仍不支持非/多选并显示提示。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: git rev-parse HEAD 为 83214b108274213b971daab864721f9f421bf528；git diff --name-status 7710e434d1fd3dc3358363026452dd71e1e0e7c6 HEAD -- public/index.html public/app.js public/styles.css tests/v5-filter-combo.test.js 返回且仅包含四个 M 路径。",
+    "PASS: node --test tests/v5-filter-combo.test.js；9 tests passed, 0 failed。",
+    "PASS: npm test；61 tests passed, 0 failed。",
+    "PASS: node --check public/app.js 完成且无语法错误。",
+    "PASS: git diff --check 7710e434d1fd3dc3358363026452dd71e1e0e7c6 -- 四个 TASK-224 允许路径无空白错误。",
+    "PASS: 静态审查确认当前 index.html 的全量/内联/专题/排期/资源维护/执行中心搜索标记、app.js 的候选来源与保存数据映射、样式和回归断言一致；实现中不存在 <datalist> 或 select multiple size=4。",
+    "PASS: 所有指定验证在当前最终组合提交上重新运行且通过；未发现阻塞 TASK-224 的范围越界、日期/时间回归、旧 ID 残留或保存逻辑问题。"
+  ],
+  "created_at": "2026-08-25T11:03:46+08:00"
+}

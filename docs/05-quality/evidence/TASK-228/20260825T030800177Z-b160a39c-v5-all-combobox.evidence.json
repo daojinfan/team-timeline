@@ -1,0 +1,21 @@
+{
+  "$schema": "schemas/validation-evidence.schema.json",
+  "schema_version": 1,
+  "task_id": "TASK-228",
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "contract_sha256": "187b1ca3dbe3bdc1de474952fe7d9d1f2a8ed604efc63a35a2286130370f6616",
+  "git_commit": "83214b108274213b971daab864721f9f421bf528",
+  "validation_id": "v5-all-combobox",
+  "command": "node",
+  "args": [
+    "--test",
+    "tests/v5-filter-combo.test.js"
+  ],
+  "started_at": "2026-08-25T03:08:00.1828683Z",
+  "finished_at": "2026-08-25T03:08:00.5145421Z",
+  "exit_code": 0,
+  "redactions_applied": 0,
+  "output_path": "docs/05-quality/evidence/TASK-228/20260825T030800177Z-b160a39c-v5-all-combobox.output.txt",
+  "output_sha256": "0cc079c255e8aeff888f0140cff3e6bb7052089e1c117a86a4a5403122c2d834"
+}
