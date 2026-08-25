@@ -5,7 +5,7 @@
   "work_package": "WP-011",
   "contract_sha256": "fa9a19398cdb00550a6ad6d18f6c9f42806182ccb14d0be9f09544776a96f488",
   "baseline": "BL-007",
-  "state": "verified",
+  "state": "planned",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -28,9 +28,7 @@
       "rebased_at": "2026-08-25T12:41:38.5649727Z"
     }
   ],
-  "evidence": [
-    "docs/05-quality/evidence/TASK-239/20260825T124958430Z-73231241-demand-import-verify.evidence.json"
-  ],
+  "evidence": [],
   "evidence_history": [
     "docs/05-quality/evidence/TASK-239/20260825T124958430Z-73231241-demand-import-verify.evidence.json",
     "docs/05-quality/evidence/TASK-239/review-round-1.json"
@@ -54,5 +52,5 @@
   },
   "last_error": "",
   "created_at": "2026-08-25T11:45:24.1002632Z",
-  "updated_at": "2026-08-25T12:50:12.0912225Z"
+  "updated_at": "2026-08-25T12:50:56.4889269Z"
 }

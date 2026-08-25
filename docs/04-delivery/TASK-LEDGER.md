@@ -36,8 +36,8 @@ review_policy: independent-required
 
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| WP-011 | TASK-239 | pending | REVIEWER | 复核 Z3.2.2 导入只读核对记录 | BL-007 | pending | TASK-238 | completed | docs/05-quality/evidence/TASK-239 | demand-import-verify | n/a | n/a | n/a | Plan 自动登记，等待调度 |
-| WP-011 | TASK-238 | pending | IMPLEMENTER | 固化 Z3.2.2 导入只读核对记录 | BL-007 | pending | n/a | running | docs/09-reports/TASK-238-demand-import.txt | demand-import-verify | TASK-239 | provisional-passed | docs/05-quality/evidence/TASK-239/review-round-1.json | Plan 自动登记，等待调度 |
+| WP-011 | TASK-239 | pending | REVIEWER | 复核 Z3.2.2 导入只读核对记录 | BL-007 | pending | TASK-238 | pending | docs/05-quality/evidence/TASK-239 | demand-import-verify | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-011 | TASK-238 | pending | IMPLEMENTER | 固化 Z3.2.2 导入只读核对记录 | BL-007 | pending | n/a | running | docs/09-reports/TASK-238-demand-import.txt | demand-import-verify | TASK-239 | pending |  | Plan 自动登记，等待调度 |
 | WP-011 | TASK-237 | pending | REVIEWER | 审核 Z3.2.2 导入只读验证结果 | BL-007 | pending | TASK-236 | replaced | docs/05-quality/evidence/TASK-237 | demand-import-verify | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-011 | TASK-236 | pending | IMPLEMENTER | 固化 Z3.2.2 需求导入验证证据 | BL-007 | pending | TASK-234 | replaced | docs/09-reports/TASK-236-demand-import.txt | demand-import-verify | TASK-237 | pending | pending | Plan 自动登记，等待调度 |
 | WP-011 | TASK-235 | pending | REVIEWER | 审核 Z3.2.2 测控需求导入结果 | BL-007 | pending | TASK-234 | replaced | docs/05-quality/evidence/TASK-235 | demand-import-verify | n/a | n/a | n/a | Plan 自动登记，等待调度 |
