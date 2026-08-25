@@ -31,6 +31,6 @@ last_reviewed: 2026-08-20
 
 | WP-010 | superseded | 2026-08-23 | PM | docs/05-quality/evidence/TASK-114/20260822T125714649Z-0cdfcb78-web-data-reconcile-verify.evidence.json, docs/05-quality/evidence/TASK-118/20260822T154404999Z-bd731c44-unassigned-topic-verify.evidence.json | 按 CONF-WEB-DATA-20260822-01 对齐工艺组 Web 数据，执行前备份，其他来源小组不变 |
 
-| WP-011 | superseded | 2026-08-25 | PM | 待生成 | BL-007 已激活；旧 BL-006 计划已替换，等待在新基线重新规划导入任务 |
+| WP-011 | planned | 2026-08-25 | PM | 待生成 | BL-007 已激活；按确认映射重新规划 Z3.2.2 读取线路异常复核需求导入 |
 
 允许的状态值：planned、in-progress、blocked、needs-decision、implemented、verified、accepted、superseded。

@@ -1,0 +1,74 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-235",
+  "work_package": "WP-011",
+  "title": "审核 Z3.2.2 测控需求导入结果",
+  "goal": "独立核对 TASK-234 的需求来源、精确字段映射、备份、数据库增量、V5/V1 投影和完整性证据。",
+  "baseline": "BL-007",
+  "profile": "Release",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-235"
+  ],
+  "read_paths": [
+    "data/team_tasks.sqlite",
+    "data/backups",
+    "docs/09-reports/TASK-234-demand-import.md",
+    "docs/05-quality/evidence/TASK-234",
+    "docs/02-product/requirements-v5.md",
+    "docs/03-architecture/overall-design-v5.md",
+    "docs/03-architecture/components/v5-detailed-design.md"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-235"
+  ],
+  "out_of_scope": [
+    "修改数据库或备份",
+    "修改导入报告",
+    "修改任何产品代码",
+    "修改既有业务对象"
+  ],
+  "authoritative_documents": [
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "DEL-WORK-001",
+    "DEC-004"
+  ],
+  "dependencies": [
+    "TASK-234"
+  ],
+  "acceptance_criteria": [
+    "完整核对实际 Git 变更清单和忽略目录中的数据库与备份证据",
+    "独立确认来源哈希和已批准映射",
+    "独立确认备份存在可读且完整",
+    "独立确认只新增批准对象和必要兼容投影",
+    "独立确认 V5/V1 查询、稳定资源 ID、无成员无排期和 waiting 状态",
+    "独立确认 integrity_check 与 foreign_key_check"
+  ],
+  "validations": [
+    {
+      "id": "demand-import-verify",
+      "command": "node",
+      "args": [
+        "--eval",
+        "const assert=require('node:assert/strict'); const {DatabaseSync}=require('node:sqlite'); const db=new DatabaseSync('data/team_tasks.sqlite',{readOnly:true}); try { const title='工艺组硅基大尺寸底片工艺的读取线路异常复核，支撑Z3和Z4项目'; const rows=db.prepare(`SELECT t.*,tp.name topic_name,sg.name source_name,c.name cryostat_name FROM v5_tasks t JOIN v5_topics tp ON tp.id=t.topic_id LEFT JOIN v2_source_groups sg ON sg.id=t.source_group_id LEFT JOIN v2_cryostats c ON c.id=t.cryostat_id WHERE t.title=?`).all(title); assert.equal(rows.length,1); const task=rows[0]; assert.equal(task.topic_name,'读取驻波问题'); assert.equal(task.source_name,'工艺组'); assert.equal(task.cryostat_name,'祖4'); assert.equal(task.manual_phase,'waiting'); assert.equal(task.start_date,null); assert.equal(task.end_date,null); assert.equal(db.prepare('SELECT COUNT(*) n FROM v5_task_members WHERE task_id=?').get(task.id).n,0); const samples=db.prepare(`SELECT s.* FROM v5_samples s JOIN v5_task_samples ts ON ts.sample_id=s.id WHERE ts.task_id=?`).all(task.id); assert.equal(samples.length,1); assert.equal(samples[0].model,'Z3.2.2 107Q'); assert.equal(samples[0].sample_no,'Z3.2.2_FC_V2_Bottom 02-05'); assert.equal(samples[0].eta_date,'2026-08-25'); assert.equal(samples[0].arrival_date,null); const items=db.prepare('SELECT name,acceptance_criteria,note FROM v5_test_items WHERE task_id=? ORDER BY position').all(task.id); assert.equal(items.length,1); assert.equal(items[0].name,'板卡+网分测试全部15路读取线路及其读取腔频率'); assert.equal(db.prepare('SELECT COUNT(*) n FROM tasks WHERE id=? AND title=? AND deleted_at IS NULL').get(task.legacy_task_id,title).n,1); assert.equal(db.prepare('PRAGMA integrity_check').get().integrity_check,'ok'); assert.equal(db.prepare('PRAGMA foreign_key_check').all().length,0); console.log(JSON.stringify({task_id:task.id,task_number:`TASK-${task.legacy_task_id}`,sample_id:samples[0].id,topic:task.topic_name,source_group:task.source_name,cryostat:task.cryostat_name,integrity:'ok',foreign_key_violations:0})); } finally { db.close(); }"
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-25T09:26:06.2778556Z",
+  "release_controls": {
+    "target_environment": "本地 dev 分支只读审核 data/team_tasks.sqlite、备份和导入报告",
+    "execution_window": "TASK-234 验证后立即执行两轮完整独立审核",
+    "rollback_plan": "审核任务不写业务数据；发现问题记录 changes-required 并由 TASK-234 按备份回滚或修复",
+    "observation_metrics": "实际 Git 变更清单、导入报告、来源和备份 SHA256、对象计数、字段投影、完整性检查",
+    "stop_conditions": "证据不完整、来源或映射不一致、数据库增量超范围、备份不可读、完整性失败",
+    "post_release_owner": "项目经理"
+  }
+}

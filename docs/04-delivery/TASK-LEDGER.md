@@ -36,6 +36,8 @@ review_policy: independent-required
 
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| WP-011 | TASK-235 | pending | REVIEWER | 审核 Z3.2.2 测控需求导入结果 | BL-007 | pending | TASK-234 | pending | docs/05-quality/evidence/TASK-235 | demand-import-verify | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-011 | TASK-234 | pending | IMPLEMENTER | 导入 Z3.2.2 读取线路异常复核任务 | BL-007 | pending | n/a | pending | data/team_tasks.sqlite, data/backups, docs/09-reports/TASK-234-demand-import.md | demand-import-verify | TASK-235 | pending | pending | Plan 自动登记，等待调度 |
 | WP-011 | TASK-233 | pending | REVIEWER | 审核 Z3.2.2 测控需求导入结果 | BL-006 | pending | TASK-232 | replaced | docs/05-quality/evidence/TASK-233 | demand-import-verify | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-011 | TASK-232 | pending | IMPLEMENTER | 导入 Z3.2.2 读取线路异常复核任务 | BL-006 | pending | n/a | replaced | data/team_tasks.sqlite, data/backups, docs/09-reports/TASK-232-demand-import.md | demand-import-verify | TASK-233 | pending | pending | Plan 自动登记，等待调度 |
 | WP-009 | TASK-231 | pending | REVIEWER | 复核空查询联想候选展示修复 | BL-006 | pending | TASK-230 | replaced | docs/05-quality/evidence/TASK-231 | v5-empty-query-combobox-review | n/a | n/a | n/a | Plan 自动登记，等待调度 |
