@@ -36,8 +36,8 @@ review_policy: independent-required
 
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| WP-012 | TASK-243 | pending | REVIEWER | 独立复审 V5 全量编辑样品信息界面修正 | BL-008 | pending | TASK-242 | pending | docs/05-quality/evidence/TASK-243 | npm-test | n/a | n/a | n/a | Plan 自动登记，等待调度 |
-| WP-012 | TASK-242 | pending | IMPLEMENTER | 修正 V5 全量编辑样品信息界面 | BL-008 | pending | n/a | running | public/index.html, public/app.js, tests | npm-test | TASK-243 | pending | pending | Plan 自动登记，等待调度 |
+| WP-012 | TASK-243 | pending | REVIEWER | 独立复审 V5 全量编辑样品信息界面修正 | BL-008 | pending | TASK-242 | completed | docs/05-quality/evidence/TASK-243 | npm-test | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-012 | TASK-242 | pending | IMPLEMENTER | 修正 V5 全量编辑样品信息界面 | BL-008 | pending | n/a | running | public/index.html, public/app.js, tests | npm-test | TASK-243 | passed | docs/05-quality/evidence/TASK-243/review-round-2.json | Plan 自动登记，等待调度 |
 | WP-012 | TASK-241 | pending | REVIEWER | 独立复审 V5 样品字段收敛实现 | BL-008 | pending | TASK-240 | completed | docs/05-quality/evidence/TASK-241 | npm-test, app-syntax, v3-syntax, git-diff-check | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-012 | TASK-240 | pending | IMPLEMENTER | 实现 V5 样品字段收敛与兼容同步 | BL-008 | pending | n/a | replaced | public/index.html, public/app.js, src/v3/index.js, tests | npm-test, app-syntax, v3-syntax, git-diff-check | TASK-241 | cancelled | docs/05-quality/evidence/TASK-241/review-cancelled-task-240.json | Plan 自动登记，等待调度 |
 | WP-011 | TASK-239 | pending | REVIEWER | 复核 Z3.2.2 导入只读核对记录 | BL-007 | pending | TASK-238 | completed | docs/05-quality/evidence/TASK-239 | demand-import-verify | n/a | n/a | n/a | BL-007 已验收，复审证据保留；运行任务随 BL-008 归档 |

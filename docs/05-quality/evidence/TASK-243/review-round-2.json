@@ -1,0 +1,60 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-243",
+  "reviewed_task_ids": [
+    "TASK-242"
+  ],
+  "work_package": "WP-012",
+  "baseline": "BL-008",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-242",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "移除任务全量编辑中的样品选择器候选、样品多选芯片和相关事件分支；保留样品行渲染、多个样品 ID、行内编辑和移除关联。"
+    },
+    {
+      "task_id": "TASK-242",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "将样品集合区改为样品信息区，移除样品库式搜索选择器，明确一个任务可添加多个样品，并保留型号、编号、预计交付时间、ETA 待确认和备注输入。"
+    },
+    {
+      "task_id": "TASK-242",
+      "path": "tests/v5-filter-combo.test.js",
+      "change_type": "modified",
+      "summary": "更新自定义联想输入回归，确认任务表单不再包含 samples 选择器，同时保留成员及其他任务资源选择器。"
+    },
+    {
+      "task_id": "TASK-242",
+      "path": "tests/v5-inline-editor.test.js",
+      "change_type": "modified",
+      "summary": "增加样品信息区、多样品提示、无样品集合语义、无样品选择器及四字段行编辑的静态回归断言。"
+    }
+  ],
+  "change_summary": "Release 第二轮以同一最终提交 ceb4e064e8810fc363330d160daedcae2f029f3d 重新审查 TASK-242。重新对 TASK-242 start_git_commit c68acd0dc7071e59284f940339e1b5e9a8f59313 获取完整名称状态和 scoped diff；实际产品/测试变更仍仅为上述 4 个 allowed_paths 文件，ceb4e06 之后没有新增产品变更。治理契约、状态、台账、批准记录和验证证据属于任务生命周期治理产物，不列为实现者产品 changes；未发现越界实现路径。",
+  "scope_checked": [
+    "重新完整读取 TASK-242/TASK-243 contract 与 state、WP-012 context、CR-008、REQ-V5-001、ARC-OVERALL-V5-001、ARC-COMP-V5-001 和 QUAL-TRACE-V5-001，并核对第一轮证据。",
+    "重新核对 c68acd0dc7071e59284f940339e1b5e9a8f59313..ceb4e064e8810fc363330d160daedcae2f029f3d 变更清单；另确认 ceb4e06..HEAD 没有新增产品或测试文件。",
+    "重新逐文件检查 public/index.html、public/app.js、tests/v5-filter-combo.test.js 和 tests/v5-inline-editor.test.js，确认全量编辑样品区域已改为样品信息，且没有样品集合、样品库式搜索、samples 任务输入或样品候选芯片。",
+    "重新核对多样品链路：dialogSampleIds 从既有任务样品初始化；样品行按 ID 多行渲染；每行提供型号、编号、ETA、ETA 待确认和备注；添加样品 POST 后加入当前 ID 集合；移除按钮删除任务关联；保存发送 sample_ids 和每行 sample_updates。",
+    "重新核对非样品任务表单选择器：专题、来源小组、制冷机和成员的自定义选择器仍保留，样品选择器仅被移除。",
+    "重新阅读 TASK-242 npm evidence，并在同一最终提交独立重跑 npm test、node --check public/app.js、node --check src/v3/index.js 和 git diff --check。",
+    "重新执行静态回归断言，样品信息标题、多样品提示、四字段、行编辑、添加、移除、保存均存在；样品集合语义、样品选择器、samples runtime 分支均不存在。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: 第二轮 npm test 在同一最终提交通过，64/64 tests pass，未出现新增失败。",
+    "PASS: 第二轮 node --check public/app.js 通过。",
+    "PASS: 第二轮 node --check src/v3/index.js 通过。",
+    "PASS: 第二轮 git diff --check 通过。",
+    "PASS: 第二轮静态断言 dialog_bounds、sample_info_legend、multi_sample_hint、four_fields、no_collection_semantics、no_sample_picker、no_legacy_fields、row_edit_fields、multi_row_remove、add_sample、save_sample_ids、no_sample_picker_runtime、regression_tests 均为 true。",
+    "PASS: tests/v5-filter-combo.test.js 和 tests/v5-inline-editor.test.js 的新增断言与最终 UI 一致，确认 samples 选择输入被移除且其他资源联想输入未受影响。",
+    "PASS: 保存实现仍将多个样品 ID 和逐行四字段更新提交至既有任务 API；未修改样品数据模型、历史数据库字段、V3 页面或 API。",
+    "PASS: Release 第二轮对同一最终内容完整复审实际 changes、界面范围、多样品编辑和全部验证证据，未发现 changes-required；第二轮结论为 passed。"
+  ],
+  "created_at": "2026-08-25T23:21:13+08:00"
+}
