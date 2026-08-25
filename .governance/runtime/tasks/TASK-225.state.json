@@ -5,22 +5,28 @@
   "work_package": "WP-009",
   "contract_sha256": "dd9e9e250b2eeaf036e94f17ce27f5011a093cf541ee79056baa810cd6c861fa",
   "baseline": "BL-006",
-  "state": "planned",
+  "state": "verified",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
   "acceptance_git_commit": "",
-  "start_git_commit": "f8df07b6043a2b81121c655ad008c2797ed9a2d7",
+  "start_git_commit": "1bb9d2a501ee367cb354c84f67c71c07c086fa3c",
   "execution_lease": "",
   "execution_lease_owner": "",
   "execution_lease_expires_at": "",
   "preexisting_changes": [],
   "plan_checkpoint_git_commit": "7710e434d1fd3dc3358363026452dd71e1e0e7c6",
   "plan_rebase_history": [],
-  "evidence": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-225/20260825T021032282Z-bdc64d73-filter-task-form-combobox-review.evidence.json"
+  ],
   "evidence_history": [
     "docs/05-quality/evidence/TASK-225/20260825T015757806Z-8acaba93-filter-task-form-combobox-review.evidence.json",
-    "docs/05-quality/evidence/TASK-225/review-round-1.json"
+    "docs/05-quality/evidence/TASK-225/review-round-1.json",
+    "docs/05-quality/evidence/TASK-225/20260825T020551065Z-8a40f489-filter-task-form-combobox-review.evidence.json",
+    "docs/05-quality/evidence/TASK-225/review-round-2.json",
+    "docs/05-quality/evidence/TASK-225/20260825T021032282Z-bdc64d73-filter-task-form-combobox-review.evidence.json",
+    "docs/05-quality/evidence/TASK-225/review-round-3.json"
   ],
   "review_history": [
     {
@@ -29,6 +35,20 @@
       "result": "changes-required",
       "round_id": "RR-824b1c54e06541228b4272cbd13de96f",
       "recorded_at": "2026-08-25T01:58:17.4376739Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-225/review-round-2.json",
+      "sha256": "81c623f875e4c914c27da771c54350b14087c8073fc89b78fa9b20d3f0eed62e",
+      "result": "passed",
+      "round_id": "RR-0ce5b79eb8294bd2b2756e2039d65efb",
+      "recorded_at": "2026-08-25T02:06:11.2622318Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-225/review-round-3.json",
+      "sha256": "7bfc63305a7924eb9f3750e62a1e953c08463e5221f4e8ffcac2a27d3e661336",
+      "result": "passed",
+      "round_id": "RR-47ca2f8dd26e4d42bdccf4dd78b2abae",
+      "recorded_at": "2026-08-25T02:10:53.3440614Z"
     }
   ],
   "review": {
@@ -41,5 +61,5 @@
   },
   "last_error": "",
   "created_at": "2026-08-25T01:28:23.6578914Z",
-  "updated_at": "2026-08-25T01:59:11.6772604Z"
+  "updated_at": "2026-08-25T02:10:53.8456625Z"
 }

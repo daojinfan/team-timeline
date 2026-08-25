@@ -1,0 +1,60 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-225",
+  "reviewed_task_ids": [
+    "TASK-224"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-224",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "最终任务全量编辑台与执行中心快捷筛选使用自定义联想输入结构，任务表单专题、来源小组、制冷机、样品和参与成员使用单选/多选联想控件，日期控件保持原样。"
+    },
+    {
+      "task_id": "TASK-224",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "最终实现快捷筛选、组合筛选和任务表单联想控件的候选过滤、选择、关闭、多选和保存逻辑；修复单选任务表单输入变化时清除旧专题/来源/制冷机 ID。"
+    },
+    {
+      "task_id": "TASK-224",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "提供最终联想菜单、候选项、焦点态、已选标签和任务表单控件样式。"
+    },
+    {
+      "task_id": "TASK-224",
+      "path": "tests/v5-filter-combo.test.js",
+      "change_type": "modified",
+      "summary": "覆盖最终自定义筛选/任务表单控件结构、无 datalist/旧多选控件、样式及单选旧值清除修复回归断言。"
+    }
+  ],
+  "change_summary": "从 TASK-224 start_git_commit 7710e434d1fd3dc3358363026452dd71e1e0e7c6 对照当前最终 HEAD 1bb9d2a501ee367cb354c84f67c71c07c086fa3c，scoped implementation manifest 恰为上述四个 modified 文件；相对 round 1，最终内容包含新增的单选联想旧值清除修复，已重新全量复核。当前审核启动提交 1bb9d2a501ee367cb354c84f67c71c07c086fa3c 之后没有额外产品文件变更。",
+  "scope_checked": [
+    "任务全量编辑台和执行中心顶部快捷筛选及组合筛选的文本/可选字段使用自定义联想输入框；计划开始/结束等日期控件未被改为联想控件。",
+    "组合筛选保留实时匹配、多个已选项添加/移除、任一/全部匹配、非、组内 AND/OR、组间 AND/OR、清空和应用逻辑。",
+    "关键词候选来自当前任务数据且允许候选外自由文本；资源/枚举筛选候选来自现有专题、来源小组、制冷机、样品和成员。",
+    "任务表单专题、来源小组、制冷机支持现有候选单选；样品和参与成员支持现有候选多选，样品明细编辑和成员参与日期输入仍可用。",
+    "联想控件支持输入过滤、候选点击、ArrowDown/ArrowUp 键盘导航、按钮默认键盘选择、Escape 关闭和外部点击关闭；未使用 datalist 或旧的 select multiple size=4 控件。",
+    "单选任务表单字段输入变化时对 topic/source/cryostat 删除 wrapper.dataset.v5TaskValue，重新点击候选才写入有效 ID；保存路径读取修复后的值，避免旧选择残留。",
+    "重新审查 app.js、index.html、styles.css、filter-combo 测试及关联回归结果，未发现越界或新的阻塞问题。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: git diff --name-status 7710e434d1fd3dc3358363026452dd71e1e0e7c6 HEAD -- public/index.html public/app.js public/styles.css tests/v5-filter-combo.test.js 返回且仅包含四个 M 路径；numstat 为 app.js 117/49、index.html 15/15、styles.css 13/0、filter-combo test 21/3。",
+    "PASS: git diff --name-status 1bb9d2a501ee367cb354c84f67c71c07c086fa3c -- 四个允许路径为空，确认审核启动提交之后没有额外产品范围漂移。",
+    "PASS: node --test tests/v5-filter-combo.test.js；8 tests passed, 0 failed。",
+    "PASS: npm test；60 tests passed, 0 failed。",
+    "PASS: node --check public/app.js 完成且无语法错误。",
+    "PASS: git diff --check 7710e434d1fd3dc3358363026452dd71e1e0e7c6 -- 四个允许路径无空白错误。",
+    "PASS: 静态复核确认自定义联想标记、候选实时过滤、选择和关闭交互、组合筛选原逻辑、样品/成员编辑能力均保留；确认修复测试断言及实现均包含 delete wrapper.dataset.v5TaskValue。",
+    "PASS: round 2 从头复核完整最终内容；与 round 1 相比已纳入并验证修复后的最终指纹。"
+  ],
+  "created_at": "2026-08-25T10:06:00+08:00"
+}
