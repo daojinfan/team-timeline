@@ -1,0 +1,47 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-239",
+  "reviewed_task_ids": [
+    "TASK-238"
+  ],
+  "work_package": "WP-011",
+  "baseline": "BL-007",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-238",
+      "path": "docs/09-reports/TASK-238-demand-import.txt",
+      "change_type": "added",
+      "summary": "新增 Z3.2.2 导入的独立只读核对记录，包含需求来源、备份指纹、任务/样品/测试项字段、投影、增量和完整性结果。"
+    }
+  ],
+  "change_summary": "本轮以 TASK-238 start_git_commit 8b031c298ade06f16e746f9638cbf6d570e8c372 对照当前最终 HEAD 7c4c90860a66655a4a654362683a34d8579b7c88，重新获取完整名称状态清单并执行 scoped diff check。除治理状态和审核/验证证据外，TASK-238 的项目内容仍只有 docs/09-reports/TASK-238-demand-import.txt（added）；数据库和备份属于忽略目录证据，未列入 Git changes。",
+  "scope_checked": [
+    "重新读取 TASK-238 contract/state、TASK-239 contract/state、WP-011 context、TASK-238 报告、TASK-238 validation evidence/output、TASK-239 第一轮证据和源 Markdown；本轮结论基于重新执行的检查而非第一轮复制。",
+    "重新计算源 Markdown 2746 bytes，SHA256=d1a486cfb3ab3d205b43bb2c259320b7fc8329f936df5016416194b83f959d37。",
+    "重新读取执行前备份 data/backups/team_tasks.pre-demand-import-20260825-172854.sqlite：770048 bytes，SHA256=00282d7722351aa653b8c14c2c748b9082e94cdd6d654eb89ea9e66faadd7ef1，integrity_check=ok，foreign_key_check=0。",
+    "重新查询当前数据库：目标标题匹配 1 条，V5 task id=37、V1 legacy task id=59，V1 标题一致且 deleted_at=null。",
+    "重新核对任务字段：topic_id=4/读取驻波问题，source_group_id=1/工艺组，cryostat_id=19/祖4，manual_phase=waiting，start_date=null，end_date=null，color 为空，purpose 和 notes 与报告及源需求映射一致。",
+    "重新核对样品关联：任务关联样品 1 条，sample id=20，model=Z3.2.2 107Q，sample_no=Z3.2.2_FC_V2_Bottom 02-05，eta_date=2026-08-25，arrival_date=null，eta_pending=0，is_required=1；全库同型号和同编号各 1 条。",
+    "重新核对结构化测试项：任务关联 1 条，id=31，名称为板卡+网分测试全部15路读取线路及其读取腔频率，验收条件、备注和 position=0 均正确。",
+    "重新核对人员与排期：v5_task_members 对 task 37 为 0，任务日期均为 null，waiting 对应等待样品；API 参与成员数组长度为 0。",
+    "重新对照备份和当前表计数：tasks 58→59、v5_tasks 36→37、v5_samples 19→20、v5_test_items 21→22、v5_task_samples 9→10、v5_events 97→99；v5_task_members 56→56，v5_topics 18→18，v2_source_groups 7→7，v2_cryostats 21→21，members 21→21。新增事件为 sample_create 和 task_create。",
+    "重新计算稳定资源字段哈希（含各资源的稳定标识、名称、状态及审计字段）：v5_topics current=backup 99d4ca0f4429eaf3171e5900c11a1baba8aaf002e037a7210815a60d6b214218；v2_source_groups current=backup f51f60661ab0c5d2e7437e943c969b9b87162fbc2a1ea986bc48f74d55e8f806；v2_cryostats current=backup 931b01714c02066190515f0b38946ee58ddc5a318db6cc6b46f1a56f60ec355b；members current=backup 030d04b4b332f1fdea7408be670a30e7de453079ff26ec7f6c05462f52da15d1。",
+    "重新执行 V5 API GET /api/v5/tasks/37：HTTP 200，task id=37、task_number=TASK-59、专题/来源/制冷机为读取驻波问题/工艺组/祖4，status=waiting，样品 1 条、测试项 1 条、参与成员 0 条。",
+    "重新执行数据库文件哈希包围检查：API/SQL 只读检查前后均为 SHA256=5d9ff3e737e59b5dd11f0ae6bbbb664c11747861d52aeb1a4d896df686c0171，未发生数据库写入。",
+    "重新执行 git diff --name-status 8b031c298ade06f16e746f9638cbf6d570e8c372 7c4c90860a66655a4a654362683a34d8579b7c88；并对 docs/09-reports/TASK-238-demand-import.txt 执行 git diff --check，新增报告无空白错误。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: 源 Markdown 的项目 Z3和Z4项目同时需要、工艺组来源、Z3.2.2 107Q/Bottom 02-05 样品、2026/08/25 ETA、Z4制冷机、15路读取线路测试目的和接线表要求与持久化字段逐项一致。",
+    "PASS: 备份重新读取且完整性通过，文件大小和 SHA256 与导入报告一致；当前资源数量及稳定字段哈希相对备份无变化。",
+    "PASS: 当前 SQL 查询重新确认目标任务、样品和结构化测试项的全库唯一性，V1 task 59 与 V5 task 37 兼容投影一致。",
+    "PASS: API 独立读取返回 200，关联专题、来源小组、制冷机、样品、测试项、waiting 状态、空排期和空成员全部符合契约。",
+    "PASS: 当前及备份 SQLite 均 integrity_check=ok、foreign_key_check=0；数据库文件哈希在本轮 API/SQL 读取前后完全相同。",
+    "PASS: TASK-238 起始提交至最终 HEAD 的实际项目 diff 仍仅为 docs/09-reports/TASK-238-demand-import.txt added，治理状态、审核证据、验证证据和被 gitignore 的数据库/备份未列为项目变更。",
+    "PASS: 本轮重新完成同一最终内容的来源、备份、数据库、API、计数、哈希、投影、Git 差异和完整性全量复核，未发现阻塞问题；第二轮审核结论为 passed。"
+  ],
+  "created_at": "2026-08-25T20:53:46+08:00"
+}
