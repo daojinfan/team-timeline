@@ -1,0 +1,68 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-241",
+  "reviewed_task_ids": [
+    "TASK-240"
+  ],
+  "work_package": "WP-012",
+  "baseline": "BL-008",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-240",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "V5 任务编辑器样品集合移除规划标签入口，保留型号、预计交付时间、ETA 待确认和样品备注入口；样品编号仍在已选样品行中后补。"
+    },
+    {
+      "task_id": "TASK-240",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "V5 样品搜索、任务树、摘要、全量编辑器和执行中心改为使用型号/编号/备注；草稿和 sample_updates 不再暴露规划标签或实际到样日期，并支持新增和编辑样品备注。"
+    },
+    {
+      "task_id": "TASK-240",
+      "path": "src/v3/index.js",
+      "change_type": "modified",
+      "summary": "V5 API 在规划标签缺省时以型号生成或同步兼容值，空样品编号归一为 NULL；样品交付状态以编号为主并保留历史实际到样字段兜底，未删除历史列或改变 V3 API。"
+    },
+    {
+      "task_id": "TASK-240",
+      "path": "tests/v5-api.test.js",
+      "change_type": "modified",
+      "summary": "新增 API 回归覆盖隐藏规划标签默认值、备注保存、编号补录后状态和型号修改同步。"
+    },
+    {
+      "task_id": "TASK-240",
+      "path": "tests/v5-inline-editor.test.js",
+      "change_type": "modified",
+      "summary": "新增 V5 UI 静态回归，确认样品编辑器只出现四类当前字段且当前 V5 不再出现规划标签、实际到样和样品数量。"
+    }
+  ],
+  "change_summary": "Release 第二轮以 TASK-240 start_git_commit d004ee18d85f061919cb9a9f3c6b01d4f08ab183 和实现最终提交 3e8c6fd6e2a7094e02de9aba3fbdf7be4d34cfc0 重新获取完整名称状态清单并执行 scoped diff check。当前 HEAD 未引入新的产品代码或测试变更；TASK-240 的实际产品/测试变更仍仅为上述 5 个允许路径，全部在 TASK-240 contract 的 allowed_paths 内。治理状态、台账、批准记录和验证证据属于任务生命周期治理产物，不作为实现者产品 changes；未发现范围外实现路径。",
+  "scope_checked": [
+    "重新完整读取 TASK-240/TASK-241 contract 与 state、WP-012 context、CR-008、REQ-V5-001、ARC-OVERALL-V5-001、ARC-COMP-V5-001 和 QUAL-TRACE-V5-001；本轮未依赖第一轮结论作为唯一依据。",
+    "重新对 d004ee18d85f061919cb9a9f3c6b01d4f08ab183..HEAD 执行 git diff --name-status，并另行确认 3e8c6fd6e2a7094e02de9aba3fbdf7be4d34cfc0..HEAD 没有新增产品变更。",
+    "逐文件重新检查 public/index.html、public/app.js、src/v3/index.js、tests/v5-api.test.js 和 tests/v5-inline-editor.test.js 的最终内容与 TASK-240 允许路径。",
+    "重新核对 V5 任务对话框 DOM、任务树、选中任务摘要、执行中心详情和样品筛选标签；规划标签、样品数量、实际到样时间均不在当前 V5 交互入口或样品展示中。",
+    "重新核对新增样品、任务 sample_updates 和独立样品 PUT 的缺省规划标签兼容逻辑，备注传递、空编号 NULL 归一和编号补录后的状态计算。",
+    "重新核对 v5_samples schema 与 V3 canonical 路由，确认历史 planning_label/arrival_date 等列仍在且没有 DROP、重命名、迁移或 V3 破坏性接口修改。",
+    "重新阅读 TASK-240 validation evidence，并在当前最终 HEAD 独立重跑 npm test、两处 node --check 和 git diff --check。",
+    "重新执行静态 UI/API 代码断言：dialog_bounds_found、current_fields、no_label_id、no_planning_label、no_arrival、no_quantity、draft_no_hidden_fields、summary_four_fields、execution_uses_model_no、api_label_fallback、null_sample_no、number_drives_status 均为 true。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: 第二轮当前最终 HEAD npm test 通过，64/64 tests pass；V5 sample compatibility、V5 sample editor four fields、V5 execution projection 等相关回归均通过。",
+    "PASS: 第二轮独立 node --check public/app.js 通过。",
+    "PASS: 第二轮独立 node --check src/v3/index.js 通过。",
+    "PASS: 第二轮独立 git diff --check 通过。",
+    "PASS: V5 表单静态断言确认型号、编号、预计交付时间、备注存在；v5SampleLabel、规划标签、实际到样、样品数量及 arrival_date/planning_label 当前 V5 编辑入口不存在。",
+    "PASS: V5 任务树、摘要和执行中心使用 sample.model/sample.sample_no；V5 样品筛选同时支持型号、编号和备注，不再依赖规划标签展示。",
+    "PASS: API 兼容断言确认 POST 未传 planning_label 时以 model 生成；任务 sample_updates 未传规划标签时沿用/同步兼容值；空 sample_no 转为 NULL；notes 可新增和编辑；补录编号后 overdue 样品状态恢复为 waiting；型号修改同步兼容值。",
+    "PASS: v5_samples 表定义仍保留 planning_label、arrival_date、model、sample_no、eta_date、notes、version 及约束；V3 旧 API 和旧页面未被此实现路径修改。",
+    "PASS: 第二轮基于同一最终实现内容完整复审全部 changes 清单和验收标准，未发现 changes-required；Release 第二轮结论为 passed。"
+  ],
+  "created_at": "2026-08-25T22:53:10+08:00"
+}
