@@ -1,0 +1,52 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-247",
+  "reviewed_task_ids": [
+    "TASK-246"
+  ],
+  "work_package": "WP-012",
+  "baseline": "BL-008",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-246",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "已选样品行的 ETA 待确认 checkbox 增加 v5-eta-pending-checkbox 类和显式紧凑尺寸样式（14px、无文本框内边距），保留 data-sample-field=eta_pending、checked 状态渲染和原有样品字段模板。"
+    },
+    {
+      "task_id": "TASK-246",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "新增样品控件中的 ETA 待确认 checkbox 增加同一紧凑类和显式尺寸样式；仍嵌套在 v5-check-inline 标签中，保留文字标签和添加样品入口。"
+    },
+    {
+      "task_id": "TASK-246",
+      "path": "tests/v5-inline-editor.test.js",
+      "change_type": "modified",
+      "summary": "新增静态回归断言，覆盖新增样品与已选样品两处 ETA checkbox 的紧凑类、14px 尺寸和样品字段收敛。"
+    }
+  ],
+  "change_summary": "Release 首轮以 TASK-246 起始提交 4f181529560965cb1eaa6ba549c20f84f81c4a8c 与最终提交 c4bea15faac559c394aee622baf3fb079ad4278a 的实际差异为准。实际产品/测试变更仅为 public/app.js、public/index.html、tests/v5-inline-editor.test.js，全部位于 TASK-246 allowed_paths；未发现样式表、数据库/API、V3 页面或其他范围外变更。",
+  "scope_checked": [
+    "读取 TASK-246/TASK-247 contract 与 state、WP-012 context，以及 REQ-V5-001、ARC-OVERALL-V5-001、ARC-COMP-V5-001、QUAL-TRACE-V5-001、CR-008；验收口径确认 V5 当前样品入口仅维护型号、编号、ETA、备注，历史规划标签和实际到样字段不作为当前入口。",
+    "核对 4f181529..c4bea15 的完整 name-status 和 scoped diff；实际变更清单与 TASK-246 allowed_paths 完全一致。",
+    "检查新增样品 public/index.html：#v5SampleEtaPending 为 type=checkbox，具有 v5-eta-pending-checkbox、width/height/min-height=14px、padding=0，并继续包在 v5-check-inline label 内，文字点击可触发控件。",
+    "检查已选样品 public/app.js：v5RenderSamplesInForm 生成相同紧凑样式的 checkbox，位于 ETA 字段标签内；型号、编号、预计交付时间、备注输入仍保留并可编辑。",
+    "检查键盘/焦点语义：两处均为未禁用、未隐藏的原生 checkbox，未设置 tabindex=-1；全局 input:focus-visible 规则仍提供焦点反馈，label 嵌套保证文字点击和键盘激活。",
+    "检查 ETA 读写链路：渲染从 draft.eta_pending 设置 checked；v5SaveTask 从 data-sample-field=eta_pending 读取 checked 并提交 eta_pending；新增处理从 #v5SampleEtaPending 读取并 POST eta_pending，未改动状态计算/API/数据库语义。",
+    "检查样品增删保存链路和四字段回归断言：新增仍 POST /api/v5/samples 后加入任务，已有样品仍通过 sample_updates 保存，未引入样品库或其他字段。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: npm test，64/64 tests pass。",
+    "PASS: node --check public/app.js。",
+    "PASS: node --check src/v3/index.js。",
+    "PASS: git diff --check 4f181529560965cb1eaa6ba549c20f84f81c4a8c c4bea15；无空白错误。",
+    "PASS: TASK-246 既有 npm-test evidence 可读取；本轮以最终提交 c4bea15 独立重跑全部要求命令。",
+    "PASS: 新增与已选样品 ETA checkbox 均显式覆盖通用输入的 30px 最小高度/内边距，标签、焦点和 eta_pending 状态链路未改变。"
+  ],
+  "created_at": "2026-08-26T00:48:16+08:00"
+}

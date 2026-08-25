@@ -1,0 +1,27 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-245",
+  "reviewed_task_ids": ["TASK-244"],
+  "work_package": "WP-012",
+  "baseline": "BL-008",
+  "result": "cancelled",
+  "diff_checked": true,
+  "changes": [
+    {"task_id": "TASK-244", "path": "public/app.js", "change_type": "modified", "summary": "样品卡片头部与移除样品操作布局。"},
+    {"task_id": "TASK-244", "path": "tests/v5-inline-editor.test.js", "change_type": "modified", "summary": "样品卡片头部和移除操作回归断言。"}
+  ],
+  "change_summary": "TASK-244 尚未验收；用户已确认由 TASK-246 继续修正样品 ETA 待确认复选框尺寸，因此旧交付不再作为独立交付成果，旧复审任务取消并由新复审任务 TASK-247 接替。",
+  "scope_checked": [
+    "核对 TASK-244 与 TASK-245 的契约、状态和已记录 Release 双轮复审证据。",
+    "核对 TASK-244 起始提交 aca91d657af04f5c4a846233e994bee5e55abd23 到最终提交 7710dd36fe9b23270a2f1b83cebb7f4452f9414f 的实际产品/测试变更。",
+    "确认 TASK-246 仍在 WP-012 的 V5 样品表单和测试路径内，仅补充 ETA 复选框视觉修正。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: TASK-244 原双轮复审在取消前均为 passed。",
+    "PASS: 取消原因是后续 ETA 复选框布局修正替代旧交付，不是发现未修复缺陷。",
+    "PASS: 本证据 changes 清单与 TASK-244 实际产品/测试变更一致。"
+  ],
+  "created_at": "2026-08-26T00:40:00+08:00"
+}

@@ -1,0 +1,62 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-247",
+  "work_package": "WP-012",
+  "contract_sha256": "856f78c59da32615d623af34f0acead1c14bf6893664bd2dbd0ef79ea61aeabf",
+  "baseline": "BL-008",
+  "state": "verified",
+  "approval_id": "APR-158",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "c4bea15faac559c394aee622baf3fb079ad4278a",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [],
+  "plan_checkpoint_git_commit": "c4bea15faac559c394aee622baf3fb079ad4278a",
+  "plan_rebase_history": [
+    {
+      "previous_changes": [],
+      "checkpoint_git_commit": "c4bea15faac559c394aee622baf3fb079ad4278a",
+      "rebased_at": "2026-08-25T16:44:53.0959277Z"
+    }
+  ],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-247/20260825T165218805Z-48500b1e-npm-test.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-247/20260825T164946635Z-464a0a25-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-247/review-round-1.json",
+    "docs/05-quality/evidence/TASK-247/20260825T165218805Z-48500b1e-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-247/review-round-2.json"
+  ],
+  "review_history": [
+    {
+      "path": "docs/05-quality/evidence/TASK-247/review-round-1.json",
+      "sha256": "2c642db0a86d5aa57ed0cb354b92f9d175bb1ac8480c90b6cd566dd38769b2ab",
+      "result": "passed",
+      "round_id": "RR-282eefc5337545c7b7863d1a748adaf7",
+      "recorded_at": "2026-08-25T16:50:03.8945084Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-247/review-round-2.json",
+      "sha256": "46f2eb442e348a706b42c89ad6365bc256d5e491c8e1ab9a616c74ac5265853d",
+      "result": "passed",
+      "round_id": "RR-5a6c118c7555440a862dd957d7d005bb",
+      "recorded_at": "2026-08-25T16:52:35.2726090Z"
+    }
+  ],
+  "review": {
+    "required": false,
+    "reviewer_task_id": "",
+    "status": "not-applicable",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
+  },
+  "last_error": "",
+  "created_at": "2026-08-25T16:34:14.6775228Z",
+  "updated_at": "2026-08-25T16:52:35.4904426Z"
+}
