@@ -60,6 +60,7 @@ test("V5 quick filters and task form selectable fields use custom autocomplete c
   assert.match(app, /function v5RenderQuickAutocomplete/);
   assert.match(app, /function v5TaskRenderMultiPicker/);
   assert.match(app, /function v5TaskRenderSingleCombobox/);
+  assert.match(app, /delete wrapper\.dataset\.v5TaskValue/);
   assert.match(app, /v5State\.dialogSampleIds/);
   assert.match(app, /v5State\.dialogMemberIds/);
   assert.match(styles, /\.v5-task-autocomplete/);

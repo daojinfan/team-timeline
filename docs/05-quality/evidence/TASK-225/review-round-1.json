@@ -1,0 +1,59 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-225",
+  "reviewed_task_ids": [
+    "TASK-224"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "changes-required",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-224",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "将执行中心快捷筛选和任务表单的专题、来源小组、制冷机、样品、参与成员控件改为自定义联想输入/多选结构，日期控件保持原样。"
+    },
+    {
+      "task_id": "TASK-224",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "实现快捷筛选、组合筛选和任务表单自定义联想控件的实时候选过滤、点击/键盘选择、Escape/外部点击关闭，以及多选、清空、应用和任务保存逻辑。"
+    },
+    {
+      "task_id": "TASK-224",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "新增统一联想菜单、候选项、已选标签和任务表单联想控件样式。"
+    },
+    {
+      "task_id": "TASK-224",
+      "path": "tests/v5-filter-combo.test.js",
+      "change_type": "modified",
+      "summary": "补充并更新自定义快捷筛选、组合筛选和任务表单控件的结构、无 datalist/旧多选控件及样式回归测试。"
+    }
+  ],
+  "change_summary": "从 TASK-224 start_git_commit 7710e434d1fd3dc3358363026452dd71e1e0e7c6 到当前最终内容核对 scoped implementation manifest，实际为上述四个 modified 文件；治理状态、台账和其他治理证据不计入 TASK-224 产品交付 changes。",
+  "scope_checked": [
+    "任务全量编辑台与执行中心快捷筛选、组合筛选的文本和可选字段均使用自定义联想输入框，日期字段仍为日期控件。",
+    "组合筛选保留实时匹配、多个已选值的添加/移除、非、AND/OR、任一/全部、清空和应用逻辑。",
+    "任务表单专题、来源小组、制冷机、样品和参与成员均有自定义输入联想控件，样品编辑和成员日期输入仍保留。",
+    "关键词支持候选外自由输入；资源/枚举候选来自现有专题、来源小组、制冷机、样品和成员数据，并支持点击、Arrow 导航、Escape 和外部点击关闭。",
+    "任务表单自定义单选控件通过 wrapper.dataset.v5TaskValue 保存候选 ID，任务保存通过该值组装 topic_id、source_group_id 和 cryostat_id。",
+    "专项与全量回归测试、JavaScript 语法和 scoped Git diff 检查均已执行。"
+  ],
+  "findings": [
+    "阻塞：资源/枚举型任务表单单选联想框在已有选择后编辑或清空输入时，input 事件只重绘候选菜单，没有清除 wrapper.dataset.v5TaskValue；v5SaveTask 仍从该旧 dataset 读取专题、来源小组和制冷机 ID。因此用户选择来源 A 后改输入为来源 B 或清空而不点击候选时，保存会提交旧的 A（新建表单也可能把任意自由输入与旧/空 ID 状态混淆）。这不满足资源/枚举字段仅选择已有候选，应在输入改变时清除已选 ID，或在保存前校验输入与已选候选一致。"
+  ],
+  "validation_evidence": [
+    "PASS: git diff --name-status 7710e434d1fd3dc3358363026452dd71e1e0e7c6 -- public/index.html public/app.js public/styles.css tests/v5-filter-combo.test.js 返回且仅包含四个 M 路径。",
+    "PASS: node --test tests/v5-filter-combo.test.js；8 tests passed, 0 failed。",
+    "PASS: npm test；60 tests passed, 0 failed。",
+    "PASS: node --check public/app.js 完成且无语法错误。",
+    "PASS: git diff --check 7710e434d1fd3dc3358363026452dd71e1e0e7c6 -- 四个允许路径无空白错误。",
+    "FINDING CONFIRMED: 静态追踪显示 v5TaskRenderSingleCombobox 在选择时写入 dataset.v5TaskValue，task-input input handler 未清除它，而 v5SaveTask 无条件读取该值；因此上述 stale selection 行为需要修复。"
+  ],
+  "created_at": "2026-08-25T09:56:42+08:00"
+}

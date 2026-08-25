@@ -1,0 +1,21 @@
+{
+  "$schema": "schemas/validation-evidence.schema.json",
+  "schema_version": 1,
+  "task_id": "TASK-225",
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "contract_sha256": "dd9e9e250b2eeaf036e94f17ce27f5011a093cf541ee79056baa810cd6c861fa",
+  "git_commit": "f8df07b6043a2b81121c655ad008c2797ed9a2d7",
+  "validation_id": "filter-task-form-combobox-review",
+  "command": "node",
+  "args": [
+    "--test",
+    "tests/v5-filter-combo.test.js"
+  ],
+  "started_at": "2026-08-25T01:57:57.8123567Z",
+  "finished_at": "2026-08-25T01:57:58.1786383Z",
+  "exit_code": 0,
+  "redactions_applied": 0,
+  "output_path": "docs/05-quality/evidence/TASK-225/20260825T015757806Z-8acaba93-filter-task-form-combobox-review.output.txt",
+  "output_sha256": "83aa2c07f50948418912acb7fd97f14200bd70fa7e9aa7dacc21d44d001c2f18"
+}
