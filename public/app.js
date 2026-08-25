@@ -4232,7 +4232,7 @@ function v5RenderTree() {
 }
 
 function v5InlineTestItemMarkup(item = {}) {
-  return `<div class="v5-repeatable-item v5-inline-test-item"><input data-inline-test-item-field="name" value="${escapeHtml(item.name || "")}" placeholder="测试项名称" aria-label="测试项名称"><input data-inline-test-item-field="acceptance_criteria" value="${escapeHtml(item.acceptance_criteria || "")}" placeholder="测试要求" aria-label="测试要求"><textarea data-inline-test-item-field="note" rows="1" placeholder="备注" aria-label="测试项备注">${escapeHtml(item.note || "")}</textarea><button class="small-button danger-button" type="button" data-v5-remove-inline-test-item>删除</button></div>`;
+  return `<div class="v5-repeatable-item v5-inline-test-item"><label class="v5-inline-test-field"><span>测试项名称</span><input data-inline-test-item-field="name" value="${escapeHtml(item.name || "")}" placeholder="填写测试项名称" aria-label="测试项名称"></label><label class="v5-inline-test-field"><span>测试要求</span><input data-inline-test-item-field="acceptance_criteria" value="${escapeHtml(item.acceptance_criteria || "")}" placeholder="填写测试要求" aria-label="测试要求"></label><label class="v5-inline-test-field"><span>备注</span><textarea data-inline-test-item-field="note" rows="1" placeholder="填写备注" aria-label="测试项备注">${escapeHtml(item.note || "")}</textarea></label><button class="small-button danger-button" type="button" data-v5-remove-inline-test-item>删除</button></div>`;
 }
 
 function v5RenderInlineTestItems(items = []) {
@@ -4302,6 +4302,7 @@ function v5RenderSelectedTask() {
   pane.querySelectorAll(".v5-inline-test-fieldset, .v5-inline-schedule-fields, .v5-inline-member-fieldset").forEach((section) => { section.style.gridColumn = "1 / -1"; });
   const scheduleFields = pane.querySelector(".v5-inline-schedule-fields");
   if (scheduleFields) { scheduleFields.style.display = "grid"; scheduleFields.style.gridTemplateColumns = "repeat(2, minmax(0, 1fr))"; scheduleFields.style.gap = "9px"; }
+  pane.querySelectorAll(".v5-inline-test-field").forEach((field) => { field.style.display = "grid"; field.style.gap = "4px"; field.style.minWidth = "0"; field.style.color = "var(--muted)"; field.style.fontSize = "11px"; field.style.fontWeight = "700"; });
   // Keep canonical form names (name="topic_id", name="source_group_id", name="cryostat_id") on the generated controls.
   const inlineFieldNames = { "inline-topic": "topic_id", "inline-source": "source_group_id", "inline-cryostat": "cryostat_id" };
   Object.entries(inlineFieldNames).forEach(([key, name]) => v5TaskComboboxInput(key)?.setAttribute("name", name));

@@ -18,6 +18,10 @@ test("V5 selected-task summary renders inline editable task attributes", () => {
   assert.match(app, /v5RenderInlineMembers/);
   assert.match(app, /v5InlineTestItems/);
   assert.match(app, /data-v5-inline-add-test-item/);
+  assert.match(app, /<label class="v5-inline-test-field"><span>测试项名称<\/span>/);
+  assert.match(app, /<label class="v5-inline-test-field"><span>测试要求<\/span>/);
+  assert.match(app, /<label class="v5-inline-test-field"><span>备注<\/span>/);
+  assert.match(app, /field\.style\.fontWeight = "700"/);
   assert.match(app, /querySelectorAll\("\.v5-inline-test-fieldset, \.v5-inline-schedule-fields, \.v5-inline-member-fieldset"\)/);
   assert.match(app, /section\.style\.gridColumn = "1 \/ -1"/);
   assert.match(app, /v5-inline-schedule-fields/);
