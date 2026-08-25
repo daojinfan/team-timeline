@@ -36,12 +36,14 @@ review_policy: independent-required
 
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| WP-009 | TASK-229 | pending | REVIEWER | 审核 V5 全部资源检索型联想控件 | BL-006 | pending | TASK-228 | completed | docs/05-quality/evidence/TASK-229 | v5-all-combobox-review | n/a | n/a | n/a | Plan 自动登记，等待调度 |
-| WP-009 | TASK-228 | pending | IMPLEMENTER | 统一 V5 全部资源检索型控件为自定义联想输入 | BL-006 | pending | TASK-224 | running | public/index.html, public/app.js, public/styles.css, tests/v5-filter-combo.test.js | v5-all-combobox | TASK-229 | passed | docs/05-quality/evidence/TASK-229/review-round-2.json | Plan 自动登记，等待调度 |
+| WP-009 | TASK-231 | pending | REVIEWER | 复核空查询联想候选展示修复 | BL-006 | pending | TASK-230 | pending | docs/05-quality/evidence/TASK-231 | v5-empty-query-combobox-review | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-009 | TASK-230 | pending | IMPLEMENTER | 修复空查询联想候选展示 | BL-006 | pending | n/a | running | public/app.js, tests/v5-filter-combo.test.js | v5-empty-query-combobox | TASK-231 | pending | pending | Plan 自动登记，等待调度 |
+| WP-009 | TASK-229 | pending | REVIEWER | 审核 V5 全部资源检索型联想控件 | BL-006 | pending | TASK-228 | pending | docs/05-quality/evidence/TASK-229 | v5-all-combobox-review | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-009 | TASK-228 | pending | IMPLEMENTER | 统一 V5 全部资源检索型控件为自定义联想输入 | BL-006 | pending | TASK-224 | running | public/index.html, public/app.js, public/styles.css, tests/v5-filter-combo.test.js | v5-all-combobox | TASK-229 | pending |  | Plan 自动登记，等待调度 |
 | WP-009 | TASK-227 | pending | REVIEWER | 审核任务全量编辑台内联联想控件 | BL-006 | pending | TASK-226 | replaced | docs/05-quality/evidence/TASK-227 | inline-task-combobox-review | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-009 | TASK-226 | pending | IMPLEMENTER | 补齐任务全量编辑台内联联想控件 | BL-006 | pending | TASK-224 | replaced | public/app.js, public/styles.css, tests/v5-filter-combo.test.js | inline-task-combobox | TASK-227 | pending | pending | Plan 自动登记，等待调度 |
-| WP-009 | TASK-225 | pending | REVIEWER | 独立审核统一筛选与任务表单联想控件 | BL-006 | pending | TASK-224 | completed | docs/05-quality/evidence/TASK-225 | filter-task-form-combobox-review | n/a | n/a | n/a | Plan 自动登记，等待调度 |
-| WP-009 | TASK-224 | pending | IMPLEMENTER | 统一筛选与任务表单自定义联想控件 | BL-006 | pending | TASK-222 | running | public/index.html, public/app.js, public/styles.css, tests/v5-filter-combo.test.js | filter-task-form-combobox | TASK-225 | passed | docs/05-quality/evidence/TASK-225/review-round-5.json | Plan 自动登记，等待调度 |
+| WP-009 | TASK-225 | pending | REVIEWER | 独立审核统一筛选与任务表单联想控件 | BL-006 | pending | TASK-224 | pending | docs/05-quality/evidence/TASK-225 | filter-task-form-combobox-review | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-009 | TASK-224 | pending | IMPLEMENTER | 统一筛选与任务表单自定义联想控件 | BL-006 | pending | TASK-222 | running | public/index.html, public/app.js, public/styles.css, tests/v5-filter-combo.test.js | filter-task-form-combobox | TASK-225 | pending |  | Plan 自动登记，等待调度 |
 | WP-009 | TASK-223 | pending | REVIEWER | 独立审核执行中心关键词自定义联想下拉 | BL-006 | pending | TASK-222 | pending | docs/05-quality/evidence/TASK-223 | execution-filter-keyword-combobox-review | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-009 | TASK-222 | pending | IMPLEMENTER | 执行中心关键词联想下拉交互 | BL-006 | pending | n/a | running | public/app.js, public/styles.css, tests/v5-filter-combo.test.js | execution-filter-keyword-combobox | TASK-223 | pending |  | Plan 自动登记，等待调度 |
 | WP-009 | TASK-221 | pending | REVIEWER | 独立审核执行中心关键词自动提示 | BL-006 | pending | TASK-220 | pending | docs/05-quality/evidence/TASK-221 | execution-filter-keyword-autocomplete-review | n/a | n/a | n/a | Plan 自动登记，等待调度 |

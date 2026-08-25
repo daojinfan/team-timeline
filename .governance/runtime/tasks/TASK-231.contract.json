@@ -1,0 +1,77 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-231",
+  "work_package": "WP-009",
+  "title": "复核空查询联想候选展示修复",
+  "goal": "独立复核 TASK-230 对 V5 联想输入空查询点击展示全部候选项的修复及回归测试。",
+  "baseline": "BL-006",
+  "profile": "Standard",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-231"
+  ],
+  "read_paths": [
+    "public/app.js",
+    "public/index.html",
+    "public/styles.css",
+    "tests/v5-filter-combo.test.js",
+    "docs/05-quality"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-231"
+  ],
+  "out_of_scope": [
+    "public/app.js",
+    "public/index.html",
+    "public/styles.css",
+    "tests/v5-filter-combo.test.js",
+    "src/server.js",
+    "data/team_tasks.sqlite"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [
+    "TASK-230"
+  ],
+  "acceptance_criteria": [
+    "完整核对空查询点击、关键词过滤、选择/清空/关闭行为及现有原生控件例外。",
+    "完成两轮 Standard 独立复核并形成结构化证据。"
+  ],
+  "validations": [
+    {
+      "id": "v5-empty-query-combobox-review",
+      "command": "node",
+      "args": [
+        "--test",
+        "tests/v5-filter-combo.test.js"
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-25T06:12:59.8339993Z"
+}

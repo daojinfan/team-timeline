@@ -1,0 +1,38 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-230",
+  "work_package": "WP-009",
+  "contract_sha256": "af723cfb6dfcce4d738f7943c9331b15883686d1917bf1746e1052b22137ffdf",
+  "baseline": "BL-006",
+  "state": "implemented",
+  "approval_id": "APR-144",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "6b0cc716d457ed275802c7da596999ccba51b282",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [],
+  "plan_checkpoint_git_commit": "6b0cc716d457ed275802c7da596999ccba51b282",
+  "plan_rebase_history": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-230/20260825T061851622Z-4042963b-v5-empty-query-combobox.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-230/20260825T061851622Z-4042963b-v5-empty-query-combobox.evidence.json"
+  ],
+  "review_history": [],
+  "review": {
+    "required": true,
+    "reviewer_task_id": "TASK-231",
+    "status": "pending",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
+  },
+  "last_error": "Strict governance validation failed before or after execution:\n项目：D:\\Codex\\人员管理系统\r\n级别：Strict\r\n扫描文档数：56\r\n错误数：2\r\n警告数：0\r\n错误：连续审核通过所绑定的最终变更指纹不一致：TASK-228\r\n错误：连续审核通过所绑定的最终变更指纹不一致：TASK-224\r\n",
+  "created_at": "2026-08-25T06:12:50.5177874Z",
+  "updated_at": "2026-08-25T06:19:05.9216432Z"
+}

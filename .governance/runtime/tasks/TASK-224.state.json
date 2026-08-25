@@ -30,14 +30,12 @@
   "review": {
     "required": true,
     "reviewer_task_id": "TASK-225",
-    "status": "passed",
-    "evidence": [
-      "docs/05-quality/evidence/TASK-225/review-round-5.json"
-    ],
-    "pass_streak": 2,
-    "subject_sha256": "3da4d84277bb4fcea14cf7b26f23af22afa6cf66787e2df4b458b5f99b934275"
+    "status": "pending",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
   },
   "last_error": "",
   "created_at": "2026-08-25T01:28:11.9924319Z",
-  "updated_at": "2026-08-25T03:07:33.5187980Z"
+  "updated_at": "2026-08-25T06:19:39.5611044Z"
 }

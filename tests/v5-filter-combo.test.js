@@ -90,6 +90,23 @@ test("V5 resource-selection surfaces all use custom autocomplete controls", () =
   assert.match(styles, /\.v5-resource-search-autocomplete/);
 });
 
+test("V5 autocomplete inputs reopen complete candidates when clicked with an empty query", () => {
+  for (const helper of [
+    "v5ShowFilterAutocompleteForInput",
+    "v5ShowQuickAutocompleteForInput",
+    "v5ShowTaskAutocompleteForInput",
+    "v5RenderResourceSearchOptions",
+    "v5RenderExecutionMemberSearchOptions",
+  ]) assert.match(app, new RegExp(`function ${helper}`), helper);
+  assert.match(app, /autocompleteInput && v5ShowFilterAutocompleteForInput\(autocompleteInput\)/);
+  assert.match(app, /quickInput && v5ShowQuickAutocompleteForInput\(quickInput\)/);
+  assert.match(app, /taskInput && v5ShowTaskAutocompleteForInput\(taskInput\)/);
+  assert.match(app, /v5RenderResourceSearchOptions\(resourceInput\.dataset\.v5ResourceSearch, resourceInput\.value\)/);
+  assert.match(app, /v5RenderExecutionMemberSearchOptions\(executionMemberInput\.value\)/);
+  assert.match(app, /!normalizedQuery \|\|/);
+  assert.match(app, /!normalized \|\|/);
+});
+
 test("V5 quick filter headings keep 非 immediately before the filter label", () => {
   const filterIds = [
     "v5TaskSearchNot",

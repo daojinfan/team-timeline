@@ -1,0 +1,76 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-230",
+  "work_package": "WP-009",
+  "title": "修复空查询联想候选展示",
+  "goal": "修复 V5 资源检索型和任务筛选型自定义联想输入框：用户点击输入框但未输入关键词时，应展示当前范围内的全部候选项；保留已有筛选、清空和选择逻辑。",
+  "baseline": "BL-006",
+  "profile": "Standard",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/app.js",
+    "tests/v5-filter-combo.test.js"
+  ],
+  "read_paths": [
+    "public/app.js",
+    "public/index.html",
+    "public/styles.css",
+    "tests/v5-filter-combo.test.js"
+  ],
+  "write_paths": [
+    "public/app.js",
+    "tests/v5-filter-combo.test.js"
+  ],
+  "out_of_scope": [
+    "src/server.js",
+    "data/team_tasks.sqlite",
+    "V2/V3历史模块"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "点击空查询任务/资源联想输入框时展示全部当前候选项。",
+    "已有关键词输入仍按关键词过滤，选择、清空和关闭逻辑不回归。",
+    "新增回归测试并通过专项与全量测试。"
+  ],
+  "validations": [
+    {
+      "id": "v5-empty-query-combobox",
+      "command": "node",
+      "args": [
+        "--test",
+        "tests/v5-filter-combo.test.js"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-25T06:12:50.5177874Z"
+}
