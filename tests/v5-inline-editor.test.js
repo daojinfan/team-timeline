@@ -31,7 +31,7 @@ test("V5 inline task save uses preview, conflict acknowledgement and expected ve
 });
 
 test("V5 inline editor keeps samples in the full editor and has compact responsive styles", () => {
-  assert.match(app, /样品明细不在摘要区重复编辑/);
+  assert.match(app, /样品明细在“全量编辑”中维护：样品型号、样品编号、预计交付时间和样品备注/);
   assert.match(app, /data-v5-edit-task/);
   assert.match(styles, /\.v5-inline-task-form/);
   assert.match(styles, /\.v5-inline-member-summary/);
@@ -39,6 +39,17 @@ test("V5 inline editor keeps samples in the full editor and has compact responsi
   assert.match(styles, /\.v5-inline-member-list/);
   assert.match(styles, /\.v5-inline-test-item \{ grid-template-columns/);
   assert.match(styles, /@media \(max-width: 520px\)/);
+});
+
+test("V5 sample editor exposes only the four current sample fields", () => {
+  const index = readFileSync(path.join(root, "public/index.html"), "utf8");
+  const dialog = index.slice(index.indexOf('id="v5TaskDialog"'), index.indexOf('id="v5TopicDialog"'));
+  for (const field of ["样品型号", "样品编号", "样品备注", "样品预期交付时间"]) assert.match(dialog, new RegExp(field));
+  for (const legacy of ["v5SampleLabel", "规划标签", "实际到样"]) assert.doesNotMatch(dialog, new RegExp(legacy));
+  assert.doesNotMatch(dialog, /样品数量/);
+  assert.match(app, /data-sample-field="notes"/);
+  assert.doesNotMatch(app, /data-sample-field="arrival_date"/);
+  assert.doesNotMatch(app, /data-sample-field="planning_label"/);
 });
 
 test("V5 task status filter supports an accessible inverse mode", () => {

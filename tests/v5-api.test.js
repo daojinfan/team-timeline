@@ -72,6 +72,31 @@ test("V5 task editor persists canonical fields and computes the five user-facing
   } finally { await app.close(); }
 });
 
+test("V5 sample compatibility defaults the hidden planning label and uses the sample number for delivery status", async () => {
+  const app = await fixture();
+  try {
+    const resources = (await app.request("/api/v5/resources")).data;
+    const topic = (await app.request("/api/v5/topics", { method: "POST", body: { name: "样品字段兼容专题" }, expected: [201] })).data;
+    const sample = (await app.request("/api/v5/samples", { method: "POST", body: { model: "QPU-COMPAT", eta_date: "2020-01-01", notes: "待补充编号" }, expected: [201] })).data;
+    assert.equal(sample.planning_label, "QPU-COMPAT");
+    assert.equal(sample.sample_no, null);
+    assert.equal(sample.notes, "待补充编号");
+    const preview = (await app.request("/api/v5/tasks/preview", { method: "POST", body: { topic_id: topic.id, title: "编号状态测试", sample_ids: [sample.id] } })).data;
+    const task = (await app.request("/api/v5/tasks", { method: "POST", body: { ...preview.normalized_input, preview_token: preview.preview_token }, expected: [201] })).data;
+    assert.equal(task.status, "sample-delayed");
+    const taskEdit = (await app.request(`/api/v5/tasks/${task.id}/preview`, { method: "POST", body: { title: task.title, sample_ids: [sample.id], sample_updates: [{ sample_id: sample.id, model: "QPU-COMPAT-TASK", eta_date: "2020-01-01", eta_pending: false, notes: "任务编辑备注", expected_version: sample.version }], expected_version: task.version } })).data;
+    const taskUpdated = (await app.request(`/api/v5/tasks/${task.id}`, { method: "PUT", body: { ...taskEdit.normalized_input, preview_token: taskEdit.preview_token, expected_version: task.version }, expected: [200] })).data;
+    assert.equal(taskUpdated.samples[0].planning_label, "QPU-COMPAT-TASK");
+    assert.equal(taskUpdated.samples[0].notes, "任务编辑备注");
+    const updated = (await app.request(`/api/v5/samples/${sample.id}`, { method: "PUT", body: { sample_no: "QPU-COMPAT-01", notes: "已补录编号", expected_version: taskUpdated.samples[0].version } })).data;
+    assert.equal(updated.planning_label, "QPU-COMPAT-TASK");
+    assert.equal(updated.notes, "已补录编号");
+    assert.equal((await app.request(`/api/v5/tasks/${task.id}`)).data.status, "waiting");
+    const renamed = (await app.request(`/api/v5/samples/${sample.id}`, { method: "PUT", body: { model: "QPU-COMPAT-REV", sample_no: null, expected_version: updated.version } })).data;
+    assert.equal(renamed.planning_label, "QPU-COMPAT-REV");
+  } finally { await app.close(); }
+});
+
 test("V5 supports topic regrouping, member schedule synchronization, and execution load projections", async () => {
   const app = await fixture();
   try {

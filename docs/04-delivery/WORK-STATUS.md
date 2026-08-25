@@ -32,6 +32,6 @@ last_reviewed: 2026-08-20
 | WP-010 | superseded | 2026-08-23 | PM | docs/05-quality/evidence/TASK-114/20260822T125714649Z-0cdfcb78-web-data-reconcile-verify.evidence.json, docs/05-quality/evidence/TASK-118/20260822T154404999Z-bd731c44-unassigned-topic-verify.evidence.json | 按 CONF-WEB-DATA-20260822-01 对齐工艺组 Web 数据，执行前备份，其他来源小组不变 |
 
 | WP-011 | accepted | 2026-08-25 | PM | docs/05-quality/evidence/TASK-234/20260825T093300568Z-b06a66ba-demand-import-verify.evidence.json, docs/05-quality/evidence/TASK-238/20260825T124053022Z-26c48997-demand-import-verify.evidence.json, docs/05-quality/evidence/TASK-239/20260825T125505831Z-27d06250-demand-import-verify.evidence.json | 导入对象与备份已保留；规划无旧任务依赖的 Standard 只读验证与文本报告 |
-| WP-012 | planned | 2026-08-25 | PM | 待生成 | 按 CONF-V5-SAMPLE-FIELDS-20260825-01 收敛 V5 样品字段；等待 execution 批准后启动实现与独立复审 |
+| WP-012 | planned | 2026-08-25 | PM | docs/05-quality/evidence/TASK-240/20260825T143636406Z-92f4528b-npm-test.evidence.json, docs/05-quality/evidence/TASK-240/20260825T143636406Z-92f4528b-app-syntax.evidence.json, docs/05-quality/evidence/TASK-240/20260825T143636406Z-92f4528b-v3-syntax.evidence.json, docs/05-quality/evidence/TASK-240/20260825T143636406Z-92f4528b-git-diff-check.evidence.json | 按 CONF-V5-SAMPLE-FIELDS-20260825-01 收敛 V5 样品字段；等待 execution 批准后启动实现与独立复审 |
 
 允许的状态值：planned、in-progress、blocked、needs-decision、implemented、verified、accepted、superseded。
