@@ -1,0 +1,21 @@
+{
+  "$schema": "schemas/validation-evidence.schema.json",
+  "schema_version": 1,
+  "task_id": "TASK-223",
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "contract_sha256": "365f7da32c2f08843bdc567400a04e4ce1f44de1d55931715d842d01ce7e7b58",
+  "git_commit": "5323bc37b9003bb01036132946808dd9a915b1c3",
+  "validation_id": "execution-filter-keyword-combobox-review",
+  "command": "node",
+  "args": [
+    "--test",
+    "tests/v5-filter-combo.test.js"
+  ],
+  "started_at": "2026-08-25T01:03:02.2176027Z",
+  "finished_at": "2026-08-25T01:03:02.5921921Z",
+  "exit_code": 0,
+  "redactions_applied": 0,
+  "output_path": "docs/05-quality/evidence/TASK-223/20260825T010302211Z-8993d4ad-execution-filter-keyword-combobox-review.output.txt",
+  "output_sha256": "299b7deb4f12436ebfd4ba49d8789950434d9f67251d8b1d0c7fb1e67159a5de"
+}

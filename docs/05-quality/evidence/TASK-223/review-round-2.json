@@ -1,0 +1,53 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-223",
+  "reviewed_task_ids": [
+    "TASK-222"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-222",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "最终自定义关键词联想菜单实现，支持当前任务候选实时过滤、候选选择、自由输入及关闭交互。"
+    },
+    {
+      "task_id": "TASK-222",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "最终自定义关键词联想菜单和候选项视觉样式。"
+    },
+    {
+      "task_id": "TASK-222",
+      "path": "tests/v5-filter-combo.test.js",
+      "change_type": "modified",
+      "summary": "最终回归断言覆盖自定义菜单、实时联想、自由输入、Escape 关闭和无 datalist。"
+    }
+  ],
+  "change_summary": "完成 Standard 第二轮从头全量独立复审。以 TASK-222 start_git_commit 634d9ac7f8c1bfdab19ce0cbd902eb0c084452eb 对照当前最终内容，实际产品 scoped manifest 仍恰为上述三个 modified 文件；最终内容与 round 1 相同。",
+  "scope_checked": [
+    "关键词输入是执行中心专用自定义输入下拉，focus/input 时展示并实时过滤当前任务候选",
+    "候选项支持鼠标点击填入；输入 ArrowDown 后焦点进入候选按钮，按钮默认键盘激活可选择，Escape 可关闭并回焦输入",
+    "点击联想区域外会关闭所有候选菜单；无 datalist 元素或 list 属性依赖",
+    "候选外自由输入仍保存在文本条件并沿用包含匹配",
+    "非、条件组内/组间 AND/OR、多选任一/全部、清空和应用状态同步逻辑在完整代码中保留",
+    "CSS 提供菜单定位、滚动、候选 hover/focus 和空候选状态；回归测试覆盖自定义交互标记",
+    "TASK-222 实际产品变更仅为 app.js、styles.css、filter-combo test 三项"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: git diff --name-status 634d9ac7f8c1bfdab19ce0cbd902eb0c084452eb HEAD -- public/app.js public/styles.css tests/v5-filter-combo.test.js returned exactly the three listed M paths.",
+    "PASS: independent static audit confirmed custom menu/input attributes, live query filtering, option fill, Escape/focus-out close, no <datalist> or list= keyword control, and preserved filter match/negate/group/reset/apply paths.",
+    "PASS: node --test tests/v5-filter-combo.test.js; 7 tests passed, 0 failed.",
+    "PASS: npm test; 59 tests passed, 0 failed.",
+    "PASS: node --check public/app.js completed without syntax errors.",
+    "PASS: git diff --check for TASK-222 allowed paths returned no whitespace errors.",
+    "PASS: final reviewed subject is unchanged from round 1."
+  ],
+  "created_at": "2026-08-25T01:30:00+08:00"
+}

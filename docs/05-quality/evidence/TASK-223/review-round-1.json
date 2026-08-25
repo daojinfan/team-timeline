@@ -1,0 +1,51 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-223",
+  "reviewed_task_ids": [
+    "TASK-222"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-222",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "将执行中心关键词 datalist 替换为自定义联想菜单，支持实时候选过滤、点击填入、键盘导航、Escape/外部点击关闭和自由输入。"
+    },
+    {
+      "task_id": "TASK-222",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "新增自定义关键词联想菜单、候选按钮、聚焦态和空候选提示样式。"
+    },
+    {
+      "task_id": "TASK-222",
+      "path": "tests/v5-filter-combo.test.js",
+      "change_type": "modified",
+      "summary": "回归测试改为验证自定义实时联想菜单标记、候选值填入、关闭交互和无 datalist。"
+    }
+  ],
+  "change_summary": "从 TASK-222 start_git_commit 634d9ac7f8c1bfdab19ce0cbd902eb0c084452eb 到当前最终内容核对，实际 scoped manifest 恰为上述三个 modified 文件。",
+  "scope_checked": [
+    "执行中心关键词输入使用自定义 data-v5-filter-autocomplete 容器、输入框和 role=listbox 菜单，不再使用 datalist/list 属性",
+    "输入事件实时调用 v5FilterRenderKeywordSuggestions，并通过 v5FilterKeywordMatches 对当前任务候选项做中文不区分大小写包含过滤",
+    "候选项来自当前任务的任务号、任务名、专题、来源小组、制冷机、样品、测试项和成员信息；点击候选写回 condition/input",
+    "候选之外自由输入仍写入条件并沿用原有文本包含匹配",
+    "Escape 关闭，点击联想区域外关闭；ArrowDown 聚焦候选，候选按钮可通过基本键盘操作触发选择",
+    "非、AND/OR、多选、清空和应用逻辑及原组合筛选匹配实现保持不变"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: git diff --name-status 634d9ac7f8c1bfdab19ce0cbd902eb0c084452eb HEAD -- public/app.js public/styles.css tests/v5-filter-combo.test.js returned exactly the three listed M paths.",
+    "PASS: node --test tests/v5-filter-combo.test.js; 7 tests passed, 0 failed.",
+    "PASS: npm test; 59 tests passed, 0 failed.",
+    "PASS: node --check public/app.js completed without syntax errors.",
+    "PASS: git diff --check for TASK-222 allowed paths returned no whitespace errors.",
+    "PASS: static review confirms no <datalist> or list= keyword control remains; custom menu has live query filtering, option click fill, Escape/focus-out closure, ArrowDown navigation, and existing filter match/negate/group/reset/apply paths remain present."
+  ],
+  "created_at": "2026-08-25T01:20:00+08:00"
+}
