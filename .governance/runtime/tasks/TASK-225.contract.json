@@ -1,0 +1,82 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-225",
+  "work_package": "WP-009",
+  "title": "独立审核统一筛选与任务表单联想控件",
+  "goal": "独立审核 TASK-224 的筛选与新建/编辑任务表单自定义联想控件、交互一致性及回归测试。",
+  "baseline": "BL-006",
+  "profile": "Standard",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-225"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "tests/v5-filter-combo.test.js",
+    "tests/v5-execution.test.js",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/05-quality"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-225"
+  ],
+  "out_of_scope": [
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "tests/v5-filter-combo.test.js",
+    "src/server.js",
+    "data/team_tasks.sqlite"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [
+    "TASK-224"
+  ],
+  "acceptance_criteria": [
+    "核对两个模块的筛选搜索和可选字段是否统一为自定义联想控件，日期/时间控件未被误改。",
+    "核对组合筛选多选、自由输入、点击/键盘选择、关闭及原组合逻辑。",
+    "核对任务表单专题、来源小组、制冷机、样品、参与成员选择与原有编辑能力。",
+    "完成 Standard 双轮独立审核并生成结构化证据。"
+  ],
+  "validations": [
+    {
+      "id": "filter-task-form-combobox-review",
+      "command": "node",
+      "args": [
+        "--test",
+        "tests/v5-filter-combo.test.js"
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-25T01:28:23.6578914Z"
+}

@@ -21,7 +21,10 @@ test("V5 filters support per-condition inverse matching and multi-select", () =>
   for (const id of ["v5TaskSearchNot", "v5TaskSourceNot", "v5TaskStatusNot", "v5TaskCryostatNot", "v5ExecutionSearchNot", "v5ExecutionSourceNot", "v5ExecutionTopicNot", "v5ExecutionStatusNot", "v5ExecutionMemberNot", "v5ExecutionSampleNot", "v5ExecutionCryostatNot"]) {
     assert.match(index, new RegExp(`id="${id}"`));
   }
-  assert.match(app, /<select multiple size="4"/);
+  assert.match(app, /data-v5-filter-multi-input="\$\{key\}"/);
+  assert.match(app, /data-v5-filter-chip-remove/);
+  assert.match(app, /data-v5-filter-option-multi/);
+  assert.doesNotMatch(app, /<select multiple size="4"/);
   assert.match(app, /supportsNegate: true/);
   assert.match(app, /condition\.negate \? !matches : matches/);
   assert.match(app, /match === "all"/);
@@ -29,14 +32,14 @@ test("V5 filters support per-condition inverse matching and multi-select", () =>
 
 test("V5 execution keyword conditions keep free input and expose a custom live suggestion menu", () => {
   assert.match(app, /function v5FilterKeywordOptionValues\(surface\)/);
-  assert.match(app, /surface !== "execution"/);
+  assert.match(app, /\["editor", "execution"\]\.includes\(surface\)/);
   assert.match(app, /task\.task_number, task\.title, task\.topic\?\.name/);
   assert.match(app, /task\.samples \|\| \[\]/);
   assert.match(app, /task\.test_items \|\| \[\]/);
   assert.match(app, /task\.participants \|\| \[\]/);
   assert.match(app, /function v5FilterKeywordMatches\(surface, query\)/);
   assert.match(app, /data-v5-filter-autocomplete="\$\{key\}"/);
-  assert.match(app, /data-v5-filter-keyword-input="\$\{key\}"/);
+  assert.match(app, /data-v5-filter-autocomplete-input="\$\{key\}"/);
   assert.match(app, /data-v5-filter-options="\$\{key\}"/);
   assert.match(app, /data-v5-filter-option-value/);
   assert.match(app, /v5FilterRenderKeywordSuggestions/);
@@ -46,6 +49,20 @@ test("V5 execution keyword conditions keep free input and expose a custom live s
   assert.doesNotMatch(app, /list="\$\{listId\}"/);
   assert.match(styles, /\.v5-filter-autocomplete-menu/);
   assert.match(styles, /\.v5-filter-autocomplete-option/);
+});
+
+test("V5 quick filters and task form selectable fields use custom autocomplete controls", () => {
+  for (const id of ["v5TaskSearch", "v5TaskSourceFilter", "v5TaskStatusFilter", "v5TaskCryostatFilter", "v5ExecutionSearch", "v5ExecutionSource", "v5ExecutionTopic", "v5ExecutionStatus", "v5ExecutionMember", "v5ExecutionSample", "v5ExecutionCryostat", "v5TaskTopic", "v5TaskSource", "v5TaskCryostat"]) {
+    assert.match(index, new RegExp(`id="${id}"`), id);
+  }
+  for (const key of ["editor-search", "editor-sourceId", "execution-search", "execution-topicId"]) assert.match(index, new RegExp(`data-v5-quick-input="${key}"`), key);
+  for (const key of ["topic", "source", "cryostat", "samples", "members"]) assert.match(index, new RegExp(`data-v5-task-input="${key}"`), key);
+  assert.match(app, /function v5RenderQuickAutocomplete/);
+  assert.match(app, /function v5TaskRenderMultiPicker/);
+  assert.match(app, /function v5TaskRenderSingleCombobox/);
+  assert.match(app, /v5State\.dialogSampleIds/);
+  assert.match(app, /v5State\.dialogMemberIds/);
+  assert.match(styles, /\.v5-task-autocomplete/);
 });
 
 test("V5 quick filter headings keep 非 immediately before the filter label", () => {

@@ -1,0 +1,88 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-224",
+  "work_package": "WP-009",
+  "title": "统一筛选与任务表单自定义联想控件",
+  "goal": "将任务全量编辑台与执行中心的搜索/可选筛选，以及新建/编辑任务表单中的专题、来源小组、制冷机、样品、参与成员选择，统一为可输入、边输入边筛选的自定义联想控件。",
+  "baseline": "BL-006",
+  "profile": "Standard",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "tests/v5-filter-combo.test.js"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "tests/v5-filter-combo.test.js",
+    "tests/v5-execution.test.js"
+  ],
+  "write_paths": [
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "tests/v5-filter-combo.test.js"
+  ],
+  "out_of_scope": [
+    "src/server.js",
+    "data/team_tasks.sqlite",
+    "手机端",
+    "日期输入、甘特图时间单位/范围/粒度",
+    "人工阶段单选",
+    "自由文本字段"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [
+    "TASK-222"
+  ],
+  "acceptance_criteria": [
+    "任务全量编辑台与执行中心顶部快捷筛选、组合筛选的文本和可选字段统一为自定义联想输入框；日期和时间控件保持原行为。",
+    "组合筛选多选字段支持实时匹配、添加/移除多个已选项，非、AND/OR、任一/全部、清空和应用逻辑保持不变。",
+    "新建/编辑任务表单的专题、来源小组、制冷机、样品和参与成员支持自定义联想选择，原有样品编辑和成员日期设置保持可用。",
+    "关键词允许自由输入，资源/枚举字段仅选择已有候选；支持点击、键盘、Escape/外部点击关闭。",
+    "补充回归测试并通过专项、全量和 Strict 治理校验。"
+  ],
+  "validations": [
+    {
+      "id": "filter-task-form-combobox",
+      "command": "node",
+      "args": [
+        "--test",
+        "tests/v5-filter-combo.test.js"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-25T01:28:11.9924319Z"
+}
