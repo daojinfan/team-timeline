@@ -18,6 +18,9 @@ test("V5 selected-task summary renders inline editable task attributes", () => {
   assert.match(app, /v5RenderInlineMembers/);
   assert.match(app, /v5InlineTestItems/);
   assert.match(app, /data-v5-inline-add-test-item/);
+  assert.match(app, /querySelectorAll\("\.v5-inline-test-fieldset, \.v5-inline-member-fieldset"\)/);
+  assert.match(app, /section\.style\.gridColumn = "1 \/ -1"/);
+  assert.match(app, /<label>计划开始<input name="start_date"[^]*?<label>计划结束<input name="end_date"/);
   assert.match(app, /id="v5InlineTaskFormError" role="alert" aria-live="polite"/);
 });
 
