@@ -1,0 +1,21 @@
+{
+  "$schema": "schemas/validation-evidence.schema.json",
+  "schema_version": 1,
+  "task_id": "TASK-239",
+  "work_package": "WP-011",
+  "baseline": "BL-007",
+  "contract_sha256": "fa9a19398cdb00550a6ad6d18f6c9f42806182ccb14d0be9f09544776a96f488",
+  "git_commit": "6b43243cc1295e3e577ad1b15b04055dc0bf4d3f",
+  "validation_id": "demand-import-verify",
+  "command": "node",
+  "args": [
+    "--eval",
+    "const assert=require('node:assert/strict'); const {DatabaseSync}=require('node:sqlite'); const db=new DatabaseSync('data/team_tasks.sqlite',{readOnly:true}); try { const title='工艺组硅基大尺寸底片工艺的读取线路异常复核，支撑Z3和Z4项目'; const rows=db.prepare(`SELECT t.*,tp.name topic_name,sg.name source_name,c.name cryostat_name FROM v5_tasks t JOIN v5_topics tp ON tp.id=t.topic_id LEFT JOIN v2_source_groups sg ON sg.id=t.source_group_id LEFT JOIN v2_cryostats c ON c.id=t.cryostat_id WHERE t.title=?`).all(title); assert.equal(rows.length,1); const task=rows[0]; assert.equal(task.topic_name,'读取驻波问题'); assert.equal(task.source_name,'工艺组'); assert.equal(task.cryostat_name,'祖4'); assert.equal(task.manual_phase,'waiting'); assert.equal(task.start_date,null); assert.equal(task.end_date,null); assert.equal(db.prepare('SELECT COUNT(*) n FROM v5_task_members WHERE task_id=?').get(task.id).n,0); const samples=db.prepare(`SELECT s.* FROM v5_samples s JOIN v5_task_samples ts ON ts.sample_id=s.id WHERE ts.task_id=?`).all(task.id); assert.equal(samples.length,1); assert.equal(samples[0].model,'Z3.2.2 107Q'); assert.equal(samples[0].sample_no,'Z3.2.2_FC_V2_Bottom 02-05'); assert.equal(samples[0].eta_date,'2026-08-25'); assert.equal(samples[0].arrival_date,null); const items=db.prepare('SELECT name,acceptance_criteria,note FROM v5_test_items WHERE task_id=? ORDER BY position').all(task.id); assert.equal(items.length,1); assert.equal(items[0].name,'板卡+网分测试全部15路读取线路及其读取腔频率'); assert.equal(db.prepare('SELECT COUNT(*) n FROM tasks WHERE id=? AND title=? AND deleted_at IS NULL').get(task.legacy_task_id,title).n,1); assert.equal(db.prepare('PRAGMA integrity_check').get().integrity_check,'ok'); assert.equal(db.prepare('PRAGMA foreign_key_check').all().length,0); console.log(JSON.stringify({task_id:task.id,task_number:`TASK-${task.legacy_task_id}`,sample_id:samples[0].id,topic:task.topic_name,source_group:task.source_name,cryostat:task.cryostat_name,integrity:'ok',foreign_key_violations:0})); } finally { db.close(); }"
+  ],
+  "started_at": "2026-08-25T12:49:58.4353961Z",
+  "finished_at": "2026-08-25T12:49:58.7308911Z",
+  "exit_code": 0,
+  "redactions_applied": 0,
+  "output_path": "docs/05-quality/evidence/TASK-239/20260825T124958430Z-73231241-demand-import-verify.output.txt",
+  "output_sha256": "fb5ce5195583394fd1ac6c4b888a69d7e1710e3021af793c2fdf61b37ecb3d3a"
+}

@@ -5,12 +5,12 @@
   "work_package": "WP-011",
   "contract_sha256": "fa9a19398cdb00550a6ad6d18f6c9f42806182ccb14d0be9f09544776a96f488",
   "baseline": "BL-007",
-  "state": "planned",
+  "state": "verified",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
   "acceptance_git_commit": "",
-  "start_git_commit": "",
+  "start_git_commit": "6b43243cc1295e3e577ad1b15b04055dc0bf4d3f",
   "execution_lease": "",
   "execution_lease_owner": "",
   "execution_lease_expires_at": "",
@@ -28,9 +28,22 @@
       "rebased_at": "2026-08-25T12:41:38.5649727Z"
     }
   ],
-  "evidence": [],
-  "evidence_history": [],
-  "review_history": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-239/20260825T124958430Z-73231241-demand-import-verify.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-239/20260825T124958430Z-73231241-demand-import-verify.evidence.json",
+    "docs/05-quality/evidence/TASK-239/review-round-1.json"
+  ],
+  "review_history": [
+    {
+      "path": "docs/05-quality/evidence/TASK-239/review-round-1.json",
+      "sha256": "31221ba1ea3e631c543b8409f785a4444c424092a92bd58565285bea21d4eaf7",
+      "result": "passed",
+      "round_id": "RR-994775ac56bc4b919c1abacdb29658b4",
+      "recorded_at": "2026-08-25T12:50:11.8390064Z"
+    }
+  ],
   "review": {
     "required": false,
     "reviewer_task_id": "",
@@ -41,5 +54,5 @@
   },
   "last_error": "",
   "created_at": "2026-08-25T11:45:24.1002632Z",
-  "updated_at": "2026-08-25T12:41:38.5722887Z"
+  "updated_at": "2026-08-25T12:50:12.0912225Z"
 }

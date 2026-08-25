@@ -1,0 +1,47 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-239",
+  "reviewed_task_ids": [
+    "TASK-238"
+  ],
+  "work_package": "WP-011",
+  "baseline": "BL-007",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-238",
+      "path": "docs/09-reports/TASK-238-demand-import.txt",
+      "change_type": "added",
+      "summary": "新增 Z3.2.2 测控需求导入只读核对记录，记录来源、备份、字段映射、对象计数、资源哈希、V1/V5 投影和完整性检查结果。"
+    }
+  ],
+  "change_summary": "以 TASK-238 start_git_commit 8b031c298ade06f16e746f9638cbf6d570e8c372 对照当前 HEAD 6b43243cc1295e3e577ad1b15b04055dc0bf4d3f，实际项目内容变更只有 docs/09-reports/TASK-238-demand-import.txt（added）。同时核对了同一差异中的治理状态和 TASK-238 验证证据；按审核规则未将数据库、备份、治理状态或证据文件列入 TASK-238 的产品 changes。",
+  "scope_checked": [
+    "完整阅读 TASK-238/TASK-239 contract 和 state、WP-011 context、源需求 Markdown、TASK-238 只读报告及其 validation evidence/output。",
+    "独立读取 data/team_tasks.sqlite 和 data/backups/team_tasks.pre-demand-import-20260825-172854.sqlite；未执行任何业务写入。",
+    "独立确认来源文件大小 2746 bytes、SHA256 d1a486cfb3ab3d205b43bb2c259320b7fc8329f936df5016416194b83f959d37。",
+    "独立确认备份大小 770048 bytes、SHA256 00282d7722351aa653b8c14c2c748b9082e94cdd6d654eb89ea9e66faadd7ef1，备份 integrity_check=ok、foreign_key_check=0。",
+    "独立确认 V5 任务 37 对应 V1 tasks.id=59，标题唯一且未删除；V5 GET /api/v5/tasks/37 返回 HTTP 200，字段和关联对象与报告一致。",
+    "独立确认专题读取驻波问题（4）、来源小组工艺组（1）、制冷机祖4（19）、manual_phase=waiting、start_date=null、end_date=null、color 为空，任务成员为 0。",
+    "独立确认样品 20 唯一关联该任务，model=Z3.2.2 107Q、sample_no=Z3.2.2_FC_V2_Bottom 02-05、eta_date=2026-08-25、arrival_date=null、eta_pending=0；同编号样品和同型号样品均为唯一一条。",
+    "独立确认任务关联测试项恰为 1 条，名称为板卡+网分测试全部15路读取线路及其读取腔频率，验收条件和备注与需求文档映射一致。",
+    "独立对照执行前备份计数：tasks/v5_tasks/v5_samples/v5_test_items/v5_task_samples/v5_events 增量分别为 +1/+1/+1/+1/+1/+2，v5_task_members 为 +0，专题、来源小组、制冷机和成员均为 +0；新增事件为 sample_create 与 task_create。",
+    "独立计算 v5_topics、v2_source_groups、v2_cryostats、members 的当前/备份稳定字段哈希，四者均相等；确认既有资源内容未被导入改变。",
+    "独立确认当前数据库 integrity_check=ok、foreign_key_check=0；数据库 SHA256 为 5d9ff3e737e59b5dd11f0ae6bbbb664c11747861d52aeb1a4d896df686c0171，与报告记录一致，API 只读核对前后未发生变化。",
+    "独立执行 git diff --name-status 8b031c298ade06f16e746f9638cbf6d570e8c372 HEAD，并对报告路径执行 git diff --check；报告新增且无空白错误。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: 源需求 Markdown 内容与 TASK-238 报告的项目、来源小组、任务名称、样品型号/编号、ETA、Z4制冷机、15路读取线路测试目的和接线表要求一致；源 SHA256 与报告及批准记录一致。",
+    "PASS: 执行前 SQLite 备份可读，大小、SHA256、integrity_check 和 foreign_key_check 均与报告一致。",
+    "PASS: 独立 SQL 查询返回目标 V5 任务 1 条、型号和编号唯一各 1 条；V5 task 37、sample 20、test item 31 及 V1 task 59 的精确字段均通过核对。",
+    "PASS: HTTP GET /api/v5/tasks/37 返回 200；响应包含读取驻波问题、工艺组、祖4、waiting/等待样品、空排期、空成员、样品和结构化测试项。",
+    "PASS: 当前与备份表计数及稳定资源哈希对照通过；不包含任何已存在资源的修改或删除。",
+    "PASS: 当前数据库和执行前备份均 integrity_check=ok、foreign_key_check=0；当前数据库文件 SHA256 在独立 API/SQL 读取前后保持 5d9ff3e737e59b5dd11f0ae6bbbb664c11747861d52aeb1a4d896df686c0171。",
+    "PASS: Git scoped diff 从 TASK-238 起始提交到当前 HEAD 仅新增 docs/09-reports/TASK-238-demand-import.txt；治理状态、验证证据以及被 gitignore 的数据库/备份未伪装为产品变更。",
+    "PASS: 未发现阻塞性问题，TASK-238 第一轮完整独立审核结论为 passed。"
+  ],
+  "created_at": "2026-08-25T21:10:00+08:00"
+}
