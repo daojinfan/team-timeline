@@ -5,7 +5,7 @@
   "work_package": "WP-012",
   "contract_sha256": "efb2ec54339f7dce219a5c7dd682ff156ad9fc8ed32b5aaccc2f6a1733d5232c",
   "baseline": "BL-008",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "APR-153",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -28,14 +28,14 @@
   "review": {
     "required": true,
     "reviewer_task_id": "TASK-243",
-    "status": "passed",
+    "status": "cancelled",
     "evidence": [
-      "docs/05-quality/evidence/TASK-243/review-round-2.json"
+      "docs/05-quality/evidence/TASK-243/review-cancelled-task-242.json"
     ],
-    "pass_streak": 2,
-    "subject_sha256": "d229cf79400518e7504aa4c6ab84b7b126935e9017eb4132bcfd95ec64ea6ea9"
+    "pass_streak": 0,
+    "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "用户确认由 TASK-244 调整 V5 样品移除操作布局；TASK-242 尚未验收，旧交付不再作为独立交付成果。",
   "created_at": "2026-08-25T15:02:36.756181Z",
-  "updated_at": "2026-08-25T15:22:35.4404279Z"
+  "updated_at": "2026-08-25T15:37:13.6891224Z"
 }

@@ -1,0 +1,50 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-245",
+  "reviewed_task_ids": [
+    "TASK-244"
+  ],
+  "work_package": "WP-012",
+  "baseline": "BL-008",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-244",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "将每个样品行改为独立头部布局：型号标题位于左侧，低强调的移除样品按钮位于右侧并跨越字段区；字段流下移并保持型号、编号、ETA、待确认和备注编辑。按钮提供 aria-label 与不删除样品数据的 title。"
+    },
+    {
+      "task_id": "TASK-244",
+      "path": "tests/v5-inline-editor.test.js",
+      "change_type": "modified",
+      "summary": "新增样品卡片头部、移除按钮可访问名称、移除样品文字和布局顺序的静态回归断言。"
+    }
+  ],
+  "change_summary": "以 TASK-244 start_git_commit aca91d657af04f5c4a846233e994bee5e55abd23 对照最终提交 7710dd36fe9b23270a2f1b83cebb7f4452f9414f，完整获取名称状态和 scoped diff。TASK-244 实际产品/测试变更仅为 public/app.js 与 tests/v5-inline-editor.test.js，均在 allowed_paths；未修改 public/styles.css、public/index.html、数据模型、API、V3 页面或治理范围。",
+  "scope_checked": [
+    "完整读取 TASK-244/TASK-245 contract 与 state、WP-012 context、CR-008、REQ-V5-001、ARC-OVERALL-V5-001、ARC-COMP-V5-001 和 QUAL-TRACE-V5-001。",
+    "重新执行 aca91d657af04f5c4a846233e994bee5e55abd23..7710dd36fe9b23270a2f1b83cebb7f4452f9414f 的 Git 名称状态和差异检查；确认变更仅涉及两个允许路径，且 7710dd3 之后没有产品变更。",
+    "读取现有 public/styles.css 的 .v5-repeatable-header、.v5-sample-edit-row、.ghost-button 和 .small-button 规则，确认实现复用现有样式，没有新增或修改样式表规则。",
+    "逐行检查 v5RenderSamplesInForm 的最终模板：v5-repeatable-header 跨越样品字段网格，标题 strong 在左、移除按钮在右；移除按钮位于所有 data-sample-field 输入之前，不夹在字段流中。",
+    "确认移除按钮 class 为 ghost-button small-button，aria-label 为“从任务中移除样品 …”，title 明确“从任务中移除，不删除样品数据”，可访问名称和不删除数据提示均存在。",
+    "确认型号、编号、预计交付时间、ETA 待确认和样品备注字段仍全部位于头部下方，dialogSampleIds 删除关联、添加样品 POST、sample_ids/sample_updates 保存链路未被破坏。",
+    "读取 TASK-244 npm 验证证据，并在最终提交独立重跑 npm test、node --check public/app.js、node --check src/v3/index.js 和 git diff --check。",
+    "独立静态断言确认头部、标题/按钮左右顺序、按钮 aria-label/title/低强调类、五个样品编辑控件、添加/移除/保存标记和现有 CSS 规则全部通过。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: npm test 在提交 7710dd3 通过，64/64 tests pass；V5 sample editor 与 inline editor 相关回归均通过。",
+    "PASS: node --check public/app.js 通过。",
+    "PASS: node --check src/v3/index.js 通过。",
+    "PASS: git diff --check 通过。",
+    "PASS: v5RenderSamplesInForm 模板静态检查确认 header_present、button_inside_header、fields_after_header、title_before_button、button_has_aria、button_has_non_delete_title、low_emphasis_classes 和 five_sample_controls 均为 true。",
+    "PASS: 添加链路仍包含 v5AddSampleBtn 与 /api/v5/samples POST；移除链路仍通过 data-v5-task-remove-sample 删除 dialogSampleIds 关联；保存链路仍提交 sample_ids 和 sample_updates。",
+    "PASS: tests/v5-inline-editor.test.js 新增断言覆盖 v5-repeatable-header、移除按钮 aria-label 和“移除样品”文字；既有四字段、无样品集合、无样品选择器断言继续保留。",
+    "PASS: Git scoped diff 未修改样式表、数据库/API、V3 页面或其他范围外文件；移除操作只删除任务关联，不删除样品数据。",
+    "PASS: Release 首轮基于 TASK-244 最终变更完成全量复审，未发现 changes-required。"
+  ],
+  "created_at": "2026-08-25T23:47:25+08:00"
+}

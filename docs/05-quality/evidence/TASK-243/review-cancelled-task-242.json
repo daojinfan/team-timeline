@@ -1,0 +1,29 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-243",
+  "reviewed_task_ids": ["TASK-242"],
+  "work_package": "WP-012",
+  "baseline": "BL-008",
+  "result": "cancelled",
+  "diff_checked": true,
+  "changes": [
+    {"task_id": "TASK-242", "path": "public/app.js", "change_type": "modified", "summary": "V5 样品信息表单与样品关联编辑实现。"},
+    {"task_id": "TASK-242", "path": "public/index.html", "change_type": "modified", "summary": "V5 样品信息字段区结构。"},
+    {"task_id": "TASK-242", "path": "tests/v5-filter-combo.test.js", "change_type": "modified", "summary": "样品选择器移除相关回归断言。"},
+    {"task_id": "TASK-242", "path": "tests/v5-inline-editor.test.js", "change_type": "modified", "summary": "样品信息行编辑相关回归断言。"}
+  ],
+  "change_summary": "TASK-242 尚未验收；用户已确认由 TASK-244 调整同一 V5 样品信息界面中的移除操作布局，因此旧交付不再作为独立交付成果，旧复审任务取消并由新复审任务 TASK-245 接替。",
+  "scope_checked": [
+    "核对 TASK-242 与 TASK-243 的契约、状态和已记录双轮复审证据。",
+    "核对 TASK-242 起始提交 c68acd0dc7071e59284f940339e1b5e9a8f59313 到最终提交 ceb4e064e8810fc363330d160daedcae2f029f3d 的实际产品/测试变更。",
+    "确认新布局任务 TASK-244 的范围仍在 WP-012 允许的 V5 样品编辑器与测试路径内。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: TASK-242 原双轮复审在取消前均为 passed。",
+    "PASS: 取消原因是后续布局修正替代旧交付，不是发现未修复缺陷。",
+    "PASS: 本证据 changes 清单与 TASK-242 实际产品/测试变更一致。"
+  ],
+  "created_at": "2026-08-25T23:50:00+08:00"
+}

@@ -1,0 +1,80 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-244",
+  "work_package": "WP-012",
+  "title": "调整 V5 样品移除操作布局",
+  "goal": "复用现有卡片头部布局，将任务全量编辑中的样品移除操作从字段流移到样品卡片头部右侧，并保持现有多样品编辑和移除关联逻辑不变。",
+  "baseline": "BL-008",
+  "profile": "Release",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/app.js",
+    "tests"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/app.js",
+    "tests",
+    "docs/02-product/requirements-v5.md",
+    "docs/03-architecture/overall-design-v5.md",
+    "docs/03-architecture/components/v5-detailed-design.md",
+    "docs/05-quality/traceability-v5.md",
+    "docs/08-changes/CR-008.md"
+  ],
+  "write_paths": [
+    "public/app.js",
+    "tests"
+  ],
+  "out_of_scope": [
+    "新增或修改样式表规则",
+    "修改样品数据模型或 API",
+    "删除样品数据库记录",
+    "修改 V3 旧页面",
+    "新增手机端布局",
+    "远程发布"
+  ],
+  "authoritative_documents": [
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-008",
+    "DEL-WORK-001",
+    "DEC-004"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "样品标题和移除操作位于独立卡片头部，标题居左、移除样品居右",
+    "移除操作不再夹在样品标题和字段之间",
+    "移除样品复用现有低强调按钮样式，并提供明确可访问名称与操作提示",
+    "型号、编号、预计交付时间、待确认和备注字段统一排在卡片头部下方",
+    "现有移除关联、编辑、新增和保存逻辑保持可用",
+    "npm test、客户端语法检查和差异检查通过"
+  ],
+  "validations": [
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "success_criteria",
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-25T15:33:40.1023570Z",
+  "release_controls": {
+    "target_environment": "本地 dev 分支桌面 Web 服务（Windows，Node.js，SQLite）",
+    "execution_window": "在当前本地开发工作区调整样品信息卡片布局；不发布远程环境",
+    "rollback_plan": "只回退 TASK-244 的 public/app.js 与测试变更，不修改数据库、API或样式表",
+    "observation_metrics": "样品卡片头部布局、移除操作位置和可访问提示、字段排列、移除/新增/保存链路、npm test、node --check、git diff --check",
+    "stop_conditions": "发现必须新增样式规则、需要修改数据模型/API、删除样品数据、变更 V3 页面、越出允许路径或测试失败时停止",
+    "post_release_owner": "项目经理（本地开发工作区）"
+  }
+}
