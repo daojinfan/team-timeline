@@ -3648,6 +3648,12 @@ button.v3-task-card:disabled small {
 .v5-filter-condition-head .icon-button { width: 25px; height: 25px; min-height: 25px; }
 .v5-filter-condition-value select[multiple] { width: 100%; min-height: 88px; padding: 5px; }
 .v5-filter-condition-value input { width: 100%; }
+.v5-filter-autocomplete { position: relative; }
+.v5-filter-autocomplete-menu { position: absolute; z-index: 30; left: 0; right: 0; top: calc(100% + 4px); display: grid; max-height: 220px; overflow-y: auto; padding: 4px; border: 1px solid #bfdbfe; border-radius: 9px; background: var(--surface); box-shadow: 0 12px 26px rgba(15, 23, 42, .16); }
+.v5-filter-autocomplete-menu[hidden] { display: none; }
+.v5-filter-autocomplete-option { display: block; width: 100%; padding: 7px 9px; border: 0; border-radius: 6px; background: transparent; color: var(--text); font: inherit; font-size: 12px; text-align: left; cursor: pointer; }
+.v5-filter-autocomplete-option:hover, .v5-filter-autocomplete-option:focus { outline: 0; background: #eff6ff; color: #1d4ed8; }
+.v5-filter-autocomplete-empty { padding: 8px 9px; color: var(--muted); font-size: 11px; }
 .v5-filter-condition-hint, .v5-filter-date-note { color: var(--muted); font-size: 10px; }
 .v5-filter-date-note { white-space: nowrap; }
 .v5-filter-builder-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; padding: 0 18px 12px; border-top: 1px solid #edf0f4; }

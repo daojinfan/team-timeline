@@ -27,16 +27,25 @@ test("V5 filters support per-condition inverse matching and multi-select", () =>
   assert.match(app, /match === "all"/);
 });
 
-test("V5 execution keyword conditions keep free input and expose task suggestions", () => {
+test("V5 execution keyword conditions keep free input and expose a custom live suggestion menu", () => {
   assert.match(app, /function v5FilterKeywordOptionValues\(surface\)/);
   assert.match(app, /surface !== "execution"/);
   assert.match(app, /task\.task_number, task\.title, task\.topic\?\.name/);
   assert.match(app, /task\.samples \|\| \[\]/);
   assert.match(app, /task\.test_items \|\| \[\]/);
   assert.match(app, /task\.participants \|\| \[\]/);
-  assert.match(app, /list="\$\{listId\}" autocomplete="off" aria-autocomplete="list"/);
-  assert.match(app, /<datalist id="\$\{listId\}">/);
-  assert.match(app, /surface === "execution" \? v5FilterKeywordOptionValues\(surface\)/);
+  assert.match(app, /function v5FilterKeywordMatches\(surface, query\)/);
+  assert.match(app, /data-v5-filter-autocomplete="\$\{key\}"/);
+  assert.match(app, /data-v5-filter-keyword-input="\$\{key\}"/);
+  assert.match(app, /data-v5-filter-options="\$\{key\}"/);
+  assert.match(app, /data-v5-filter-option-value/);
+  assert.match(app, /v5FilterRenderKeywordSuggestions/);
+  assert.match(app, /v5FilterCloseAllKeywordSuggestions/);
+  assert.match(app, /event\.key === "Escape"/);
+  assert.doesNotMatch(app, /<datalist/);
+  assert.doesNotMatch(app, /list="\$\{listId\}"/);
+  assert.match(styles, /\.v5-filter-autocomplete-menu/);
+  assert.match(styles, /\.v5-filter-autocomplete-option/);
 });
 
 test("V5 quick filter headings keep 非 immediately before the filter label", () => {

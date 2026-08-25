@@ -1,0 +1,81 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-222",
+  "work_package": "WP-009",
+  "title": "执行中心关键词联想下拉交互",
+  "goal": "将执行中心组合筛选关键词从原生 datalist 调整为自定义联想下拉：边输入边筛选当前任务候选项，支持点击填入、自由输入、键盘和失焦关闭。",
+  "baseline": "BL-006",
+  "profile": "Standard",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/app.js",
+    "public/styles.css",
+    "tests/v5-filter-combo.test.js"
+  ],
+  "read_paths": [
+    "public/app.js",
+    "public/styles.css",
+    "public/index.html",
+    "tests/v5-filter-combo.test.js"
+  ],
+  "write_paths": [
+    "public/app.js",
+    "public/styles.css",
+    "tests/v5-filter-combo.test.js"
+  ],
+  "out_of_scope": [
+    "public/index.html",
+    "src/server.js",
+    "data/team_tasks.sqlite",
+    "手机端",
+    "任务全量编辑台组合筛选"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "执行中心关键词条件使用自定义输入联想下拉，输入时实时筛选当前任务候选项。",
+    "点击候选项可填入关键词，候选项之外的自由输入仍可应用并按原有包含匹配执行。",
+    "候选下拉支持点击外部关闭、Escape 关闭和基本键盘选择，不影响非、AND/OR、多选、清空和应用。",
+    "新增回归测试覆盖自定义下拉标记、实时筛选、自由输入和关闭交互。"
+  ],
+  "validations": [
+    {
+      "id": "execution-filter-keyword-combobox",
+      "command": "node",
+      "args": [
+        "--test",
+        "tests/v5-filter-combo.test.js"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-25T00:55:25.5608713Z"
+}

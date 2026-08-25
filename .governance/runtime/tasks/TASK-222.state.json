@@ -1,0 +1,39 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-222",
+  "work_package": "WP-009",
+  "contract_sha256": "e62c9651a04de91800c2939fea2088819c7da4afc0f735c8e8db87bbdf5a7a53",
+  "baseline": "BL-006",
+  "state": "verified",
+  "approval_id": "APR-141",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "634d9ac7f8c1bfdab19ce0cbd902eb0c084452eb",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [],
+  "plan_checkpoint_git_commit": "634d9ac7f8c1bfdab19ce0cbd902eb0c084452eb",
+  "plan_rebase_history": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-222/20260825T010015731Z-f087ac60-execution-filter-keyword-combobox.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-222/20260825T005934423Z-cee5fde2-execution-filter-keyword-combobox.evidence.json",
+    "docs/05-quality/evidence/TASK-222/20260825T010015731Z-f087ac60-execution-filter-keyword-combobox.evidence.json"
+  ],
+  "review_history": [],
+  "review": {
+    "required": true,
+    "reviewer_task_id": "TASK-223",
+    "status": "pending",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
+  },
+  "last_error": "",
+  "created_at": "2026-08-25T00:55:25.5608713Z",
+  "updated_at": "2026-08-25T01:00:16.6658264Z"
+}

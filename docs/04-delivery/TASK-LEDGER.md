@@ -36,8 +36,10 @@ review_policy: independent-required
 
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| WP-009 | TASK-221 | pending | REVIEWER | 独立审核执行中心关键词自动提示 | BL-006 | pending | TASK-220 | completed | docs/05-quality/evidence/TASK-221 | execution-filter-keyword-autocomplete-review | n/a | n/a | n/a | Plan 自动登记，等待调度 |
-| WP-009 | TASK-220 | pending | IMPLEMENTER | 执行中心组合筛选关键词自动提示 | BL-006 | pending | n/a | running | public/app.js, tests/v5-filter-combo.test.js | execution-filter-keyword-autocomplete | TASK-221 | passed | docs/05-quality/evidence/TASK-221/review-round-2.json | Plan 自动登记，等待调度 |
+| WP-009 | TASK-223 | pending | REVIEWER | 独立审核执行中心关键词自定义联想下拉 | BL-006 | pending | TASK-222 | pending | docs/05-quality/evidence/TASK-223 | execution-filter-keyword-combobox-review | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-009 | TASK-222 | pending | IMPLEMENTER | 执行中心关键词联想下拉交互 | BL-006 | pending | n/a | running | public/app.js, public/styles.css, tests/v5-filter-combo.test.js | execution-filter-keyword-combobox | TASK-223 | pending | pending | Plan 自动登记，等待调度 |
+| WP-009 | TASK-221 | pending | REVIEWER | 独立审核执行中心关键词自动提示 | BL-006 | pending | TASK-220 | pending | docs/05-quality/evidence/TASK-221 | execution-filter-keyword-autocomplete-review | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-009 | TASK-220 | pending | IMPLEMENTER | 执行中心组合筛选关键词自动提示 | BL-006 | pending | n/a | running | public/app.js, tests/v5-filter-combo.test.js | execution-filter-keyword-autocomplete | TASK-221 | pending |  | Plan 自动登记，等待调度 |
 | WP-009 | TASK-219 | pending | REVIEWER | 独立审核执行中心排期免预览修复 | BL-006 | pending | TASK-218 | pending | docs/05-quality/evidence/TASK-219 | execution-schedule-no-preview-review | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-009 | TASK-218 | pending | IMPLEMENTER | 移除执行中心排期的手动预览操作 | BL-006 | pending | n/a | running | public/index.html, public/app.js, tests/v5-execution.test.js | execution-schedule-no-preview | TASK-219 | pending |  | Plan 自动登记，等待调度 |
 | WP-009 | TASK-217 | pending | REVIEWER | 独立审核最新测控任务需求示例 | BL-006 | pending | TASK-216 | completed | docs/05-quality/evidence/TASK-217 | current-template-example-review | n/a | n/a | n/a | Plan 自动登记，等待调度 |

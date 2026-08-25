@@ -4079,6 +4079,24 @@ function v5FilterKeywordOptionValues(surface) {
   });
   return [...values].sort((left, right) => left.localeCompare(right, "zh-CN")).slice(0, 120);
 }
+function v5FilterKeywordMatches(surface, query) {
+  const normalizedQuery = String(query || "").trim().toLocaleLowerCase("zh-CN");
+  return v5FilterKeywordOptionValues(surface).filter((value) => !normalizedQuery || value.toLocaleLowerCase("zh-CN").includes(normalizedQuery)).slice(0, 20);
+}
+function v5FilterKeywordInput(key) { return document.querySelector(`[data-v5-filter-keyword-input="${key}"]`); }
+function v5FilterKeywordMenu(key) { return document.querySelector(`[data-v5-filter-options="${key}"]`); }
+function v5FilterCloseKeywordSuggestions(key) {
+  const menu = v5FilterKeywordMenu(key); const input = v5FilterKeywordInput(key); if (!menu) return;
+  menu.hidden = true; if (input) input.setAttribute("aria-expanded", "false");
+}
+function v5FilterRenderKeywordSuggestions(surface, key, query = "") {
+  if (surface !== "execution") return;
+  const menu = v5FilterKeywordMenu(key); const input = v5FilterKeywordInput(key); if (!menu) return;
+  const values = v5FilterKeywordMatches(surface, query);
+  menu.innerHTML = values.length ? values.map((value) => `<button type="button" class="v5-filter-autocomplete-option" role="option" data-v5-filter-option="${key}" data-v5-filter-option-value="${escapeHtml(value)}">${escapeHtml(value)}</button>`).join("") : `<span class="v5-filter-autocomplete-empty">没有匹配候选项，可继续自由输入</span>`;
+  menu.hidden = false; if (input) input.setAttribute("aria-expanded", "true");
+}
+function v5FilterCloseAllKeywordSuggestions() { $$('[data-v5-filter-options]').forEach((menu) => v5FilterCloseKeywordSuggestions(menu.dataset.v5FilterOptions)); }
 function v5FilterTaskValues(task, field) {
   if (field === "search") return [v5TaskSearchText(task)];
   if (field === "sourceId") return task.source_group_id == null ? [] : [String(task.source_group_id)];
@@ -4130,9 +4148,9 @@ function v5FilterConditionFromField(surface, field) { const schema = v5FilterSch
 function v5FilterRenderValue(surface, schema, condition, groupIndex, conditionIndex) {
   const key = `${groupIndex}-${conditionIndex}`; const values = v5FilterNormaliseValues(condition);
   if (schema.kind === "text") {
-    const listId = `v5FilterKeywordOptions-${surface}-${key}`;
-    const options = surface === "execution" ? v5FilterKeywordOptionValues(surface).map((value) => v5Option(value, value)).join("") : "";
-    return `<input type="search" list="${listId}" autocomplete="off" aria-autocomplete="list" data-v5-filter-value="${key}" value="${escapeHtml(condition.value || "")}" placeholder="输入关键词…">${options ? `<datalist id="${listId}">${options}</datalist>` : ""}`;
+    if (surface !== "execution") return `<input type="search" data-v5-filter-value="${key}" value="${escapeHtml(condition.value || "")}" placeholder="输入关键词…">`;
+    const menuId = `v5FilterKeywordOptions-${surface}-${key}`;
+    return `<div class="v5-filter-autocomplete" data-v5-filter-autocomplete="${key}"><input type="search" autocomplete="off" aria-autocomplete="list" aria-expanded="false" aria-controls="${menuId}" data-v5-filter-value="${key}" data-v5-filter-keyword-input="${key}" value="${escapeHtml(condition.value || "")}" placeholder="输入关键词…"><div id="${menuId}" class="v5-filter-autocomplete-menu" data-v5-filter-options="${key}" role="listbox" hidden></div></div>`;
   }
   if (schema.kind === "date") return `<input type="date" data-v5-filter-value="${key}" value="${escapeHtml(condition.value || "")}">`;
   const options = v5FilterOptionValues(surface, schema).map((option) => v5Option(option.value, option.label, values.includes(String(option.value)))).join("");
@@ -4527,9 +4545,34 @@ function bindV5Events() {
   $("#v5FilterAddCondition")?.addEventListener("click", () => { const surface = v5State.filterDraftSurface; if (!surface) return; const field = $("#v5FilterAddField")?.value || v5FilterSchemas[surface][0].field; if (!v5State.filterDraft.groups.length) v5State.filterDraft.groups.push({ id: `group-${Date.now()}`, logic: "and", connector: "and", conditions: [] }); v5State.filterDraft.groups[0].conditions.push(v5FilterConditionFromField(surface, field)); v5RenderFilterBuilder(); });
   $("#v5FilterAddGroup")?.addEventListener("click", () => { const surface = v5State.filterDraftSurface; if (!surface) return; v5State.filterDraft.groups.push({ id: `group-${Date.now()}`, logic: "and", connector: "and", conditions: [] }); v5RenderFilterBuilder(); });
   $("#v5FilterReset")?.addEventListener("click", () => { const surface = v5State.filterDraftSurface; if (!surface) return; v5ApplyFilterExpression(surface, v5EmptyFilterExpression()); v5Close("#v5FilterDialog"); });
-  document.body.addEventListener("input", (event) => { const key = event.target.dataset.v5FilterValue; if (!key || !v5State.filterDraft) return; const [groupIndex, conditionIndex] = key.split("-").map(Number); const condition = v5State.filterDraft.groups[groupIndex]?.conditions?.[conditionIndex]; if (!condition) return; condition.value = event.target.value; });
+  document.body.addEventListener("focusin", (event) => { const input = event.target.closest("[data-v5-filter-keyword-input]"); if (!input || !v5State.filterDraft) return; v5FilterRenderKeywordSuggestions(v5State.filterDraftSurface, input.dataset.v5FilterKeywordInput, input.value); });
+  document.body.addEventListener("keydown", (event) => {
+    const input = event.target.closest("[data-v5-filter-keyword-input]");
+    if (!input) {
+      const option = event.target.closest("[data-v5-filter-option]");
+      if (!option) return;
+      const key = option.dataset.v5FilterOption; const options = [...(v5FilterKeywordMenu(key)?.querySelectorAll("[data-v5-filter-option]") || [])]; const index = options.indexOf(option);
+      if (event.key === "Escape") { event.preventDefault(); v5FilterCloseKeywordSuggestions(key); v5FilterKeywordInput(key)?.focus(); }
+      else if (event.key === "ArrowDown" && options.length) { event.preventDefault(); options[(index + 1) % options.length].focus(); }
+      else if (event.key === "ArrowUp" && options.length) { event.preventDefault(); options[(index - 1 + options.length) % options.length].focus(); }
+      return;
+    }
+    const key = input.dataset.v5FilterKeywordInput;
+    if (event.key === "Escape") { event.preventDefault(); v5FilterCloseKeywordSuggestions(key); return; }
+    if (event.key === "ArrowDown") { const first = v5FilterKeywordMenu(key)?.querySelector("[data-v5-filter-option]"); if (first) { event.preventDefault(); first.focus(); } }
+  });
+  document.body.addEventListener("input", (event) => { const key = event.target.dataset.v5FilterValue; if (!key || !v5State.filterDraft) return; const [groupIndex, conditionIndex] = key.split("-").map(Number); const condition = v5State.filterDraft.groups[groupIndex]?.conditions?.[conditionIndex]; if (!condition) return; condition.value = event.target.value; if (event.target.matches("[data-v5-filter-keyword-input]")) v5FilterRenderKeywordSuggestions(v5State.filterDraftSurface, key, event.target.value); });
   document.body.addEventListener("change", (event) => { if (!v5State.filterDraft) return; const key = event.target.dataset.v5FilterValue || event.target.dataset.v5FilterMatch || event.target.dataset.v5FilterNegate; if (key) { const [groupIndex, conditionIndex] = key.split("-").map(Number); const condition = v5State.filterDraft.groups[groupIndex]?.conditions?.[conditionIndex]; if (!condition) return; if (event.target.dataset.v5FilterValue) condition.value = event.target.multiple ? [...event.target.selectedOptions].map((option) => option.value) : event.target.value; else if (event.target.dataset.v5FilterMatch) condition.match = event.target.value === "all" ? "all" : "any"; else condition.negate = event.target.checked; return; } const groupLogic = event.target.dataset.v5FilterGroupLogic; if (groupLogic) { const group = v5State.filterDraft.groups[Number(groupLogic)]; if (group) group.logic = event.target.value === "or" ? "or" : "and"; return; } const groupConnector = event.target.dataset.v5FilterGroupConnector; if (groupConnector) { const group = v5State.filterDraft.groups[Number(groupConnector)]; if (group) group.connector = event.target.value === "or" ? "or" : "and"; } });
-  document.body.addEventListener("click", (event) => { const remove = event.target.closest("[data-v5-filter-remove]"); if (remove && v5State.filterDraft) { const [groupIndex, conditionIndex] = remove.dataset.v5FilterRemove.split("-").map(Number); v5State.filterDraft.groups[groupIndex]?.conditions?.splice(conditionIndex, 1); v5RenderFilterBuilder(); return; } const removeGroup = event.target.closest("[data-v5-filter-remove-group]"); if (removeGroup && v5State.filterDraft) { v5State.filterDraft.groups.splice(Number(removeGroup.dataset.v5FilterRemoveGroup), 1); v5RenderFilterBuilder(); } });
+  document.body.addEventListener("click", (event) => {
+    const option = event.target.closest("[data-v5-filter-option]");
+    if (option && v5State.filterDraft) {
+      const key = option.dataset.v5FilterOption; const [groupIndex, conditionIndex] = key.split("-").map(Number); const condition = v5State.filterDraft.groups[groupIndex]?.conditions?.[conditionIndex];
+      if (condition) { condition.value = option.dataset.v5FilterOptionValue || ""; const input = v5FilterKeywordInput(key); if (input) input.value = condition.value; v5FilterCloseKeywordSuggestions(key); }
+      return;
+    }
+    if (!event.target.closest("[data-v5-filter-autocomplete]")) v5FilterCloseAllKeywordSuggestions();
+    const remove = event.target.closest("[data-v5-filter-remove]"); if (remove && v5State.filterDraft) { const [groupIndex, conditionIndex] = remove.dataset.v5FilterRemove.split("-").map(Number); v5State.filterDraft.groups[groupIndex]?.conditions?.splice(conditionIndex, 1); v5RenderFilterBuilder(); return; } const removeGroup = event.target.closest("[data-v5-filter-remove-group]"); if (removeGroup && v5State.filterDraft) { v5State.filterDraft.groups.splice(Number(removeGroup.dataset.v5FilterRemoveGroup), 1); v5RenderFilterBuilder(); }
+  });
   $$('[data-v5-resource-search]').forEach((input) => input.addEventListener("input", () => { v5State.resourceSearch[input.dataset.v5ResourceSearch] = input.value; v5RenderResources(); }));
 }
 
