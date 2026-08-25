@@ -1,0 +1,21 @@
+{
+  "$schema": "schemas/validation-evidence.schema.json",
+  "schema_version": 1,
+  "task_id": "TASK-221",
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "contract_sha256": "34329e7e8c010f812e3345dd75a943a0906ecf94476aca8c22e34fbfb0dc81e3",
+  "git_commit": "45ca9bcd39b7aa1b8fa70278470795316eeb3c84",
+  "validation_id": "execution-filter-keyword-autocomplete-review",
+  "command": "node",
+  "args": [
+    "--test",
+    "tests/v5-filter-combo.test.js"
+  ],
+  "started_at": "2026-08-25T00:48:28.2552862Z",
+  "finished_at": "2026-08-25T00:48:28.6250513Z",
+  "exit_code": 0,
+  "redactions_applied": 0,
+  "output_path": "docs/05-quality/evidence/TASK-221/20260825T004828249Z-8515e0b7-execution-filter-keyword-autocomplete-review.output.txt",
+  "output_sha256": "cbcdbed5fec965b90ea2dad020a2b568258760d8641800bbe77447f88ad22d65"
+}

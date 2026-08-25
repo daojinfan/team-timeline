@@ -5,21 +5,43 @@
   "work_package": "WP-009",
   "contract_sha256": "34329e7e8c010f812e3345dd75a943a0906ecf94476aca8c22e34fbfb0dc81e3",
   "baseline": "BL-006",
-  "state": "planned",
+  "state": "verified",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
   "acceptance_git_commit": "",
-  "start_git_commit": "",
+  "start_git_commit": "45ca9bcd39b7aa1b8fa70278470795316eeb3c84",
   "execution_lease": "",
   "execution_lease_owner": "",
   "execution_lease_expires_at": "",
   "preexisting_changes": [],
   "plan_checkpoint_git_commit": "a95644589ed2f7497ffe91df42265db48190b890",
   "plan_rebase_history": [],
-  "evidence": [],
-  "evidence_history": [],
-  "review_history": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-221/20260825T004828249Z-8515e0b7-execution-filter-keyword-autocomplete-review.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-221/20260825T004336154Z-80940dd7-execution-filter-keyword-autocomplete-review.evidence.json",
+    "docs/05-quality/evidence/TASK-221/review-round-1.json",
+    "docs/05-quality/evidence/TASK-221/20260825T004828249Z-8515e0b7-execution-filter-keyword-autocomplete-review.evidence.json",
+    "docs/05-quality/evidence/TASK-221/review-round-2.json"
+  ],
+  "review_history": [
+    {
+      "path": "docs/05-quality/evidence/TASK-221/review-round-1.json",
+      "sha256": "4d781f3c109b9307bcdc998f7c29636696034112cb516e093c984f496d672dfc",
+      "result": "passed",
+      "round_id": "RR-a97bf2a3ad6a4affba709e0d6e5dc5ce",
+      "recorded_at": "2026-08-25T00:43:58.0955793Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-221/review-round-2.json",
+      "sha256": "689c06d1f0786e245727e642c3a9984f5edd37d1017c61b644679e9bd9d45213",
+      "result": "passed",
+      "round_id": "RR-74d8f6baea50466aabc7806361abec48",
+      "recorded_at": "2026-08-25T00:48:50.0319488Z"
+    }
+  ],
   "review": {
     "required": false,
     "reviewer_task_id": "",
@@ -30,5 +52,5 @@
   },
   "last_error": "",
   "created_at": "2026-08-25T00:14:02.5664248Z",
-  "updated_at": "2026-08-25T00:14:02.5664248Z"
+  "updated_at": "2026-08-25T00:48:50.4808033Z"
 }

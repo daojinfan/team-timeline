@@ -1,0 +1,44 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-221",
+  "reviewed_task_ids": [
+    "TASK-220"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-220",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "为执行中心组合筛选关键词条件增加基于当前任务数据的去重候选值生成和 datalist 输入提示，同时保留自由文本输入。"
+    },
+    {
+      "task_id": "TASK-220",
+      "path": "tests/v5-filter-combo.test.js",
+      "change_type": "modified",
+      "summary": "新增执行中心关键词候选提示回归测试，覆盖候选来源、datalist 标记和自由输入兼容性。"
+    }
+  ],
+  "change_summary": "从 TASK-220 start_git_commit a95644589ed2f7497ffe91df42265db48190b890 到当前工作树核对，实际 scoped manifest 恰为上述两个 modified 文件，无其他 TASK-220 产品路径变更。",
+  "scope_checked": [
+    "执行中心关键词条件使用可输入 search 文本框并绑定 datalist/aria-autocomplete 提示入口",
+    "候选值从当前任务数据收集任务号、任务名、专题、来源小组、制冷机、样品标签/型号/编号、测试项和成员信息，Set 去重并排序/限量",
+    "自由输入保留；关键词条件仍使用中文不区分大小写的 includes 包含匹配",
+    "非条件、条件组内 AND/OR、条件组连接 AND/OR、多选字段、清空和应用流程保持现有实现",
+    "新增回归测试只覆盖候选提示增加，不改变组合筛选既有契约"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: git diff --name-status a95644589ed2f7497ffe91df42265db48190b890 -- public/app.js tests/v5-filter-combo.test.js returned exactly the two listed M paths.",
+    "PASS: node --test tests/v5-filter-combo.test.js; 7 tests passed, 0 failed.",
+    "PASS: npm test; 59 tests passed, 0 failed.",
+    "PASS: node --check public/app.js completed without syntax errors.",
+    "PASS: git diff --check for TASK-220 allowed paths returned no whitespace errors.",
+    "PASS: static review confirms datalist candidate generation is execution-only and gathers task_number/title/topic/source_group/samples/test_items/participants while v5FilterConditionMatches retains includes, negate, match all/any, and expression/group logic."
+  ],
+  "created_at": "2026-08-25T00:45:00+08:00"
+}

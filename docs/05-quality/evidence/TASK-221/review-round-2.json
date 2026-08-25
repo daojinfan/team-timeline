@@ -1,0 +1,45 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-221",
+  "reviewed_task_ids": [
+    "TASK-220"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-220",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "最终执行中心关键词组合筛选支持当前任务数据候选 datalist，同时保持文本条件和组合筛选实现。"
+    },
+    {
+      "task_id": "TASK-220",
+      "path": "tests/v5-filter-combo.test.js",
+      "change_type": "modified",
+      "summary": "最终回归测试覆盖执行中心关键词候选值来源、datalist 标记及自由输入保留。"
+    }
+  ],
+  "change_summary": "完成 Standard 第二轮从头独立复核。以 TASK-220 start_git_commit a95644589ed2f7497ffe91df42265db48190b890 对照当前最终工作树，实际变更仍恰为上述 public/app.js 与 tests/v5-filter-combo.test.js 两个 modified 文件；本轮最终内容与 round 1 相同。",
+  "scope_checked": [
+    "关键词条件仍是可自由输入的 search 文本框，并在执行中心通过 list/datalist 提供候选提示",
+    "候选生成仅用于 execution surface，遍历当前 v5State.tasks，收集任务号、任务名、专题、来源小组、制冷机、样品、测试项和成员，去重后排序",
+    "文本条件仍执行中文大小写不敏感 includes 包含匹配，非条件仍反转匹配结果",
+    "现有多选字段的任一/全部匹配、条件内 AND/OR、条件组连接 AND/OR、清空和应用状态同步逻辑保持不变",
+    "回归测试与实际候选提示实现一致，实际产品 changes 仅上述两项"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: git diff --name-status a95644589ed2f7497ffe91df42265db48190b890 -- public/app.js tests/v5-filter-combo.test.js returned exactly public/app.js and tests/v5-filter-combo.test.js as modified.",
+    "PASS: independent static audit confirmed task/topic/source/sample/test-item/member candidate sources, execution-only datalist rendering, includes matching, negate, all/any, group AND/OR, reset and apply paths.",
+    "PASS: node --test tests/v5-filter-combo.test.js; 7 tests passed, 0 failed.",
+    "PASS: npm test; 59 tests passed, 0 failed.",
+    "PASS: node --check public/app.js completed without syntax errors.",
+    "PASS: git diff --check for TASK-220 allowed paths returned no whitespace errors.",
+    "PASS: final reviewed subject is unchanged from round 1."
+  ],
+  "created_at": "2026-08-25T01:00:00+08:00"
+}
