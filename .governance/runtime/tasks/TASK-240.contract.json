@@ -1,0 +1,110 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-240",
+  "work_package": "WP-012",
+  "title": "实现 V5 样品字段收敛与兼容同步",
+  "goal": "将当前 V5 任务编辑器及相关样品展示收敛为型号、编号、预计交付时间、样品备注四个字段；保留历史数据库/API 兼容，并让样品编号后补正确影响展示状态。",
+  "baseline": "BL-008",
+  "profile": "Release",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/index.html",
+    "public/app.js",
+    "src/v3/index.js",
+    "tests"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/app.js",
+    "src/v3/index.js",
+    "tests",
+    "docs/02-product/requirements-v5.md",
+    "docs/03-architecture/overall-design-v5.md",
+    "docs/03-architecture/components/v5-detailed-design.md",
+    "docs/05-quality/traceability-v5.md",
+    "docs/08-changes/CR-008.md"
+  ],
+  "write_paths": [
+    "public/index.html",
+    "public/app.js",
+    "src/v3/index.js",
+    "tests"
+  ],
+  "out_of_scope": [
+    "删除或重命名 SQLite 历史字段",
+    "修改 V3 旧页面和破坏性 API",
+    "新增独立样品库导航",
+    "修改专题、资源、任务其他业务字段",
+    "远程发布"
+  ],
+  "authoritative_documents": [
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-008",
+    "DEL-WORK-001",
+    "DEC-004"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "V5 新增和编辑任务表单只出现样品型号、样品编号、预计交付时间、样品备注四个样品字段",
+    "样品编号可为空并可在同一行后补，样品备注可新增和编辑",
+    "规划标签、样品数量、实际到样时间不再出现在当前 V5 表单、摘要和执行中心样品展示",
+    "新增样品不传规划标签时后端以型号生成兼容值，历史列和 V3 API 保留",
+    "样品编号补录后样品交付延期计算与任务状态展示正确",
+    "npm test、客户端和服务端语法检查、差异检查均通过"
+  ],
+  "validations": [
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "v3-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "src/v3/index.js"
+      ]
+    },
+    {
+      "id": "git-diff-check",
+      "command": "git",
+      "args": [
+        "diff",
+        "--check"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "scope",
+    "success_criteria",
+    "public_interface",
+    "data_model_or_migration"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-25T14:24:29.7812000Z",
+  "release_controls": {
+    "target_environment": "本地 dev 分支桌面 Web 服务（Windows，Node.js，SQLite）",
+    "execution_window": "执行批准后，在当前本地开发工作区完成；不发布远程环境",
+    "rollback_plan": "保留当前代码和数据库不变；失败时停止本地服务并回退本任务代码提交，不执行数据库删除或不可逆迁移",
+    "observation_metrics": "npm test、两处 node --check、V5 样品字段回归断言、历史字段/API 兼容检查、git diff --check",
+    "stop_conditions": "出现 V3 API 破坏、历史列删除、数据库完整性异常、范围外文件变更或回归测试失败时立即停止并报告",
+    "post_release_owner": "项目经理（本地开发工作区）"
+  }
+}

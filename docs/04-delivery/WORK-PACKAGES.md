@@ -30,6 +30,7 @@ last_reviewed: 2026-08-22
 | WP-009 | 在 V2.1 兼容基础上修正 V4 专题唯一工作区与连续任务体验 | BL-005 | WP-006、WP-007、WP-008 | V3 schema/API 兼容、V4 专题主路径、样品/任务/状态/同步、双分辨率与 Release 双轮审核 | IMPLEMENTER |
 | WP-010 | 按 Web 字段表收敛工艺组专题、样品与任务数据 | BL-005 | CR-006 | 备份、数据库完整性、V3 API/页面数据核对与回滚演练 | PM |
 | WP-011 | 从已确认的测控任务需求文档受控导入单个 V5 任务 | BL-006 | REQ-V5-001、ARC-OVERALL-V5-001、ARC-COMP-V5-001 | 来源哈希、备份、精确字段映射、V5/V1 投影与数据库完整性 | PM |
+| WP-012 | 收敛 V5 样品字段并保持历史数据与 V3 兼容 | BL-008 | CR-008、REQ-V5-001、ARC-OVERALL-V5-001、ARC-COMP-V5-001 | V5 表单字段回归、样品新增/编辑、编号后补、ETA 状态、历史字段保留与 API 回归 | IMPLEMENTER |
 
 执行状态统一记录在 `WORK-STATUS.md`，避免日常状态变化改写已经批准的工作包契约。
 每个活动工作包还必须有 `context/WP-NNN.context.json`，声明所需权威文档、读取模式、适用基线和验证。上下文路由随基线锁定；已经 `accepted` 或 `superseded` 的历史工作包可以保留旧路由。生成的 `.governance/context/*.generated.md` 只是临时输入，不是项目事实。
@@ -145,4 +146,18 @@ last_reviewed: 2026-08-22
 - 允许修改：`data/team_tasks.sqlite`、`data/backups`、`docs/09-reports`、`docs/05-quality/evidence`、`docs/04-delivery/WORK-PACKAGES.md`、`docs/04-delivery/WORK-STATUS.md`、`docs/04-delivery/context/WP-011.context.json`、`docs/00-index/APPROVAL-LOG.md`、`.governance/runtime/tasks`、`docs/04-delivery/TASK-LEDGER.md`。
 - 验收：需求源哈希固定；写入前备份可读且 `PRAGMA integrity_check=ok`；无同名任务和同编号样品；新增对象精确匹配已确认字段；来源/专题/制冷机均引用既有稳定 ID；任务在 V5 查询和 V1 兼容投影可见；外键检查通过；其他既有业务对象不变；独立 Reviewer 对同一最终内容连续两轮通过。
 - 回滚：停止本地服务，将失败后的数据库另存后，用执行前 SQLite 备份恢复 `data/team_tasks.sqlite`，重启并复核计数、对象哈希和完整性。
+- 任务档位：Release。
+
+## WP-012 契约
+
+- 目标：按 `CONF-V5-SAMPLE-FIELDS-20260825-01` 收敛当前 V5 任务编辑器中的样品字段，降低创建和补录成本。
+- 范围：`public/index.html`、`public/app.js` 中 V5 样品新增与任务全量编辑展示；`src/v3/index.js` 中 V5 样品默认映射、样品更新兼容和样品交付延期判定；相关自动化回归测试与验证证据。
+- 业务字段：保留样品型号、样品编号、预计交付时间、样品备注；移除规划标签、样品数量、实际到样时间的当前 V5 UI 展示和写入。
+- 兼容策略：不删除或重命名 SQLite 历史列；V3 旧页面/API 不改；新增样品由型号生成兼容规划标签，未传规划标签的更新沿用或同步型号。
+- 范围外：独立样品库导航、数据库物理删除、V3 破坏性接口、任务/专题/资源字段变化、远程发布。
+- 基线：BL-008。
+- 权威文档：`REQ-V5-001`、`ARC-OVERALL-V5-001`、`ARC-COMP-V5-001`、`QUAL-TRACE-V5-001`、`CR-008`、`DEL-WORK-001`。
+- 允许修改：`public/index.html`、`public/app.js`、`src/v3/index.js`、`tests/`、`docs/05-quality/evidence`、`docs/09-reports`、治理任务与工作状态文件。
+- 验收：V5 新增/编辑表单只出现四个样品字段；样品编号可为空并可后补；样品备注可新增和编辑；不再显示规划标签、样品数量、实际到样时间；历史列和 V3 API 保留；无规划标签请求可成功创建；编号补录后状态计算正确；`npm test`、客户端/服务端语法和 V5 回归通过；独立 Reviewer 对最终内容完成 Release 双轮复审。
+- 回滚：停止本地服务，按交付提交回退代码；不执行数据库删除或不可逆迁移。
 - 任务档位：Release。

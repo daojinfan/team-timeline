@@ -43,4 +43,5 @@ last_reviewed: 2026-08-20
 | BL-004 | superseded | baselines/BL-004/manifest.json | pending | APR-059 | 2026-08-21 | Approved V2.1 topic, sample-pool, linear task-chain, task cryostat, and V3 compatibility baseline |
 | BL-005 | superseded | baselines/BL-005/manifest.json | 328076e6d56687443c6f0f06ca1c1103510d7d85 | APR-083 | 2026-08-22 | V4 专题唯一工作区、样品规划、人工连续任务排序、状态窗口与跨入口同步基线 |
 | BL-006 | superseded | baselines/BL-006/manifest.json | be88bd0c89fbd8bcb63a74b5a0784ebdfe970f07 | APR-103 | 2026-08-23 | V5 三模块任务管理与执行设计基线（资源维护、任务全量编辑台、执行中心） |
-| BL-007 | active | baselines/BL-007/manifest.json | 32aaad33cf4aaca89f208f9fb5fdbfd35b12c52b | APR-146 | 2026-08-25 | BL-006 V5 三模块范围延续，并新增 WP-011 单个测控需求受控导入 |
+| BL-007 | superseded | baselines/BL-007/manifest.json | 32aaad33cf4aaca89f208f9fb5fdbfd35b12c52b | APR-146 | 2026-08-25 | BL-006 V5 三模块范围延续，并新增 WP-011 单个测控需求受控导入 |
+| BL-008 | active | baselines/BL-008/manifest.json | d159ed6226199215e9f549ac9fbfba604e6ccfa2 | APR-150 | 2026-08-25 | V5 样品字段收敛：保留型号、编号、ETA、备注，历史字段兼容 |

@@ -1,0 +1,55 @@
+{
+  "$schema": "schemas/work-package-context.schema.json",
+  "schema_version": 1,
+  "work_package": "WP-012",
+  "baseline": "BL-008",
+  "scope": [
+    "public/index.html",
+    "public/app.js",
+    "src/v3/index.js",
+    "tests",
+    "docs/02-product/requirements-v5.md",
+    "docs/03-architecture/overall-design-v5.md",
+    "docs/03-architecture/components/v5-detailed-design.md",
+    "docs/05-quality/traceability-v5.md",
+    "docs/08-changes/CR-008.md",
+    "docs/04-delivery/WORK-PACKAGES.md",
+    "docs/05-quality/evidence",
+    "docs/09-reports"
+  ],
+  "required_documents": [
+    {
+      "doc_id": "REQ-V5-001",
+      "mode": "full"
+    },
+    {
+      "doc_id": "ARC-OVERALL-V5-001",
+      "mode": "full"
+    },
+    {
+      "doc_id": "ARC-COMP-V5-001",
+      "mode": "full"
+    },
+    {
+      "doc_id": "QUAL-TRACE-V5-001",
+      "mode": "full"
+    },
+    {
+      "doc_id": "CR-008",
+      "mode": "full"
+    },
+    {
+      "doc_id": "DEL-WORK-001",
+      "mode": "full"
+    }
+  ],
+  "decisions": [
+    "DEC-004"
+  ],
+  "validation": [
+    "npm test",
+    "node --check public/app.js",
+    "node --check src/v3/index.js",
+    "V5 样品字段与 API 回归测试"
+  ]
+}

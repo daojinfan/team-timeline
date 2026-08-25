@@ -2,9 +2,9 @@
 doc_id: ARC-OVERALL-V5-001
 type: architecture.overall.v5
 status: proposed
-version: 1.2
+version: 1.3
 owner: human
-baseline: BL-005
+baseline: BL-008
 depends_on:
   - REQ-V5-001
   - CR-007
@@ -13,7 +13,7 @@ affects:
   - ARC-COMP-V5-001
   - QUAL-TRACE-V5-001
 supersedes: ARC-OVERALL-V4-001
-last_reviewed: 2026-08-23
+last_reviewed: 2026-08-25
 ---
 
 # V5 总体设计：三模块任务管理架构
@@ -67,7 +67,7 @@ notes, cryostat_id, color, manual_phase, start_date, end_date,
 version, created_at, updated_at
 ~~~
 
-样品保存规划标签、型号、编号、ETA、实际到样和事件历史；任务与样品使用多对多关系。
+样品保存型号、编号、ETA、备注和事件历史；历史规划标签、实际到样字段继续保留用于兼容，不作为当前 V5 的写入入口。任务与样品使用多对多关系。
 
 ## 4. 兼容策略
 
@@ -88,7 +88,7 @@ V5 设计不授权立即改写产品代码或数据库。后续实现必须采�
 已完成
   > 测试延期（人工开始测试且 now > end_date）
   > 正在测试（人工开始测试且 now <= end_date）
-  > 样品交付延期（未开始且样品 ETA 已过且未到样）
+  > 样品交付延期（未开始且样品 ETA 已过且样品编号为空）
   > 等待样品（未开始且样品未到、ETA 未过或待确认）
 ~~~
 
@@ -115,7 +115,7 @@ V5 设计不授权立即改写产品代码或数据库。后续实现必须采�
 | `topic` | id, name, purpose, status, notes, system_key, version | `system_key=unassigned` 全局唯一且不可删除 |
 | `task` | id, topic_id, source_group_id, title, purpose, notes, color, manual_phase, start_date, end_date, cryostat_id, version | 任务编号稳定；主题必须存在 |
 | `test_item` | id, task_id, name, notes, position | 仅用于稳定展示，position 不等于任务顺序 |
-| `sample` | id, planning_label, model, sample_no, eta_date, arrival_date, eta_pending, version | 正式编号可在到样后补录 |
+| `sample` | id, model, sample_no, eta_date, notes, eta_pending, version | 正式编号可在到样后补录；`planning_label`、`arrival_date` 为历史兼容字段 |
 | `task_sample` | task_id, sample_id, required | 同一样品可被多个任务规划引用 |
 | `task_member` | task_id, member_id, start_date, end_date, version | 联合键唯一；日期可空 |
 | `task_event` | id, task_id, event_type, before, after, actor, occurred_at | 支持审计和最近一次可逆撤销 |

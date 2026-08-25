@@ -1,0 +1,101 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-241",
+  "work_package": "WP-012",
+  "title": "独立复审 V5 样品字段收敛实现",
+  "goal": "独立审查 TASK-240 的实际代码和测试变更，确认当前 V5 样品字段、兼容逻辑、状态计算和回归证据符合 CR-008；只写审核证据，不修改产品代码。",
+  "baseline": "BL-008",
+  "profile": "Release",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-241"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/app.js",
+    "src/v3/index.js",
+    "tests",
+    "docs/02-product/requirements-v5.md",
+    "docs/03-architecture/overall-design-v5.md",
+    "docs/03-architecture/components/v5-detailed-design.md",
+    "docs/05-quality/traceability-v5.md",
+    "docs/08-changes/CR-008.md",
+    "docs/04-delivery/WORK-PACKAGES.md",
+    "docs/05-quality/evidence/TASK-240"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-241"
+  ],
+  "out_of_scope": [
+    "修改任何产品代码、测试代码或数据库",
+    "代替实现者修复问题",
+    "修改工作包或基线文档",
+    "远程发布"
+  ],
+  "authoritative_documents": [
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-008",
+    "DEL-WORK-001",
+    "DEC-004"
+  ],
+  "dependencies": [
+    "TASK-240"
+  ],
+  "acceptance_criteria": [
+    "实际变更清单与 TASK-240 允许路径一致，未引入范围外修改",
+    "V5 当前表单只保留型号、编号、ETA、备注，移除目标字段且新增/编辑链路一致",
+    "历史数据库/API 兼容策略与编号后补状态逻辑有代码和测试证据",
+    "npm test、语法检查和 git diff --check 结果可复核",
+    "Release 首轮和第二轮审核均基于同一最终内容并记录 changes 清单"
+  ],
+  "validations": [
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "v3-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "src/v3/index.js"
+      ]
+    },
+    {
+      "id": "git-diff-check",
+      "command": "git",
+      "args": [
+        "diff",
+        "--check"
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-25T14:24:50.4121464Z",
+  "release_controls": {
+    "target_environment": "本地 dev 分支桌面 Web 服务（Windows，Node.js，SQLite）",
+    "execution_window": "TASK-240 完成后，在当前本地开发工作区进行；不发布远程环境",
+    "rollback_plan": "审核只写 TASK-241 证据目录；发现问题记录 changes-required，不修改实现范围",
+    "observation_metrics": "实际 Git 变更清单、npm test、语法检查、V5 样品字段回归证据、基线与契约哈希",
+    "stop_conditions": "发现范围外文件、历史列删除、V3 破坏性变化、测试失败或证据缺失时停止并记录 changes-required",
+    "post_release_owner": "项目经理（本地开发工作区）"
+  }
+}
