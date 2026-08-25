@@ -1,0 +1,28 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-247",
+  "reviewed_task_ids": ["TASK-246"],
+  "work_package": "WP-012",
+  "baseline": "BL-008",
+  "result": "cancelled",
+  "diff_checked": true,
+  "changes": [
+    {"task_id": "TASK-246", "path": "public/app.js", "change_type": "modified", "summary": "已选样品 ETA 复选框紧凑尺寸。"},
+    {"task_id": "TASK-246", "path": "public/index.html", "change_type": "modified", "summary": "新增样品 ETA 复选框紧凑尺寸。"},
+    {"task_id": "TASK-246", "path": "tests/v5-inline-editor.test.js", "change_type": "modified", "summary": "两处 ETA 复选框尺寸回归断言。"}
+  ],
+  "change_summary": "TASK-246 尚未验收；用户已确认由 TASK-248 继续修正任务全量编辑台右侧内联编辑布局，因此旧交付不再作为独立交付成果，旧复审任务取消并由新复审任务 TASK-249 接替。",
+  "scope_checked": [
+    "核对 TASK-246 与 TASK-247 的契约、状态和已记录 Release 双轮复审证据。",
+    "核对 TASK-246 起始提交 4f181529560965cb1eaa6ba549c20f84f81c4a8c 到最终提交 c4bea15faac559c394aee622baf3fb079ad4278a 的实际产品/测试变更。",
+    "确认 TASK-248 仍在 WP-012 的 V5 右侧内联编辑面板和测试路径内，不改变任务数据或 API。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: TASK-246 原双轮复审在取消前均为 passed。",
+    "PASS: 取消原因是后续右侧面板布局修正替代旧交付，不是发现未修复缺陷。",
+    "PASS: 本证据 changes 清单与 TASK-246 实际产品/测试变更一致。"
+  ],
+  "created_at": "2026-08-26T01:05:00+08:00"
+}

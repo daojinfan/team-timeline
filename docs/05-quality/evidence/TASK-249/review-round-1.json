@@ -1,0 +1,46 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-249",
+  "reviewed_task_ids": [
+    "TASK-248"
+  ],
+  "work_package": "WP-012",
+  "baseline": "BL-008",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-248",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "右侧内联任务编辑渲染完成后，将测试项和参与成员两个 fieldset 设为 grid-column: 1 / -1，使其横跨 .v5-editor-fields 两列；未改动表单字段或提交函数。"
+    },
+    {
+      "task_id": "TASK-248",
+      "path": "tests/v5-inline-editor.test.js",
+      "change_type": "modified",
+      "summary": "增加布局回归断言，覆盖 fieldset 横跨整行、测试项逐项结构以及计划开始/计划结束相邻渲染顺序。"
+    }
+  ],
+  "change_summary": "Release 首轮基于 TASK-248 起始提交 b662a139fbd088e1d209549dd8889133a8788f55 与最终提交 887c55fc061945f1a7db048449c8d0931741c032 的完整实际 diff。仅发现 public/app.js 和 tests/v5-inline-editor.test.js 两个修改文件，均在 allowed_paths；没有 public/styles.css、public/index.html、API/数据库、V3 或治理范围外产品变更。",
+  "scope_checked": [
+    "读取 TASK-248/TASK-249 contract 与 state、WP-012 context，以及 REQ-V5-001、ARC-OVERALL-V5-001、ARC-COMP-V5-001、QUAL-TRACE-V5-001、CR-008；确认 V5 内联编辑需支持可重复测试项、整体日期、参与成员和冲突预览保存。",
+    "核对 b662a139..887c55f 的 name-status、stat 与 scoped diff；changes 清单与 TASK-248 allowed_paths 精确一致，887c55f 为当前 HEAD。",
+    "浏览器实测 Edge 本地页面 http://localhost:3000/，任务 TASK-22 右侧内联编辑面板：视口 1699×802；.v5-editor-fields 宽 485.4375px；.v5-inline-test-fieldset 宽 485.4375px、grid-column=1 / -1；.v5-inline-member-fieldset 宽 485.4375px、grid-column=1 / -1，二者与字段区等宽且左边界一致。",
+    "浏览器实测计划开始/计划结束两个 label 的 y 坐标相同（393.3333px），各自宽 238.21875px，确认日期控件固定在同一行并排；测试项新增第二项后两行 x 均为 1116.21875px、宽均为 464.1041875px、y 分别为 310.6667px 与 387.6667px，确认每项独占完整一行。",
+    "浏览器操作验证右侧编辑面板真实渲染：增加测试项后出现第二整行，点击其删除按钮后恢复单项；未提交数据库写入。成员 fieldset 可见已选成员标签、移除按钮和搜索框均位于整行容器内。",
+    "重新检查编辑保存链路：v5InlineTaskPayload 仍收集 testItems、start_date、end_date、participant_member_ids/member_dates；v5SaveInlineTask 仍先 POST 任务 preview，再携带 preview_token、ack、expected_version PUT 保存并刷新任务树。TASK-248 仅新增渲染后的 gridColumn 设置，没有改动字段读写、API 或保存逻辑。",
+    "重新检查测试项新增/删除事件委托、日期输入和成员选择/移除控件；静态回归断言覆盖字段、保存预览、冲突确认和布局标记。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: 读取 TASK-248 既有 npm-test validation evidence（b662a13，64 tests pass）。",
+    "PASS: 在最终提交 887c55f 独立重跑 npm test，64/64 tests pass。",
+    "PASS: node --check public/app.js。",
+    "PASS: node --check src/v3/index.js。",
+    "PASS: git diff --check b662a139fbd088e1d209549dd8889133a8788f55 887c55fc061945f1a7db048449c8d0931741c032。",
+    "PASS: 浏览器尺寸关系、测试项逐行、新增/删除交互和日期同行实测通过；实际 Git changes 与 evidence changes 清单一致。"
+  ],
+  "created_at": "2026-08-26T01:07:43+08:00"
+}

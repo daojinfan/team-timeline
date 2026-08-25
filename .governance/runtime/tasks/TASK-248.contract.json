@@ -1,0 +1,80 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-248",
+  "work_package": "WP-012",
+  "title": "修正 V5 右侧预览字段分行布局",
+  "goal": "修正任务全量编辑台选中任务后的右侧内联编辑面板网格：测试项与参与成员横跨整行，测试项逐项上下排列，计划开始与计划结束固定并排一行，同时保持现有编辑和保存逻辑。",
+  "baseline": "BL-008",
+  "profile": "Release",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/app.js",
+    "tests"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/app.js",
+    "tests",
+    "docs/02-product/requirements-v5.md",
+    "docs/03-architecture/overall-design-v5.md",
+    "docs/03-architecture/components/v5-detailed-design.md",
+    "docs/05-quality/traceability-v5.md",
+    "docs/08-changes/CR-008.md"
+  ],
+  "write_paths": [
+    "public/app.js",
+    "tests"
+  ],
+  "out_of_scope": [
+    "修改任务字段或 API",
+    "修改数据库",
+    "修改全量编辑弹窗",
+    "修改 V3 页面",
+    "手机端布局",
+    "远程发布"
+  ],
+  "authoritative_documents": [
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-008",
+    "DEL-WORK-001",
+    "DEC-004"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "右侧内联编辑的测试项区域横跨两列且每个测试项独占完整一行",
+    "计划开始和计划结束固定在同一日期行内并排显示",
+    "参与成员区域横跨两列独占完整一行",
+    "测试项新增删除、日期编辑、成员选择移除和保存逻辑保持可用",
+    "桌面右侧面板不再出现测试项被压缩或计划日期错位",
+    "npm test、客户端语法检查和差异检查通过"
+  ],
+  "validations": [
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "success_criteria",
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-25T16:54:59.6899012Z",
+  "release_controls": {
+    "target_environment": "本地 dev 分支桌面 Web 服务（Windows，Node.js，SQLite）",
+    "execution_window": "在当前本地开发工作区修正任务右侧预览布局；不发布远程环境",
+    "rollback_plan": "只回退 TASK-248 的 public/app.js 与测试变更，不修改数据库或 API",
+    "observation_metrics": "测试项逐行、日期同行、成员整行、桌面右侧面板无压缩、npm test、node --check、git diff --check",
+    "stop_conditions": "发现需要修改数据/API、全量弹窗、V3 页面、越出允许路径或测试失败时停止",
+    "post_release_owner": "项目经理（本地开发工作区）"
+  }
+}

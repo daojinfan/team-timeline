@@ -1,0 +1,46 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-249",
+  "reviewed_task_ids": [
+    "TASK-248"
+  ],
+  "work_package": "WP-012",
+  "baseline": "BL-008",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-248",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "同一最终渲染逻辑在右侧内联编辑生成测试项和参与成员 fieldset 后设置 gridColumn 为 1 / -1；第二轮确认其余字段、事件和保存函数未变化。"
+    },
+    {
+      "task_id": "TASK-248",
+      "path": "tests/v5-inline-editor.test.js",
+      "change_type": "modified",
+      "summary": "同一最终回归断言覆盖整行 fieldset、测试项结构和日期字段相邻顺序。"
+    }
+  ],
+  "change_summary": "Release 第二轮重新以同一最终提交 887c55fc061945f1a7db048449c8d0931741c032 全量复审，比较起始提交 b662a139fbd088e1d209549dd8889133a8788f55 后实际变更仍只有 public/app.js 与 tests/v5-inline-editor.test.js，均在 TASK-248 allowed_paths；两轮之间没有产品/测试内容变化。",
+  "scope_checked": [
+    "重新检查 TASK-248/TASK-249 contract、state、首轮 review-round-1.json、WP-012 context 及 V5 需求/总体设计/详设/追踪矩阵/CR-008；本轮覆盖全部验收点而非只复查首轮结论。",
+    "重新执行完整 name-status、stat 和 scoped diff，确认实际 changes 清单与 TASK-248 allowed_paths 精确一致；当前 HEAD 仍为 887c55f，未修改 public/styles.css、HTML、API、数据库、V3 或治理范围外产品文件。",
+    "刷新 Edge 本地页面并重新选择 TASK-22 进行 runtime 检查：视口 1699×802；.v5-editor-fields、.v5-inline-test-fieldset、.v5-inline-member-fieldset 宽度均 485.4375px，两个 fieldset 的 computed gridColumn 均为 1 / -1，x 均为 1105.5521px。",
+    "第二轮重新实测计划开始/计划结束 label：y 均为 675.3334px，各宽 238.21875px，确认并排同行；重新新增第二测试项后两行均 x=1116.21875px、width=464.1041875px，y=310.6667px/387.6667px，删除第二项后按钮数量由 2 恢复为 1。",
+    "重新检查 DOM/CSS/runtime 关系：测试项和成员 fieldset 是 .v5-editor-fields 的直接网格子项，动态 inline gridColumn 覆盖默认两列；测试项内部使用现有 .v5-inline-test-items 网格，新增/删除事件委托保持可用。",
+    "重新检查保存链路和表单字段：最终页面仍有 topic_id、source_group_id、cryostat_id、purpose、start_date、end_date、notes 以及测试项和成员控件；v5InlineTaskPayload 仍收集 testItems、日期、participant_member_ids/member_dates，v5SaveInlineTask 仍走 preview → preview_token/ack/expected_version PUT → 刷新。",
+    "第二轮浏览器交互仅新增并移除测试项，未提交任何数据库/API写入；成员 fieldset 的已选成员、移除按钮和搜索框仍位于整行容器内。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: 第二轮独立 npm test，64/64 tests pass。",
+    "PASS: 第二轮 node --check public/app.js。",
+    "PASS: 第二轮 node --check src/v3/index.js。",
+    "PASS: 第二轮 git diff --check b662a139fbd088e1d209549dd8889133a8788f55 887c55fc061945f1a7db048449c8d0931741c032。",
+    "PASS: 首轮 review-round-1.json 已读取并与第二轮同一最终提交内容、changes 清单和尺寸实测互相核对。",
+    "PASS: Release 第二轮完整复审通过，无 changes-required；测试项逐行、日期同行、成员整行、增删交互与编辑保存链路均无回归。"
+  ],
+  "created_at": "2026-08-26T01:11:48+08:00"
+}

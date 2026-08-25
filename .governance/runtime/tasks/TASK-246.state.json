@@ -5,7 +5,7 @@
   "work_package": "WP-012",
   "contract_sha256": "5096a40ec6d1093c2acf8ad20117b0622159fff14c0975bb9c6b824edeb77eb3",
   "baseline": "BL-008",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "APR-157",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -27,14 +27,14 @@
   "review": {
     "required": true,
     "reviewer_task_id": "TASK-247",
-    "status": "passed",
+    "status": "cancelled",
     "evidence": [
-      "docs/05-quality/evidence/TASK-247/review-round-2.json"
+      "docs/05-quality/evidence/TASK-247/review-cancelled-task-246.json"
     ],
-    "pass_streak": 2,
-    "subject_sha256": "87bad979547ffa2585b4907cdfefe35aafa237397ca22b8a444df72e54b544f0"
+    "pass_streak": 0,
+    "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "用户确认由 TASK-248 修正 V5 右侧内联编辑分行布局；TASK-246 尚未验收，旧交付不再作为独立交付成果。",
   "created_at": "2026-08-25T16:34:14.393267Z",
-  "updated_at": "2026-08-25T16:52:35.4300205Z"
+  "updated_at": "2026-08-25T16:56:04.1859589Z"
 }
