@@ -45,14 +45,12 @@
   "review": {
     "required": true,
     "reviewer_task_id": "TASK-219",
-    "status": "passed",
-    "evidence": [
-      "docs/05-quality/evidence/TASK-219/review-round-2.json"
-    ],
-    "pass_streak": 2,
+    "status": "pending",
+    "evidence": [],
+    "pass_streak": 1,
     "subject_sha256": "9d57d4bf45075fce9418e51345bda79c460c279924cd6143771b99ee20ab18e5"
   },
   "last_error": "",
   "created_at": "2026-08-24T16:39:06.29077Z",
-  "updated_at": "2026-08-24T23:52:36.2388679Z"
+  "updated_at": "2026-08-25T00:32:12.2287051Z"
 }

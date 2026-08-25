@@ -27,6 +27,18 @@ test("V5 filters support per-condition inverse matching and multi-select", () =>
   assert.match(app, /match === "all"/);
 });
 
+test("V5 execution keyword conditions keep free input and expose task suggestions", () => {
+  assert.match(app, /function v5FilterKeywordOptionValues\(surface\)/);
+  assert.match(app, /surface !== "execution"/);
+  assert.match(app, /task\.task_number, task\.title, task\.topic\?\.name/);
+  assert.match(app, /task\.samples \|\| \[\]/);
+  assert.match(app, /task\.test_items \|\| \[\]/);
+  assert.match(app, /task\.participants \|\| \[\]/);
+  assert.match(app, /list="\$\{listId\}" autocomplete="off" aria-autocomplete="list"/);
+  assert.match(app, /<datalist id="\$\{listId\}">/);
+  assert.match(app, /surface === "execution" \? v5FilterKeywordOptionValues\(surface\)/);
+});
+
 test("V5 quick filter headings keep 非 immediately before the filter label", () => {
   const filterIds = [
     "v5TaskSearchNot",

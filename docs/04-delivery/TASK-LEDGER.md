@@ -36,8 +36,10 @@ review_policy: independent-required
 
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| WP-009 | TASK-219 | pending | REVIEWER | 独立审核执行中心排期免预览修复 | BL-006 | pending | TASK-218 | completed | docs/05-quality/evidence/TASK-219 | execution-schedule-no-preview-review | n/a | n/a | n/a | Plan 自动登记，等待调度 |
-| WP-009 | TASK-218 | pending | IMPLEMENTER | 移除执行中心排期的手动预览操作 | BL-006 | pending | n/a | running | public/index.html, public/app.js, tests/v5-execution.test.js | execution-schedule-no-preview | TASK-219 | passed | docs/05-quality/evidence/TASK-219/review-round-2.json | Plan 自动登记，等待调度 |
+| WP-009 | TASK-221 | pending | REVIEWER | 独立审核执行中心关键词自动提示 | BL-006 | pending | TASK-220 | pending | docs/05-quality/evidence/TASK-221 | execution-filter-keyword-autocomplete-review | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-009 | TASK-220 | pending | IMPLEMENTER | 执行中心组合筛选关键词自动提示 | BL-006 | pending | n/a | running | public/app.js, tests/v5-filter-combo.test.js | execution-filter-keyword-autocomplete | TASK-221 | pending | pending | Plan 自动登记，等待调度 |
+| WP-009 | TASK-219 | pending | REVIEWER | 独立审核执行中心排期免预览修复 | BL-006 | pending | TASK-218 | pending | docs/05-quality/evidence/TASK-219 | execution-schedule-no-preview-review | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-009 | TASK-218 | pending | IMPLEMENTER | 移除执行中心排期的手动预览操作 | BL-006 | pending | n/a | running | public/index.html, public/app.js, tests/v5-execution.test.js | execution-schedule-no-preview | TASK-219 | pending |  | Plan 自动登记，等待调度 |
 | WP-009 | TASK-217 | pending | REVIEWER | 独立审核最新测控任务需求示例 | BL-006 | pending | TASK-216 | completed | docs/05-quality/evidence/TASK-217 | current-template-example-review | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-009 | TASK-216 | pending | IMPLEMENTER | 按最新模板生成测控任务需求示例 | BL-006 | pending | n/a | running | docs/09-reports/templates/REQ-SOURCE-GROUP-EXAMPLE-V5-001.md | current-template-example | TASK-217 | passed | docs/05-quality/evidence/TASK-217/review-round-2.json | Plan 自动登记，等待调度 |
 | WP-009 | TASK-215 | pending | REVIEWER | 独立审核测试目的填写区 | BL-006 | pending | TASK-214 | completed | docs/05-quality/evidence/TASK-215 | purpose-section-review | n/a | n/a | n/a | Plan 自动登记，等待调度 |

@@ -1,0 +1,21 @@
+{
+  "$schema": "schemas/validation-evidence.schema.json",
+  "schema_version": 1,
+  "task_id": "TASK-220",
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "contract_sha256": "e5a6fba642dd4af07d9be163427d2f2a87c2596f75060945c0f0f9dc78d48f51",
+  "git_commit": "a95644589ed2f7497ffe91df42265db48190b890",
+  "validation_id": "execution-filter-keyword-autocomplete",
+  "command": "node",
+  "args": [
+    "--test",
+    "tests/v5-filter-combo.test.js"
+  ],
+  "started_at": "2026-08-25T00:19:30.7029315Z",
+  "finished_at": "2026-08-25T00:19:31.0615296Z",
+  "exit_code": 0,
+  "redactions_applied": 0,
+  "output_path": "docs/05-quality/evidence/TASK-220/20260825T001930696Z-b1b49769-execution-filter-keyword-autocomplete.output.txt",
+  "output_sha256": "2952651043066de90dc1df98fcbf3217460cee76a9fffd06aa0d3538bdee24cd"
+}

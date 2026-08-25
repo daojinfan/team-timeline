@@ -4068,6 +4068,17 @@ function v5FilterOptionValues(surface, schema) {
   if (schema.source === "cryostats") return v5State.resources.cryostats.filter((item) => v5ResourceActive("cryostats", item) || v5State.tasks.some((task) => Number(task.cryostat_id) === Number(item.id))).map((item) => ({ value: item.id, label: `${item.name}${v5ResourceActive("cryostats", item) ? "" : "（停用）"}` }));
   return [];
 }
+function v5FilterKeywordOptionValues(surface) {
+  if (surface !== "execution") return [];
+  const values = new Set(); const add = (value) => { const text = String(value || "").trim(); if (text) values.add(text); };
+  v5State.tasks.forEach((task) => {
+    [task.task_number, task.title, task.topic?.name, task.source_group?.name, task.cryostat?.name].forEach(add);
+    (task.samples || []).forEach((sample) => [sample.planning_label, sample.model, sample.sample_no].forEach(add));
+    (task.test_items || []).forEach((item) => add(item.name));
+    (task.participants || []).forEach((member) => add(member.name));
+  });
+  return [...values].sort((left, right) => left.localeCompare(right, "zh-CN")).slice(0, 120);
+}
 function v5FilterTaskValues(task, field) {
   if (field === "search") return [v5TaskSearchText(task)];
   if (field === "sourceId") return task.source_group_id == null ? [] : [String(task.source_group_id)];
@@ -4118,7 +4129,11 @@ function v5RenderFilterOptions() {
 function v5FilterConditionFromField(surface, field) { const schema = v5FilterSchema(surface, field); return { id: `condition-${field}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`, surface, field, value: schema?.kind === "multi" ? [] : "", match: "any", negate: false }; }
 function v5FilterRenderValue(surface, schema, condition, groupIndex, conditionIndex) {
   const key = `${groupIndex}-${conditionIndex}`; const values = v5FilterNormaliseValues(condition);
-  if (schema.kind === "text") return `<input type="search" data-v5-filter-value="${key}" value="${escapeHtml(condition.value || "")}" placeholder="输入关键词…">`;
+  if (schema.kind === "text") {
+    const listId = `v5FilterKeywordOptions-${surface}-${key}`;
+    const options = surface === "execution" ? v5FilterKeywordOptionValues(surface).map((value) => v5Option(value, value)).join("") : "";
+    return `<input type="search" list="${listId}" autocomplete="off" aria-autocomplete="list" data-v5-filter-value="${key}" value="${escapeHtml(condition.value || "")}" placeholder="输入关键词…">${options ? `<datalist id="${listId}">${options}</datalist>` : ""}`;
+  }
   if (schema.kind === "date") return `<input type="date" data-v5-filter-value="${key}" value="${escapeHtml(condition.value || "")}">`;
   const options = v5FilterOptionValues(surface, schema).map((option) => v5Option(option.value, option.label, values.includes(String(option.value)))).join("");
   return `<select multiple size="4" data-v5-filter-value="${key}" aria-label="${escapeHtml(schema.label)}多选">${options || `<option disabled>暂无可选值</option>`}</select>`;
