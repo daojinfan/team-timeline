@@ -66,6 +66,30 @@ test("V5 quick filters and task form selectable fields use custom autocomplete c
   assert.match(styles, /\.v5-task-autocomplete/);
 });
 
+test("V5 resource-selection surfaces all use custom autocomplete controls", () => {
+  for (const marker of [
+    'data-v5-task-combobox="topic-status"',
+    'data-v5-task-combobox="topic-move"',
+    'data-v5-task-combobox="schedule-member"',
+    'data-v5-resource-combobox="source-groups"',
+    'data-v5-resource-combobox="members"',
+    'data-v5-resource-combobox="cryostats"',
+    'data-v5-execution-member-search',
+  ]) assert.match(index, new RegExp(marker.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), marker);
+  for (const marker of [
+    'data-v5-task-combobox="inline-topic"',
+    'data-v5-task-combobox="inline-source"',
+    'data-v5-task-combobox="inline-cryostat"',
+    'data-v5-task-combobox="inline-members"',
+  ]) assert.match(app, new RegExp(marker.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), marker);
+  for (const selectId of ["v5TopicStatus", "v5TopicMoveTarget", "v5ScheduleMember"]) assert.doesNotMatch(index, new RegExp(`<select[^>]+id="${selectId}"`), selectId);
+  assert.match(index, /id="v5ExecutionScale"/);
+  assert.match(index, /id="v5ExecutionRange"/);
+  for (const helper of ["v5RenderResourceSearchOptions", "v5RenderExecutionMemberSearchOptions", "v5TaskCombobox(\"inline-topic\")", "v5TaskCombobox(\"schedule-member\")", "v5TaskCombobox(\"topic-move\")"]) assert.ok(app.includes(helper), helper);
+  assert.match(app, /delete wrapper\.dataset\.v5TaskValue/);
+  assert.match(styles, /\.v5-resource-search-autocomplete/);
+});
+
 test("V5 quick filter headings keep 非 immediately before the filter label", () => {
   const filterIds = [
     "v5TaskSearchNot",

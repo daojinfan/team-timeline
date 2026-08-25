@@ -1,0 +1,87 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-226",
+  "work_package": "WP-009",
+  "title": "补齐任务全量编辑台内联联想控件",
+  "goal": "将任务全量编辑台选中任务后的内联编辑区域中的专题、来源小组、制冷机和参与成员选择统一为自定义联想输入框，保留现有保存、筛选、成员日期和冲突校验逻辑。",
+  "baseline": "BL-006",
+  "profile": "Standard",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/app.js",
+    "public/styles.css",
+    "tests/v5-filter-combo.test.js"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "tests/v5-filter-combo.test.js",
+    "tests/v5-execution.test.js",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/05-quality"
+  ],
+  "write_paths": [
+    "public/app.js",
+    "public/styles.css",
+    "tests/v5-filter-combo.test.js"
+  ],
+  "out_of_scope": [
+    "src/server.js",
+    "data/team_tasks.sqlite",
+    "执行中心排期弹窗",
+    "新建任务弹窗已完成的联想控件"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [
+    "TASK-224"
+  ],
+  "acceptance_criteria": [
+    "内联编辑的专题、来源小组、制冷机不再使用原生 select，改为可输入、边输入边筛选的单选联想控件。",
+    "内联编辑的参与成员使用自定义多选联想控件，已选成员可见、可移除，成员搜索实时匹配。",
+    "点击、键盘 Arrow、Escape 和外部点击行为可用；清空或改输入未选候选时不会提交旧资源 ID。",
+    "保存摘要修改继续使用现有预览、冲突确认、版本校验和任务树同步逻辑。",
+    "专项回归测试与全量测试通过。"
+  ],
+  "validations": [
+    {
+      "id": "inline-task-combobox",
+      "command": "node",
+      "args": [
+        "--test",
+        "tests/v5-filter-combo.test.js"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-25T02:16:27.7328266Z"
+}

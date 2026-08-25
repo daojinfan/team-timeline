@@ -5,7 +5,7 @@
   "work_package": "WP-009",
   "contract_sha256": "dd9e9e250b2eeaf036e94f17ce27f5011a093cf541ee79056baa810cd6c861fa",
   "baseline": "BL-006",
-  "state": "verified",
+  "state": "planned",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -17,9 +17,7 @@
   "preexisting_changes": [],
   "plan_checkpoint_git_commit": "7710e434d1fd3dc3358363026452dd71e1e0e7c6",
   "plan_rebase_history": [],
-  "evidence": [
-    "docs/05-quality/evidence/TASK-225/20260825T021032282Z-bdc64d73-filter-task-form-combobox-review.evidence.json"
-  ],
+  "evidence": [],
   "evidence_history": [
     "docs/05-quality/evidence/TASK-225/20260825T015757806Z-8acaba93-filter-task-form-combobox-review.evidence.json",
     "docs/05-quality/evidence/TASK-225/review-round-1.json",
@@ -61,5 +59,5 @@
   },
   "last_error": "",
   "created_at": "2026-08-25T01:28:23.6578914Z",
-  "updated_at": "2026-08-25T02:10:53.8456625Z"
+  "updated_at": "2026-08-25T02:41:03.2213351Z"
 }

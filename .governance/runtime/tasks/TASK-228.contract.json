@@ -1,0 +1,94 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-228",
+  "work_package": "WP-009",
+  "title": "统一 V5 全部资源检索型控件为自定义联想输入",
+  "goal": "将 V5 任务全量编辑台内联编辑、专题管理、执行中心和资源维护中的资源检索型搜索/选择控件统一为可输入、边输入边筛选的自定义联想控件；保留日期、时间单位、时间范围、甘特图粒度和逻辑组合控件的原生行为。",
+  "baseline": "BL-006",
+  "profile": "Standard",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "tests/v5-filter-combo.test.js"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "tests/v5-filter-combo.test.js",
+    "tests/v5-execution.test.js",
+    "docs/02-product",
+    "docs/03-architecture",
+    "docs/05-quality"
+  ],
+  "write_paths": [
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "tests/v5-filter-combo.test.js"
+  ],
+  "out_of_scope": [
+    "src/server.js",
+    "data/team_tasks.sqlite",
+    "手机端",
+    "日期输入",
+    "时间单位和时间范围",
+    "甘特图粒度",
+    "AND/OR、任一/全部等逻辑控制",
+    "V2/V3 历史模块"
+  ],
+  "authoritative_documents": [
+    "REQ-V21-001",
+    "ARC-OVERALL-003",
+    "ARC-COMP-005",
+    "DEC-003",
+    "DEC-004",
+    "CR-003",
+    "RPT-V21-DEV-001",
+    "QUAL-TRACE-V21-001",
+    "REQ-V4-001",
+    "ARC-OVERALL-V4-001",
+    "ARC-COMP-V4-001",
+    "CR-005",
+    "QUAL-TRACE-V4-001",
+    "REQ-BASE-001",
+    "ARC-OVERALL-001",
+    "DEL-WORK-001",
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-007"
+  ],
+  "dependencies": [
+    "TASK-224"
+  ],
+  "acceptance_criteria": [
+    "任务全量编辑台内联的专题、来源小组、制冷机和参与成员改为单选/多选自定义联想控件，保存不提交旧 ID。",
+    "专题管理中的目标专题和专题状态使用自定义选择交互；已有专题移动和状态保存逻辑保持一致。",
+    "执行中心排期成员选择、成员负载搜索使用自定义联想交互；时间单位、范围和日期控件保持原样。",
+    "资源维护的来源小组、成员和制冷机搜索支持实时候选匹配并保持原列表过滤语义。",
+    "所有资源检索型控件支持点击、键盘、Escape 和外部点击关闭，选中/清空状态与底层数据同步。",
+    "补充专项回归测试并通过全量测试。"
+  ],
+  "validations": [
+    {
+      "id": "v5-all-combobox",
+      "command": "node",
+      "args": [
+        "--test",
+        "tests/v5-filter-combo.test.js"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-25T02:25:00.1884478Z"
+}

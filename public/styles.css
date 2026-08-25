@@ -3663,8 +3663,9 @@ button.v3-task-card:disabled small {
 .v5-filter-autocomplete-chip button { width: 16px; height: 16px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: inherit; cursor: pointer; line-height: 14px; }
 .v5-filter-autocomplete-chip button:hover, .v5-filter-autocomplete-chip button:focus { background: #dbeafe; outline: 0; }
 .v5-filter-autocomplete-placeholder { color: var(--muted); font-size: 11px; }
-.v5-task-autocomplete { position: relative; min-width: 0; }
+.v5-task-autocomplete, .v5-resource-search-autocomplete { position: relative; min-width: 0; }
 .v5-task-autocomplete > input { width: 100%; }
+.v5-resource-search-autocomplete > input { width: 100%; }
 .v5-task-autocomplete-multi { margin-bottom: 9px; }
 .v5-filter-autocomplete-empty { padding: 8px 9px; color: var(--muted); font-size: 11px; }
 .v5-filter-condition-hint, .v5-filter-date-note { color: var(--muted); font-size: 10px; }
