@@ -1,0 +1,59 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-225",
+  "reviewed_task_ids": [
+    "TASK-224"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-224",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "最终任务全量编辑台、执行中心和任务表单的筛选/资源选择表面使用自定义联想输入结构，日期、时间单位、范围和甘特粒度保留原生控件。"
+    },
+    {
+      "task_id": "TASK-224",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "实现筛选组合、快捷过滤、任务全量/内联表单、专题管理、排期成员和资源搜索的候选生成、空查询展示、选择、关闭和保存映射；输入变化清除单选旧 ID。"
+    },
+    {
+      "task_id": "TASK-224",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "提供统一联想菜单、候选项、选中态、筛选/任务多选标签和资源搜索联想控件样式。"
+    },
+    {
+      "task_id": "TASK-224",
+      "path": "tests/v5-filter-combo.test.js",
+      "change_type": "modified",
+      "summary": "覆盖组合筛选、关键词、快捷筛选、任务/资源联想控件及空查询点击展示的最终回归断言。"
+    }
+  ],
+  "change_summary": "TASK-224 第二轮依赖复审以 start_git_commit 7710e434d1fd3dc3358363026452dd71e1e0e7c6 对照最终 HEAD e07a368006015dc1cd0c3304fcad0ceb64b627ae；scoped implementation manifest 恰为上述四个 modified 文件，空查询共享修复已纳入最终内容。",
+  "scope_checked": [
+    "任务全量编辑台和执行中心快捷/组合筛选，以及新建/编辑任务表单专题、来源小组、制冷机、样品和参与成员均为自定义联想控件。",
+    "关键词候选来自当前任务事实且允许候选外自由输入；资源/枚举字段保存值来自现有候选，输入变化清除旧 dataset ID。",
+    "组合筛选保留实时匹配、多选标签添加/移除、任一/全部、非、组内/组间 AND/OR、清空和应用逻辑。",
+    "任务样品规划标签/型号/编号/ETA/到样编辑、成员日期、内联摘要保存、预览/冲突确认和版本校验保持可用。",
+    "专题状态/目标专题、排期成员、资源维护搜索和执行中心成员搜索使用统一联想交互；点击空查询输入框会重开当前范围全部候选，已有关键词仍按包含匹配过滤。",
+    "点击、ArrowDown/ArrowUp、候选按钮键盘激活、Escape 和外部点击关闭均有对应通用或资源专用处理器；实现无 datalist 或 select multiple size=4。",
+    "任务/样品/成员/排期日期、执行中心时间单位/范围/甘特粒度和日期组合条件例外均保持原生行为。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: git rev-parse HEAD 为 e07a368006015dc1cd0c3304fcad0ceb64b627ae；git diff --name-status 7710e434d1fd3dc3358363026452dd71e1e0e7c6 HEAD -- 四个 TASK-224 路径返回且仅包含 public/app.js、public/index.html、public/styles.css、tests/v5-filter-combo.test.js 四个 M；numstat 为 app.js 197/67、index.html 22/22、styles.css 14/0、filter-combo test 62/3。",
+    "PASS: node --test tests/v5-filter-combo.test.js；10 tests passed, 0 failed。",
+    "PASS: npm test；62 tests passed, 0 failed。",
+    "PASS: node --check public/app.js 完成且无语法错误。",
+    "PASS: git diff --check 7710e434d1fd3dc3358363026452dd71e1e0e7c6 -- 四个 TASK-224 允许路径无空白错误。",
+    "PASS: 静态复核确认 v5ShowFilterAutocompleteForInput、v5ShowQuickAutocompleteForInput、v5ShowTaskAutocompleteForInput 及资源/执行成员空查询渲染函数均在点击/聚焦路径调用，匹配函数对空 query 使用全量候选分支。",
+    "PASS: 本轮重新从总体范围、空查询点击重开、数据保存、选择/清空、键盘/鼠标关闭、日期/时间例外、组合逻辑和回归测试全量复核，未发现阻塞问题。"
+  ],
+  "created_at": "2026-08-25T14:28:06+08:00"
+}

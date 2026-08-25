@@ -1,0 +1,47 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-231",
+  "reviewed_task_ids": [
+    "TASK-230"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-230",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "补充空查询点击时重建组合筛选、快捷筛选、任务表单、资源维护和执行中心成员候选菜单；非空查询仍按候选文本过滤，原有选择、清空、关闭及保存同步路径保留。"
+    },
+    {
+      "task_id": "TASK-230",
+      "path": "tests/v5-filter-combo.test.js",
+      "change_type": "modified",
+      "summary": "增加空查询点击重开全部候选的专项回归测试，断言五类候选渲染函数、输入点击入口及空查询匹配分支。"
+    }
+  ],
+  "change_summary": "本轮从 TASK-230 start_git_commit 6b0cc716d457ed275802c7da596999ccba51b282 重新审查至最终 HEAD e07a368006015dc1cd0c3304fcad0ceb64b627ae；按 TASK-230 允许路径核对，实际 scoped manifest 仍准确为 public/app.js 与 tests/v5-filter-combo.test.js 两项 modified，未把治理状态和其他任务证据作为 TASK-230 交付变更。",
+  "scope_checked": [
+    "组合筛选自定义输入的 focus/click 入口均调用 v5ShowFilterAutocompleteForInput；候选匹配的空 normalizedQuery 分支返回当前 surface 全部候选，非空输入仍按 label/value 做中文不区分大小写的 includes 匹配。",
+    "编辑台和执行中心快捷筛选输入的 focus/click 入口均调用 v5ShowQuickAutocompleteForInput；空查询显示清空项与全部当前候选，已有查询继续实时过滤，候选选择和清空仍触发现有 filter 状态更新。",
+    "任务全量编辑/新增表单的 topic、source、cryostat、samples、members，以及已生成的 inline-topic、inline-source、inline-cryostat、inline-members 均由 v5ShowTaskAutocompleteForInput 处理；空查询返回全部 v5TaskOptions，非空查询按 label/search 过滤。",
+    "任务候选按钮选择仍更新单选 dataset.v5TaskValue 或样品/成员多选集合，输入变更清除单选旧值；全量任务保存继续提交专题、来源、制冷机、样品、成员和日期字段。",
+    "资源维护 source-groups、members、cryostats 搜索点击重渲染 v5RenderResourceSearchOptions，执行中心成员搜索点击重渲染 v5RenderExecutionMemberSearchOptions；空查询包含全部当前资源，非空查询按名称/角色/备注包含匹配，全部按钮和状态同步保持。",
+    "筛选、快捷、任务和资源菜单的候选选择、清空、Escape、ArrowDown/ArrowUp 与外部点击关闭路径均重新核对；公共修改没有改变日期、颜色、执行中心日期范围/时间单位/甘特粒度等原生控件。",
+    "从 TASK-230 起始提交至最终内容仅 public/app.js 与测试文件发生实现范围修改；public/index.html 和 public/styles.css 未被 TASK-230 修改，未引入 datalist 或新的手写式候选控件。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: git rev-parse HEAD 返回 e07a368006015dc1cd0c3304fcad0ceb64b627ae；git diff --name-status 6b0cc716d457ed275802c7da596999ccba51b282 HEAD -- public/app.js tests/v5-filter-combo.test.js 仅返回 public/app.js M 与 tests/v5-filter-combo.test.js M，numstat 为 32/5、17/0。",
+    "PASS: node --test tests/v5-filter-combo.test.js；10 tests passed, 0 failed。",
+    "PASS: npm test；62 tests passed, 0 failed。",
+    "PASS: node --check public/app.js 完成且无语法错误。",
+    "PASS: git diff --check 6b0cc716d457ed275802c7da596999ccba51b282 -- public/app.js tests/v5-filter-combo.test.js 无空白错误。",
+    "PASS: 静态复核再次确认五种点击入口分别连接组合筛选、快捷筛选、任务表单、资源维护和执行成员渲染函数，且各自空 query 分支返回完整候选；查询输入仍保留包含匹配。",
+    "PASS: 完成第二轮从完整 scoped diff、所有目标自定义联想输入、候选选择/清空/关闭、任务保存值同步到日期等原生控件例外的独立全量复核，未发现阻塞问题。"
+  ],
+  "created_at": "2026-08-25T14:46:00+08:00"
+}

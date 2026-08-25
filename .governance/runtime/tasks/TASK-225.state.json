@@ -5,19 +5,21 @@
   "work_package": "WP-009",
   "contract_sha256": "dd9e9e250b2eeaf036e94f17ce27f5011a093cf541ee79056baa810cd6c861fa",
   "baseline": "BL-006",
-  "state": "planned",
+  "state": "verified",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
   "acceptance_git_commit": "",
-  "start_git_commit": "83214b108274213b971daab864721f9f421bf528",
+  "start_git_commit": "e07a368006015dc1cd0c3304fcad0ceb64b627ae",
   "execution_lease": "",
   "execution_lease_owner": "",
   "execution_lease_expires_at": "",
   "preexisting_changes": [],
   "plan_checkpoint_git_commit": "7710e434d1fd3dc3358363026452dd71e1e0e7c6",
   "plan_rebase_history": [],
-  "evidence": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-225/20260825T063125858Z-6888e81e-filter-task-form-combobox-review.evidence.json"
+  ],
   "evidence_history": [
     "docs/05-quality/evidence/TASK-225/20260825T015757806Z-8acaba93-filter-task-form-combobox-review.evidence.json",
     "docs/05-quality/evidence/TASK-225/review-round-1.json",
@@ -29,7 +31,11 @@
     "docs/05-quality/evidence/TASK-225/20260825T030433680Z-0dfee2b1-filter-task-form-combobox-review.evidence.json",
     "docs/05-quality/evidence/TASK-225/review-round-4.json",
     "docs/05-quality/evidence/TASK-225/20260825T030712422Z-7b542e6c-filter-task-form-combobox-review.evidence.json",
-    "docs/05-quality/evidence/TASK-225/review-round-5.json"
+    "docs/05-quality/evidence/TASK-225/review-round-5.json",
+    "docs/05-quality/evidence/TASK-225/20260825T062534675Z-e4b9c5f9-filter-task-form-combobox-review.evidence.json",
+    "docs/05-quality/evidence/TASK-225/review-round-6.json",
+    "docs/05-quality/evidence/TASK-225/20260825T063125858Z-6888e81e-filter-task-form-combobox-review.evidence.json",
+    "docs/05-quality/evidence/TASK-225/review-round-7.json"
   ],
   "review_history": [
     {
@@ -66,6 +72,20 @@
       "result": "passed",
       "round_id": "RR-bb3ffb356eb8426084c742b94ac4ebfb",
       "recorded_at": "2026-08-25T03:07:33.28743Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-225/review-round-6.json",
+      "sha256": "8df5186cdf15f0e2e019d028a5b0c67d5e1cc98d916d857bbbe7c214ed4a0e45",
+      "result": "passed",
+      "round_id": "RR-38ffeb5223794ed8b4fb623c56b98337",
+      "recorded_at": "2026-08-25T06:26:11.7032969Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-225/review-round-7.json",
+      "sha256": "258d05c57459afccbc345908f76fdabbb4325696c0982545918542e7c38d5fd1",
+      "result": "passed",
+      "round_id": "RR-5848e39e9687438982fcebe66b73622f",
+      "recorded_at": "2026-08-25T06:31:54.0166191Z"
     }
   ],
   "review": {
@@ -78,5 +98,5 @@
   },
   "last_error": "",
   "created_at": "2026-08-25T01:28:23.6578914Z",
-  "updated_at": "2026-08-25T06:19:39.3056316Z"
+  "updated_at": "2026-08-25T06:31:54.3229660Z"
 }

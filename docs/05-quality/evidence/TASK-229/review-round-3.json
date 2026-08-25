@@ -1,0 +1,58 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-229",
+  "reviewed_task_ids": [
+    "TASK-228"
+  ],
+  "work_package": "WP-009",
+  "baseline": "BL-006",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-228",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "最终资源维护来源小组/成员/制冷机搜索、执行中心成员负载搜索、专题状态/目标专题和排期成员选择均为自定义联想输入；日期与时间控件保持原生。"
+    },
+    {
+      "task_id": "TASK-228",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "最终实现全部资源检索型控件的候选过滤、空查询展示、点击/清空、单选 ID 同步、保存映射、外部关闭和通用/资源专用键盘交互。"
+    },
+    {
+      "task_id": "TASK-228",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "最终复用统一联想菜单和候选样式，并补齐资源搜索联想容器及输入布局。"
+    },
+    {
+      "task_id": "TASK-228",
+      "path": "tests/v5-filter-combo.test.js",
+      "change_type": "modified",
+      "summary": "最终专项断言覆盖全部资源检索控件、原生时间/逻辑例外、保存辅助函数、样式及空查询点击展示。"
+    }
+  ],
+  "change_summary": "TASK-228 依赖复审从 start_git_commit 1ae069b6653aa878097ee957c6de883f1d15dce9 对照当前最终 HEAD e07a368，实际 scoped manifest 恰为上述四个 modified 文件；TASK-230 空查询修复已纳入同一最终内容。",
+  "scope_checked": [
+    "任务全量编辑台内联专题/来源小组/制冷机/参与成员、专题管理状态/目标专题、执行中心排期成员/成员搜索和资源维护三类搜索均为自定义联想控件。",
+    "点击空查询输入框时显示当前范围全部候选；输入关键词继续按名称、角色、备注或当前任务候选实时过滤，候选点击/清空同步底层搜索或选中 ID。",
+    "内联和排期保存使用选中候选 ID，输入变化清除旧 ID；专题状态/目标专题的预览与保存仍保持原数据语义。",
+    "所有资源检索型控件覆盖点击、ArrowDown/ArrowUp、候选按钮键盘激活、Escape 和外部点击关闭；资源维护/执行成员搜索由专用处理器覆盖相应 data 属性。",
+    "日期输入、执行中心时间单位/时间范围/甘特图粒度以及 AND/OR、任一/全部逻辑仍为原生例外；V2/V3 历史模块未涉及。",
+    "实现无 datalist 或 select multiple size=4；CSS 与新增空查询回归断言覆盖最终控件。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: git rev-parse HEAD 为 e07a368；git diff --name-status 1ae069b6653aa878097ee957c6de883f1d15dce9 HEAD -- 四个 TASK-228 路径返回且仅包含 public/app.js、public/index.html、public/styles.css、tests/v5-filter-combo.test.js 四个 M；numstat 为 app.js 90/28、index.html 7/7、styles.css 2/1、filter-combo test 41/0。",
+    "PASS: node --test tests/v5-filter-combo.test.js；10 tests passed, 0 failed。",
+    "PASS: npm test；62 tests passed, 0 failed。",
+    "PASS: node --check public/app.js 完成且无语法错误。",
+    "PASS: git diff --check 1ae069b6653aa878097ee957c6de883f1d15dce9 -- 四个 TASK-228 允许路径无空白错误。",
+    "PASS: 静态复核确认空查询点击路径调用 v5ShowFilterAutocompleteForInput/v5ShowQuickAutocompleteForInput/v5ShowTaskAutocompleteForInput、v5RenderResourceSearchOptions 和 v5RenderExecutionMemberSearchOptions，且候选匹配函数对空 query 使用全量分支。",
+    "PASS: 从全部资源表面、空查询、候选/清空同步、键盘/鼠标关闭、原生例外、保存路径和回归测试重新全量复核，未发现阻塞问题。"
+  ],
+  "created_at": "2026-08-25T14:21:55+08:00"
+}

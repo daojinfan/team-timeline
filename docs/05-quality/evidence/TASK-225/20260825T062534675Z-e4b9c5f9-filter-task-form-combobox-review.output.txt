@@ -1,0 +1,18 @@
+✔ V5 editor and execution center expose the shared filter builder (1.2803ms)
+✔ V5 filters support per-condition inverse matching and multi-select (0.6862ms)
+✔ V5 execution keyword conditions keep free input and expose a custom live suggestion menu (1.2621ms)
+✔ V5 quick filters and task form selectable fields use custom autocomplete controls (0.8102ms)
+✔ V5 resource-selection surfaces all use custom autocomplete controls (1.249ms)
+✔ V5 autocomplete inputs reopen complete candidates when clicked with an empty query (0.8211ms)
+✔ V5 quick filter headings keep 非 immediately before the filter label (0.5501ms)
+✔ V5 filter groups make AND/OR explicit and keep date exceptions (0.5108ms)
+✔ V5 editor projection cannot regress to an out-of-scope task reference (0.3023ms)
+✔ V5 filter styling keeps builder groups readable on narrow screens (0.4211ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 66.9826
