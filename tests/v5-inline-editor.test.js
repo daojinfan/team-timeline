@@ -45,11 +45,17 @@ test("V5 sample editor exposes only the four current sample fields", () => {
   const index = readFileSync(path.join(root, "public/index.html"), "utf8");
   const dialog = index.slice(index.indexOf('id="v5TaskDialog"'), index.indexOf('id="v5TopicDialog"'));
   for (const field of ["样品型号", "样品编号", "样品备注", "样品预期交付时间"]) assert.match(dialog, new RegExp(field));
+  assert.match(dialog, /<legend>样品信息<\/legend>/);
+  assert.match(dialog, /一个任务可以添加多个样品/);
+  assert.doesNotMatch(dialog, /样品集合/);
+  assert.doesNotMatch(dialog, /v5TaskSamplePicker/);
+  assert.doesNotMatch(dialog, /data-v5-task-input="samples"/);
   for (const legacy of ["v5SampleLabel", "规划标签", "实际到样"]) assert.doesNotMatch(dialog, new RegExp(legacy));
   assert.doesNotMatch(dialog, /样品数量/);
   assert.match(app, /data-sample-field="notes"/);
   assert.doesNotMatch(app, /data-sample-field="arrival_date"/);
   assert.doesNotMatch(app, /data-sample-field="planning_label"/);
+  assert.doesNotMatch(app, /v5TaskRenderMultiPicker\("samples"/);
 });
 
 test("V5 task status filter supports an accessible inverse mode", () => {

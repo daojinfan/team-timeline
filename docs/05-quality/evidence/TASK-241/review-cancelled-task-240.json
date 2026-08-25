@@ -1,0 +1,49 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-241",
+  "reviewed_task_ids": [
+    "TASK-240"
+  ],
+  "work_package": "WP-012",
+  "baseline": "BL-008",
+  "result": "cancelled",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-240",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "用户确认由 TASK-242 接替未验收的全量编辑样品信息界面修正。"
+    },
+    {
+      "task_id": "TASK-240",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "用户确认由 TASK-242 接替未验收的全量编辑样品信息界面修正。"
+    },
+    {
+      "task_id": "TASK-240",
+      "path": "tests/v5-filter-combo.test.js",
+      "change_type": "modified",
+      "summary": "对应的样品选择器回归断言由 TASK-242 接替更新。"
+    },
+    {
+      "task_id": "TASK-240",
+      "path": "tests/v5-inline-editor.test.js",
+      "change_type": "modified",
+      "summary": "对应的样品信息界面回归断言由 TASK-242 接替更新。"
+    }
+  ],
+  "change_summary": "TASK-240 尚未验收，用户确认 TASK-242 接替其全量编辑样品信息界面修正；本证据只用于记录旧交付被替代，不把旧版本计为交付成果。实际 Git 变更清单已按 TASK-240 允许路径核对。",
+  "scope_checked": [
+    "确认 TASK-240 已被标记为 superseded，未删除其代码、数据或历史审核证据。",
+    "核对当前工作树相对 TASK-240 start_git_commit 的实际变更仅落在原任务允许的前端与测试路径。",
+    "确认后续实现由 TASK-242 承担，并绑定同一工作包 WP-012。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: 旧交付未进入验收，按规则记录为 cancelled，不作为独立交付成果。"
+  ],
+  "created_at": "2026-08-25T23:05:00+08:00"
+}

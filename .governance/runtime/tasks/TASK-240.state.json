@@ -5,7 +5,7 @@
   "work_package": "WP-012",
   "contract_sha256": "ab25b4a5ceac6d77f65132b062ae07fc172a8edc61132fa500ebb107968c3a75",
   "baseline": "BL-008",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "APR-151",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -53,14 +53,14 @@
   "review": {
     "required": true,
     "reviewer_task_id": "TASK-241",
-    "status": "passed",
+    "status": "cancelled",
     "evidence": [
-      "docs/05-quality/evidence/TASK-241/review-round-2.json"
+      "docs/05-quality/evidence/TASK-241/review-cancelled-task-240.json"
     ],
-    "pass_streak": 2,
-    "subject_sha256": "eecfd5d0b42b259846c8d275e447725cce38809c38a41ea4b494b44bf64fb94c"
+    "pass_streak": 0,
+    "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "用户确认 TASK-242 修正全量编辑样品信息界面；TASK-240 尚未验收，旧交付不再作为独立交付成果。",
   "created_at": "2026-08-25T14:24:29.7812Z",
-  "updated_at": "2026-08-25T14:54:49.4123029Z"
+  "updated_at": "2026-08-25T15:12:41.3952690Z"
 }

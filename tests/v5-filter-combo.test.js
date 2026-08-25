@@ -56,7 +56,8 @@ test("V5 quick filters and task form selectable fields use custom autocomplete c
     assert.match(index, new RegExp(`id="${id}"`), id);
   }
   for (const key of ["editor-search", "editor-sourceId", "execution-search", "execution-topicId"]) assert.match(index, new RegExp(`data-v5-quick-input="${key}"`), key);
-  for (const key of ["topic", "source", "cryostat", "samples", "members"]) assert.match(index, new RegExp(`data-v5-task-input="${key}"`), key);
+  for (const key of ["topic", "source", "cryostat", "members"]) assert.match(index, new RegExp(`data-v5-task-input="${key}"`), key);
+  assert.doesNotMatch(index, /data-v5-task-input="samples"/);
   assert.match(app, /function v5RenderQuickAutocomplete/);
   assert.match(app, /function v5TaskRenderMultiPicker/);
   assert.match(app, /function v5TaskRenderSingleCombobox/);
