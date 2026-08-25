@@ -5,7 +5,7 @@
   "work_package": "WP-009",
   "contract_sha256": "f32d9e602f90b832cbda1b72442cc290717a0062afadd8c9d9e63d64a8a336d6",
   "baseline": "BL-006",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -53,7 +53,7 @@
       "sha256": "0195fc2d599be33f5fcba0e77017ee9a3eec544108598e401e351d7434bd1909",
       "result": "cancelled",
       "round_id": "RR-8b659b7469a6405c80ee1536d28eab93",
-      "recorded_at": "2026-08-24T12:16:13.2309490Z"
+      "recorded_at": "2026-08-24T12:16:13.230949Z"
     }
   ],
   "review": {
@@ -64,7 +64,7 @@
     "pass_streak": 0,
     "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "BL-007 已继承并锁定现有 V5 成果；该旧基线任务不再单独推进，由新基线后续任务替代。",
   "created_at": "2026-08-24T11:38:05.5218155Z",
-  "updated_at": "2026-08-24T12:16:13.5285379Z"
+  "updated_at": "2026-08-25T09:19:29.3647225Z"
 }

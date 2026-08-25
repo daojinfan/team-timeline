@@ -22,7 +22,7 @@ last_reviewed: 2026-08-23
 - 运行模式：TEAM_PROJECT
 - 默认任务档位：Release
 - 当前目标：在不接入 AI 的前提下，按 V5 三模块基线落地资源维护、任务全量编辑台与执行中心甘特图体验。
-- 当前基线：BL-006
+- 当前基线：BL-007
 - 当前总体设计：ARC-OVERALL-V5-001 v1.2（BL-006 active，V5 设计包已批准）
 - 治理检查级别：Release
 - 下一阶段门：为 TASK-128、TASK-130、TASK-132 取得 execution 批准，按依赖顺序进入 TEAM_EXECUTION

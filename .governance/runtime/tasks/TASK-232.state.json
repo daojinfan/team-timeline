@@ -1,0 +1,38 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-232",
+  "work_package": "WP-011",
+  "contract_sha256": "689527c239fa151477465a938189b157acdd47633d3473acad98b4514d766622",
+  "baseline": "BL-006",
+  "state": "superseded",
+  "approval_id": "",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [
+    "docs/04-delivery/WORK-PACKAGES.md",
+    "docs/04-delivery/context/.context-routes.lock",
+    "docs/04-delivery/context/WP-011.context.json"
+  ],
+  "plan_checkpoint_git_commit": "32aaad33cf4aaca89f208f9fb5fdbfd35b12c52b",
+  "plan_rebase_history": [],
+  "evidence": [],
+  "evidence_history": [],
+  "review_history": [],
+  "review": {
+    "required": true,
+    "reviewer_task_id": "TASK-233",
+    "status": "pending",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
+  },
+  "last_error": "WP-011 需要在 BL-007 激活后重新规划；BL-006 计划保留为已替换历史。",
+  "created_at": "2026-08-25T09:06:33.3201316Z",
+  "updated_at": "2026-08-25T09:15:37.7329048Z"
+}

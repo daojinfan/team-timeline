@@ -1,83 +1,79 @@
 {
-    "$schema":  "schemas/governed-work-state.schema.json",
-    "schema_version":  2,
-    "task_id":  "TASK-131",
-    "work_package":  "WP-009",
-    "contract_sha256":  "c1b177de5fbb85b86adc85edaaac89ef9734d8214f2c874720ecc8233a6307b8",
-    "baseline":  "BL-006",
-    "state":  "verified",
-    "approval_id":  "APR-107",
-    "acceptance_subject_sha256":  "",
-    "acceptance_evidence_sha256":  "",
-    "acceptance_git_commit":  "",
-    "start_git_commit":  "59965d2e032f2f084fca89871a507d998aa21c4c",
-    "execution_lease":  "",
-    "execution_lease_owner":  "",
-    "execution_lease_expires_at":  "",
-    "preexisting_changes":  [
-
-                            ],
-    "plan_checkpoint_git_commit":  "59965d2e032f2f084fca89871a507d998aa21c4c",
-    "plan_rebase_history":  [
-                                {
-                                    "previous_changes":  [
-                                                             "docs/00-index/BASELINE-REGISTRY.md",
-                                                             "docs/00-index/CURRENT-STATE.md",
-                                                             "docs/00-index/DOC-REGISTRY.md",
-                                                             "docs/04-delivery/context/WP-009.context.json",
-                                                             "docs/04-delivery/context/WP-010.context.json",
-                                                             "governance.json",
-                                                             ".governance/baseline-activation.lock",
-                                                             "baselines/BL-006-draft-before-route-refresh/manifest.json",
-                                                             "baselines/BL-006/activation.json",
-                                                             "baselines/BL-006/manifest.json",
-                                                             "docs/00-index/.BASELINE-REGISTRY.md.lock"
-                                                         ],
-                                    "checkpoint_git_commit":  "59965d2e032f2f084fca89871a507d998aa21c4c",
-                                    "rebased_at":  "2026-08-23T05:40:09.6534856Z"
-                                }
-                            ],
-    "evidence":  [
-                     "docs/05-quality/evidence/TASK-131/20260823T054242023Z-477ea56c-governance-release.evidence.json",
-                     "docs/05-quality/evidence/TASK-131/20260823T054242023Z-477ea56c-npm-test.evidence.json",
-                     "docs/05-quality/evidence/TASK-131/20260823T054242023Z-477ea56c-app-syntax.evidence.json",
-                     "docs/05-quality/evidence/TASK-131/20260823T054242023Z-477ea56c-git-diff-check.evidence.json"
-                 ],
-    "evidence_history":  [
-                             "docs/05-quality/evidence/TASK-131/20260823T054242023Z-477ea56c-governance-release.evidence.json",
-                             "docs/05-quality/evidence/TASK-131/20260823T054242023Z-477ea56c-npm-test.evidence.json",
-                             "docs/05-quality/evidence/TASK-131/20260823T054242023Z-477ea56c-app-syntax.evidence.json",
-                             "docs/05-quality/evidence/TASK-131/20260823T054242023Z-477ea56c-git-diff-check.evidence.json",
-                             "docs/05-quality/evidence/TASK-131/review-round-1.json",
-                             "docs/05-quality/evidence/TASK-131/review-cancelled-task130-replan-20260823.json"
-                         ],
-    "review_history":  [
-                           {
-                               "path":  "docs/05-quality/evidence/TASK-131/review-round-1.json",
-                               "sha256":  "de69e7ffcb78a1096412ab37abfc4d5b3105b2590d6550d37ca695cf78fc7557",
-                               "result":  "changes-required",
-                               "round_id":  "RR-949df59ff8754e61a786fc6e5104e67c",
-                               "recorded_at":  "2026-08-23T05:43:16.7594259Z"
-                           },
-                           {
-                               "path":  "docs/05-quality/evidence/TASK-131/review-cancelled-task130-replan-20260823.json",
-                               "sha256":  "561c2418c95f27e6e7419c088b12fd3492a401979cd639d7fda056664b311fcf",
-                               "result":  "cancelled",
-                               "round_id":  "RR-7ac08007a90548d8bd0d38fe995bd008",
-                               "recorded_at":  "2026-08-23T09:21:14.1493556Z"
-                           }
-                       ],
-    "review":  {
-                   "required":  false,
-                   "reviewer_task_id":  "",
-                   "status":  "not-applicable",
-                   "evidence":  [
-
-                                ],
-                   "pass_streak":  0,
-                   "subject_sha256":  ""
-               },
-    "last_error":  "",
-    "created_at":  "2026-08-23T04:24:24.2472945Z",
-    "updated_at":  "2026-08-23T09:21:14.4547025Z"
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-131",
+  "work_package": "WP-009",
+  "contract_sha256": "c1b177de5fbb85b86adc85edaaac89ef9734d8214f2c874720ecc8233a6307b8",
+  "baseline": "BL-006",
+  "state": "superseded",
+  "approval_id": "APR-107",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "59965d2e032f2f084fca89871a507d998aa21c4c",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [],
+  "plan_checkpoint_git_commit": "59965d2e032f2f084fca89871a507d998aa21c4c",
+  "plan_rebase_history": [
+    {
+      "previous_changes": [
+        "docs/00-index/BASELINE-REGISTRY.md",
+        "docs/00-index/CURRENT-STATE.md",
+        "docs/00-index/DOC-REGISTRY.md",
+        "docs/04-delivery/context/WP-009.context.json",
+        "docs/04-delivery/context/WP-010.context.json",
+        "governance.json",
+        ".governance/baseline-activation.lock",
+        "baselines/BL-006-draft-before-route-refresh/manifest.json",
+        "baselines/BL-006/activation.json",
+        "baselines/BL-006/manifest.json",
+        "docs/00-index/.BASELINE-REGISTRY.md.lock"
+      ],
+      "checkpoint_git_commit": "59965d2e032f2f084fca89871a507d998aa21c4c",
+      "rebased_at": "2026-08-23T05:40:09.6534856Z"
+    }
+  ],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-131/20260823T054242023Z-477ea56c-governance-release.evidence.json",
+    "docs/05-quality/evidence/TASK-131/20260823T054242023Z-477ea56c-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-131/20260823T054242023Z-477ea56c-app-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-131/20260823T054242023Z-477ea56c-git-diff-check.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-131/20260823T054242023Z-477ea56c-governance-release.evidence.json",
+    "docs/05-quality/evidence/TASK-131/20260823T054242023Z-477ea56c-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-131/20260823T054242023Z-477ea56c-app-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-131/20260823T054242023Z-477ea56c-git-diff-check.evidence.json",
+    "docs/05-quality/evidence/TASK-131/review-round-1.json",
+    "docs/05-quality/evidence/TASK-131/review-cancelled-task130-replan-20260823.json"
+  ],
+  "review_history": [
+    {
+      "path": "docs/05-quality/evidence/TASK-131/review-round-1.json",
+      "sha256": "de69e7ffcb78a1096412ab37abfc4d5b3105b2590d6550d37ca695cf78fc7557",
+      "result": "changes-required",
+      "round_id": "RR-949df59ff8754e61a786fc6e5104e67c",
+      "recorded_at": "2026-08-23T05:43:16.7594259Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-131/review-cancelled-task130-replan-20260823.json",
+      "sha256": "561c2418c95f27e6e7419c088b12fd3492a401979cd639d7fda056664b311fcf",
+      "result": "cancelled",
+      "round_id": "RR-7ac08007a90548d8bd0d38fe995bd008",
+      "recorded_at": "2026-08-23T09:21:14.1493556Z"
+    }
+  ],
+  "review": {
+    "required": false,
+    "reviewer_task_id": "",
+    "status": "not-applicable",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
+  },
+  "last_error": "BL-007 已继承并锁定现有 V5 成果；该旧基线任务不再单独推进，由新基线后续任务替代。",
+  "created_at": "2026-08-23T04:24:24.2472945Z",
+  "updated_at": "2026-08-25T09:19:21.0753699Z"
 }

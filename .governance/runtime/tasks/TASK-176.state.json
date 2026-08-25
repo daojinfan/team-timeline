@@ -1,67 +1,59 @@
 {
-    "$schema":  "schemas/governed-work-state.schema.json",
-    "schema_version":  2,
-    "task_id":  "TASK-176",
-    "work_package":  "WP-009",
-    "contract_sha256":  "cb7458e48e1baeedeae5b9d366f9f086f9bd7fade3025ee18b11ade7a3b6650b",
-    "baseline":  "BL-006",
-    "state":  "verified",
-    "approval_id":  "APR-132",
-    "acceptance_subject_sha256":  "",
-    "acceptance_evidence_sha256":  "",
-    "acceptance_git_commit":  "",
-    "start_git_commit":  "555875a9d8398bb8ddf07e348dd5aa0dfdd02492",
-    "execution_lease":  "",
-    "execution_lease_owner":  "",
-    "execution_lease_expires_at":  "",
-    "preexisting_changes":  [
-
-                            ],
-    "plan_checkpoint_git_commit":  "555875a9d8398bb8ddf07e348dd5aa0dfdd02492",
-    "plan_rebase_history":  [
-
-                            ],
-    "evidence":  [
-                     "docs/05-quality/evidence/TASK-176/20260823T164030856Z-9ddb21a0-app-syntax.evidence.json",
-                     "docs/05-quality/evidence/TASK-176/20260823T164030856Z-9ddb21a0-npm-test.evidence.json",
-                     "docs/05-quality/evidence/TASK-176/20260823T164030856Z-9ddb21a0-v5-execution-regression.evidence.json",
-                     "docs/05-quality/evidence/TASK-176/20260823T164030856Z-9ddb21a0-v5-inline-regression.evidence.json",
-                     "docs/05-quality/evidence/TASK-176/20260823T164030856Z-9ddb21a0-git-diff-check.evidence.json",
-                     "docs/05-quality/evidence/TASK-176/20260823T164030856Z-9ddb21a0-governance-release.evidence.json"
-                 ],
-    "evidence_history":  [
-                             "docs/05-quality/evidence/TASK-176/20260823T163650714Z-293621c3-app-syntax.evidence.json",
-                             "docs/05-quality/evidence/TASK-176/20260823T163650714Z-293621c3-npm-test.evidence.json",
-                             "docs/05-quality/evidence/TASK-176/20260823T163650714Z-293621c3-v5-execution-regression.evidence.json",
-                             "docs/05-quality/evidence/TASK-176/20260823T163650714Z-293621c3-v5-inline-regression.evidence.json",
-                             "docs/05-quality/evidence/TASK-176/20260823T163650714Z-293621c3-git-diff-check.evidence.json",
-                             "docs/05-quality/evidence/TASK-176/20260823T163816308Z-e5a32ed5-app-syntax.evidence.json",
-                             "docs/05-quality/evidence/TASK-176/20260823T163816308Z-e5a32ed5-npm-test.evidence.json",
-                             "docs/05-quality/evidence/TASK-176/20260823T163816308Z-e5a32ed5-v5-execution-regression.evidence.json",
-                             "docs/05-quality/evidence/TASK-176/20260823T163816308Z-e5a32ed5-v5-inline-regression.evidence.json",
-                             "docs/05-quality/evidence/TASK-176/20260823T163816308Z-e5a32ed5-git-diff-check.evidence.json",
-                             "docs/05-quality/evidence/TASK-176/20260823T163816308Z-e5a32ed5-governance-release.evidence.json",
-                             "docs/05-quality/evidence/TASK-176/20260823T164030856Z-9ddb21a0-app-syntax.evidence.json",
-                             "docs/05-quality/evidence/TASK-176/20260823T164030856Z-9ddb21a0-npm-test.evidence.json",
-                             "docs/05-quality/evidence/TASK-176/20260823T164030856Z-9ddb21a0-v5-execution-regression.evidence.json",
-                             "docs/05-quality/evidence/TASK-176/20260823T164030856Z-9ddb21a0-v5-inline-regression.evidence.json",
-                             "docs/05-quality/evidence/TASK-176/20260823T164030856Z-9ddb21a0-git-diff-check.evidence.json",
-                             "docs/05-quality/evidence/TASK-176/20260823T164030856Z-9ddb21a0-governance-release.evidence.json"
-                         ],
-    "review_history":  [
-
-                       ],
-    "review":  {
-                   "required":  true,
-                   "reviewer_task_id":  "TASK-177",
-                   "status":  "pending",
-                   "evidence":  [
-
-                                ],
-                   "pass_streak":  0,
-                   "subject_sha256":  ""
-               },
-    "last_error":  "",
-    "created_at":  "2026-08-23T16:20:08.9118685Z",
-    "updated_at":  "2026-08-23T16:41:00.9399465Z"
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-176",
+  "work_package": "WP-009",
+  "contract_sha256": "cb7458e48e1baeedeae5b9d366f9f086f9bd7fade3025ee18b11ade7a3b6650b",
+  "baseline": "BL-006",
+  "state": "superseded",
+  "approval_id": "APR-132",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "555875a9d8398bb8ddf07e348dd5aa0dfdd02492",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [],
+  "plan_checkpoint_git_commit": "555875a9d8398bb8ddf07e348dd5aa0dfdd02492",
+  "plan_rebase_history": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-176/20260823T164030856Z-9ddb21a0-app-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-176/20260823T164030856Z-9ddb21a0-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-176/20260823T164030856Z-9ddb21a0-v5-execution-regression.evidence.json",
+    "docs/05-quality/evidence/TASK-176/20260823T164030856Z-9ddb21a0-v5-inline-regression.evidence.json",
+    "docs/05-quality/evidence/TASK-176/20260823T164030856Z-9ddb21a0-git-diff-check.evidence.json",
+    "docs/05-quality/evidence/TASK-176/20260823T164030856Z-9ddb21a0-governance-release.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-176/20260823T163650714Z-293621c3-app-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-176/20260823T163650714Z-293621c3-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-176/20260823T163650714Z-293621c3-v5-execution-regression.evidence.json",
+    "docs/05-quality/evidence/TASK-176/20260823T163650714Z-293621c3-v5-inline-regression.evidence.json",
+    "docs/05-quality/evidence/TASK-176/20260823T163650714Z-293621c3-git-diff-check.evidence.json",
+    "docs/05-quality/evidence/TASK-176/20260823T163816308Z-e5a32ed5-app-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-176/20260823T163816308Z-e5a32ed5-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-176/20260823T163816308Z-e5a32ed5-v5-execution-regression.evidence.json",
+    "docs/05-quality/evidence/TASK-176/20260823T163816308Z-e5a32ed5-v5-inline-regression.evidence.json",
+    "docs/05-quality/evidence/TASK-176/20260823T163816308Z-e5a32ed5-git-diff-check.evidence.json",
+    "docs/05-quality/evidence/TASK-176/20260823T163816308Z-e5a32ed5-governance-release.evidence.json",
+    "docs/05-quality/evidence/TASK-176/20260823T164030856Z-9ddb21a0-app-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-176/20260823T164030856Z-9ddb21a0-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-176/20260823T164030856Z-9ddb21a0-v5-execution-regression.evidence.json",
+    "docs/05-quality/evidence/TASK-176/20260823T164030856Z-9ddb21a0-v5-inline-regression.evidence.json",
+    "docs/05-quality/evidence/TASK-176/20260823T164030856Z-9ddb21a0-git-diff-check.evidence.json",
+    "docs/05-quality/evidence/TASK-176/20260823T164030856Z-9ddb21a0-governance-release.evidence.json"
+  ],
+  "review_history": [],
+  "review": {
+    "required": true,
+    "reviewer_task_id": "TASK-177",
+    "status": "pending",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
+  },
+  "last_error": "BL-007 已继承并锁定现有 V5 成果；该旧基线任务不再单独推进，由新基线后续任务替代。",
+  "created_at": "2026-08-23T16:20:08.9118685Z",
+  "updated_at": "2026-08-25T09:19:26.9712062Z"
 }

@@ -1,0 +1,38 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-233",
+  "work_package": "WP-011",
+  "contract_sha256": "66b640d3cd9838442dd230afdcb231e59feb328deb9be666be84a490ddb4f893",
+  "baseline": "BL-006",
+  "state": "superseded",
+  "approval_id": "",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [
+    "docs/04-delivery/WORK-PACKAGES.md",
+    "docs/04-delivery/context/.context-routes.lock",
+    "docs/04-delivery/context/WP-011.context.json"
+  ],
+  "plan_checkpoint_git_commit": "32aaad33cf4aaca89f208f9fb5fdbfd35b12c52b",
+  "plan_rebase_history": [],
+  "evidence": [],
+  "evidence_history": [],
+  "review_history": [],
+  "review": {
+    "required": false,
+    "reviewer_task_id": "",
+    "status": "not-applicable",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
+  },
+  "last_error": "对应 TASK-232 已由 BL-007 后续任务替换，且未开始审核。",
+  "created_at": "2026-08-25T09:06:33.6467373Z",
+  "updated_at": "2026-08-25T09:15:37.9273539Z"
+}

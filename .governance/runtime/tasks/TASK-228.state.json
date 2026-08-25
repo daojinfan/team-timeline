@@ -5,7 +5,7 @@
   "work_package": "WP-009",
   "contract_sha256": "187b1ca3dbe3bdc1de474952fe7d9d1f2a8ed604efc63a35a2286130370f6616",
   "baseline": "BL-006",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "APR-143",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -28,14 +28,14 @@
   "review": {
     "required": true,
     "reviewer_task_id": "TASK-229",
-    "status": "passed",
+    "status": "cancelled",
     "evidence": [
-      "docs/05-quality/evidence/TASK-229/review-round-4.json"
+      "docs/05-quality/evidence/TASK-229/review-cancelled-bl007-carry-forward.json"
     ],
-    "pass_streak": 2,
-    "subject_sha256": "f677a8ef781fd18ed3675f1df708349798b4e950307ff40f5de4bf864f189c45"
+    "pass_streak": 0,
+    "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "BL-007 已继承并锁定现有 V5 成果；该旧基线任务不再单独推进，由新基线后续任务替代。",
   "created_at": "2026-08-25T02:25:00.1884478Z",
-  "updated_at": "2026-08-25T06:32:07.2616413Z"
+  "updated_at": "2026-08-25T09:19:32.2917898Z"
 }

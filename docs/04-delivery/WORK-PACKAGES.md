@@ -29,6 +29,7 @@ last_reviewed: 2026-08-22
 | WP-008 | 集成 V2 客户端交互与完整人工闭环 | BL-003 | WP-006、WP-007 | 关键交互、错误路径、焦点、V1 回归与双轮审核 | INTEGRATOR |
 | WP-009 | 在 V2.1 兼容基础上修正 V4 专题唯一工作区与连续任务体验 | BL-005 | WP-006、WP-007、WP-008 | V3 schema/API 兼容、V4 专题主路径、样品/任务/状态/同步、双分辨率与 Release 双轮审核 | IMPLEMENTER |
 | WP-010 | 按 Web 字段表收敛工艺组专题、样品与任务数据 | BL-005 | CR-006 | 备份、数据库完整性、V3 API/页面数据核对与回滚演练 | PM |
+| WP-011 | 从已确认的测控任务需求文档受控导入单个 V5 任务 | BL-006 | REQ-V5-001、ARC-OVERALL-V5-001、ARC-COMP-V5-001 | 来源哈希、备份、精确字段映射、V5/V1 投影与数据库完整性 | PM |
 
 执行状态统一记录在 `WORK-STATUS.md`，避免日常状态变化改写已经批准的工作包契约。
 每个活动工作包还必须有 `context/WP-NNN.context.json`，声明所需权威文档、读取模式、适用基线和验证。上下文路由随基线锁定；已经 `accepted` 或 `superseded` 的历史工作包可以保留旧路由。生成的 `.governance/context/*.generated.md` 只是临时输入，不是项目事实。
@@ -131,4 +132,17 @@ last_reviewed: 2026-08-22
 - 允许修改：`scripts/reconcile-web-data.mjs`、`data/team_tasks.sqlite`、`data/backups`、`outputs/专题信息补全模板-20260822/专题任务Web字段整理表.xlsx`（只读）、`docs/08-changes/CR-006.md`、`docs/04-delivery/WORK-PACKAGES.md`、`docs/04-delivery/WORK-STATUS.md`、`docs/00-index/CURRENT-STATE.md`、`docs/00-index/APPROVAL-LOG.md`、`docs/05-quality/evidence`。
 - 验收：保留 5 个专题、9 个样品、9 个任务；多余工艺组专题/样品可恢复归档；其他来源小组数据不变；关联无孤儿；备份可恢复；V3 API 查询与前端页面只展示保留范围。
 - 回滚：停止服务，使用执行前 SQLite 备份原子恢复；保留失败库和验证证据。
+- 任务档位：Release。
+
+## WP-011 契约
+
+- 目标：根据 `CONF-V5-DEMAND-IMPORT-20260825-01`，把已确认的 Z3.2.2 读取线路异常复核需求作为一个完整 V5 任务写入当前本地系统。
+- 范围：读取指定 Markdown 需求源；执行前备份 `data/team_tasks.sqlite`；新增且仅新增 1 个样品、1 个任务、1 个结构化测试项及其必要 V1/V5 兼容投影和事件；通过现有 V5 API 核对 Web 可见结果。
+- 已确认映射：专题“读取驻波问题”；来源小组“工艺组”；制冷机“祖4”；样品型号“Z3.2.2 107Q”；样品编号“Z3.2.2_FC_V2_Bottom 02-05”；ETA `2026-08-25`；无参与成员、无任务排期、人工阶段 `waiting`。
+- 范围外：修改现有专题/资源/任务/样品，修改或停用 `Z4.1` 资源，新增成员或排期，修改 schema/API/前端代码，删除数据，远程发布。
+- 基线：BL-006。
+- 权威文档：`REQ-V5-001`、`ARC-OVERALL-V5-001`、`ARC-COMP-V5-001`、`QUAL-TRACE-V5-001`、`DEC-004`、`DEL-WORK-001`。
+- 允许修改：`data/team_tasks.sqlite`、`data/backups`、`docs/09-reports`、`docs/05-quality/evidence`、`docs/04-delivery/WORK-PACKAGES.md`、`docs/04-delivery/WORK-STATUS.md`、`docs/04-delivery/context/WP-011.context.json`、`docs/00-index/APPROVAL-LOG.md`、`.governance/runtime/tasks`、`docs/04-delivery/TASK-LEDGER.md`。
+- 验收：需求源哈希固定；写入前备份可读且 `PRAGMA integrity_check=ok`；无同名任务和同编号样品；新增对象精确匹配已确认字段；来源/专题/制冷机均引用既有稳定 ID；任务在 V5 查询和 V1 兼容投影可见；外键检查通过；其他既有业务对象不变；独立 Reviewer 对同一最终内容连续两轮通过。
+- 回滚：停止本地服务，将失败后的数据库另存后，用执行前 SQLite 备份恢复 `data/team_tasks.sqlite`，重启并复核计数、对象哈希和完整性。
 - 任务档位：Release。

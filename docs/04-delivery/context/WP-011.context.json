@@ -1,0 +1,53 @@
+{
+  "$schema": "schemas/work-package-context.schema.json",
+  "schema_version": 1,
+  "work_package": "WP-011",
+  "baseline": "BL-007",
+  "scope": [
+    "data/team_tasks.sqlite",
+    "data/backups",
+    "docs/09-reports",
+    "docs/05-quality/evidence",
+    "docs/02-product/requirements-v5.md",
+    "docs/03-architecture/overall-design-v5.md",
+    "docs/03-architecture/components/v5-detailed-design.md",
+    "docs/04-delivery/WORK-PACKAGES.md",
+    "docs/04-delivery/WORK-STATUS.md",
+    "docs/04-delivery/context/WP-011.context.json"
+  ],
+  "required_documents": [
+    {
+      "doc_id": "REQ-V5-001",
+      "mode": "full"
+    },
+    {
+      "doc_id": "ARC-OVERALL-V5-001",
+      "mode": "full"
+    },
+    {
+      "doc_id": "ARC-COMP-V5-001",
+      "mode": "full"
+    },
+    {
+      "doc_id": "QUAL-TRACE-V5-001",
+      "mode": "full"
+    },
+    {
+      "doc_id": "DEL-WORK-001",
+      "mode": "full"
+    }
+  ],
+  "decisions": [
+    "DEC-004"
+  ],
+  "validation": [
+    "source requirement SHA256 is recorded",
+    "pre-import SQLite backup exists and passes integrity_check",
+    "exactly one non-duplicate sample and one task are added",
+    "V5 task projection matches confirmed topic/source/cryostat/sample/test fields",
+    "V1 compatibility projection is present",
+    "PRAGMA integrity_check and foreign_key_check pass",
+    "existing object counts and hashes remain unchanged except approved inserts",
+    "Release governance validation passes"
+  ]
+}

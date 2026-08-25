@@ -5,7 +5,7 @@
   "work_package": "WP-009",
   "contract_sha256": "26b9417f0016c363853b81b7dc87a1acac71e9a549e435e3bf9dd2f4ad8d5508",
   "baseline": "BL-006",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "APR-137",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -42,7 +42,7 @@
     "pass_streak": 1,
     "subject_sha256": "1b0478e3552eb1a9972837e0a781d319a3b5d1278fb9158eebf2115df591aa36"
   },
-  "last_error": "",
+  "last_error": "BL-007 已继承并锁定现有 V5 成果；该旧基线任务不再单独推进，由新基线后续任务替代。",
   "created_at": "2026-08-24T04:20:32.4753207Z",
-  "updated_at": "2026-08-24T23:44:14.1926482Z"
+  "updated_at": "2026-08-25T09:19:27.9124860Z"
 }

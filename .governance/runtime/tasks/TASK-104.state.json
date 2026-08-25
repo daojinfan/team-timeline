@@ -5,7 +5,7 @@
   "work_package": "WP-009",
   "contract_sha256": "17a1672c368eae14d6e988914b513d6246da252aa9d699dd1d033f529695b99f",
   "baseline": "BL-005",
-  "state": "needs-decision",
+  "state": "superseded",
   "approval_id": "APR-084",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -50,7 +50,7 @@
     "pass_streak": 0,
     "subject_sha256": ""
   },
-  "last_error": "TASK-105 第一轮发现来源小组编辑未持久化；修复需要修改 src/v3/index.js，超出 TASK-104 仅允许 public 三文件且保持 API/schema 不变的已批准范围。需人类决定扩展范围或将来源小组改为只读。",
+  "last_error": "BL-007 已继承并锁定现有 V5 成果；该旧基线任务不再单独推进，由新基线后续任务替代。",
   "created_at": "2026-08-22T03:15:13.5181606Z",
-  "updated_at": "2026-08-22T03:48:30.5158350Z"
+  "updated_at": "2026-08-25T09:19:20.3736103Z"
 }
