@@ -1,0 +1,101 @@
+TASK-238 Z3.2.2 测控需求导入只读核对记录
+生成日期：2026-08-25
+基线：BL-007
+工作包：WP-011
+
+1. 核对结论
+
+现有导入结果符合用户确认的映射。TASK-238 只读取数据库、执行前备份、来源文件和 V5 API，并生成本文件；没有再次新增、修改或删除业务数据。
+
+系统任务号：TASK-59
+V5 任务 ID：37
+样品 ID：20
+测试项 ID：31
+专题：读取驻波问题（ID 4）
+来源小组：工艺组（ID 1）
+制冷机：祖4（ID 19）
+任务状态：waiting / 等待样品
+参与成员：0
+任务开始日期：null
+任务结束日期：null
+任务颜色：空
+
+2. 授权与来源
+
+基线确认：CONF-V5-DEMAND-IMPORT-BL007-20260825-01 / APR-146
+首次导入执行确认：CONF-V5-DEMAND-IMPORT-EXEC-BL007-20260825-01 / APR-147
+本次只读核对确认：CONF-V5-DEMAND-IMPORT-VERIFY-20260825-01 / APR-148
+来源文件：D:\百度网盘同步空间\BaiduSyncdisk\work\测控工程师\任务梳理\测控任务需求单\# Z3和Z4项目-Z3.2.2读取线路排查-所有读取线路和读取腔测试-20260825.md
+来源大小：2746 bytes
+来源 SHA256：d1a486cfb3ab3d205b43bb2c259320b7fc8329f936df5016416194b83f959d37
+
+3. 执行前备份
+
+路径：data/backups/team_tasks.pre-demand-import-20260825-172854.sqlite
+大小：770048 bytes
+SHA256：00282d7722351aa653b8c14c2c748b9082e94cdd6d654eb89ea9e66faadd7ef1
+PRAGMA integrity_check：ok
+PRAGMA foreign_key_check：0 条
+
+4. 任务与样品字段
+
+任务标题：工艺组硅基大尺寸底片工艺的读取线路异常复核，支撑Z3和Z4项目
+测试目的：对Z3.2.2 107Q样品的15路读取线路及读取腔频率进行板卡+网分测试，复核硅基大尺寸底片工艺读取线路异常，支撑Z3和Z4项目，并判断芯片是否异常。
+任务备注：项目为Z3和Z4项目同时需要；样品仅有底片和下层PCB；需求方应提供Z3.2.2接线表，若无法提供则由测控工程师生成并与需求方确认；封测单内网转发范道金。
+
+样品规划标签：Z3.2.2 107Q（底片+下层PCB）
+样品型号：Z3.2.2 107Q
+样品编号：Z3.2.2_FC_V2_Bottom 02-05
+样品 ETA：2026-08-25
+实际到样时间：null
+ETA 待确认：false
+
+测试项：板卡+网分测试全部15路读取线路及其读取腔频率
+验收条件：确认芯片是否异常；如无异常，所有读取线路结果应与Z3.2.1 P107Q相似。
+测试项备注：接线表参照Z3.2.2样品；封测单内网转发范道金。
+
+5. 对象唯一性与计数
+
+同名 V5 任务：1 条
+同编号样品：1 条
+任务关联样品：1 条
+任务关联测试项：1 条
+任务关联成员：0 条
+V1 兼容投影：tasks.id = 59，标题一致，未删除
+
+当前表计数：
+tasks=59
+v5_tasks=37
+v5_samples=20
+v5_test_items=22
+v5_task_samples=10
+v5_task_members=56
+v5_events=99
+v5_topics=18
+v2_source_groups=7
+v2_cryostats=21
+members=21
+
+导入增量相对执行前备份：tasks +1；v5_tasks +1；v5_samples +1；v5_test_items +1；v5_task_samples +1；v5_task_members +0；v5_events +2；专题、来源小组、制冷机和成员数量均为 +0。
+
+6. 稳定资源内容哈希
+
+v5_topics：99d4ca0f4429eaf3171e5900c11a1baba8aaf002e037a7210815a60d6b214218
+v2_source_groups：f51f60661ab0c5d2e7437e943c969b9b87162fbc2a1ea986bc48f74d55e8f806
+v2_cryostats：931b01714c02066190515f0b38946ee58ddc5a318db6cc6b46f1a56f60ec355b
+members：25c17ec0879ec6722c8f46e17a8a35c32c756f0425a45762f7c6bc263d6f1bf8
+
+上述四项与导入前读取结果完全一致。
+
+7. 完整性与只读性
+
+当前数据库 PRAGMA integrity_check：ok
+当前数据库 PRAGMA foreign_key_check：0 条
+V5 GET /api/v5/tasks/37：HTTP 200，返回字段与本记录一致
+TASK-238 生成报告前数据库文件 SHA256：5d9ff3e737e59b5dd11f0ae6bbbb664c11747861d52aeb1a4d896df686c0171a
+TASK-238 生成报告后数据库文件 SHA256：5d9ff3e737e59b5dd11f0ae6bbbb664c11747861d52aeb1a4d896df686c0171a
+前后 SHA256 一致，确认本次只读核对没有改写数据库文件。
+
+8. 回滚边界
+
+本任务没有写业务数据，不触发回滚。如果独立复审发现已导入数据本身存在错误，应停止并另行取得数据修复或使用执行前备份回滚的授权。
