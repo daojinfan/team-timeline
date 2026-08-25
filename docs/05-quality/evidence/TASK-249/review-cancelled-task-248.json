@@ -1,0 +1,27 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-249",
+  "reviewed_task_ids": ["TASK-248"],
+  "work_package": "WP-012",
+  "baseline": "BL-008",
+  "result": "cancelled",
+  "diff_checked": true,
+  "changes": [
+    {"task_id": "TASK-248", "path": "public/app.js", "change_type": "modified", "summary": "旧交付包含右侧内联编辑测试项与日期布局修正，现由 TASK-250 继续承接并替代。"},
+    {"task_id": "TASK-248", "path": "tests/v5-inline-editor.test.js", "change_type": "modified", "summary": "旧交付包含右侧内联编辑布局回归断言，现由 TASK-250 继续承接并替代。"}
+  ],
+  "change_summary": "TASK-248 尚未验收；用户确认由 TASK-250 继续修正测试项与计划日期的视觉分行，旧交付及其审核任务不再作为最终交付成果，保留不可变审核历史并取消旧复审。",
+  "scope_checked": [
+    "核对 TASK-248 与 TASK-249 的契约、状态、首次和第二轮复审证据。",
+    "核对 TASK-248 起始提交 b662a139fbd088e1d209549dd8889133a8788f55 以来的实际产品与测试变更。",
+    "确认 TASK-250 仍在 WP-012 的 V5 右侧内联编辑面板范围内，不改变任务数据或 API。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: TASK-248 原双轮复审在替代前均为 passed。",
+    "PASS: TASK-248 在用户确认后由 TASK-250 继续承接，本证据仅取消旧复审，不修改旧证据。",
+    "PASS: changes 清单覆盖 TASK-248 起始提交以来的实际产品与测试变更路径。"
+  ],
+  "created_at": "2026-08-26T09:00:00+08:00"
+}

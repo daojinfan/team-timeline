@@ -1,0 +1,46 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-251",
+  "reviewed_task_ids": [
+    "TASK-250"
+  ],
+  "work_package": "WP-012",
+  "baseline": "BL-008",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-250",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "同一最终内容在测试项后渲染独立 v5-inline-schedule-fields，并将测试项、排期和成员容器设为整行；排期容器固定为两列等宽。"
+    },
+    {
+      "task_id": "TASK-250",
+      "path": "tests/v5-inline-editor.test.js",
+      "change_type": "modified",
+      "summary": "同一最终回归断言覆盖测试项/排期 DOM 顺序、整行选择器和排期两列样式。"
+    }
+  ],
+  "change_summary": "Release 第二轮重新基于同一最终提交 238f5c2136a43b17485e81659dc8133a289667fe，以起始提交 06ec6e4058f0b1d7b469aebb55a02cd0ecc7cd58 计算完整实际差异。变更仍仅有 public/app.js 与 tests/v5-inline-editor.test.js，均在 TASK-250 allowed_paths；两轮之间没有产品或测试内容变化。",
+  "scope_checked": [
+    "重新读取 TASK-250/TASK-251 contract/state、TASK-250 全部验证 evidence、TASK-251 首轮 review-round-1.json、WP-012 context 与 V5 权威需求/架构/追踪/CR 文档；第二轮覆盖全部验收点而非仅复查首轮。",
+    "重新执行完整 name-status、stat、scoped diff 和 HEAD 检查；实际 changes 清单精确为 public/app.js、tests/v5-inline-editor.test.js，未出现样式表、HTML、API/数据库、V3 或治理范围外变更。",
+    "桌面 Edge localhost:3000 重新选择 TASK-22 实测视口 1699×802：.v5-editor-fields、v5-inline-test-fieldset、v5-inline-schedule-fields、v5-inline-member-fieldset 均宽 485.4375px；测试/排期/成员 computed gridColumn 均 1 / -1；排期 display=grid、columns=238.219px 238.219px，开始/结束日期 y=675.3334px相同。",
+    "窄视口 1180×720 重新实测：字段区及三块容器均宽 1042.3334px并整行；排期两列各 516.667px，日期 y=4103.667px相同；新增第二测试项后两项均宽 1021px、x=71.8333px、y=269.6667px/346.6667px上下排列，删除后删除按钮数量由 2 恢复为 1；临时 viewport 已 reset。",
+    "重新确认最终 DOM 结构为测试项 fieldset 后紧接独立 schedule 容器，再接参与成员 fieldset；表单仍存在 topic_id、source_group_id、cryostat_id、purpose、start_date、end_date、notes 和保存按钮。",
+    "重新确认 v5InlineTaskPayload/v5SaveInlineTask 未受布局变更影响：测试项、日期、成员及成员日期仍进入 payload，保存仍执行 preview、冲突确认、preview_token/ack/expected_version PUT 和刷新。新增/删除测试项和成员选择/移除事件仍由原有事件委托处理。",
+    "第二轮浏览器操作只在内存 DOM 中新增和移除测试项，未提交任何任务或数据库写入。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: 第二轮独立 npm test，64/64 tests pass。",
+    "PASS: 第二轮 node --check public/app.js。",
+    "PASS: 第二轮 node --check src/v3/index.js。",
+    "PASS: 第二轮 git diff --check 06ec6e4058f0b1d7b469aebb55a02cd0ecc7cd58 238f5c2136a43b17485e81659dc8133a289667fe。",
+    "PASS: 首轮 review-round-1.json 已重新读取，首轮与本轮均基于同一最终内容且 changes 清单一致。",
+    "PASS: Release 第二轮完整独立复审通过，无 changes-required；DOM 顺序、两种桌面宽度布局、测试项增删、成员整行和保存链路均未发现回归。"
+  ],
+  "created_at": "2026-08-26T01:48:19+08:00"
+}

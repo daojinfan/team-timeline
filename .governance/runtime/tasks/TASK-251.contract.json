@@ -1,0 +1,75 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-251",
+  "work_package": "WP-012",
+  "title": "独立复审 V5 右侧预览测试项与排期分行",
+  "goal": "独立复审 TASK-250 的右侧内联编辑布局修正，确认测试项与计划日期明确分行、日期同行、参与成员整行且编辑保存链路无回归；只写审核证据。",
+  "baseline": "BL-008",
+  "profile": "Release",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-251"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/app.js",
+    "tests",
+    "docs/02-product/requirements-v5.md",
+    "docs/03-architecture/overall-design-v5.md",
+    "docs/03-architecture/components/v5-detailed-design.md",
+    "docs/05-quality/traceability-v5.md",
+    "docs/08-changes/CR-008.md",
+    "docs/04-delivery/WORK-PACKAGES.md",
+    "docs/05-quality/evidence/TASK-250"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-251"
+  ],
+  "out_of_scope": [
+    "修改产品代码或测试代码",
+    "修改数据/API或治理基线",
+    "远程发布"
+  ],
+  "authoritative_documents": [
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-008",
+    "DEL-WORK-001",
+    "DEC-004"
+  ],
+  "dependencies": [
+    "TASK-250"
+  ],
+  "acceptance_criteria": [
+    "实际变更清单与 TASK-250 允许路径一致",
+    "测试项、计划日期和参与成员的 DOM 与浏览器布局可复核",
+    "测试项新增删除、日期编辑、成员选择移除和保存行为未回归",
+    "npm test、语法和差异检查证据完整",
+    "Release 两轮审核基于同一最终内容"
+  ],
+  "validations": [
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-25T17:24:14.3547708Z",
+  "release_controls": {
+    "target_environment": "本地 dev 分支桌面 Web 服务（Windows，Node.js，SQLite）",
+    "execution_window": "TASK-250 完成后在当前本地开发工作区进行两轮独立复审；不发布远程环境",
+    "rollback_plan": "审核只写 TASK-251 证据目录；发现问题记录 changes-required",
+    "observation_metrics": "实际 Git 变更清单、右侧面板 DOM/浏览器尺寸、npm test、node --check、git diff --check",
+    "stop_conditions": "发现范围外文件、数据/API变化、编辑链路回归、测试失败或证据缺失时停止",
+    "post_release_owner": "项目经理（本地开发工作区）"
+  }
+}

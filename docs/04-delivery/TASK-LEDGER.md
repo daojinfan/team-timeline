@@ -36,8 +36,10 @@ review_policy: independent-required
 
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| WP-012 | TASK-251 | pending | REVIEWER | 独立复审 V5 右侧预览测试项与排期分行 | BL-008 | pending | TASK-250 | completed | docs/05-quality/evidence/TASK-251 | npm-test | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-012 | TASK-250 | pending | IMPLEMENTER | 修正 V5 右侧预览测试项与排期分行 | BL-008 | pending | TASK-248 | running | public/app.js, tests | npm-test | TASK-251 | passed | docs/05-quality/evidence/TASK-251/review-round-2.json | Plan 自动登记，等待调度 |
 | WP-012 | TASK-249 | pending | REVIEWER | 独立复审 V5 右侧预览分行布局 | BL-008 | pending | TASK-248 | completed | docs/05-quality/evidence/TASK-249 | npm-test | n/a | n/a | n/a | Plan 自动登记，等待调度 |
-| WP-012 | TASK-248 | pending | IMPLEMENTER | 修正 V5 右侧预览字段分行布局 | BL-008 | pending | n/a | running | public/app.js, tests | npm-test | TASK-249 | passed | docs/05-quality/evidence/TASK-249/review-round-2.json | Plan 自动登记，等待调度 |
+| WP-012 | TASK-248 | pending | IMPLEMENTER | 修正 V5 右侧预览字段分行布局 | BL-008 | pending | n/a | replaced | public/app.js, tests | npm-test | TASK-249 | cancelled | docs/05-quality/evidence/TASK-249/review-cancelled-task-248.json | Plan 自动登记，等待调度 |
 | WP-012 | TASK-247 | pending | REVIEWER | 独立复审 V5 样品 ETA 复选框布局 | BL-008 | pending | TASK-246 | completed | docs/05-quality/evidence/TASK-247 | npm-test | n/a | n/a | n/a | 已完成规划，等待 execution 批准 |
 | WP-012 | TASK-246 | pending | IMPLEMENTER | 收窄 V5 样品 ETA 复选框 | BL-008 | pending | n/a | replaced | public/app.js, public/index.html, tests | npm-test | TASK-247 | cancelled | docs/05-quality/evidence/TASK-247/review-cancelled-task-246.json | 已完成规划，等待 execution 批准 |
 | WP-012 | TASK-245 | pending | REVIEWER | 独立复审 V5 样品移除操作布局 | BL-008 | pending | TASK-244 | completed | docs/05-quality/evidence/TASK-245 | npm-test | n/a | n/a | n/a | Plan 自动登记，等待调度 |

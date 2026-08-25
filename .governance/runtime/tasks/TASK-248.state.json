@@ -5,7 +5,7 @@
   "work_package": "WP-012",
   "contract_sha256": "76790e5f6e496df82255cb06383be66cb3852e2bdad8999799d8808071abbaab",
   "baseline": "BL-008",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "APR-159",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -27,14 +27,14 @@
   "review": {
     "required": true,
     "reviewer_task_id": "TASK-249",
-    "status": "passed",
+    "status": "cancelled",
     "evidence": [
-      "docs/05-quality/evidence/TASK-249/review-round-2.json"
+      "docs/05-quality/evidence/TASK-249/review-cancelled-task-248.json"
     ],
-    "pass_streak": 2,
-    "subject_sha256": "174ae0e4ba2bd1880e318650f8f02d7ac9fa2cbd80ee7af269926e1786758fc6"
+    "pass_streak": 0,
+    "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "TASK-250 承接并替代 TASK-248 的右侧预览布局实现，修复测试项与计划日期仍可能同视觉行的问题；保留 TASK-248 不可变审核历史。",
   "created_at": "2026-08-25T16:54:59.6899012Z",
-  "updated_at": "2026-08-25T17:13:05.0372789Z"
+  "updated_at": "2026-08-25T17:38:40.3426475Z"
 }

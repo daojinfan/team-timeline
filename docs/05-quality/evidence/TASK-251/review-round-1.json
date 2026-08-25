@@ -1,0 +1,47 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-251",
+  "reviewed_task_ids": [
+    "TASK-250"
+  ],
+  "work_package": "WP-012",
+  "baseline": "BL-008",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-250",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "右侧内联编辑 DOM 在测试项 fieldset 后新增独立 v5-inline-schedule-fields full 容器，将开始/结束日期放入该容器；测试项、排期容器、参与成员均设置 grid-column: 1 / -1，排期容器再设置 display:grid、两列等宽和 9px 间距。未改动字段读取或保存函数。"
+    },
+    {
+      "task_id": "TASK-250",
+      "path": "tests/v5-inline-editor.test.js",
+      "change_type": "modified",
+      "summary": "新增布局回归断言，覆盖测试项 fieldset 后紧接排期容器、排期两列样式、三块整行网格选择器和现有日期字段顺序。"
+    }
+  ],
+  "change_summary": "Release 首轮以 TASK-250 起始提交 06ec6e4058f0b1d7b469aebb55a02cd0ecc7cd58 与最终提交 238f5c2136a43b17485e81659dc8133a289667fe 的实际差异为准。实际变化仅为 public/app.js、tests/v5-inline-editor.test.js，全部在 TASK-250 allowed_paths；未修改 public/styles.css、public/index.html、API/数据库、V3 页面或治理范围外文件。",
+  "scope_checked": [
+    "读取 TASK-250/TASK-251 contract 与 state、TASK-250 三份 npm validation evidence、WP-012 context，以及 REQ-V5-001、ARC-OVERALL-V5-001、ARC-COMP-V5-001、QUAL-TRACE-V5-001、CR-008；确认可重复测试项、独立任务日期行、参与成员整行和既有预览保存要求。",
+    "核对 06ec6e4..238f5c2 完整 name-status、stat、scoped diff；实际 changes 清单与 TASK-250 allowed_paths 精确一致，当前 HEAD 为 238f5c2。",
+    "检查最终 DOM 模板顺序：<fieldset class=\"v5-inline-test-fieldset full\"> 后紧接 <div class=\"v5-inline-schedule-fields full\">，其后为 v5-inline-member-fieldset；三个容器均由同一 querySelectorAll 动态设置 gridColumn=1 / -1。",
+    "浏览器桌面实测 Edge localhost:3000 视口 1699×802、任务 TASK-22：.v5-editor-fields 宽 485.4375px；测试项 fieldset、排期容器、成员 fieldset 宽均 485.4375px且左边界一致；排期容器 computed display=grid、gridColumn=1 / -1、两列 238.219px 238.219px；开始/结束日期 y 均 675.3334px，确认独立日期行同行并排。",
+    "桌面实测测试项单行宽 464.1041875px、x=1116.21875px；增加第二测试项后两行保持相同 x/宽并上下排列，删除后恢复一行，未提交数据库写入。",
+    "浏览器窄视口实测临时 viewport 1180×720：.v5-editor-fields 宽 1042.3334px；测试项、排期、成员容器均宽 1042.3334px并横跨整行；排期仍为两列 516.667px 516.667px，日期 y=4103.667px相同；测试项两行宽 1021px、x=71.8333px并上下排列；结束后已 reset viewport。",
+    "检查编辑保存链路未回归：v5InlineTaskPayload 仍收集 testItems、start_date、end_date、participant_member_ids/member_dates；v5SaveInlineTask 仍执行 preview、冲突确认、preview_token/ack/expected_version PUT 并刷新任务树。此次只改变渲染 DOM 与布局样式。",
+    "检查测试项新增/删除、日期输入、成员选择/移除控件及现有静态回归断言；未执行真实保存，避免审核过程中写入用户任务数据。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: TASK-250 既有最终 npm-test evidence 可读取（06ec6e4，64 tests pass）。",
+    "PASS: 在最终提交 238f5c2 独立重跑 npm test，64/64 tests pass。",
+    "PASS: node --check public/app.js。",
+    "PASS: node --check src/v3/index.js。",
+    "PASS: git diff --check 06ec6e4058f0b1d7b469aebb55a02cd0ecc7cd58 238f5c2136a43b17485e81659dc8133a289667fe。",
+    "PASS: 桌面与窄视口 runtime 网格尺寸、DOM 顺序、测试项增删和编辑保存代码检查均通过；实际 Git changes 与 evidence changes 清单一致。"
+  ],
+  "created_at": "2026-08-26T01:44:30+08:00"
+}
