@@ -5,7 +5,7 @@
   "work_package": "WP-011",
   "contract_sha256": "5c9c089bf028b47ebccd7332f36822c255b0ece852855db26f9b4c4fe522b130",
   "baseline": "BL-007",
-  "state": "planned",
+  "state": "superseded",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -34,7 +34,7 @@
     "pass_streak": 0,
     "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "对应 TASK-234 因报告契约缺陷被替换，尚未开始审核。",
   "created_at": "2026-08-25T09:26:06.2778556Z",
-  "updated_at": "2026-08-25T09:27:17.2527796Z"
+  "updated_at": "2026-08-25T09:36:26.8896756Z"
 }

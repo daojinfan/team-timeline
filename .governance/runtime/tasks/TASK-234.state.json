@@ -5,12 +5,12 @@
   "work_package": "WP-011",
   "contract_sha256": "f6ae9346f83918aee008ece494165366b2f7ba1a18a3aafff7a8ad1b6378646d",
   "baseline": "BL-007",
-  "state": "planned",
-  "approval_id": "",
+  "state": "superseded",
+  "approval_id": "APR-147",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
   "acceptance_git_commit": "",
-  "start_git_commit": "",
+  "start_git_commit": "8562ead72fa5020df6436815057ed31c3e9fa649",
   "execution_lease": "",
   "execution_lease_owner": "",
   "execution_lease_expires_at": "",
@@ -23,8 +23,13 @@
       "rebased_at": "2026-08-25T09:27:04.6133964Z"
     }
   ],
-  "evidence": [],
-  "evidence_history": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-234/20260825T093300568Z-b06a66ba-demand-import-verify.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-234/20260825T093146681Z-7e081e16-demand-import-verify.evidence.json",
+    "docs/05-quality/evidence/TASK-234/20260825T093300568Z-b06a66ba-demand-import-verify.evidence.json"
+  ],
   "review_history": [],
   "review": {
     "required": true,
@@ -34,7 +39,7 @@
     "pass_streak": 0,
     "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "导入已完成并验证，但 Markdown 报告需要未纳入契约的 DOC-REGISTRY 登记；保持数据库与备份，改由后续只读修复任务使用非注册报告格式重新验证。",
   "created_at": "2026-08-25T09:26:06.0110067Z",
-  "updated_at": "2026-08-25T09:27:04.6218545Z"
+  "updated_at": "2026-08-25T09:36:26.6949114Z"
 }
