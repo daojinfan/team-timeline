@@ -5,7 +5,7 @@
   "work_package": "WP-011",
   "contract_sha256": "983f02dbafa1eec1edfd5b4116c331a4a6a67a9604c634cc375fb5e05df67d64",
   "baseline": "BL-007",
-  "state": "planned",
+  "state": "superseded",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -39,7 +39,7 @@
     "pass_streak": 0,
     "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "对应 TASK-236 在启动前被替换，审核任务未开始。",
   "created_at": "2026-08-25T09:37:48.475504Z",
-  "updated_at": "2026-08-25T11:43:06.5396186Z"
+  "updated_at": "2026-08-25T11:44:48.6384297Z"
 }

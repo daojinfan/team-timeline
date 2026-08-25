@@ -5,7 +5,7 @@
   "work_package": "WP-011",
   "contract_sha256": "86eb139a865f0b17557ce2c2ed3ced353682e75432fc4e4253caa36391697729",
   "baseline": "BL-007",
-  "state": "planned",
+  "state": "superseded",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -25,7 +25,7 @@
     {
       "previous_changes": [],
       "checkpoint_git_commit": "abedd850b82ce8e407ffdd73d3fbbe2ad3717b88",
-      "rebased_at": "2026-08-25T11:42:54.0775690Z"
+      "rebased_at": "2026-08-25T11:42:54.077569Z"
     }
   ],
   "evidence": [],
@@ -39,7 +39,7 @@
     "pass_streak": 0,
     "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "启动门发现错误依赖已替换的 TASK-234；任务未开始，由无旧任务依赖的只读验证任务替代。",
   "created_at": "2026-08-25T09:37:48.2220659Z",
-  "updated_at": "2026-08-25T11:42:54.0862854Z"
+  "updated_at": "2026-08-25T11:44:48.4048905Z"
 }
