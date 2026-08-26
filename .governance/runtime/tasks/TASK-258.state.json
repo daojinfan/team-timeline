@@ -5,7 +5,7 @@
   "work_package": "WP-012",
   "contract_sha256": "8ed8f22e936a57b94e9d6ca118254b4294b200bf16f4372b8c882d5c25f69377",
   "baseline": "BL-008",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -50,7 +50,7 @@
     "pass_streak": 0,
     "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "后续复选框尺寸修正继续修改同一 public/app.js 文件；该复审任务由当前迭代重新覆盖，保留原双轮证据。",
   "created_at": "2026-08-26T01:33:46.0122693Z",
-  "updated_at": "2026-08-26T01:39:46.9012075Z"
+  "updated_at": "2026-08-26T02:00:40.1888446Z"
 }

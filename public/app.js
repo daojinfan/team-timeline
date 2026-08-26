@@ -4322,6 +4322,7 @@ function v5RenderInlineMemberSchedule(task, form = document.querySelector("#v5In
   if (list) { list.style.display = "grid"; list.style.gap = "6px"; list.style.maxHeight = "260px"; list.style.overflow = "auto"; }
   node.querySelectorAll(".v5-inline-member-time-row").forEach((row) => { row.style.display = "grid"; row.style.gridTemplateColumns = "minmax(150px, 1fr) repeat(2, minmax(130px, 0.75fr))"; row.style.alignItems = "end"; row.style.gap = "8px"; row.style.padding = "7px 8px"; row.style.border = "1px solid var(--border)"; row.style.borderRadius = "7px"; });
   node.querySelectorAll(".v5-inline-member-sync-check").forEach((label) => { label.style.display = "flex"; label.style.alignItems = "center"; label.style.gap = "6px"; label.style.minWidth = "0"; label.style.paddingBottom = "4px"; });
+  node.querySelectorAll(".v5-inline-member-sync-check input, .v5-inline-member-sync-all input").forEach((input) => { input.style.width = "14px"; input.style.height = "14px"; input.style.minHeight = "14px"; input.style.minWidth = "14px"; input.style.margin = "0"; input.style.padding = "0"; input.style.border = "0"; input.style.background = "transparent"; input.style.accentColor = "var(--accent)"; input.style.flex = "0 0 14px"; });
   node.querySelectorAll(".v5-inline-member-time-row > label:not(.v5-inline-member-sync-check)").forEach((label) => { label.style.display = "grid"; label.style.gap = "3px"; label.style.color = "var(--muted)"; label.style.fontSize = "10px"; label.style.fontWeight = "700"; });
   v5UpdateInlineMemberSyncState(form);
 }

@@ -1,0 +1,20 @@
+{
+  "$schema": "schemas/validation-evidence.schema.json",
+  "schema_version": 1,
+  "task_id": "TASK-259",
+  "work_package": "WP-012",
+  "baseline": "BL-008",
+  "contract_sha256": "72c2e5eea6185e42d2c9dc3c63dde8dda091c956335dab51f16a11978f9954e7",
+  "git_commit": "65572b0699cb44e62e902deee4ef8aee22913cd6",
+  "validation_id": "npm-test",
+  "command": "npm",
+  "args": [
+    "test"
+  ],
+  "started_at": "2026-08-26T01:58:32.8020089Z",
+  "finished_at": "2026-08-26T01:58:34.9895854Z",
+  "exit_code": 0,
+  "redactions_applied": 0,
+  "output_path": "docs/05-quality/evidence/TASK-259/20260826T015832794Z-2bca8ad0-npm-test.output.txt",
+  "output_sha256": "63396806ef1fd5effb857a336932124d89145b089248c701a5acdf9839b11525"
+}

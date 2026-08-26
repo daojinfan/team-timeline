@@ -1,0 +1,55 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-259",
+  "work_package": "WP-012",
+  "title": "收窄 V5 成员排期复选框",
+  "goal": "修正任务全量编辑台测试人员同步区域的全选和成员同步复选框尺寸，覆盖全局 input 宽度规则并保持可点击性。",
+  "baseline": "BL-008",
+  "profile": "Standard",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/app.js"
+  ],
+  "read_paths": [
+    "public/app.js"
+  ],
+  "write_paths": [
+    "public/app.js"
+  ],
+  "out_of_scope": [
+    "修改产品逻辑、API、数据库或其他 UI 控件",
+    "远程发布"
+  ],
+  "authoritative_documents": [
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-008",
+    "DEL-WORK-001",
+    "DEC-004"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "全选与成员同步复选框均为 14x14px 左右的紧凑尺寸",
+    "复选框仍可点击且不影响日期输入布局",
+    "npm test、语法和差异检查通过"
+  ],
+  "validations": [
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-26T01:49:31.7849473Z"
+}

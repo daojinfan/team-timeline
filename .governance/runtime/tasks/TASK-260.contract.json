@@ -1,0 +1,55 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-260",
+  "work_package": "WP-012",
+  "title": "独立复审 V5 成员排期复选框尺寸",
+  "goal": "独立检查 TASK-259 的复选框局部样式是否覆盖全局宽度规则且不改变交互逻辑；只写审核证据。",
+  "baseline": "BL-008",
+  "profile": "Standard",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-260"
+  ],
+  "read_paths": [
+    "public/app.js"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-260"
+  ],
+  "out_of_scope": [
+    "修改产品代码、测试代码或治理契约",
+    "远程发布"
+  ],
+  "authoritative_documents": [
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-008",
+    "DEL-WORK-001",
+    "DEC-004"
+  ],
+  "dependencies": [
+    "TASK-259"
+  ],
+  "acceptance_criteria": [
+    "实际变更仅位于 TASK-259 允许路径",
+    "全选与成员同步复选框尺寸紧凑且交互保持",
+    "npm test 与语法检查证据完整"
+  ],
+  "validations": [
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-26T01:49:54.5097582Z"
+}

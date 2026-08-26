@@ -5,7 +5,7 @@
   "work_package": "WP-012",
   "contract_sha256": "92cff815cf5e5682f2bc7a6bb2dee1d8efa65d84e2ce06baa21da9c866573e82",
   "baseline": "BL-008",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "APR-165",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -27,15 +27,13 @@
   "review_history": [],
   "review": {
     "required": true,
-    "reviewer_task_id": "TASK-258",
-    "status": "passed",
-    "evidence": [
-      "docs/05-quality/evidence/TASK-258/review-round-2.json"
-    ],
-    "pass_streak": 2,
-    "subject_sha256": "9cdd69bd355193a78103bbf83000befd24401804b28f2b43bb8fe07f359ab20c"
+    "reviewer_task_id": "",
+    "status": "cancelled",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "后续成员排期复选框尺寸修正改变最终代码指纹；原成员同步交付由当前修正迭代承接，保留历史实现与双轮复审证据。",
   "created_at": "2026-08-26T00:52:52.0763326Z",
-  "updated_at": "2026-08-26T01:39:46.7902599Z"
+  "updated_at": "2026-08-26T02:00:40.9305286Z"
 }
