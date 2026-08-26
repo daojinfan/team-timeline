@@ -1,0 +1,34 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-258",
+  "reviewed_task_ids": ["TASK-254"],
+  "work_package": "WP-012",
+  "baseline": "BL-008",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-254",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "全量编辑台增加测试人员个人排期草稿、全选/单选同步和保存后提交 member_dates 的交互逻辑。"
+    }
+  ],
+  "change_summary": "复核 TASK-254 的实际 Git 变更，仅涉及 public/app.js；同步按钮只更新当前摘要草稿，保存提交时才通过既有 V5 任务接口写入成员日期。",
+  "scope_checked": [
+    "public/app.js",
+    "tests",
+    "src/v3/index.js"
+  ],
+  "findings": [
+    "成员选择支持全选、单选和取消选择，个人开始/结束日期成对校验。",
+    "同步操作仅写入前端草稿 Map，不调用 API；保存摘要修改时才把 member_dates 放入 PUT 请求。",
+    "成员增删、任务日期变更、取消编辑和保存失败均保留或重置草稿边界清晰。",
+    "既有 V5 member_dates 校验、预览冲突检查和版本并发控制链路保持复用。"
+  ],
+  "validation_evidence": [
+    "docs/05-quality/evidence/TASK-258/20260826T013441758Z-b235f86a-npm-test.evidence.json"
+  ],
+  "created_at": "2026-08-26T01:37:00+08:00"
+}

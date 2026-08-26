@@ -1,0 +1,35 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-258",
+  "reviewed_task_ids": ["TASK-254"],
+  "work_package": "WP-012",
+  "baseline": "BL-008",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-254",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "复查任务右侧成员编辑区域的排期表格、同步目标状态及保存 payload 组装。"
+    }
+  ],
+  "change_summary": "第二轮按同一最终提交内容复查 public/app.js：成员排期的选择状态和日期草稿在重新渲染时保持，只有摘要表单提交才进入既有预览/确认/PUT 链路。",
+  "scope_checked": [
+    "public/app.js",
+    "src/v3/index.js",
+    "tests/v5-api.test.js",
+    "tests/v5-ui.test.js"
+  ],
+  "findings": [
+    "全选复选框正确呈现全选、部分选中和无成员三种状态，单成员选择会同步更新按钮可用性。",
+    "任务日期缺失时同步按钮保持禁用；个人排期缺一端或起止倒置会在保存前阻止提交。",
+    "新增成员初始化为当前任务草稿日期，移除成员会清除对应同步和日期草稿，取消编辑不会留下持久化副作用。",
+    "第二轮未发现超出 TASK-254 allowed_paths 的产品变更或 API/数据库契约回归。"
+  ],
+  "validation_evidence": [
+    "docs/05-quality/evidence/TASK-258/20260826T013739800Z-d0da621d-npm-test.evidence.json"
+  ],
+  "created_at": "2026-08-26T01:39:00+08:00"
+}

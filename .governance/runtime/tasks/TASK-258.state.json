@@ -1,0 +1,56 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-258",
+  "work_package": "WP-012",
+  "contract_sha256": "8ed8f22e936a57b94e9d6ca118254b4294b200bf16f4372b8c882d5c25f69377",
+  "baseline": "BL-008",
+  "state": "verified",
+  "approval_id": "",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "0dfb2bd5a675fb6f82453b6e7ff3c2cec61322cd",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [],
+  "plan_checkpoint_git_commit": "0dfb2bd5a675fb6f82453b6e7ff3c2cec61322cd",
+  "plan_rebase_history": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-258/20260826T013739800Z-d0da621d-npm-test.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-258/20260826T013441758Z-b235f86a-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-258/review-round-1.json",
+    "docs/05-quality/evidence/TASK-258/20260826T013739800Z-d0da621d-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-258/review-round-2.json"
+  ],
+  "review_history": [
+    {
+      "path": "docs/05-quality/evidence/TASK-258/review-round-1.json",
+      "sha256": "f7aa0cc6f22c8b6a9c293ff0f88a6c1a20fd38ecfbaeca859cc300702d734798",
+      "result": "passed",
+      "round_id": "RR-a473e34a026c41e095402fb8e2939834",
+      "recorded_at": "2026-08-26T01:36:36.7895937Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-258/review-round-2.json",
+      "sha256": "775384c4ed7c27eec6363521d2cb7bfe14b086b50e2d84cf703de9eae2b84d3e",
+      "result": "passed",
+      "round_id": "RR-c92705c0db874487a33e6169c507bf33",
+      "recorded_at": "2026-08-26T01:39:46.5937051Z"
+    }
+  ],
+  "review": {
+    "required": false,
+    "reviewer_task_id": "",
+    "status": "not-applicable",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
+  },
+  "last_error": "",
+  "created_at": "2026-08-26T01:33:46.0122693Z",
+  "updated_at": "2026-08-26T01:39:46.9012075Z"
+}
