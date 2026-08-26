@@ -1,0 +1,31 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-264",
+  "reviewed_task_ids": ["TASK-263"],
+  "work_package": "WP-012",
+  "baseline": "BL-008",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {"task_id":"TASK-263","path":"public/index.html","change_type":"modified","summary":"在任务全量编辑弹窗参与成员区域增加全选测试人员和同步测试人员时间控件，并明确同步保存边界。"},
+    {"task_id":"TASK-263","path":"public/app.js","change_type":"modified","summary":"增加弹窗成员同步草稿状态、全选状态、任务日期校验和同步逻辑，同时保留右侧预览编辑区原有同步能力。"},
+    {"task_id":"TASK-263","path":"tests/v5-inline-editor.test.js","change_type":"modified","summary":"增加全量编辑弹窗同步控件、成员同步字段和保存后生效提示的静态契约断言。"}
+  ],
+  "change_summary": "以 TASK-263 启动提交 fdc784432cd98172880a84a8c6d1a6f6ae282cd2 为基点，完整核对三个实际修改文件。全量编辑弹窗和右侧任务预览编辑区均有独立的成员同步选择、全选和同步动作；同步只写当前表单草稿，任务保存时沿用既有 member_dates 提交，取消不会请求写接口。未发现任务时间 API、数据库结构或执行中心排期逻辑变化。",
+  "scope_checked": [
+    "TASK-263/TASK-264 Release 契约、WP-012/BL-008、依赖与路径范围",
+    "public/index.html 全量编辑弹窗参与成员区的控件、可访问标签和保存提示",
+    "public/app.js 弹窗成员同步状态、全选/部分选中、日期校验、草稿写入和移除成员清理",
+    "public/app.js 右侧任务预览编辑区原有同步逻辑未被替换或破坏",
+    "tests/v5-inline-editor.test.js 及全部现有 V5/V3/V2 回归测试"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "node --check public/app.js：通过",
+    "npm test：65/65 通过",
+    "git diff --check：通过",
+    "git diff --name-status --find-renames fdc784432cd98172880a84a8c6d1a6f6ae282cd2 HEAD -- public/index.html public/app.js tests：三个 modified 文件，均在 TASK-263 写入范围内"
+  ],
+  "created_at": "2026-08-26T05:05:00Z"
+}

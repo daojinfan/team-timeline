@@ -1,0 +1,31 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-264",
+  "reviewed_task_ids": ["TASK-263"],
+  "work_package": "WP-012",
+  "baseline": "BL-008",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {"task_id":"TASK-263","path":"public/index.html","change_type":"modified","summary":"第二轮重新核对最终弹窗：全量编辑参与成员区保留全选和同步测试人员时间按钮，并提示保存后生效。"},
+    {"task_id":"TASK-263","path":"public/app.js","change_type":"modified","summary":"第二轮重新核对最终逻辑：弹窗同步和右侧预览同步各自维护草稿状态，日期校验、部分选中和成员移除清理均完整。"},
+    {"task_id":"TASK-263","path":"tests/v5-inline-editor.test.js","change_type":"modified","summary":"第二轮重新核对最终静态测试契约，两个入口的同步控件和保存边界断言保持。"}
+  ],
+  "change_summary": "第一轮通过后重新对 TASK-263 的完整最终内容进行第二轮复核。实际变更仍为 public/index.html、public/app.js、tests/v5-inline-editor.test.js 三项 modified，内容指纹与第一轮一致；确认全量编辑弹窗与右侧任务预览编辑区均支持成员选择、全选和同步，且同步不会绕过各自保存流程。",
+  "scope_checked": [
+    "重新读取 TASK-263/TASK-264 契约、状态、第一轮证据、WP-012 路由和 BL-008 绑定",
+    "重新核对两个入口的成员选择集合、全选/部分选中状态和按钮禁用条件",
+    "重新核对任务计划日期变化、成员移除、取消编辑和保存摘要/保存任务的草稿边界",
+    "重新核对完整 Git 变更清单、前端语法、差异检查和全部回归测试",
+    "确认没有改变任务时间 API、数据库结构或执行中心排期逻辑"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "node --check public/app.js：通过",
+    "npm test：65/65 通过",
+    "git diff --check：通过",
+    "第二轮实际变更仍为三个范围内 modified 文件，与第一轮清单和 TASK-263 写入范围一致"
+  ],
+  "created_at": "2026-08-26T05:07:00Z"
+}
