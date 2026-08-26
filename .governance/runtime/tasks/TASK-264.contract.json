@@ -1,0 +1,70 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-264",
+  "work_package": "WP-012",
+  "title": "独立复审 V5 两处成员时间同步入口",
+  "goal": "独立检查全量编辑弹窗和右侧任务预览编辑区的成员时间同步交互、草稿保存边界和回归兼容性。",
+  "baseline": "BL-008",
+  "profile": "Release",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-264"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/app.js",
+    "src/v3/index.js",
+    "tests",
+    "docs/02-product/requirements-v5.md",
+    "docs/03-architecture/components/v5-detailed-design.md"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-264"
+  ],
+  "out_of_scope": [
+    "修改产品代码、测试代码、数据库或治理契约",
+    "远程发布"
+  ],
+  "authoritative_documents": [
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-008",
+    "DEL-WORK-001",
+    "DEC-004"
+  ],
+  "dependencies": [
+    "TASK-263"
+  ],
+  "acceptance_criteria": [
+    "实际变更清单与 TASK-263 写入范围一致",
+    "两个编辑入口均具备同步能力且状态一致",
+    "同步只在保存时生效，取消不写入",
+    "npm test、语法检查和差异检查通过",
+    "按 Release 要求完成两轮复审"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-26T04:52:20.1141138Z",
+  "release_controls": {
+    "target_environment": "本地 dev 分支桌面 Web 服务（Windows、Node.js、SQLite）",
+    "execution_window": "TASK-263 完成后执行两轮独立复审，不发布远程环境",
+    "rollback_plan": "审核只写 TASK-264 证据目录；发现问题记录 changes-required 并退回 TASK-263",
+    "observation_metrics": "实际 Git 变更、两处成员同步控件、草稿保存/取消和 npm test",
+    "stop_conditions": "发现入口缺失、状态不一致、取消写入、公共 API 变化或测试失败时停止",
+    "post_release_owner": "项目经理（本地开发工作区）"
+  }
+}

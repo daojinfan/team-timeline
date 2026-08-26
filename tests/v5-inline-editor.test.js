@@ -75,6 +75,11 @@ test("V5 sample editor exposes only the four current sample fields", () => {
   assert.doesNotMatch(app, /data-sample-field="arrival_date"/);
   assert.doesNotMatch(app, /data-sample-field="planning_label"/);
   assert.doesNotMatch(app, /v5TaskRenderMultiPicker\("samples"/);
+  assert.match(dialog, /id="v5TaskMemberSyncAll"[^>]*data-v5-dialog-member-sync-all/);
+  assert.match(dialog, /id="v5TaskSyncMemberDates"[^>]*data-v5-dialog-sync-member-dates/);
+  assert.match(app, /data-v5-dialog-member-sync/);
+  assert.match(app, /v5SyncDialogMemberDates/);
+  assert.match(app, /保存任务后生效/);
 });
 
 test("V5 task status filter supports an accessible inverse mode", () => {

@@ -1,0 +1,75 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-263",
+  "work_package": "WP-012",
+  "title": "补齐 V5 两处任务编辑器的成员时间同步",
+  "goal": "在任务全量编辑弹窗和右侧任务预览编辑区同时提供成员时间全选与同步，统一草稿保存语义，不改变任务时间 API。",
+  "baseline": "BL-008",
+  "profile": "Release",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/index.html",
+    "public/app.js",
+    "tests"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/app.js",
+    "src/v3/index.js",
+    "tests",
+    "docs/02-product/requirements-v5.md",
+    "docs/03-architecture/components/v5-detailed-design.md"
+  ],
+  "write_paths": [
+    "public/index.html",
+    "public/app.js",
+    "tests"
+  ],
+  "out_of_scope": [
+    "修改任务时间 API、数据库结构或执行中心排期逻辑",
+    "远程发布"
+  ],
+  "authoritative_documents": [
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-008",
+    "DEL-WORK-001",
+    "DEC-004"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "全量编辑弹窗参与成员区提供全选和同步测试人员时间",
+    "右侧任务预览编辑区保留全选和同步能力",
+    "两处同步只更新当前编辑草稿，保存后才提交，取消不写入",
+    "两处按钮和成员勾选状态随编辑状态同步刷新",
+    "npm test、语法检查和差异检查通过"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface",
+    "success_criteria"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-26T04:52:06.1321628Z",
+  "release_controls": {
+    "target_environment": "本地 dev 分支桌面 Web 服务（Windows、Node.js、SQLite）",
+    "execution_window": "在现有 V5 工作区完成实现与独立复审，不发布远程环境",
+    "rollback_plan": "通过 Git 回退本次前端提交；不修改数据库和任务时间 API",
+    "observation_metrics": "两个编辑入口的成员勾选、同步按钮、草稿保存、取消行为及 npm test",
+    "stop_conditions": "发现两处状态不一致、取消写入、公共 API 变化或测试失败时停止",
+    "post_release_owner": "项目经理（本地开发工作区）"
+  }
+}
