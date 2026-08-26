@@ -66,6 +66,10 @@ test("V5 sample editor exposes only the four current sample fields", () => {
   assert.match(app, /class="v5-repeatable-header" style="grid-column:1\/-1"/);
   assert.match(app, /data-v5-task-remove-sample="\$\{sample\.id\}"[^>]*aria-label="从任务中移除样品/);
   assert.match(app, />移除样品<\/button>/);
+  assert.match(app, /dialogSampleDraftSequence/);
+  assert.match(app, /payload\.sample_creates/);
+  assert.match(app, /保存任务后生效/);
+  assert.doesNotMatch(app, /const sample = await v5Api\("\/api\/v5\/samples"/);
   assert.match(app, /class="v5-eta-pending-checkbox" data-sample-field="eta_pending"[^>]*style="width:14px;height:14px;min-height:14px/);
   assert.match(dialog, /id="v5SampleEtaPending" class="v5-eta-pending-checkbox" type="checkbox" style="width:14px;height:14px;min-height:14px/);
   assert.doesNotMatch(app, /data-sample-field="arrival_date"/);

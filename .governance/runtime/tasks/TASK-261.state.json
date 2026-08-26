@@ -1,0 +1,39 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-261",
+  "work_package": "WP-012",
+  "contract_sha256": "1e62e4927d12206d83d48e81a069235425c46729fe0977429da444ec21f0dbd0",
+  "baseline": "BL-008",
+  "state": "verified",
+  "approval_id": "APR-167",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "06e3f73257252df7e9440abab1ca725986db4f1d",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [],
+  "plan_checkpoint_git_commit": "06e3f73257252df7e9440abab1ca725986db4f1d",
+  "plan_rebase_history": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-261/20260826T043558314Z-598d02e0-npm-test.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-261/20260826T033324062Z-441e3a3d-npm-test.evidence.json",
+    "docs/05-quality/evidence/TASK-261/20260826T043558314Z-598d02e0-npm-test.evidence.json"
+  ],
+  "review_history": [],
+  "review": {
+    "required": true,
+    "reviewer_task_id": "TASK-262",
+    "status": "pending",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
+  },
+  "last_error": "",
+  "created_at": "2026-08-26T02:45:08.6266967Z",
+  "updated_at": "2026-08-26T04:36:01.2449570Z"
+}

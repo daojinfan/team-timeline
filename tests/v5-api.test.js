@@ -97,6 +97,25 @@ test("V5 sample compatibility defaults the hidden planning label and uses the sa
   } finally { await app.close(); }
 });
 
+test("V5 task-local sample records are created only when the task is saved and unlinking preserves the record", async () => {
+  const app = await fixture();
+  try {
+    const topic = (await app.request("/api/v5/topics", { method: "POST", body: { name: "任务样品记录专题" }, expected: [201] })).data;
+    const before = app.database.prepare("SELECT COUNT(*) AS count FROM v5_samples").get().count;
+    const input = { topic_id: topic.id, title: "任务内新增样品", sample_ids: [], sample_creates: [{ model: "TASK-LOCAL-MODEL", sample_no: null, eta_date: "2099-03-01", eta_pending: false, notes: "仅属于当前任务的记录" }] };
+    const preview = (await app.request("/api/v5/tasks/preview", { method: "POST", body: input })).data;
+    assert.equal(app.database.prepare("SELECT COUNT(*) AS count FROM v5_samples").get().count, before);
+    const task = (await app.request("/api/v5/tasks", { method: "POST", body: { ...preview.normalized_input, preview_token: preview.preview_token }, expected: [201] })).data;
+    assert.equal(app.database.prepare("SELECT COUNT(*) AS count FROM v5_samples").get().count, before + 1);
+    assert.equal(task.samples.length, 1);
+    assert.equal(task.samples[0].model, "TASK-LOCAL-MODEL");
+    const editPreview = (await app.request(`/api/v5/tasks/${task.id}/preview`, { method: "POST", body: { title: task.title, topic_id: topic.id, sample_ids: [], sample_creates: [], expected_version: task.version } })).data;
+    const unlinked = (await app.request(`/api/v5/tasks/${task.id}`, { method: "PUT", body: { ...editPreview.normalized_input, preview_token: editPreview.preview_token, expected_version: task.version }, expected: [200] })).data;
+    assert.equal(unlinked.samples.length, 0);
+    assert.equal(app.database.prepare("SELECT COUNT(*) AS count FROM v5_samples").get().count, before + 1);
+  } finally { await app.close(); }
+});
+
 test("V5 supports topic regrouping, member schedule synchronization, and execution load projections", async () => {
   const app = await fixture();
   try {

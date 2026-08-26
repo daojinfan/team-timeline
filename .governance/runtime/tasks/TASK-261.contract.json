@@ -1,0 +1,77 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-261",
+  "work_package": "WP-012",
+  "title": "实现 V5 任务内样品记录草稿化",
+  "goal": "将任务全量编辑弹窗中的样品改为当前任务内的可重复字段记录；新增、修改、移除均先保存在弹窗草稿，保存任务时通过 V5 任务接口一次提交，不提供样品库、已有样品选择或跨任务复用交互。",
+  "baseline": "BL-008",
+  "profile": "Release",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/app.js",
+    "src/v3/index.js",
+    "tests"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/app.js",
+    "src/v3/index.js",
+    "tests",
+    "docs/02-product/requirements-v5.md",
+    "docs/03-architecture/components/v5-detailed-design.md"
+  ],
+  "write_paths": [
+    "public/app.js",
+    "src/v3/index.js",
+    "tests"
+  ],
+  "out_of_scope": [
+    "新增样品库导航或已有样品选择器",
+    "删除历史样品表或 V3 兼容接口",
+    "修改任务、专题、资源字段",
+    "远程发布"
+  ],
+  "authoritative_documents": [
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-008",
+    "DEL-WORK-001",
+    "DEC-004"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "弹窗新增样品只创建本地草稿，取消不产生数据库记录",
+    "保存任务时新增样品、已有样品修改、样品移除与任务其他字段一次提交",
+    "每条样品记录只显示型号、编号、预计交付时间、ETA待确认和备注",
+    "弹窗不出现样品库、选择已有样品或跨任务同步概念",
+    "现有 V5/V3 数据和 API 回归测试通过"
+  ],
+  "validations": [
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface",
+    "data_model_or_migration"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-26T02:45:08.6266967Z",
+  "release_controls": {
+    "target_environment": "本地 dev 分支桌面 Web 服务（Windows、Node.js、SQLite）",
+    "execution_window": "用户提供本次执行批准后，在当前本地开发工作区实施和验证；不发布远程环境",
+    "rollback_plan": "回退本次前端、V5 API 和测试提交；不删除或迁移现有 SQLite 表及历史数据",
+    "observation_metrics": "样品新增时无即时 API 写入、任务预览与保存请求、取消后数据库计数、npm test、语法与差异检查",
+    "stop_conditions": "出现历史样品数据丢失、V3 API 破坏、范围外 schema 迁移、任务保存非原子或测试失败时停止",
+    "post_release_owner": "项目经理（本地开发工作区）"
+  }
+}

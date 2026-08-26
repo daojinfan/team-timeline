@@ -1,0 +1,24 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-260",
+  "reviewed_task_ids": ["TASK-259"],
+  "work_package": "WP-012",
+  "baseline": "BL-008",
+  "result": "cancelled",
+  "diff_checked": true,
+  "changes": [],
+  "change_summary": "TASK-259 已由治理动作标记为 superseded。其前一轮审核绑定的 public/app.js 变更指纹因后续同文件交付而不再代表独立可验收的最终对象，本记录仅取消旧审核资格，保留已有产品代码与历史审核证据不变；新的最终内容由 TASK-261/TASK-262 重新审核。",
+  "scope_checked": [
+    "TASK-259 state= superseded、TASK-259/TASK-260 契约及 WP-012/BL-008 绑定",
+    "TASK-259 原有两轮 passed 审核证据保持不可变且不再作为当前最终指纹依据",
+    "TASK-261 当前 V5 任务负责同一 public/app.js 文件的最终变更并绑定独立 Reviewer TASK-262",
+    "本次 changes=[] 仅表示取消 superseded 任务的旧审核资格，不声称新增产品变更"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "治理运行状态显示 TASK-259.state=superseded，且 last_error 记录后续同文件交付覆盖旧最终指纹",
+    "TASK-261/TASK-262 已在 WP-012/BL-008 下独立规划，新的审核将覆盖当前实现范围"
+  ],
+  "created_at": "2026-08-26T03:57:00Z"
+}

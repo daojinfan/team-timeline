@@ -5,7 +5,7 @@
   "work_package": "WP-012",
   "contract_sha256": "72c2e5eea6185e42d2c9dc3c63dde8dda091c956335dab51f16a11978f9954e7",
   "baseline": "BL-008",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "APR-166",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -28,14 +28,14 @@
   "review": {
     "required": true,
     "reviewer_task_id": "TASK-260",
-    "status": "passed",
+    "status": "cancelled",
     "evidence": [
-      "docs/05-quality/evidence/TASK-260/review-round-2.json"
+      "docs/05-quality/evidence/TASK-260/review-cancelled-20260826T035700Z.json"
     ],
-    "pass_streak": 2,
-    "subject_sha256": "799ff7a2dbca8d7263fa0b6d69eac887d70ed172bb461f1a0f00e3c0a814bedd"
+    "pass_streak": 0,
+    "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "后续任务在同一前端文件形成新的最终变更指纹，旧任务交付由当前 V5 任务重新复审覆盖",
   "created_at": "2026-08-26T01:49:31.7849473Z",
-  "updated_at": "2026-08-26T02:05:04.0741252Z"
+  "updated_at": "2026-08-26T03:56:28.4708366Z"
 }

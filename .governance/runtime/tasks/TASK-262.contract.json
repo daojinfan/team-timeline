@@ -1,0 +1,70 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-262",
+  "work_package": "WP-012",
+  "title": "独立复审 V5 任务内样品记录草稿化",
+  "goal": "独立检查 TASK-261 的实际差异、弹窗样品草稿边界、任务保存原子性、历史兼容和无样品库交互；只写审核证据。",
+  "baseline": "BL-008",
+  "profile": "Release",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-262"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/app.js",
+    "src/v3/index.js",
+    "tests",
+    "docs/02-product/requirements-v5.md",
+    "docs/03-architecture/components/v5-detailed-design.md"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-262"
+  ],
+  "out_of_scope": [
+    "修改产品代码、测试代码、数据库或治理契约",
+    "远程发布"
+  ],
+  "authoritative_documents": [
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-008",
+    "DEL-WORK-001",
+    "DEC-004"
+  ],
+  "dependencies": [
+    "TASK-261"
+  ],
+  "acceptance_criteria": [
+    "实际变更清单与 TASK-261 写入范围一致",
+    "新增样品在保存任务前不调用写接口，取消不残留记录",
+    "任务保存同时处理新增、修改和移除样品记录",
+    "无样品库、已有样品选择或跨任务同步交互",
+    "回归测试和双轮复审基于同一最终内容"
+  ],
+  "validations": [
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-26T02:45:23.2652212Z",
+  "release_controls": {
+    "target_environment": "本地 dev 分支桌面 Web 服务（Windows、Node.js、SQLite）",
+    "execution_window": "TASK-261 完成并提交后，在干净本地工作区执行两轮独立复审；不发布远程环境",
+    "rollback_plan": "审核只写 TASK-262 证据目录；发现问题记录 changes-required 并退回实现任务",
+    "observation_metrics": "实际 Git 变更、样品草稿交互、任务 API 事务、取消路径、npm test、语法和差异检查",
+    "stop_conditions": "发现即时样品写入、非原子任务保存、V3 兼容破坏、范围外 schema 变化或测试失败时停止",
+    "post_release_owner": "项目经理（本地开发工作区）"
+  }
+}
