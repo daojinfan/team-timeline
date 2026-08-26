@@ -1,0 +1,33 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-262",
+  "reviewed_task_ids": ["TASK-261"],
+  "work_package": "WP-012",
+  "baseline": "BL-008",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {"task_id":"TASK-261","path":"public/app.js","change_type":"modified","summary":"任务全量编辑弹窗将样品新增改为负 ID 草稿，保存任务时拆分既有样品更新与 sample_creates，移除仅解除当前任务关联。"},
+    {"task_id":"TASK-261","path":"src/v3/index.js","change_type":"modified","summary":"V5 任务规范化、创建和更新事务支持 sample_creates，并在任务保存事务中原子创建样品记录及任务关联。"},
+    {"task_id":"TASK-261","path":"tests/v5-api.test.js","change_type":"modified","summary":"增加预览不写库、保存创建以及解除关联不删除样品记录的 API 回归测试。"},
+    {"task_id":"TASK-261","path":"tests/v5-inline-editor.test.js","change_type":"modified","summary":"增加任务内样品草稿、保存后生效及不调用即时样品写接口的前端静态契约断言。"}
+  ],
+  "change_summary": "以 TASK-261 启动提交 06e3f73257252df7e9440abab1ca725986db4f1d 为基点，完整核对其写入范围内的四个实际修改文件；未发现新增、删除、重命名或范围外产品文件。样品记录现在只在任务保存事务中创建，预览和点击新增样品均不写服务端；现有样品更新保留版本校验，取消/移除只重建任务关联，不删除记录。",
+  "scope_checked": [
+    "TASK-261/TASK-262 Release 契约、WP-012/BL-008、依赖关系和独立审核边界",
+    "public/app.js 任务弹窗样品草稿状态、渲染、移除、保存 payload 及即时写接口移除",
+    "src/v3/index.js sample_creates 校验、预览 token、POST/PUT 事务、事件记录和既有 sample_updates 兼容",
+    "tests/v5-api.test.js 与 tests/v5-inline-editor.test.js 的新增覆盖及现有 V5/V3/V2 回归测试",
+    "无样品库、既有样品选择、跨任务同步或 schema 迁移等越界交互"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "node --check public/app.js：通过",
+    "node --check src/v3/index.js：通过",
+    "npm test：65/65 通过",
+    "git diff --check：通过",
+    "git diff --name-status --find-renames 06e3f73257252df7e9440abab1ca725986db4f1d HEAD -- public/app.js src/v3/index.js tests：四项 modified，均在 TASK-261 写入范围内"
+  ],
+  "created_at": "2026-08-26T04:45:00Z"
+}

@@ -1,0 +1,33 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-262",
+  "reviewed_task_ids": ["TASK-261"],
+  "work_package": "WP-012",
+  "baseline": "BL-008",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {"task_id":"TASK-261","path":"public/app.js","change_type":"modified","summary":"第二轮重新核对最终前端内容：任务样品使用任务会话内负 ID 草稿，保存前不请求样品写接口，保存后才提交 sample_creates。"},
+    {"task_id":"TASK-261","path":"src/v3/index.js","change_type":"modified","summary":"第二轮重新核对最终服务端内容：sample_creates 经过字段校验并参与 POST/PUT 任务事务，关系重建与样品事件在同一事务边界内。"},
+    {"task_id":"TASK-261","path":"tests/v5-api.test.js","change_type":"modified","summary":"第二轮重新核对 API 回归：预览无持久化、保存新增、移除解除关联但保留样品记录三条不变量均有断言。"},
+    {"task_id":"TASK-261","path":"tests/v5-inline-editor.test.js","change_type":"modified","summary":"第二轮重新核对前端静态回归：四个样品字段、草稿序号、保存后生效提示及无即时样品 POST 约束均保持。"}
+  ],
+  "change_summary": "在第一轮通过后重新从 TASK-261 启动提交和当前最终提交核对完整差异、代码路径、事务顺序和测试契约。第二轮确认内容指纹与第一轮相同，没有轮次间修改；四个实际产品/测试文件均在 TASK-261 写入范围内，未发现样品库概念回流、即时写入、跨任务复用、删除样品记录或 V3 兼容回归。",
+  "scope_checked": [
+    "重新读取 TASK-261/TASK-262 契约、运行状态、第一轮证据、WP-012 路由和 BL-008 绑定",
+    "重新检查任务新建与编辑两条保存路径、预览 token/版本校验、取消和移除行为",
+    "重新检查 v5_samples 与 v5_task_samples 的创建、关联重建、更新和保留语义",
+    "重新核对完整 Git name-status、diff-check、客户端/服务端语法和所有回归测试",
+    "重新确认没有修改公共 schema、数据库迁移、样品选择器或跨任务同步设计"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "node --check public/app.js：通过",
+    "node --check src/v3/index.js：通过",
+    "npm test：65/65 通过",
+    "git diff --check：通过",
+    "第二轮实际变更仍为 public/app.js、src/v3/index.js、tests/v5-api.test.js、tests/v5-inline-editor.test.js 四项 modified，和第一轮清单及 TASK-261 写范围完全一致"
+  ],
+  "created_at": "2026-08-26T04:46:00Z"
+}
