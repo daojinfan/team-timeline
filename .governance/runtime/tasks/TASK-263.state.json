@@ -5,7 +5,7 @@
   "work_package": "WP-012",
   "contract_sha256": "ec8c3a2392ec14d217cf4c3fbd484f7287855e466adfc9a5391159e2a4370d80",
   "baseline": "BL-008",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "APR-169",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -28,14 +28,14 @@
   "review": {
     "required": true,
     "reviewer_task_id": "TASK-264",
-    "status": "passed",
+    "status": "cancelled",
     "evidence": [
-      "docs/05-quality/evidence/TASK-264/review-round-2.json"
+      "docs/05-quality/evidence/TASK-264/review-cancelled-task-263-20260826T084500Z.json"
     ],
-    "pass_streak": 2,
-    "subject_sha256": "6b34e030ee090281cc606ea152137425cef9a8509410e338d97be91ca64ceea4"
+    "pass_streak": 0,
+    "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "后续布局修正继续修改 public/app.js，旧任务的最终变更指纹不再代表当前交付；保留历史证据并由 TASK-265 重新承接最终内容。",
   "created_at": "2026-08-26T04:52:06.1321628Z",
-  "updated_at": "2026-08-26T05:09:52.1569269Z"
+  "updated_at": "2026-08-26T08:44:14.3984655Z"
 }

@@ -82,6 +82,21 @@ test("V5 sample editor exposes only the four current sample fields", () => {
   assert.match(app, /保存任务后生效/);
 });
 
+test("V5 full task editor renders each selected member on its own row", () => {
+  const index = readFileSync(path.join(root, "public/index.html"), "utf8");
+  const rendererStart = app.indexOf("function v5RenderMembersInForm");
+  const rendererEnd = app.indexOf("function v5SyncDialogMemberDates");
+  assert.ok(rendererStart >= 0 && rendererEnd > rendererStart);
+  const renderer = app.slice(rendererStart, rendererEnd);
+  assert.match(renderer, /grid-column:1\/\-1;display:grid;grid-template-columns:max-content minmax\(0,1fr\) minmax\(132px,1fr\) minmax\(132px,1fr\)/);
+  assert.match(renderer, /data-v5-dialog-member-sync/);
+  assert.match(renderer, /class="v5-member-start"[^>]*style="width:100%;min-width:0"/);
+  assert.match(renderer, /class="v5-member-end"[^>]*style="width:100%;min-width:0"/);
+  assert.doesNotMatch(renderer, /data-v5-task-remove-member/);
+  assert.match(index, /data-v5-task-selected="members"/);
+  assert.match(app, /if \(key === "members"\) \{ v5State\.dialogMemberIds\.delete\(id\)/);
+});
+
 test("V5 task status filter supports an accessible inverse mode", () => {
   const index = readFileSync(path.join(root, "public/index.html"), "utf8");
   assert.match(index, /id="v5TaskStatusFilter"/);
