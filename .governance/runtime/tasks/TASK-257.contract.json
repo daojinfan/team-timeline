@@ -1,0 +1,59 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-257",
+  "work_package": "WP-012",
+  "title": "独立复审 V5 测试人员时间批量同步",
+  "goal": "独立检查 TASK-254 的实际代码差异、成员选择与批量同步草稿逻辑、保存边界及回归风险；只写审核证据。",
+  "baseline": "BL-008",
+  "profile": "Standard",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-257"
+  ],
+  "read_paths": [
+    "public/app.js",
+    "tests",
+    "docs/03-architecture/components/v5-detailed-design.md"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-257"
+  ],
+  "out_of_scope": [
+    "修改产品代码或测试代码",
+    "修改数据库/API或治理契约",
+    "远程发布"
+  ],
+  "authoritative_documents": [
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-008",
+    "DEL-WORK-001",
+    "DEC-004"
+  ],
+  "dependencies": [
+    "TASK-254"
+  ],
+  "acceptance_criteria": [
+    "实际变更清单与 TASK-254 契约一致",
+    "同步按钮只修改草稿，保存摘要后才提交 member_dates",
+    "全选、单选和空成员路径可复核",
+    "npm test 通过且无范围外修改"
+  ],
+  "validations": [
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-26T01:31:58.6287085Z"
+}

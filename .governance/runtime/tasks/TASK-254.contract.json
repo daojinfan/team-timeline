@@ -1,0 +1,60 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-254",
+  "work_package": "WP-012",
+  "title": "实现 V5 全量编辑台测试人员时间批量同步",
+  "goal": "在任务全量编辑台的测试人员区域增加独立同步选择、全选和同步测试人员时间操作；同步只更新编辑草稿，保存摘要修改时一次性提交任务与成员排期。",
+  "baseline": "BL-008",
+  "profile": "Release",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/app.js"
+  ],
+  "read_paths": [
+    "public/app.js"
+  ],
+  "write_paths": [
+    "public/app.js"
+  ],
+  "out_of_scope": [
+    "不修改数据库 schema，不新增即时写库同步接口，不改变执行中心拖拽排期语义"
+  ],
+  "authoritative_documents": [
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-008",
+    "DEL-WORK-001",
+    "DEC-004"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "已选测试人员可独立勾选并支持全选；同步按钮只更新当前任务草稿，保存摘要修改时提交 participant_member_ids 与 member_dates，成功后刷新任务树、预览和执行中心投影。"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-26T00:52:52.0763326Z",
+  "release_controls": {
+    "target_environment": "本地桌面 Web 开发环境",
+    "execution_window": "当前开发窗口；不发布生产",
+    "rollback_plan": "保留实现前 Git 提交，若验证失败仅回退本任务 public/app.js 变更，不触碰数据库",
+    "observation_metrics": "npm test、node --check public/app.js、git diff --check，以及手动验证同步草稿/取消/保存刷新路径",
+    "stop_conditions": "出现需要修改 schema、V5 API 契约或执行中心既有同步语义的需求时立即停止并回报",
+    "post_release_owner": "项目经理"
+  }
+}

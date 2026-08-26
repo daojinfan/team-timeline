@@ -5,7 +5,7 @@
   "work_package": "WP-012",
   "contract_sha256": "5d5f0304f626f3f01bb99ea952a11e65da7bc36b4751fc554eb5140a6c9de98a",
   "baseline": "BL-008",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "APR-164",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -45,7 +45,7 @@
       "sha256": "d23590483cf3efe68ca2b355e911185a952d8de7e1d8111f469ae675204262ff",
       "result": "passed",
       "round_id": "RR-2de416a213e846728fe03892dfdb5ce2",
-      "recorded_at": "2026-08-26T00:22:19.4096390Z"
+      "recorded_at": "2026-08-26T00:22:19.409639Z"
     }
   ],
   "review": {
@@ -56,7 +56,7 @@
     "pass_streak": 0,
     "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "TASK-252 后续编辑台迭代已改变最终代码指纹；保留历史双轮复审证据，由当前任务重新复核最终产品状态。",
   "created_at": "2026-08-25T23:42:28.7847739Z",
-  "updated_at": "2026-08-26T00:22:19.7310895Z"
+  "updated_at": "2026-08-26T01:24:54.2334471Z"
 }

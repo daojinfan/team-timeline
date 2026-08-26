@@ -3963,6 +3963,8 @@ const v5State = {
   dialogMemberIds: new Set(),
   dialogMemberDates: new Map(),
   inlineMemberIds: new Set(),
+  inlineMemberDates: new Map(),
+  inlineMemberSyncIds: new Set(),
   customComboboxOptions: {},
   resourceSearch: {},
   filterExpressions: {
@@ -4257,6 +4259,85 @@ function v5InlineMemberSummaryMarkup(task, selectedIds = null) {
   return `<strong>已选 ${selected.size} 名</strong><span>${preview ? `${preview}${suffix}` : "尚未分配成员"}</span>`;
 }
 
+function v5InlineMemberDatesFor(task, memberId) {
+  const id = Number(memberId);
+  const draft = v5State.inlineMemberDates.get(id);
+  const current = (task?.participants || []).find((member) => Number(member.id) === id);
+  return {
+    start_date: draft?.start_date ?? current?.start_date ?? task?.start_date ?? "",
+    end_date: draft?.end_date ?? current?.end_date ?? task?.end_date ?? ""
+  };
+}
+
+function v5ReadInlineMemberDates(form = document.querySelector("#v5InlineTaskForm")) {
+  if (!form) return;
+  for (const memberId of v5State.inlineMemberIds) {
+    const row = form.querySelector(`[data-v5-inline-member-row="${Number(memberId)}"]`);
+    if (!row) continue;
+    v5State.inlineMemberDates.set(Number(memberId), {
+      start_date: row.querySelector("[data-v5-inline-member-start]")?.value || "",
+      end_date: row.querySelector("[data-v5-inline-member-end]")?.value || ""
+    });
+  }
+}
+
+function v5InlineMemberScheduleMarkup(task) {
+  const selectedIds = [...v5State.inlineMemberIds].map(Number);
+  const members = new Map(v5State.resources.members.map((member) => [Number(member.id), member]));
+  const allSelected = selectedIds.length > 0 && selectedIds.every((memberId) => v5State.inlineMemberSyncIds.has(memberId));
+  const rows = selectedIds.map((memberId) => {
+    const member = members.get(memberId) || (task.participants || []).find((item) => Number(item.id) === memberId) || { id: memberId, name: `成员 ${memberId}` };
+    const dates = v5InlineMemberDatesFor(task, memberId);
+    const inactive = member.status && member.status !== "active";
+    return `<div class="v5-inline-member-time-row${inactive ? " is-inactive" : ""}" data-v5-inline-member-row="${memberId}"><label class="v5-inline-member-sync-check"><input type="checkbox" data-v5-inline-member-sync value="${memberId}"${v5State.inlineMemberSyncIds.has(memberId) ? " checked" : ""} aria-label="选择${escapeHtml(member.name)}同步时间"><span>${escapeHtml(member.name)}${member.role ? ` <small>${escapeHtml(member.role)}</small>` : ""}${inactive ? " <em>停用</em>" : ""}</span></label><label><span>个人开始</span><input type="date" data-v5-inline-member-start value="${escapeHtml(dates.start_date || "")}" aria-label="${escapeHtml(member.name)}个人开始日期"></label><label><span>个人结束</span><input type="date" data-v5-inline-member-end value="${escapeHtml(dates.end_date || "")}" aria-label="${escapeHtml(member.name)}个人结束日期"></label></div>`;
+  }).join("");
+  return `<div class="v5-inline-member-sync-toolbar"><label class="v5-inline-member-sync-all"><input type="checkbox" data-v5-inline-member-sync-all${allSelected ? " checked" : ""}${selectedIds.length ? "" : " disabled"}> 全选</label><button class="small-button" type="button" data-v5-inline-sync-member-dates${allSelected || v5State.inlineMemberSyncIds.size ? "" : " disabled"}>同步测试人员时间</button></div><div class="v5-inline-member-schedule-list" data-v5-inline-member-schedule-list>${rows || `<span class="v5-muted">尚未分配测试人员</span>`}</div>`;
+}
+
+function v5UpdateInlineMemberSyncState(form = document.querySelector("#v5InlineTaskForm")) {
+  if (!form) return;
+  const ids = [...form.querySelectorAll("[data-v5-inline-member-sync]")].map((input) => Number(input.value));
+  const checked = ids.filter((memberId) => form.querySelector(`[data-v5-inline-member-sync][value="${memberId}"]`)?.checked);
+  v5State.inlineMemberSyncIds = new Set(checked);
+  const all = form.querySelector("[data-v5-inline-member-sync-all]");
+  if (all) {
+    all.checked = ids.length > 0 && checked.length === ids.length;
+    all.indeterminate = checked.length > 0 && checked.length < ids.length;
+    all.disabled = ids.length === 0;
+  }
+  const button = form.querySelector("[data-v5-inline-sync-member-dates]");
+  if (button) button.disabled = !checked.length || !form.elements.start_date?.value || !form.elements.end_date?.value;
+}
+
+function v5RenderInlineMemberSchedule(task, form = document.querySelector("#v5InlineTaskForm")) {
+  const node = form?.querySelector("[data-v5-inline-member-schedule]");
+  if (!node || !task) return;
+  v5ReadInlineMemberDates(form);
+  node.innerHTML = v5InlineMemberScheduleMarkup(task);
+  node.style.display = "grid";
+  node.style.gap = "8px";
+  const toolbar = node.querySelector(".v5-inline-member-sync-toolbar");
+  if (toolbar) { toolbar.style.display = "flex"; toolbar.style.alignItems = "center"; toolbar.style.justifyContent = "space-between"; toolbar.style.gap = "8px"; }
+  const list = node.querySelector(".v5-inline-member-schedule-list");
+  if (list) { list.style.display = "grid"; list.style.gap = "6px"; list.style.maxHeight = "260px"; list.style.overflow = "auto"; }
+  node.querySelectorAll(".v5-inline-member-time-row").forEach((row) => { row.style.display = "grid"; row.style.gridTemplateColumns = "minmax(150px, 1fr) repeat(2, minmax(130px, 0.75fr))"; row.style.alignItems = "end"; row.style.gap = "8px"; row.style.padding = "7px 8px"; row.style.border = "1px solid var(--border)"; row.style.borderRadius = "7px"; });
+  node.querySelectorAll(".v5-inline-member-sync-check").forEach((label) => { label.style.display = "flex"; label.style.alignItems = "center"; label.style.gap = "6px"; label.style.minWidth = "0"; label.style.paddingBottom = "4px"; });
+  node.querySelectorAll(".v5-inline-member-time-row > label:not(.v5-inline-member-sync-check)").forEach((label) => { label.style.display = "grid"; label.style.gap = "3px"; label.style.color = "var(--muted)"; label.style.fontSize = "10px"; label.style.fontWeight = "700"; });
+  v5UpdateInlineMemberSyncState(form);
+}
+
+function v5SyncInlineMemberDates(form = document.querySelector("#v5InlineTaskForm")) {
+  if (!form) return;
+  const start = form.elements.start_date?.value || "";
+  const end = form.elements.end_date?.value || "";
+  const selected = [...form.querySelectorAll("[data-v5-inline-member-sync]:checked")].map((input) => Number(input.value));
+  if (!start || !end) throw new Error("请先填写完整的任务计划开始和结束日期");
+  if (!selected.length) throw new Error("请先选择需要同步的测试人员");
+  selected.forEach((memberId) => v5State.inlineMemberDates.set(memberId, { start_date: start, end_date: end }));
+  v5RenderInlineMemberSchedule(v5State.tasks.find((task) => Number(task.id) === Number(form.dataset.v5InlineTask)), form);
+  showToast(`已将任务排期填入 ${selected.length} 名测试人员草稿，保存后生效`);
+}
+
 function v5InlineMembersMarkup(task, query = "", selectedIds = null) {
   const selected = selectedIds || new Set((task.participants || []).map((member) => Number(member.id)));
   const normalizedQuery = query.trim().toLocaleLowerCase("zh-CN");
@@ -4297,6 +4378,8 @@ function v5RenderSelectedTask() {
   const missing = [task.source_group_id, task.purpose, task.samples?.length, task.start_date && task.end_date, task.cryostat_id, task.participant_member_ids?.length].filter((value) => !value).length;
   const options = v5InlineTaskOptions(task);
   v5State.inlineMemberIds = new Set((task.participants || []).map((member) => Number(member.id)));
+  v5State.inlineMemberDates = new Map((task.participants || []).map((member) => [Number(member.id), { start_date: member.start_date || task.start_date || "", end_date: member.end_date || task.end_date || "" }]));
+  v5State.inlineMemberSyncIds = new Set();
   const color = /^#[0-9a-f]{3,8}$/i.test(task.color || "") ? task.color : "#2563eb";
   pane.innerHTML = `<div class="v5-editor-pane-header"><div><span class="v5-eyebrow">${escapeHtml(task.task_number || `TASK-${task.id}`)}</span><h3>${escapeHtml(task.title)}</h3><small class="v5-muted">${escapeHtml(v5TopicName(task.topic_id))} · ${missing ? `${missing} 项待补充` : "信息完整"}</small></div><div class="v5-topic-actions"><button class="small-button" type="button" data-v5-edit-task="${task.id}">全量编辑</button></div></div><form id="v5InlineTaskForm" class="v5-inline-task-form" data-v5-inline-task="${task.id}"><div class="v5-editor-pane-body"><div class="v5-editor-section"><h4>当前状态</h4><div>${v5StatusChip(task)}</div></div><div class="v5-editor-section"><h4>任务属性（可直接编辑）</h4><div class="v5-editor-fields"><label>所属专题<div class="v5-task-autocomplete v5-inline-task-autocomplete" data-v5-task-combobox="inline-topic"><input type="search" data-v5-task-input="inline-topic" autocomplete="off" aria-autocomplete="list" aria-expanded="false" aria-controls="v5InlineTopicOptions" required placeholder="选择专题"><div id="v5InlineTopicOptions" class="v5-filter-autocomplete-menu" data-v5-task-options="inline-topic" role="listbox" hidden></div></div></label><label>来源小组<div class="v5-task-autocomplete v5-inline-task-autocomplete" data-v5-task-combobox="inline-source"><input type="search" data-v5-task-input="inline-source" autocomplete="off" aria-autocomplete="list" aria-expanded="false" aria-controls="v5InlineSourceOptions" placeholder="待补充"><div id="v5InlineSourceOptions" class="v5-filter-autocomplete-menu" data-v5-task-options="inline-source" role="listbox" hidden></div></div></label><label>制冷机<div class="v5-task-autocomplete v5-inline-task-autocomplete" data-v5-task-combobox="inline-cryostat"><input type="search" data-v5-task-input="inline-cryostat" autocomplete="off" aria-autocomplete="list" aria-expanded="false" aria-controls="v5InlineCryostatOptions" placeholder="待补充"><div id="v5InlineCryostatOptions" class="v5-filter-autocomplete-menu" data-v5-task-options="inline-cryostat" role="listbox" hidden></div></div></label><label>任务颜色<input name="color" type="color" value="${escapeHtml(color)}"></label><label class="full">测试目的<textarea name="purpose" rows="2">${escapeHtml(task.purpose || "")}</textarea></label><fieldset class="v5-inline-test-fieldset full"><legend>测试项</legend><div id="v5InlineTestItems" class="v5-inline-test-items">${(task.test_items || []).length ? task.test_items.map(v5InlineTestItemMarkup).join("") : v5InlineTestItemMarkup()}</div><button class="small-button" type="button" data-v5-inline-add-test-item>增加测试项</button></fieldset><div class="v5-inline-schedule-fields full"><label>计划开始<input name="start_date" type="date" value="${escapeHtml(task.start_date || "")}"></label><label>计划结束<input name="end_date" type="date" value="${escapeHtml(task.end_date || "")}"></label></div><fieldset class="v5-inline-member-fieldset full"><legend>参与成员</legend><div class="v5-task-autocomplete v5-task-autocomplete-multi v5-inline-member-autocomplete" data-v5-task-combobox="inline-members"><div class="v5-task-selected" data-v5-task-selected="inline-members"></div><input type="search" data-v5-task-input="inline-members" autocomplete="off" aria-autocomplete="list" aria-expanded="false" aria-controls="v5InlineMemberOptions" placeholder="输入姓名或角色"><div id="v5InlineMemberOptions" class="v5-filter-autocomplete-menu" data-v5-task-options="inline-members" role="listbox" hidden></div></div><p class="v5-field-hint">已选成员可在标签中移除；停用但已选成员会保留并标记。</p></fieldset><label class="full">备注<textarea name="notes" rows="3">${escapeHtml(task.notes || "")}</textarea></label></div><p class="v5-field-hint">样品明细在“全量编辑”中维护：样品型号、样品编号、预计交付时间和样品备注。</p></div><div class="v5-inline-actions"><span class="v5-form-error" id="v5InlineTaskFormError" role="alert" aria-live="polite" hidden></span><div><button class="small-button" type="button" data-v5-inline-cancel>取消</button><button class="primary-action" type="submit">保存摘要修改</button></div></div></form><footer class="v5-editor-footer"><span class="v5-muted">人工阶段：${escapeHtml(task.manual_phase === "testing" ? "正在测试" : task.manual_phase === "completed" ? "已完成" : "等待样品")}</span><div class="actions"><button class="small-button" type="button" data-v5-start-testing="${task.id}"${task.manual_phase === "testing" || task.manual_phase === "completed" ? " disabled" : ""}>开始测试</button><button class="small-button" type="button" data-v5-complete-task="${task.id}"${task.manual_phase === "completed" ? " disabled" : ""}>标记完成</button></div></footer>`;
   pane.querySelectorAll(".v5-inline-test-fieldset, .v5-inline-schedule-fields, .v5-inline-member-fieldset").forEach((section) => { section.style.gridColumn = "1 / -1"; });
@@ -4310,13 +4393,27 @@ function v5RenderSelectedTask() {
   v5TaskRenderSingleCombobox("inline-source", options.sourceOptions, task.source_group_id, "待补充");
   v5TaskRenderSingleCombobox("inline-cryostat", options.cryostatOptions, task.cryostat_id, "待补充");
   v5TaskRenderMultiPicker("inline-members", options.memberOptions, v5State.inlineMemberIds, "输入姓名或角色");
+  const memberFieldset = pane.querySelector(".v5-inline-member-fieldset");
+  if (memberFieldset) {
+    const legend = memberFieldset.querySelector("legend");
+    if (legend) legend.textContent = "测试人员（参与成员）";
+    const hint = memberFieldset.querySelector(".v5-field-hint");
+    hint?.insertAdjacentHTML("beforebegin", `<div data-v5-inline-member-schedule></div>`);
+    if (hint) hint.textContent = "勾选测试人员后点击同步，成员个人排期会暂存到本次摘要草稿；点击“保存摘要修改”后才会生效。";
+  }
+  v5RenderInlineMemberSchedule(task);
 }
 
 function v5InlineTaskPayload(task, form) {
   const memberIds = [...v5State.inlineMemberIds].map(Number);
+  v5ReadInlineMemberDates(form);
   const memberDates = memberIds.map((memberId) => {
-    const current = (task.participants || []).find((member) => Number(member.id) === memberId);
-    return { member_id: memberId, start_date: current?.start_date || task.start_date || null, end_date: current?.end_date || task.end_date || null };
+    const dates = v5InlineMemberDatesFor(task, memberId);
+    const start = dates.start_date || null;
+    const end = dates.end_date || null;
+    if ((start && !end) || (!start && end)) throw new Error("每位测试人员的个人排期需要同时填写开始和结束日期");
+    if (start && end && start > end) throw new Error("测试人员个人排期的开始日期不能晚于结束日期");
+    return { member_id: memberId, start_date: start, end_date: end };
   });
   const testItems = [...form.querySelectorAll(".v5-inline-test-item")].map((row) => ({ name: row.querySelector('[data-inline-test-item-field="name"]')?.value.trim() || "", acceptance_criteria: row.querySelector('[data-inline-test-item-field="acceptance_criteria"]')?.value.trim() || "", note: row.querySelector('[data-inline-test-item-field="note"]')?.value.trim() || "" })).filter((item) => item.name);
   const topicId = Number(v5TaskCombobox("inline-topic")?.dataset.v5TaskValue);
@@ -4631,15 +4728,35 @@ function bindV5Events() {
   $("#v5AddSampleBtn")?.addEventListener("click", async () => { const model = $("#v5SampleModel").value.trim(); const eta = $("#v5SampleEta").value || null; const pending = $("#v5SampleEtaPending").checked; const notes = $("#v5SampleNotes").value.trim(); try { if (!model || (!eta && !pending)) throw new Error("新增样品需要填写样品型号，并填写 ETA 或勾选待确认"); const sample = await v5Api("/api/v5/samples", v5Json("POST", { model, eta_date: eta, eta_pending: pending, notes, actor: "本地用户" })); v5State.samples.push(sample); v5State.dialogSampleIds.add(Number(sample.id)); $("#v5SampleModel").value = ""; $("#v5SampleEta").value = ""; $("#v5SampleEtaPending").checked = false; $("#v5SampleNotes").value = ""; v5RenderSamplesInForm(v5State.tasks.find((task) => Number(task.id) === Number(v5State.editingTaskId))); showToast("样品已新增"); } catch (error) { v5SetFormError("#v5TaskFormError", v5ErrorText(error)); } });
   document.body.addEventListener("submit", (event) => { if (event.target.closest("#v5InlineTaskForm")) v5SaveInlineTask(event); });
   document.body.addEventListener("input", (event) => {
+    const form = event.target.closest("#v5InlineTaskForm");
+    if (form && event.target.matches("[data-v5-inline-member-start], [data-v5-inline-member-end]")) { v5ReadInlineMemberDates(form); return; }
+    if (form && event.target.matches("[name=\"start_date\"], [name=\"end_date\"]")) { v5UpdateInlineMemberSyncState(form); return; }
     if (!event.target.matches("[data-v5-inline-member-search]")) return;
     const taskId = Number(event.target.closest("#v5InlineTaskForm")?.dataset.v5InlineTask);
     const task = v5State.tasks.find((row) => Number(row.id) === taskId);
     v5RenderInlineMembers(task, event.target.value);
   });
   document.body.addEventListener("change", (event) => {
-    if (!event.target.matches(".v5-inline-member-check")) return;
-    const form = event.target.closest("#v5InlineTaskForm"); const taskId = Number(form?.dataset.v5InlineTask);
-    v5RenderInlineMemberSummary(v5State.tasks.find((row) => Number(row.id) === taskId), form);
+    const form = event.target.closest("#v5InlineTaskForm");
+    if (!form) return;
+    if (event.target.matches("[data-v5-inline-member-sync-all]")) {
+      const checked = event.target.checked;
+      form.querySelectorAll("[data-v5-inline-member-sync]").forEach((input) => { input.checked = checked; });
+      v5UpdateInlineMemberSyncState(form);
+      return;
+    }
+    if (event.target.matches("[data-v5-inline-member-sync]")) {
+      v5UpdateInlineMemberSyncState(form);
+      return;
+    }
+    if (event.target.matches("[data-v5-inline-member-start], [data-v5-inline-member-end]")) {
+      v5ReadInlineMemberDates(form);
+      return;
+    }
+    if (event.target.matches(".v5-inline-member-check")) {
+      const taskId = Number(form.dataset.v5InlineTask);
+      v5RenderInlineMemberSummary(v5State.tasks.find((row) => Number(row.id) === taskId), form);
+    }
   });
   document.body.addEventListener("click", async (event) => { const action = (selector) => event.target.closest(selector); try { if (action("[data-v5-close-dialog]")) return v5Close(`#${action("[data-v5-close-dialog]").dataset.v5CloseDialog}`); if (action("[data-v5-toggle-topic]")) { const id = Number(action("[data-v5-toggle-topic]").dataset.v5ToggleTopic); if (v5State.expandedTopics.has(id)) v5State.expandedTopics.delete(id); else v5State.expandedTopics.add(id); return v5RenderTree(); } if (action("[data-v5-move-task]")) return v5OpenTopicMove("task", Number(action("[data-v5-move-task]").dataset.v5MoveTask)); if (action("[data-v5-select-task]")) { v5State.selectedTaskId = Number(action("[data-v5-select-task]").dataset.v5SelectTask); v5RenderTree(); return v5RenderSelectedTask(); } if (action("[data-v5-edit-task]")) return v5OpenTaskEditor(Number(action("[data-v5-edit-task]").dataset.v5EditTask)); if (action("[data-v5-new-task-topic]")) return v5OpenTaskEditor(null, Number(action("[data-v5-new-task-topic]").dataset.v5NewTaskTopic)); if (action("[data-v5-new-topic]")) return v5OpenTopicEditor(); if (action("[data-v5-edit-topic]")) return v5OpenTopicEditor(Number(action("[data-v5-edit-topic]").dataset.v5EditTopic)); if (action("[data-v5-delete-topic]")) return v5OpenTopicMove("delete", Number(action("[data-v5-delete-topic]").dataset.v5DeleteTopic)); if (action("[data-v5-start-testing]")) return v5StartTesting(Number(action("[data-v5-start-testing]").dataset.v5StartTesting)); if (action("[data-v5-complete-task]")) return v5StartTesting(Number(action("[data-v5-complete-task]").dataset.v5CompleteTask), true); if (action("[data-v5-retry]")) return v5LoadAll(); if (action("[data-v5-back-editor]")) return v5SetView("editor"); if (action("[data-v5-open-maintenance]")) { $("#legacyV2Content").hidden = false; setV2View("management"); return; } if (action("[data-v5-add-resource]")) return v5OpenResourceEditor(action("[data-v5-add-resource]").dataset.v5AddResource); if (action("[data-v5-edit-resource]")) { const [kind, id] = action("[data-v5-edit-resource]").dataset.v5EditResource.split(":"); return v5OpenResourceEditor(kind, Number(id)); } if (action("[data-v5-inline-toggle-members]")) { const button = action("[data-v5-inline-toggle-members]"); const panel = document.querySelector(`#${button.getAttribute("aria-controls")}`); if (!panel) return; const open = panel.hidden; panel.hidden = !open; button.setAttribute("aria-expanded", String(open)); if (open) document.querySelector("[data-v5-inline-member-search]")?.focus(); return; } if (action("[data-v5-inline-add-test-item]")) { $("#v5InlineTestItems")?.insertAdjacentHTML("beforeend", v5InlineTestItemMarkup()); return; } if (action("[data-v5-remove-inline-test-item]")) { action("[data-v5-remove-inline-test-item]").closest(".v5-inline-test-item")?.remove(); return; } if (action("[data-v5-inline-cancel]")) return v5RenderSelectedTask(); if (action("[data-v5-remove-test-item]")) { action("[data-v5-remove-test-item]").closest(".v5-repeatable-item")?.remove(); return; } } catch (error) { showToast(v5ErrorText(error), { type: "error" }); } });
   $("#v5FilterForm")?.addEventListener("submit", (event) => { event.preventDefault(); const surface = v5State.filterDraftSurface; if (!surface) return; v5ApplyFilterExpression(surface, v5State.filterDraft); v5Close("#v5FilterDialog"); });
@@ -4695,12 +4812,14 @@ function bindV5Events() {
     if (quickOption) { const [surface, ...fieldParts] = quickOption.dataset.v5QuickOption.split("-"); const field = fieldParts.join("-"); const input = v5QuickAutocompleteInput(`${surface}-${field}`); if (input) { input.dataset.v5QuickValue = quickOption.dataset.v5QuickOptionValue || ""; input.value = quickOption.dataset.v5QuickOptionValue ? (quickOption.dataset.v5QuickOptionLabel || "") : ""; v5UpdateQuickFilter(surface, field); } v5CloseAllV5AutocompleteMenus(); return; }
     const resourceOption = event.target.closest("[data-v5-resource-option]");
     if (resourceOption) { const kind = resourceOption.dataset.v5ResourceOption; const input = document.querySelector(`[data-v5-resource-search="${kind}"]`); if (input) { input.value = resourceOption.dataset.v5ResourceOptionValue || ""; v5State.resourceSearch[kind] = input.value; v5RenderResources(); } v5CloseAllV5AutocompleteMenus(); return; }
-    const executionMemberOption = event.target.closest("[data-v5-execution-member-option-value]");
-    if (executionMemberOption) { const input = $("#v5ExecutionMemberSearch"); if (input) { input.value = executionMemberOption.dataset.v5ExecutionMemberOptionValue || ""; v5State.execution.memberSearch = input.value; v5RenderExecution(); } v5CloseAllV5AutocompleteMenus(); return; }
-    const taskOption = event.target.closest("[data-v5-task-option]");
-    if (taskOption) { const key = taskOption.dataset.v5TaskOption; const value = taskOption.dataset.v5TaskOptionValue || ""; if (key === "members") { const id = Number(value); if (v5State.dialogMemberIds.has(id)) v5State.dialogMemberIds.delete(id); else v5State.dialogMemberIds.add(id); v5RenderMembersInForm(v5State.tasks.find((task) => Number(task.id) === Number(v5State.editingTaskId))); } else if (key === "inline-members") { const id = Number(value); if (v5State.inlineMemberIds.has(id)) v5State.inlineMemberIds.delete(id); else v5State.inlineMemberIds.add(id); v5TaskRenderMultiPicker(key, v5TaskOptions(key), v5State.inlineMemberIds, "输入姓名或角色"); v5TaskComboboxInput(key)?.focus(); } else { const wrapper = v5TaskCombobox(key); if (wrapper) { wrapper.dataset.v5TaskValue = value; const input = v5TaskComboboxInput(key); if (input) input.value = taskOption.dataset.v5TaskOptionLabel && value ? taskOption.dataset.v5TaskOptionLabel : ""; } if (key === "topic-move") v5RenderTopicMovePreview(); v5CloseAllV5AutocompleteMenus(); } return; }
+     const executionMemberOption = event.target.closest("[data-v5-execution-member-option-value]");
+     if (executionMemberOption) { const input = $("#v5ExecutionMemberSearch"); if (input) { input.value = executionMemberOption.dataset.v5ExecutionMemberOptionValue || ""; v5State.execution.memberSearch = input.value; v5RenderExecution(); } v5CloseAllV5AutocompleteMenus(); return; }
+     const syncMemberDates = event.target.closest("[data-v5-inline-sync-member-dates]");
+     if (syncMemberDates) { try { v5SyncInlineMemberDates(syncMemberDates.closest("#v5InlineTaskForm")); } catch (error) { v5SetFormError("#v5InlineTaskFormError", v5ErrorText(error)); } return; }
+     const taskOption = event.target.closest("[data-v5-task-option]");
+     if (taskOption) { const key = taskOption.dataset.v5TaskOption; const value = taskOption.dataset.v5TaskOptionValue || ""; if (key === "members") { const id = Number(value); if (v5State.dialogMemberIds.has(id)) v5State.dialogMemberIds.delete(id); else v5State.dialogMemberIds.add(id); v5RenderMembersInForm(v5State.tasks.find((task) => Number(task.id) === Number(v5State.editingTaskId))); } else if (key === "inline-members") { const id = Number(value); const form = document.querySelector("#v5InlineTaskForm"); const task = v5State.tasks.find((row) => Number(row.id) === Number(form?.dataset.v5InlineTask)); v5ReadInlineMemberDates(form); if (v5State.inlineMemberIds.has(id)) { v5State.inlineMemberIds.delete(id); v5State.inlineMemberDates.delete(id); v5State.inlineMemberSyncIds.delete(id); } else { v5State.inlineMemberIds.add(id); if (task && !v5State.inlineMemberDates.has(id)) v5State.inlineMemberDates.set(id, { start_date: form?.elements.start_date?.value || task.start_date || "", end_date: form?.elements.end_date?.value || task.end_date || "" }); } v5TaskRenderMultiPicker(key, v5TaskOptions(key), v5State.inlineMemberIds, "输入姓名或角色"); v5RenderInlineMemberSchedule(task, form); v5TaskComboboxInput(key)?.focus(); } else { const wrapper = v5TaskCombobox(key); if (wrapper) { wrapper.dataset.v5TaskValue = value; const input = v5TaskComboboxInput(key); if (input) input.value = taskOption.dataset.v5TaskOptionLabel && value ? taskOption.dataset.v5TaskOptionLabel : ""; } if (key === "topic-move") v5RenderTopicMovePreview(); v5CloseAllV5AutocompleteMenus(); } return; }
     const taskChip = event.target.closest("[data-v5-task-chip-remove]");
-    if (taskChip) { const key = taskChip.dataset.v5TaskChipRemove; const id = Number(taskChip.dataset.v5TaskChipValue); if (key === "members") { v5State.dialogMemberIds.delete(id); v5RenderMembersInForm(v5State.tasks.find((task) => Number(task.id) === Number(v5State.editingTaskId))); } else if (key === "inline-members") { v5State.inlineMemberIds.delete(id); v5TaskRenderMultiPicker(key, v5TaskOptions(key), v5State.inlineMemberIds, "输入姓名或角色"); } return; }
+     if (taskChip) { const key = taskChip.dataset.v5TaskChipRemove; const id = Number(taskChip.dataset.v5TaskChipValue); if (key === "members") { v5State.dialogMemberIds.delete(id); v5RenderMembersInForm(v5State.tasks.find((task) => Number(task.id) === Number(v5State.editingTaskId))); } else if (key === "inline-members") { const form = document.querySelector("#v5InlineTaskForm"); const task = v5State.tasks.find((row) => Number(row.id) === Number(form?.dataset.v5InlineTask)); v5ReadInlineMemberDates(form); v5State.inlineMemberIds.delete(id); v5State.inlineMemberDates.delete(id); v5State.inlineMemberSyncIds.delete(id); v5TaskRenderMultiPicker(key, v5TaskOptions(key), v5State.inlineMemberIds, "输入姓名或角色"); v5RenderInlineMemberSchedule(task, form); } return; }
     const removeSample = event.target.closest("[data-v5-task-remove-sample]"); if (removeSample) { v5State.dialogSampleIds.delete(Number(removeSample.dataset.v5TaskRemoveSample)); v5RenderSamplesInForm(); return; }
     const removeMember = event.target.closest("[data-v5-task-remove-member]"); if (removeMember) { v5State.dialogMemberIds.delete(Number(removeMember.dataset.v5TaskRemoveMember)); v5RenderMembersInForm(v5State.tasks.find((task) => Number(task.id) === Number(v5State.editingTaskId))); return; }
     if (!event.target.closest(".v5-filter-autocomplete, .v5-task-autocomplete, .v5-resource-search-autocomplete")) v5CloseAllV5AutocompleteMenus();

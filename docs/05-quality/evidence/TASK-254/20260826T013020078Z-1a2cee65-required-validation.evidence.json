@@ -1,0 +1,20 @@
+{
+  "$schema": "schemas/validation-evidence.schema.json",
+  "schema_version": 1,
+  "task_id": "TASK-254",
+  "work_package": "WP-012",
+  "baseline": "BL-008",
+  "contract_sha256": "92cff815cf5e5682f2bc7a6bb2dee1d8efa65d84e2ce06baa21da9c866573e82",
+  "git_commit": "3b81844572d8fbf52f487c5a814a3148e918adc7",
+  "validation_id": "required-validation",
+  "command": "npm",
+  "args": [
+    "test"
+  ],
+  "started_at": "2026-08-26T01:30:20.0857434Z",
+  "finished_at": "2026-08-26T01:30:22.2225722Z",
+  "exit_code": 0,
+  "redactions_applied": 0,
+  "output_path": "docs/05-quality/evidence/TASK-254/20260826T013020078Z-1a2cee65-required-validation.output.txt",
+  "output_sha256": "b912b0b9b4bb72d9931bee4fdd6566bf6c1857e2318d57ea42073147c24f78cc"
+}

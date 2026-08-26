@@ -1,0 +1,36 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-257",
+  "work_package": "WP-012",
+  "contract_sha256": "3e7e358301f2fd091b9715f7cc530502ece4df07faefad093acbc490563ce98b",
+  "baseline": "BL-008",
+  "state": "superseded",
+  "approval_id": "",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [
+    "public/app.js"
+  ],
+  "plan_checkpoint_git_commit": "3b81844572d8fbf52f487c5a814a3148e918adc7",
+  "plan_rebase_history": [],
+  "evidence": [],
+  "evidence_history": [],
+  "review_history": [],
+  "review": {
+    "required": false,
+    "reviewer_task_id": "",
+    "status": "not-applicable",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
+  },
+  "last_error": "复审任务必须从干净执行点规划；当前实现差异尚未提交，重新规划独立复审任务。",
+  "created_at": "2026-08-26T01:31:58.6287085Z",
+  "updated_at": "2026-08-26T01:32:35.3705366Z"
+}

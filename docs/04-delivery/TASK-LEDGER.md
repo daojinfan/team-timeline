@@ -36,8 +36,12 @@ review_policy: independent-required
 
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| WP-012 | TASK-253 | pending | REVIEWER | 独立复审 V5 右侧测试项字段标题 | BL-008 | pending | TASK-252 | completed | docs/05-quality/evidence/TASK-253 | npm-test | n/a | n/a | n/a | Plan 自动登记，等待调度 |
-| WP-012 | TASK-252 | pending | IMPLEMENTER | 补充 V5 右侧测试项字段标题 | BL-008 | pending | TASK-250 | running | public/app.js, tests | npm-test | TASK-253 | passed | docs/05-quality/evidence/TASK-253/review-round-2.json | Plan 自动登记，等待调度 |
+| WP-012 | TASK-257 | pending | REVIEWER | 独立复审 V5 测试人员时间批量同步 | BL-008 | pending | TASK-254 | replaced | docs/05-quality/evidence/TASK-257 | npm-test | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-012 | TASK-256 | pending | REVIEWER | 独立复审 V5 测试人员时间批量同步 | BL-008 | pending | TASK-254 | replaced | docs/05-quality/evidence/TASK-256 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-012 | TASK-255 | pending | REVIEWER | 独立复审 V5 测试人员时间批量同步 | BL-008 | pending | TASK-254 | replaced | docs/05-quality/evidence/TASK-255 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-012 | TASK-254 | pending | IMPLEMENTER | 实现 V5 全量编辑台测试人员时间批量同步 | BL-008 | pending | n/a | running | public/app.js | required-validation | TASK-256 | pending | pending | Plan 自动登记，等待调度 |
+| WP-012 | TASK-253 | pending | REVIEWER | 独立复审 V5 右侧测试项字段标题 | BL-008 | pending | TASK-252 | replaced | docs/05-quality/evidence/TASK-253 | npm-test | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-012 | TASK-252 | pending | IMPLEMENTER | 补充 V5 右侧测试项字段标题 | BL-008 | pending | TASK-250 | replaced | public/app.js, tests | npm-test | TASK-253 | cancelled | n/a | Plan 自动登记，等待调度 |
 | WP-012 | TASK-251 | pending | REVIEWER | 独立复审 V5 右侧预览测试项与排期分行 | BL-008 | pending | TASK-250 | completed | docs/05-quality/evidence/TASK-251 | npm-test | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-012 | TASK-250 | pending | IMPLEMENTER | 修正 V5 右侧预览测试项与排期分行 | BL-008 | pending | TASK-248 | replaced | public/app.js, tests | npm-test | TASK-251 | cancelled | docs/05-quality/evidence/TASK-251/review-cancelled-task-250.json | Plan 自动登记，等待调度 |
 | WP-012 | TASK-249 | pending | REVIEWER | 独立复审 V5 右侧预览分行布局 | BL-008 | pending | TASK-248 | completed | docs/05-quality/evidence/TASK-249 | npm-test | n/a | n/a | n/a | Plan 自动登记，等待调度 |

@@ -5,7 +5,7 @@
   "work_package": "WP-012",
   "contract_sha256": "fb6629f5a57b59e2886418f77eb321e3702eaa782a3a9fae1b364493e6ea41a0",
   "baseline": "BL-008",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "APR-163",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -27,15 +27,13 @@
   "review_history": [],
   "review": {
     "required": true,
-    "reviewer_task_id": "TASK-253",
-    "status": "passed",
-    "evidence": [
-      "docs/05-quality/evidence/TASK-253/review-round-2.json"
-    ],
-    "pass_streak": 2,
-    "subject_sha256": "f93d1c18bf821c2d36345ceb2cf4eb93e0f97a9cb90028e0cc344baced576a23"
+    "reviewer_task_id": "",
+    "status": "cancelled",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "后续 V5 任务编辑台迭代已替代未验收交付状态；保留历史双轮复审证据，由当前任务重新复核最终产品状态。",
   "created_at": "2026-08-25T23:42:13.7920271Z",
-  "updated_at": "2026-08-26T00:22:19.6251635Z"
+  "updated_at": "2026-08-26T01:24:54.9812166Z"
 }

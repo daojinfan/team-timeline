@@ -1,0 +1,60 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-255",
+  "work_package": "WP-012",
+  "title": "独立复审 V5 测试人员时间批量同步",
+  "goal": "检查 TASK-254 的实际代码差异、草稿保存边界、成员选择与同步逻辑，并提供独立复审证据。",
+  "baseline": "BL-008",
+  "profile": "Release",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-255"
+  ],
+  "read_paths": [
+    "public/app.js"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-255"
+  ],
+  "out_of_scope": [
+    "不修改 public/app.js，不修改数据库或治理契约"
+  ],
+  "authoritative_documents": [
+    "REQ-V5-001",
+    "ARC-OVERALL-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "CR-008",
+    "DEL-WORK-001",
+    "DEC-004"
+  ],
+  "dependencies": [
+    "TASK-254"
+  ],
+  "acceptance_criteria": [
+    "复审实际变更清单与 TASK-254 契约一致，验证同步草稿不即时写库、保存后 member_dates 正确提交、取消和异常路径保留草稿。"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-26T00:53:14.0023711Z",
+  "release_controls": {
+    "target_environment": "本地桌面 Web 开发环境",
+    "execution_window": "实现任务完成后的独立复审窗口",
+    "rollback_plan": "审核仅写入 TASK-255 证据目录，发现问题由实现任务修复后重新复审",
+    "observation_metrics": "实际 diff 清单、npm test、node --check public/app.js、git diff --check 和同步交互证据",
+    "stop_conditions": "发现实现超出 TASK-254 允许范围或需要变更 schema/API 契约时停止并标记 changes-required",
+    "post_release_owner": "项目经理"
+  }
+}
