@@ -72,6 +72,40 @@
             <article class="v5-resource-stat"><span>当前任务数</span><strong id="v5ResourceCurrent">—</strong><small>未完成任务的资源引用</small></article>
           </section>
           <section class="v5-maintenance-strip" aria-labelledby="v5MaintenanceTitle"><div><span class="v5-eyebrow">数据安全与迁移</span><h3 id="v5MaintenanceTitle">备份、导出与恢复</h3><p>资源和任务共用同一份数据库；在导入或恢复前先下载备份。</p></div><div class="v5-maintenance-actions"><a class="ghost-button" href="/api/backup" target="_blank" rel="noreferrer">下载备份 JSON</a><a class="ghost-button" href="/api/export/tasks.csv">导出任务 CSV</a><a class="ghost-button" href="/api/export/member-load.csv">导出负载 CSV</a><button class="ghost-button" type="button" data-v5-open-maintenance>打开导入/恢复</button></div></section>
+          <section class="v5-maintenance-strip" aria-labelledby="v5DefaultStatusTitle">
+            <div>
+              <span class="v5-eyebrow">工作区偏好</span>
+              <h3 id="v5DefaultStatusTitle">工作区默认值</h3>
+              <p>设置进入任务全量编辑台和执行中心时默认显示的状态；不选择表示显示全部状态。</p>
+            </div>
+            <div class="v5-default-status-settings">
+              <fieldset>
+                <legend>任务全量编辑台默认状态</legend>
+                <div class="v5-phase-options" data-v5-default-status-group="editor">
+                  <label><input type="checkbox" data-v5-default-status="editor" value="waiting">等待样品</label>
+                  <label><input type="checkbox" data-v5-default-status="editor" value="sample-delayed">样品交付延期</label>
+                  <label><input type="checkbox" data-v5-default-status="editor" value="testing">正在测试</label>
+                  <label><input type="checkbox" data-v5-default-status="editor" value="test-delayed">测试延期</label>
+                  <label><input type="checkbox" data-v5-default-status="editor" value="completed">已完成</label>
+                </div>
+              </fieldset>
+              <fieldset>
+                <legend>执行中心默认状态</legend>
+                <div class="v5-phase-options" data-v5-default-status-group="execution">
+                  <label><input type="checkbox" data-v5-default-status="execution" value="waiting">等待样品</label>
+                  <label><input type="checkbox" data-v5-default-status="execution" value="sample-delayed">样品交付延期</label>
+                  <label><input type="checkbox" data-v5-default-status="execution" value="testing">正在测试</label>
+                  <label><input type="checkbox" data-v5-default-status="execution" value="test-delayed">测试延期</label>
+                  <label><input type="checkbox" data-v5-default-status="execution" value="completed">已完成</label>
+                </div>
+              </fieldset>
+              <div class="v5-toolbar-actions">
+                <button id="v5SaveDefaultStatuses" class="primary-action" type="button">保存默认值</button>
+                <button id="v5ResetDefaultStatuses" class="ghost-button" type="button">恢复全部状态</button>
+                <span id="v5DefaultStatusMessage" class="v5-muted" role="status" aria-live="polite"></span>
+              </div>
+            </div>
+          </section>
           <div class="v5-resource-grid">
             <article class="v5-resource-card"><header class="v5-card-header"><div><span class="v5-eyebrow">任务来源</span><h3>来源小组</h3></div><button class="small-button" type="button" data-v5-add-resource="source-groups">＋ 新增</button></header><label class="v5-resource-search">搜索<div class="v5-resource-search-autocomplete" data-v5-resource-combobox="source-groups"><input type="search" data-v5-resource-search="source-groups" autocomplete="off" aria-autocomplete="list" aria-expanded="false" aria-controls="v5ResourceSearchOptions-source-groups" placeholder="小组名称"><div id="v5ResourceSearchOptions-source-groups" class="v5-filter-autocomplete-menu" data-v5-resource-options="source-groups" role="listbox" hidden></div></div></label><div id="v5SourceGroupsList" class="v5-resource-list"></div></article>
             <article class="v5-resource-card"><header class="v5-card-header"><div><span class="v5-eyebrow">执行人员</span><h3>测控成员</h3></div><button class="small-button" type="button" data-v5-add-resource="members">＋ 新增</button></header><label class="v5-resource-search">搜索<div class="v5-resource-search-autocomplete" data-v5-resource-combobox="members"><input type="search" data-v5-resource-search="members" autocomplete="off" aria-autocomplete="list" aria-expanded="false" aria-controls="v5ResourceSearchOptions-members" placeholder="姓名或角色"><div id="v5ResourceSearchOptions-members" class="v5-filter-autocomplete-menu" data-v5-resource-options="members" role="listbox" hidden></div></div></label><div id="v5MembersList" class="v5-resource-list"></div></article>

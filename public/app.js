@@ -3969,6 +3969,7 @@ const v5State = {
   inlineMemberSyncIds: new Set(),
   customComboboxOptions: {},
   resourceSearch: {},
+  preferences: { version: 1, editorDefaultStatuses: [], executionDefaultStatuses: [] },
   filterExpressions: {
     editor: { groups: [] },
     execution: { groups: [] }
@@ -4010,6 +4011,8 @@ const v5StatusMeta = {
 };
 const v5ResourceLabels = { "source-groups": "来源小组", members: "测控成员", cryostats: "制冷机" };
 const v5ResourceKeys = { "source-groups": "source_groups", members: "members", cryostats: "cryostats" };
+const V5_PREFS_KEY = "teamTaskGantt.v5Prefs.v1";
+const V5_PREFS_VERSION = 1;
 function v5ResourceRows(kind) { return v5State.resources[v5ResourceKeys[kind] || kind] || []; }
 
 async function v5Api(path, options = {}) {
@@ -4044,6 +4047,60 @@ function v5TopicName(id) { return v5State.topics.find((row) => Number(row.id) ==
 function v5StatusChip(task) { const meta = v5StatusMeta[task.status] || v5StatusMeta.waiting; return `<span class="v5-status-chip status-${escapeHtml(task.status || "waiting")}" title="${escapeHtml(meta.label)}">${meta.icon} ${meta.label}</span>`; }
 function v5TaskSearchText(task) { return [task.task_number, task.title, task.purpose, task.notes, task.topic?.name, task.source_group?.name, task.cryostat?.name, ...(task.samples || []).flatMap((sample) => [sample.model, sample.sample_no, sample.notes]), ...(task.test_items || []).flatMap((item) => [item.name, item.acceptance_criteria, item.note]), ...(task.participants || []).map((member) => member.name)].join(" ").toLowerCase(); }
 const v5FilterStatusOptions = [{ value: "waiting", label: "等待样品" }, { value: "sample-delayed", label: "样品交付延期" }, { value: "testing", label: "正在测试" }, { value: "test-delayed", label: "测试延期" }, { value: "completed", label: "已完成" }];
+const v5FilterStatusValues = new Set(v5FilterStatusOptions.map(({ value }) => value));
+function v5DefaultStatusPreferences() { return { version: V5_PREFS_VERSION, editorDefaultStatuses: [], executionDefaultStatuses: [] }; }
+function v5NormaliseDefaultStatuses(value) {
+  if (!Array.isArray(value) || value.length > v5FilterStatusOptions.length) return [];
+  const values = value.map((item) => String(item));
+  if (new Set(values).size !== values.length || values.some((item) => !v5FilterStatusValues.has(item))) return [];
+  return values;
+}
+function v5ReadPreferences() {
+  const fallback = v5DefaultStatusPreferences();
+  try {
+    const raw = window.localStorage.getItem(V5_PREFS_KEY);
+    if (!raw) return fallback;
+    const value = JSON.parse(raw);
+    if (!value || value.version !== V5_PREFS_VERSION) return fallback;
+    return { version: V5_PREFS_VERSION, editorDefaultStatuses: v5NormaliseDefaultStatuses(value.editorDefaultStatuses), executionDefaultStatuses: v5NormaliseDefaultStatuses(value.executionDefaultStatuses) };
+  } catch {
+    return fallback;
+  }
+}
+function v5WritePreferences(preferences) {
+  try {
+    window.localStorage.setItem(V5_PREFS_KEY, JSON.stringify(preferences));
+    return true;
+  } catch {
+    return false;
+  }
+}
+function v5DefaultStatusExpression(surface, statuses) {
+  if (!statuses.length) return v5EmptyFilterExpression();
+  return { groups: [{ id: `default-status-${surface}`, logic: "and", connector: "and", conditions: [{ id: `default-status-${surface}`, surface, field: "status", value: statuses, match: "any", negate: false }] }] };
+}
+function v5ApplyConfiguredDefaultFilters() {
+  ["editor", "execution"].forEach((surface) => { v5State.filterExpressions[surface] = v5DefaultStatusExpression(surface, v5State.preferences[`${surface}DefaultStatuses`]); });
+}
+function v5RenderDefaultStatusSettings() {
+  ["editor", "execution"].forEach((surface) => { const selected = new Set(v5State.preferences[`${surface}DefaultStatuses`]); $$(`[data-v5-default-status="${surface}"]`).forEach((input) => { input.checked = selected.has(input.value); }); });
+  const message = $("#v5DefaultStatusMessage");
+  if (message) message.textContent = "";
+}
+function v5DefaultStatusValuesFromForm(surface) { return $$(`[data-v5-default-status="${surface}"]:checked`).map((input) => input.value); }
+function v5SaveDefaultStatusPreferences({ reset = false } = {}) {
+  const next = reset ? v5DefaultStatusPreferences() : { version: V5_PREFS_VERSION, editorDefaultStatuses: v5DefaultStatusValuesFromForm("editor"), executionDefaultStatuses: v5DefaultStatusValuesFromForm("execution") };
+  if (!v5WritePreferences(next)) { const message = $("#v5DefaultStatusMessage"); if (message) message.textContent = "浏览器暂时无法保存偏好"; return false; }
+  v5State.preferences = next;
+  v5ApplyConfiguredDefaultFilters();
+  v5RenderDefaultStatusSettings();
+  v5RenderFilterOptions();
+  v5RenderExecutionFilterOptions();
+  v5RenderTree();
+  v5RenderExecution();
+  const message = $("#v5DefaultStatusMessage"); if (message) message.textContent = reset ? "已恢复全部状态" : "默认状态已保存";
+  return true;
+}
 const v5FilterSchemas = {
   editor: [
     { field: "search", label: "关键词", kind: "text", supportsNegate: true },
@@ -4601,7 +4658,7 @@ function v5RenderResourceStats() {
   const values = { "#v5ResourceTotal": total, "#v5ResourceActive": active, "#v5ResourceReferences": references, "#v5ResourceCurrent": current };
   Object.entries(values).forEach(([selector, value]) => { const node = $(selector); if (node) node.textContent = String(value); });
 }
-function v5RenderResources() { v5RenderResourceList("source-groups", "#v5SourceGroupsList"); v5RenderResourceList("members", "#v5MembersList"); v5RenderResourceList("cryostats", "#v5CryostatsList"); v5RenderResourceStats(); const stamp = $("#v5ResourceUpdated"); if (stamp) stamp.textContent = `${v5State.resources.source_groups.length} 个小组 · ${v5State.resources.members.length} 名成员 · ${v5State.resources.cryostats.length} 台制冷机`; }
+function v5RenderResources() { v5RenderResourceList("source-groups", "#v5SourceGroupsList"); v5RenderResourceList("members", "#v5MembersList"); v5RenderResourceList("cryostats", "#v5CryostatsList"); v5RenderResourceStats(); v5RenderDefaultStatusSettings(); const stamp = $("#v5ResourceUpdated"); if (stamp) stamp.textContent = `${v5State.resources.source_groups.length} 个小组 · ${v5State.resources.members.length} 名成员 · ${v5State.resources.cryostats.length} 台制冷机`; }
 function v5OpenResourceEditor(kind, id = null) { const item = id == null ? null : v5ResourceRows(kind).find((row) => Number(row.id) === Number(id)); v5State.editingResource = { kind, id: item?.id || null, updated_at: item?.updated_at || null }; $("#v5ResourceDialogTitle").textContent = `${item ? "编辑" : "新增"}${v5ResourceLabels[kind]}`; $("#v5ResourceKind").value = kind; $("#v5ResourceName").value = item?.name || ""; $("#v5ResourceRole").value = item?.role || ""; $("#v5ResourceNote").value = item?.note || ""; $("#v5ResourceActive").checked = kind === "source-groups" ? item ? Number(item.is_active) === 1 : true : item ? item.status === "active" : true; $("#v5ResourceRoleWrap").hidden = kind !== "members"; v5SetFormError("#v5ResourceFormError"); v5Open("#v5ResourceDialog"); }
 async function v5SaveResource(event) { event.preventDefault(); const editing = v5State.editingResource; const kind = $("#v5ResourceKind").value; try { const payload = { name: $("#v5ResourceName").value.trim(), note: $("#v5ResourceNote").value.trim(), actor: "本地用户" }; if (kind === "members") { payload.role = $("#v5ResourceRole").value.trim(); payload.status = $("#v5ResourceActive").checked ? "active" : "inactive"; } else if (kind === "source-groups") payload.is_active = $("#v5ResourceActive").checked; else payload.status = $("#v5ResourceActive").checked ? "active" : "inactive"; const path = editing?.id ? `/api/v5/resources/${kind}/${editing.id}` : `/api/v5/resources/${kind}`; if (editing?.id) payload.expected_updated_at = editing.updated_at; await v5Api(path, v5Json(editing?.id ? "PUT" : "POST", payload)); v5Close("#v5ResourceDialog"); await v5LoadAll(); showToast(`${v5ResourceLabels[kind]}已保存`); } catch (error) { v5SetFormError("#v5ResourceFormError", v5ErrorText(error)); } }
 
@@ -4765,6 +4822,7 @@ function bindV5Events() {
   $$('[data-v5-view]').forEach((button) => button.addEventListener("click", () => v5SetView(button.dataset.v5View)));
   $("#v5RefreshBtn")?.addEventListener("click", () => v5LoadAll()); $("#v5NewTaskBtn")?.addEventListener("click", () => v5OpenTaskEditor()); $("#v5EmptyNewTaskBtn")?.addEventListener("click", () => v5OpenTaskEditor()); $("#v5NewTopicBtn")?.addEventListener("click", () => v5OpenTopicEditor()); $("#v5ExpandAllBtn")?.addEventListener("click", () => { v5State.topics.forEach((topic) => v5State.expandedTopics.add(Number(topic.id))); v5RenderTree(); }); $("#v5CollapseAllBtn")?.addEventListener("click", () => { v5State.expandedTopics.clear(); v5RenderTree(); });
   $("#v5OpenEditorFilters")?.addEventListener("click", () => v5OpenFilterDialog("editor")); $("#v5ClearTaskFilters")?.addEventListener("click", () => v5ResetFilterSurface("editor"));
+  $("#v5SaveDefaultStatuses")?.addEventListener("click", () => v5SaveDefaultStatusPreferences()); $("#v5ResetDefaultStatuses")?.addEventListener("click", () => v5SaveDefaultStatusPreferences({ reset: true }));
   v5FilterQuickConfig("editor").forEach(({ field, selector, negate }) => { const node = $(selector); const schema = v5FilterSchema("editor", field); node?.addEventListener(schema?.kind === "text" ? "input" : "change", () => v5UpdateQuickFilter("editor", field)); if (negate) $(negate)?.addEventListener("change", () => v5UpdateQuickFilter("editor", field)); });
   $("#v5TaskForm")?.addEventListener("submit", v5SaveTask); $("#v5TopicForm")?.addEventListener("submit", v5SaveTopic); $("#v5ResourceForm")?.addEventListener("submit", v5SaveResource); $("#v5TopicMoveForm")?.addEventListener("submit", v5SaveTopicMove); $("#v5TopicMoveTarget")?.addEventListener("change", v5RenderTopicMovePreview); $("#v5ShowArchivedTopics")?.addEventListener("change", (event) => { v5State.showArchivedTopics = event.target.checked; v5LoadAll(); });
   $("#v5TaskSamples")?.addEventListener("change", (event) => { if (!event.target.classList.contains("v5-sample-check")) return; v5State.dialogSampleIds = new Set($$("#v5TaskSamples .v5-sample-check:checked").map((input) => Number(input.value))); v5RenderSamplesInForm(v5State.tasks.find((task) => Number(task.id) === Number(v5State.editingTaskId))); });
@@ -4890,5 +4948,7 @@ function bindV5ExecutionEvents() {
   document.body.addEventListener("click", (event) => { const action = (selector) => event.target.closest(selector); const view = action("[data-v5-exec-view]"); if (view) { v5SetExecutionSubView(view.dataset.v5ExecView); return; } const selected = action("[data-v5-exec-select-task]"); if (selected) { v5State.execution.selectedTaskId = Number(selected.dataset.v5ExecSelectTask); v5RenderExecution(); } const taskEdit = action("[data-v5-exec-edit-task]"); if (taskEdit) { v5State.execution.selectedTaskId = Number(taskEdit.dataset.v5ExecEditTask); return v5OpenScheduleEditor(Number(taskEdit.dataset.v5ExecEditTask)); } const memberEdit = action("[data-v5-exec-edit-member]"); if (memberEdit) return v5OpenScheduleEditor(Number(memberEdit.dataset.v5ExecEditMember), "member", Number(memberEdit.dataset.v5ExecMember)); const memberFilter = action("[data-v5-exec-member-filter]"); if (memberFilter) { const memberSelect = $("#v5ExecutionMember"); const selectedId = String(memberFilter.dataset.v5ExecMemberFilter); if (memberSelect) memberSelect.value = selectedId === String(memberSelect.value) ? "" : selectedId; v5UpdateQuickFilter("execution", "memberId"); } const editor = action("[data-v5-open-editor]"); if (editor) { v5State.selectedTaskId = Number(editor.dataset.v5OpenEditor); v5SetView("editor"); v5RenderTree(); v5RenderSelectedTask(); } });
 }
 bindV5ExecutionEvents();
+v5State.preferences = v5ReadPreferences();
+v5ApplyConfiguredDefaultFilters();
 v5SetView("editor");
 v5LoadAll();
