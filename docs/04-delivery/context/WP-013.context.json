@@ -1,0 +1,52 @@
+{
+  "$schema": "schemas/work-package-context.schema.json",
+  "schema_version": 1,
+  "work_package": "WP-013",
+  "baseline": "BL-009",
+  "scope": [
+    "public/index.html",
+    "public/app.js",
+    "tests",
+    "docs/02-product/requirements-v5.md",
+    "docs/03-architecture/components/v5-detailed-design.md",
+    "docs/05-quality/traceability-v5.md",
+    "docs/07-decisions/DEC-005.md",
+    "docs/08-changes/CR-009.md",
+    "docs/04-delivery/WORK-PACKAGES.md",
+    "docs/04-delivery/WORK-STATUS.md"
+  ],
+  "required_documents": [
+    {
+      "doc_id": "REQ-V5-001",
+      "mode": "full"
+    },
+    {
+      "doc_id": "ARC-COMP-V5-001",
+      "mode": "full"
+    },
+    {
+      "doc_id": "QUAL-TRACE-V5-001",
+      "mode": "full"
+    },
+    {
+      "doc_id": "DEC-005",
+      "mode": "full"
+    },
+    {
+      "doc_id": "CR-009",
+      "mode": "full"
+    },
+    {
+      "doc_id": "DEL-WORK-001",
+      "mode": "full"
+    }
+  ],
+  "decisions": [
+    "DEC-005"
+  ],
+  "validation": [
+    "npm test",
+    "node --check public/app.js",
+    "Test-ProjectGovernance.ps1 -Level Standard"
+  ]
+}
