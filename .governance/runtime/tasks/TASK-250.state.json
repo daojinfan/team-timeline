@@ -5,7 +5,7 @@
   "work_package": "WP-012",
   "contract_sha256": "bbd444dbac7b5812116b6b417b084845633a40de54b31995bffb590f786d40a9",
   "baseline": "BL-008",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "APR-161",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -29,14 +29,14 @@
   "review": {
     "required": true,
     "reviewer_task_id": "TASK-251",
-    "status": "passed",
+    "status": "cancelled",
     "evidence": [
-      "docs/05-quality/evidence/TASK-251/review-round-2.json"
+      "docs/05-quality/evidence/TASK-251/review-cancelled-task-250.json"
     ],
-    "pass_streak": 2,
-    "subject_sha256": "ae6e1cf914322e7f9d7cddc2cafa7d2b6cfd0af1b9fda7afc7b694239de0aab3"
+    "pass_streak": 0,
+    "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "TASK-252 承接并替代 TASK-250 的右侧测试项字段标题补充，保留 TASK-250 不可变双轮复审历史。",
   "created_at": "2026-08-25T17:23:54.3542941Z",
-  "updated_at": "2026-08-25T17:49:35.7422827Z"
+  "updated_at": "2026-08-25T23:58:09.3056321Z"
 }

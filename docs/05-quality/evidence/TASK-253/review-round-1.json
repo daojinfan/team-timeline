@@ -1,0 +1,46 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-253",
+  "reviewed_task_ids": [
+    "TASK-252"
+  ],
+  "work_package": "WP-012",
+  "baseline": "BL-008",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-252",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "v5InlineTestItemMarkup 将 name、acceptance_criteria、note 三个控件各自包入 v5-inline-test-field label，并显示测试项名称、测试要求、备注标题；保留原数据属性、删除按钮和动态渲染。渲染后为标题字段设置 grid、gap、最小宽度和可读文字样式。"
+    },
+    {
+      "task_id": "TASK-252",
+      "path": "tests/v5-inline-editor.test.js",
+      "change_type": "modified",
+      "summary": "新增字段标题与字段样式回归断言，验证三个 v5-inline-test-field 标题和标题样式存在。"
+    }
+  ],
+  "change_summary": "Release 首轮基于 TASK-252 起始提交 37b52a2fa503815f5b102a6eea25a3e24702e087 与最终提交 0f661c1b25911a7f2c0923294c80c79b289d2a42 的完整实际 diff。实际变更仅为 public/app.js、tests/v5-inline-editor.test.js，全部位于 TASK-252 allowed_paths；未修改样式表、HTML、API/数据库、V3 或治理范围外产品内容。",
+  "scope_checked": [
+    "读取 TASK-252/TASK-253 contract 与 state、TASK-252 两份 npm validation evidence、WP-012 context，以及 REQ-V5-001、ARC-OVERALL-V5-001、ARC-COMP-V5-001、QUAL-TRACE-V5-001、CR-008；确认测试项是可重复结构化条目，标题和字段含义需清晰且保存映射保持。",
+    "核对 37b52a2..0f661c1 的 name-status、stat 和 scoped diff；实际 changes 清单与 TASK-252 allowed_paths 精确一致，当前 HEAD 为 0f661c1。",
+    "浏览器实测 Edge 本地页面 http://localhost:3000/，任务 TASK-22，视口 1699×802：每个 v5-inline-test-item 都渲染三个 v5-inline-test-field label，标题文字依次为测试项名称、测试要求、备注；三个 label 的 computed display=grid、gap=4px、min-width=0、font-weight=700、font-size=11px、可见颜色为 rgb(102,112,133)。",
+    "桌面实测每个标题位于对应控件上方：标题 span y=550.6667px、控件 y=568.6667px；名称映射 data-inline-test-item-field=name，要求映射 acceptance_criteria，备注映射 note；三个字段分别有 aria-label 测试项名称、测试要求、测试项备注和填写占位提示。",
+    "浏览器操作验证动态新增：点击增加测试项后两行均包含同样三标题与 name/acceptance_criteria/note 映射，且每行标题仍在控件上方；点击第二行删除后项目数从 2 恢复为 1，未提交数据库写入。",
+    "重新检查编辑保存链路：v5InlineTaskPayload 仍从 data-inline-test-item-field 的 name、acceptance_criteria、note 读取 testItems；v5SaveInlineTask 仍执行 preview、冲突确认、preview_token/ack/expected_version PUT 并刷新任务树。此次仅改变测试项包装标题和其运行时样式。",
+    "确认日期和参与成员相关控件、测试项增删事件委托未被改动；任务表单仍保留 start_date、end_date、participant_member_ids/member_dates 和保存按钮。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: TASK-252 既有最终 npm-test evidence 可读取（37b52a2，64 tests pass）。",
+    "PASS: 在最终提交 0f661c1 独立重跑 npm test，64/64 tests pass。",
+    "PASS: node --check public/app.js。",
+    "PASS: node --check src/v3/index.js。",
+    "PASS: git diff --check 37b52a2fa503815f5b102a6eea25a3e24702e087 0f661c1b25911a7f2c0923294c80c79b289d2a42。",
+    "PASS: 浏览器实际 DOM/样式、标题与输入上下关系、动态新增删除、字段映射和保存链路均通过；Git changes 与 evidence changes 清单一致。"
+  ],
+  "created_at": "2026-08-26T08:15:28+08:00"
+}
