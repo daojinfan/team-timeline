@@ -17,7 +17,7 @@
     "mode": "TEAM_PROJECT",
     "phase": "EXECUTION_PLANNING"
   },
-  "current_baseline": "BL-008",
+  "current_baseline": "BL-009",
   "task_profile": "Release",
   "validation_level": "Release",
   "context_policy": {

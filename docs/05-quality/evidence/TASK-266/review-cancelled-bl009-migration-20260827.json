@@ -1,0 +1,23 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-266",
+  "reviewed_task_ids": ["TASK-265"],
+  "work_package": "WP-012",
+  "baseline": "BL-008",
+  "result": "cancelled",
+  "diff_checked": true,
+  "changes": [],
+  "change_summary": "TASK-265 已由项目经理依据 CONF-V5-DEFAULT-STATUS-20260826-01 批准的 BL-009 基线替代。保留 TASK-265/TASK-266 的历史实现、验证和两轮审核证据，仅取消旧审核关系，不把历史 passed 结论作为当前交付审核结论。",
+  "scope_checked": [
+    "TASK-265 与 TASK-266 均属于 WP-012/BL-008，且两者运行状态均为 superseded。",
+    "BL-009 已激活并承接当前 V5 默认状态配置工作包；旧任务实现与历史审核文件保持不变。",
+    "本次只更新 TASK-265 的当前审核关系和台账登记，不修改 public/app.js、public/index.html 或业务数据。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "Supersede 状态保留 TASK-265/TASK-266 的历史证据链。",
+    "取消后的审核状态为 cancelled，避免旧审核结论阻塞 BL-009 Release 治理校验。"
+  ],
+  "created_at": "2026-08-27T00:00:00Z"
+}
