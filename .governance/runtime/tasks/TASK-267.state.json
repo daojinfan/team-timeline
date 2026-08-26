@@ -5,11 +5,11 @@
   "work_package": "WP-013",
   "contract_sha256": "c889078217265c70f40575740ad607140eb0b8de1d2a75740cc70f6e6e06d43d",
   "baseline": "BL-009",
-  "state": "verified",
-  "approval_id": "APR-174",
-  "acceptance_subject_sha256": "",
-  "acceptance_evidence_sha256": "",
-  "acceptance_git_commit": "",
+  "state": "accepted",
+  "approval_id": "APR-175",
+  "acceptance_subject_sha256": "9c8411d3751cecf91f5976142f6ddcd3bfa64f63bf34961b787ca432cbfec172",
+  "acceptance_evidence_sha256": "315d3aa2142997e93b3592da16dbd8bc57e55e0edf6db0992c66754630721e28",
+  "acceptance_git_commit": "052e027cae8672973c83dc998d74c677ffaca854",
   "start_git_commit": "b40b1f7f164438281353c47039c133698cdcd2cc",
   "execution_lease": "",
   "execution_lease_owner": "",
@@ -38,5 +38,5 @@
   },
   "last_error": "",
   "created_at": "2026-08-26T16:45:23.2514521Z",
-  "updated_at": "2026-08-26T17:08:34.5430381Z"
+  "updated_at": "2026-08-26T17:13:43.8350579Z"
 }
