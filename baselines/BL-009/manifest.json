@@ -5,7 +5,7 @@
   "status_at_creation": "approved",
   "created_at": "2026-08-26T15:29:32.6431834Z",
   "approval_id": "APR-173",
-  "git_commit": "ef484c114c8f3f176e724fead04c4d11152ee0cc",
+  "git_commit": "c79a760d96392687bfbf226598e574cd73dea746",
   "documents": [
     {
       "doc_id": "PROJ-CHARTER-001",
