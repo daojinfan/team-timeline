@@ -36,13 +36,13 @@ review_policy: independent-required
 
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| WP-012 | TASK-266 | pending | REVIEWER | 独立复审 V5 全量编辑参与成员单行布局 | BL-008 | pending | TASK-265 | completed | docs/05-quality/evidence/TASK-266 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
-| WP-012 | TASK-265 | pending | IMPLEMENTER | 修正 V5 全量编辑参与成员单行布局 | BL-008 | pending | TASK-263 | running | public/app.js, tests | required-validation | TASK-266 | passed | docs/05-quality/evidence/TASK-266/review-round-2.json | Plan 自动登记，等待调度 |
-| WP-012 | TASK-264 | pending | REVIEWER | 独立复审 V5 两处成员时间同步入口 | BL-008 | pending | TASK-263 | completed | docs/05-quality/evidence/TASK-264 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-012 | TASK-266 | pending | REVIEWER | 独立复审 V5 全量编辑参与成员单行布局 | BL-008 | pending | TASK-265 | replaced | docs/05-quality/evidence/TASK-266 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-012 | TASK-265 | pending | IMPLEMENTER | 修正 V5 全量编辑参与成员单行布局 | BL-008 | pending | TASK-263 | replaced | public/app.js, tests | required-validation | TASK-266 | passed | docs/05-quality/evidence/TASK-266/review-round-2.json | Plan 自动登记，等待调度 |
+| WP-012 | TASK-264 | pending | REVIEWER | 独立复审 V5 两处成员时间同步入口 | BL-008 | pending | TASK-263 | replaced | docs/05-quality/evidence/TASK-264 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-012 | TASK-263 | pending | IMPLEMENTER | 补齐 V5 两处任务编辑器的成员时间同步 | BL-008 | pending | n/a | replaced | public/index.html, public/app.js, tests | required-validation | TASK-264 | cancelled | docs/05-quality/evidence/TASK-264/review-cancelled-task-263-20260826T084500Z.json | Plan 自动登记，等待调度 |
-| WP-012 | TASK-262 | pending | REVIEWER | 独立复审 V5 任务内样品记录草稿化 | BL-008 | pending | TASK-261 | completed | docs/05-quality/evidence/TASK-262 | npm-test | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-012 | TASK-262 | pending | REVIEWER | 独立复审 V5 任务内样品记录草稿化 | BL-008 | pending | TASK-261 | replaced | docs/05-quality/evidence/TASK-262 | npm-test | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-012 | TASK-261 | pending | IMPLEMENTER | 实现 V5 任务内样品记录草稿化 | BL-008 | pending | n/a | replaced | public/app.js, src/v3/index.js, tests | npm-test | TASK-262 | cancelled | docs/05-quality/evidence/TASK-262/review-cancelled-task-261-20260826T050000Z.json | Plan 自动登记，等待调度 |
-| WP-012 | TASK-260 | pending | REVIEWER | 独立复审 V5 成员排期复选框尺寸 | BL-008 | pending | TASK-259 | completed | docs/05-quality/evidence/TASK-260 | npm-test | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-012 | TASK-260 | pending | REVIEWER | 独立复审 V5 成员排期复选框尺寸 | BL-008 | pending | TASK-259 | replaced | docs/05-quality/evidence/TASK-260 | npm-test | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-012 | TASK-259 | pending | IMPLEMENTER | 收窄 V5 成员排期复选框 | BL-008 | pending | n/a | replaced | public/app.js | npm-test | TASK-260 | cancelled | docs/05-quality/evidence/TASK-260/review-cancelled-20260826T035700Z.json | Plan 自动登记，等待调度 |
 | WP-012 | TASK-258 | pending | REVIEWER | 独立复审 V5 测试人员时间批量同步 | BL-008 | pending | TASK-254 | replaced | docs/05-quality/evidence/TASK-258 | npm-test | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-012 | TASK-257 | pending | REVIEWER | 独立复审 V5 测试人员时间批量同步 | BL-008 | pending | TASK-254 | replaced | docs/05-quality/evidence/TASK-257 | npm-test | n/a | n/a | n/a | Plan 自动登记，等待调度 |
@@ -51,17 +51,17 @@ review_policy: independent-required
 | WP-012 | TASK-254 | pending | IMPLEMENTER | 实现 V5 全量编辑台测试人员时间批量同步 | BL-008 | pending | n/a | replaced | public/app.js | required-validation | TASK-258 | cancelled | n/a | Plan 自动登记，等待调度 |
 | WP-012 | TASK-253 | pending | REVIEWER | 独立复审 V5 右侧测试项字段标题 | BL-008 | pending | TASK-252 | replaced | docs/05-quality/evidence/TASK-253 | npm-test | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-012 | TASK-252 | pending | IMPLEMENTER | 补充 V5 右侧测试项字段标题 | BL-008 | pending | TASK-250 | replaced | public/app.js, tests | npm-test | TASK-253 | cancelled | n/a | Plan 自动登记，等待调度 |
-| WP-012 | TASK-251 | pending | REVIEWER | 独立复审 V5 右侧预览测试项与排期分行 | BL-008 | pending | TASK-250 | completed | docs/05-quality/evidence/TASK-251 | npm-test | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-012 | TASK-251 | pending | REVIEWER | 独立复审 V5 右侧预览测试项与排期分行 | BL-008 | pending | TASK-250 | replaced | docs/05-quality/evidence/TASK-251 | npm-test | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-012 | TASK-250 | pending | IMPLEMENTER | 修正 V5 右侧预览测试项与排期分行 | BL-008 | pending | TASK-248 | replaced | public/app.js, tests | npm-test | TASK-251 | cancelled | docs/05-quality/evidence/TASK-251/review-cancelled-task-250.json | Plan 自动登记，等待调度 |
-| WP-012 | TASK-249 | pending | REVIEWER | 独立复审 V5 右侧预览分行布局 | BL-008 | pending | TASK-248 | completed | docs/05-quality/evidence/TASK-249 | npm-test | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-012 | TASK-249 | pending | REVIEWER | 独立复审 V5 右侧预览分行布局 | BL-008 | pending | TASK-248 | replaced | docs/05-quality/evidence/TASK-249 | npm-test | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-012 | TASK-248 | pending | IMPLEMENTER | 修正 V5 右侧预览字段分行布局 | BL-008 | pending | n/a | replaced | public/app.js, tests | npm-test | TASK-249 | cancelled | docs/05-quality/evidence/TASK-249/review-cancelled-task-248.json | Plan 自动登记，等待调度 |
-| WP-012 | TASK-247 | pending | REVIEWER | 独立复审 V5 样品 ETA 复选框布局 | BL-008 | pending | TASK-246 | completed | docs/05-quality/evidence/TASK-247 | npm-test | n/a | n/a | n/a | 已完成规划，等待 execution 批准 |
+| WP-012 | TASK-247 | pending | REVIEWER | 独立复审 V5 样品 ETA 复选框布局 | BL-008 | pending | TASK-246 | replaced | docs/05-quality/evidence/TASK-247 | npm-test | n/a | n/a | n/a | 已完成规划，等待 execution 批准 |
 | WP-012 | TASK-246 | pending | IMPLEMENTER | 收窄 V5 样品 ETA 复选框 | BL-008 | pending | n/a | replaced | public/app.js, public/index.html, tests | npm-test | TASK-247 | cancelled | docs/05-quality/evidence/TASK-247/review-cancelled-task-246.json | 已完成规划，等待 execution 批准 |
-| WP-012 | TASK-245 | pending | REVIEWER | 独立复审 V5 样品移除操作布局 | BL-008 | pending | TASK-244 | completed | docs/05-quality/evidence/TASK-245 | npm-test | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-012 | TASK-245 | pending | REVIEWER | 独立复审 V5 样品移除操作布局 | BL-008 | pending | TASK-244 | replaced | docs/05-quality/evidence/TASK-245 | npm-test | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-012 | TASK-244 | pending | IMPLEMENTER | 调整 V5 样品移除操作布局 | BL-008 | pending | n/a | replaced | public/app.js, tests | npm-test | TASK-245 | cancelled | docs/05-quality/evidence/TASK-245/review-cancelled-task-244.json | Plan 自动登记，等待调度 |
-| WP-012 | TASK-243 | pending | REVIEWER | 独立复审 V5 全量编辑样品信息界面修正 | BL-008 | pending | TASK-242 | completed | docs/05-quality/evidence/TASK-243 | npm-test | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-012 | TASK-243 | pending | REVIEWER | 独立复审 V5 全量编辑样品信息界面修正 | BL-008 | pending | TASK-242 | replaced | docs/05-quality/evidence/TASK-243 | npm-test | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-012 | TASK-242 | pending | IMPLEMENTER | 修正 V5 全量编辑样品信息界面 | BL-008 | pending | n/a | replaced | public/index.html, public/app.js, tests | npm-test | TASK-243 | cancelled | docs/05-quality/evidence/TASK-243/review-cancelled-task-242.json | Plan 自动登记，等待调度 |
-| WP-012 | TASK-241 | pending | REVIEWER | 独立复审 V5 样品字段收敛实现 | BL-008 | pending | TASK-240 | completed | docs/05-quality/evidence/TASK-241 | npm-test, app-syntax, v3-syntax, git-diff-check | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-012 | TASK-241 | pending | REVIEWER | 独立复审 V5 样品字段收敛实现 | BL-008 | pending | TASK-240 | replaced | docs/05-quality/evidence/TASK-241 | npm-test, app-syntax, v3-syntax, git-diff-check | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-012 | TASK-240 | pending | IMPLEMENTER | 实现 V5 样品字段收敛与兼容同步 | BL-008 | pending | n/a | replaced | public/index.html, public/app.js, src/v3/index.js, tests | npm-test, app-syntax, v3-syntax, git-diff-check | TASK-241 | cancelled | docs/05-quality/evidence/TASK-241/review-cancelled-task-240.json | Plan 自动登记，等待调度 |
 | WP-011 | TASK-239 | pending | REVIEWER | 复核 Z3.2.2 导入只读核对记录 | BL-007 | pending | TASK-238 | completed | docs/05-quality/evidence/TASK-239 | demand-import-verify | n/a | n/a | n/a | BL-007 已验收，复审证据保留；运行任务随 BL-008 归档 |
 | WP-011 | TASK-238 | pending | IMPLEMENTER | 固化 Z3.2.2 导入只读核对记录 | BL-007 | pending | n/a | completed | docs/09-reports/TASK-238-demand-import.txt | demand-import-verify | TASK-239 | passed | docs/05-quality/evidence/TASK-239/review-round-2.json | Plan 自动登记，等待调度 |

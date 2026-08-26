@@ -5,7 +5,7 @@
   "work_package": "WP-012",
   "contract_sha256": "856f78c59da32615d623af34f0acead1c14bf6893664bd2dbd0ef79ea61aeabf",
   "baseline": "BL-008",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "APR-158",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -64,7 +64,7 @@
     "pass_streak": 0,
     "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "BL-008 历史交付已由批准的 BL-009 基线替代；保留原实现、审核和验证证据，不重复执行。",
   "created_at": "2026-08-25T16:34:14.6775228Z",
-  "updated_at": "2026-08-26T16:30:00.8157619Z"
+  "updated_at": "2026-08-26T16:36:12.8292958Z"
 }
