@@ -1,0 +1,31 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-260",
+  "reviewed_task_ids": ["TASK-259"],
+  "work_package": "WP-012",
+  "baseline": "BL-008",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-259",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "第二轮复查同步工具栏及成员行复选框的局部尺寸覆盖和视觉对齐。"
+    }
+  ],
+  "change_summary": "第二轮基于同一最终提交复查：复选框固定为紧凑 14px 盒模型，标签仍保持可点击，日期字段和同步操作的行为边界不受影响。",
+  "scope_checked": [
+    "public/app.js"
+  ],
+  "findings": [
+    "全选与成员同步复选框均有显式固定尺寸、零内边距和 flex 固定基数，能覆盖通用表单样式。",
+    "样式仅在成员排期节点渲染时应用，不会污染其他筛选、样品或旧版表单复选框。",
+    "第二轮未发现产品逻辑、API、数据库或超出 TASK-259 写入范围的变更。"
+  ],
+  "validation_evidence": [
+    "docs/05-quality/evidence/TASK-260/20260826T020222088Z-e3f6ea8f-npm-test.evidence.json"
+  ],
+  "created_at": "2026-08-26T02:06:00+08:00"
+}

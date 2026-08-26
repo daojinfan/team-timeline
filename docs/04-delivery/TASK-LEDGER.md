@@ -36,8 +36,8 @@ review_policy: independent-required
 
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| WP-012 | TASK-260 | pending | REVIEWER | 独立复审 V5 成员排期复选框尺寸 | BL-008 | pending | TASK-259 | pending | docs/05-quality/evidence/TASK-260 | npm-test | n/a | n/a | n/a | Plan 自动登记，等待调度 |
-| WP-012 | TASK-259 | pending | IMPLEMENTER | 收窄 V5 成员排期复选框 | BL-008 | pending | n/a | running | public/app.js | npm-test | TASK-260 | pending | pending | Plan 自动登记，等待调度 |
+| WP-012 | TASK-260 | pending | REVIEWER | 独立复审 V5 成员排期复选框尺寸 | BL-008 | pending | TASK-259 | completed | docs/05-quality/evidence/TASK-260 | npm-test | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-012 | TASK-259 | pending | IMPLEMENTER | 收窄 V5 成员排期复选框 | BL-008 | pending | n/a | running | public/app.js | npm-test | TASK-260 | passed | docs/05-quality/evidence/TASK-260/review-round-2.json | Plan 自动登记，等待调度 |
 | WP-012 | TASK-258 | pending | REVIEWER | 独立复审 V5 测试人员时间批量同步 | BL-008 | pending | TASK-254 | replaced | docs/05-quality/evidence/TASK-258 | npm-test | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-012 | TASK-257 | pending | REVIEWER | 独立复审 V5 测试人员时间批量同步 | BL-008 | pending | TASK-254 | replaced | docs/05-quality/evidence/TASK-257 | npm-test | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-012 | TASK-256 | pending | REVIEWER | 独立复审 V5 测试人员时间批量同步 | BL-008 | pending | TASK-254 | replaced | docs/05-quality/evidence/TASK-256 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
