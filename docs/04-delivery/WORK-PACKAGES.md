@@ -2,7 +2,7 @@
 doc_id: DEL-WORK-001
 type: delivery.work-packages
 status: active
-version: 1.3
+version: 1.2
 owner: human
 baseline: BL-005
 depends_on:
@@ -31,7 +31,6 @@ last_reviewed: 2026-08-22
 | WP-010 | 按 Web 字段表收敛工艺组专题、样品与任务数据 | BL-005 | CR-006 | 备份、数据库完整性、V3 API/页面数据核对与回滚演练 | PM |
 | WP-011 | 从已确认的测控任务需求文档受控导入单个 V5 任务 | BL-006 | REQ-V5-001、ARC-OVERALL-V5-001、ARC-COMP-V5-001 | 来源哈希、备份、精确字段映射、V5/V1 投影与数据库完整性 | PM |
 | WP-012 | 收敛 V5 样品字段并保持历史数据与 V3 兼容 | BL-008 | CR-008、REQ-V5-001、ARC-OVERALL-V5-001、ARC-COMP-V5-001 | V5 表单字段回归、样品新增/编辑、编号后补、ETA 状态、历史字段保留与 API 回归 | IMPLEMENTER |
-| WP-013 | 为任务全量编辑台和执行中心增加可配置的默认状态筛选 | BL-009 | DEC-005、CR-009、REQ-V5-001、ARC-COMP-V5-001 | 默认值设置入口、独立状态集合、浏览器持久化、无效配置回退、两视图初始化与回归测试 | IMPLEMENTER |
 
 执行状态统一记录在 `WORK-STATUS.md`，避免日常状态变化改写已经批准的工作包契约。
 每个活动工作包还必须有 `context/WP-NNN.context.json`，声明所需权威文档、读取模式、适用基线和验证。上下文路由随基线锁定；已经 `accepted` 或 `superseded` 的历史工作包可以保留旧路由。生成的 `.governance/context/*.generated.md` 只是临时输入，不是项目事实。
@@ -59,20 +58,6 @@ last_reviewed: 2026-08-22
 - 范围外：产品代码、手机端设计、公共接口和数据库。
 - 验收：规范无占位内容，组件状态、空状态、工具栏和验收步骤可追踪到 REQ-001 至 REQ-007。
 - 任务档位：Release。
-
-## WP-013 契约
-
-- 目标：让任务全量编辑台和执行中心的默认状态筛选可由用户配置，同时保持当前首次使用的“全部状态”行为。
-- 范围：`public/index.html` 中资源维护的工作区默认值设置入口；`public/app.js` 中 V5 偏好解析、保存、应用、重置和两个视图的状态筛选初始化；`tests/` 中相关回归。
-- 业务规则：任务全量编辑台和执行中心分别保存状态集合；空集合表示全部状态；手动修改当前筛选不覆盖默认值；配置损坏或版本不兼容回退到全部状态。
-- 兼容策略：使用版本化浏览器 `localStorage`，不增加数据库表、不改变 V5/V3/V2/V1 API 和任务事实；不影响其他浏览器或历史数据。
-- 范围外：共享用户配置、登录权限、云同步、数据库迁移、V5 API 变化、状态计算规则变化、远程发布。
-- 基线：BL-009。
-- 权威文档：`REQ-V5-001`、`ARC-COMP-V5-001`、`QUAL-TRACE-V5-001`、`DEC-005`、`CR-009`、`DEL-WORK-001`。
-- 允许修改：`public/index.html`、`public/app.js`、`tests/`、`docs/02-product/requirements-v5.md`、`docs/03-architecture/components/v5-detailed-design.md`、`docs/05-quality/traceability-v5.md`、`docs/07-decisions/DEC-005.md`、`docs/08-changes/CR-009.md`、`docs/04-delivery/WORK-PACKAGES.md`、`docs/04-delivery/WORK-STATUS.md`、`docs/00-index/CURRENT-STATE.md`、`docs/05-quality/evidence`、治理任务与工作状态文件。
-- 验收：设置入口可达；两视图可独立保存 0～5 类状态；刷新或重新进入对应模块后应用配置；空集合显示全部状态；无效 JSON/未知状态/旧版本回退到全部状态；手动筛选不覆盖默认值；重置清除配置并恢复全部状态；`npm test`、`node --check public/app.js` 和 V5 静态回归通过；独立 Reviewer 完成 Standard 双轮复审。
-- 回滚：回退前端、测试和文档交付提交；清除本地偏好键即可恢复固定“全部状态”行为；不涉及数据库回滚。
-- 任务档位：Standard（本地展示偏好，无数据/API/发布风险）。
 
 ## WP-003 契约
 

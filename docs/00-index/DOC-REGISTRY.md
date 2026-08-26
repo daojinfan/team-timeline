@@ -30,7 +30,7 @@ last_reviewed: 2026-08-20
 | ARC-COMP-002 | docs/03-architecture/components/task-workflow.md | architecture.component.task-workflow | active | 1.0 | BL-001 | human |
 | ARC-COMP-003 | docs/03-architecture/components/verification.md | architecture.component.verification | active | 1.0 | BL-001 | human |
 | DEC-001 | docs/07-decisions/DEC-001.md | architecture.decision | active | 1.0 | BL-001 | human |
-| DEL-WORK-001 | docs/04-delivery/WORK-PACKAGES.md | delivery.work-packages | active | 1.3 | BL-009 | human |
+| DEL-WORK-001 | docs/04-delivery/WORK-PACKAGES.md | delivery.work-packages | active | 1.2 | BL-005 | human |
 | DEL-WORK-STATUS-001 | docs/04-delivery/WORK-STATUS.md | delivery.work-status | active | 1.0 | BL-001 | human |
 | QUA-TRACE-001 | docs/05-quality/traceability.md | quality.traceability | active | 1.0 | BL-001 | human |
 | DEL-TASK-LEDGER-001 | docs/04-delivery/TASK-LEDGER.md | delivery.task-ledger | active | 1.0 | BL-001 | human |
@@ -57,11 +57,11 @@ last_reviewed: 2026-08-20
 | CR-005 | docs/08-changes/CR-005.md | change-package | approved | 1.0 | BL-004 | human |
 | QUAL-TRACE-V4-001 | docs/05-quality/traceability-v4.md | quality.traceability.v4 | proposed | 1.0 | BL-005 | human |
 | CR-006 | docs/08-changes/CR-006.md | change-package | approved | 1.0 | BL-005 | human |
-| REQ-V5-001 | docs/02-product/requirements-v5.md | product.requirements.v5 | proposed | 1.4 | BL-009 | human |
+| REQ-V5-001 | docs/02-product/requirements-v5.md | product.requirements.v5 | proposed | 1.3 | BL-008 | human |
 | ARC-OVERALL-V5-001 | docs/03-architecture/overall-design-v5.md | architecture.overall.v5 | proposed | 1.3 | BL-008 | human |
-| ARC-COMP-V5-001 | docs/03-architecture/components/v5-detailed-design.md | architecture.component.v5-detailed-design | proposed | 1.4 | BL-009 | human |
-| QUAL-TRACE-V5-001 | docs/05-quality/traceability-v5.md | quality.traceability.v5 | proposed | 1.4 | BL-009 | human |
+| ARC-COMP-V5-001 | docs/03-architecture/components/v5-detailed-design.md | architecture.component.v5-detailed-design | proposed | 1.3 | BL-008 | human |
+| QUAL-TRACE-V5-001 | docs/05-quality/traceability-v5.md | quality.traceability.v5 | proposed | 1.3 | BL-008 | human |
 | CR-007 | docs/08-changes/CR-007.md | change-package | proposed | 1.2 | BL-005 | human |
 | CR-008 | docs/08-changes/CR-008.md | change-package | approved | 1.0 | BL-008 | human |
-| DEC-005 | docs/07-decisions/DEC-005.md | decision | proposed | 1.0 | BL-009 | human |
-| CR-009 | docs/08-changes/CR-009.md | change-package | proposed | 1.0 | BL-009 | human |
+| DEC-005 | docs/07-decisions/DEC-005.md | decision | proposed | 1.0 | BL-008 | human |
+| CR-009 | docs/08-changes/CR-009.md | change-package | proposed | 1.0 | BL-008 | human |
