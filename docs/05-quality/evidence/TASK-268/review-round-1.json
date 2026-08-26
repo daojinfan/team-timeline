@@ -1,0 +1,46 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-268",
+  "reviewed_task_ids": ["TASK-267"],
+  "work_package": "WP-013",
+  "baseline": "BL-009",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-267",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "资源维护新增工作区默认值区域，分别提供任务全量编辑台和执行中心五类状态的多选项、保存与恢复全部状态操作。"
+    },
+    {
+      "task_id": "TASK-267",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "新增版本化 teamTaskGantt.v5Prefs.v1 偏好读写、状态枚举校验、无效配置回退、默认筛选表达式应用，以及保存/重置后立即刷新两个 V5 视图。"
+    },
+    {
+      "task_id": "TASK-267",
+      "path": "tests/v5-default-status.test.js",
+      "change_type": "added",
+      "summary": "新增 V5 默认状态设置入口、localStorage 安全回退和临时筛选不持久化的静态回归。"
+    }
+  ],
+  "change_summary": "第一轮从 TASK-267 启动提交 f0fb4660b79d5755efd2df370456b7ae3952577a 核对实际产品差异，变更类型与 TASK-267 allowed_paths 完全一致；未发现越界、删除或重命名。",
+  "scope_checked": [
+    "REQ-V5-038～040、ARC-COMP-V5-001 §3.4/§4.4～4.5、DEC-005 和 CR-009 的默认状态约束。",
+    "public/index.html 的资源维护入口可达，编辑台与执行中心使用独立 data-v5-default-status 分组，空选项语义清晰。",
+    "public/app.js 的版本、状态枚举、重复值和未知值校验；读取异常回退为空集合且不阻断 V5 加载；保存/恢复会更新两个当前筛选表达式和渲染。",
+    "快速筛选函数不调用 localStorage 或默认偏好保存函数，临时筛选不会反向覆盖已保存默认值。",
+    "tests/v5-default-status.test.js 覆盖入口、五类状态、版本化键、安全回退、恢复和临时筛选隔离。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: node --check public/app.js",
+    "PASS: npm test（69/69）",
+    "PASS: V5 默认状态静态回归（3/3）",
+    "PASS: 产品差异清单与 TASK-267 启动提交、allowed_paths 及变更类型一致。"
+  ],
+  "created_at": "2026-08-27T01:00:00Z"
+}
