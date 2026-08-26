@@ -1,0 +1,40 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-266",
+  "reviewed_task_ids": ["TASK-265"],
+  "work_package": "WP-012",
+  "baseline": "BL-008",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-265",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "复核最终成员渲染输出：每个成员项通过 grid-column:1/-1 占满父列表一行，四列依次显示同步、成员信息、个人开始和个人结束；活动渲染器不生成行内移除操作。"
+    },
+    {
+      "task_id": "TASK-265",
+      "path": "tests/v5-inline-editor.test.js",
+      "change_type": "modified",
+      "summary": "复核新增静态断言覆盖单行布局、日期输入、行内移除按钮缺失和成员 chip 的×移除路径。"
+    }
+  ],
+  "change_summary": "第二轮重新从 TASK-265 起始提交核对最终产品差异，变更指纹与第一轮一致，未发现遗漏、越界或两轮之间的产品内容变化。",
+  "scope_checked": [
+    "确认当前 HEAD 相对 997138e1c62bead336ca13fa9c426389e1fe1c6c 的产品差异仍只有 public/app.js 与 tests/v5-inline-editor.test.js。",
+    "确认 v5RenderMembersInForm 的每条成员记录不会再落入原两列列表的半列，成员数量增加时仍按成员逐行排列。",
+    "确认同步 checkbox、成员姓名/角色、个人开始和个人结束字段均保持可操作且不改变保存 payload。",
+    "确认成员 chip 的×移除事件仍清理 dialogMemberIds 与 dialogMemberSyncIds，并重新渲染成员行。",
+    "确认没有修改右侧任务预览、任务时间 API、数据库或执行中心排期逻辑。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: node --check public/app.js",
+    "PASS: npm test（66/66）",
+    "PASS: git diff --check",
+    "PASS: 第二轮与第一轮的最终内容指纹一致。"
+  ],
+  "created_at": "2026-08-26T08:55:00Z"
+}

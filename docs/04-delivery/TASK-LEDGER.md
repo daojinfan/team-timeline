@@ -36,8 +36,8 @@ review_policy: independent-required
 
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| WP-012 | TASK-266 | pending | REVIEWER | 独立复审 V5 全量编辑参与成员单行布局 | BL-008 | pending | TASK-265 | pending | docs/05-quality/evidence/TASK-266 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
-| WP-012 | TASK-265 | pending | IMPLEMENTER | 修正 V5 全量编辑参与成员单行布局 | BL-008 | pending | TASK-263 | running | public/app.js, tests | required-validation | TASK-266 | pending | pending | Plan 自动登记，等待调度 |
+| WP-012 | TASK-266 | pending | REVIEWER | 独立复审 V5 全量编辑参与成员单行布局 | BL-008 | pending | TASK-265 | completed | docs/05-quality/evidence/TASK-266 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-012 | TASK-265 | pending | IMPLEMENTER | 修正 V5 全量编辑参与成员单行布局 | BL-008 | pending | TASK-263 | running | public/app.js, tests | required-validation | TASK-266 | passed | docs/05-quality/evidence/TASK-266/review-round-2.json | Plan 自动登记，等待调度 |
 | WP-012 | TASK-264 | pending | REVIEWER | 独立复审 V5 两处成员时间同步入口 | BL-008 | pending | TASK-263 | completed | docs/05-quality/evidence/TASK-264 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-012 | TASK-263 | pending | IMPLEMENTER | 补齐 V5 两处任务编辑器的成员时间同步 | BL-008 | pending | n/a | replaced | public/index.html, public/app.js, tests | required-validation | TASK-264 | cancelled | docs/05-quality/evidence/TASK-264/review-cancelled-task-263-20260826T084500Z.json | Plan 自动登记，等待调度 |
 | WP-012 | TASK-262 | pending | REVIEWER | 独立复审 V5 任务内样品记录草稿化 | BL-008 | pending | TASK-261 | completed | docs/05-quality/evidence/TASK-262 | npm-test | n/a | n/a | n/a | Plan 自动登记，等待调度 |

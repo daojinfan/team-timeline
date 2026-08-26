@@ -5,21 +5,43 @@
   "work_package": "WP-012",
   "contract_sha256": "f92e513441092d2d87284bd25a3f32fdc48f3454bafe884d343389730edb6b5e",
   "baseline": "BL-008",
-  "state": "planned",
-  "approval_id": "",
+  "state": "verified",
+  "approval_id": "APR-172",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
   "acceptance_git_commit": "",
-  "start_git_commit": "",
+  "start_git_commit": "7ce77593b520bdf7dffcaffa156a939cd237a1cb",
   "execution_lease": "",
   "execution_lease_owner": "",
   "execution_lease_expires_at": "",
   "preexisting_changes": [],
   "plan_checkpoint_git_commit": "997138e1c62bead336ca13fa9c426389e1fe1c6c",
   "plan_rebase_history": [],
-  "evidence": [],
-  "evidence_history": [],
-  "review_history": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-266/20260826T085309561Z-7afd2b3f-required-validation.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-266/20260826T085017287Z-8622b17e-required-validation.evidence.json",
+    "docs/05-quality/evidence/TASK-266/review-round-1.json",
+    "docs/05-quality/evidence/TASK-266/20260826T085309561Z-7afd2b3f-required-validation.evidence.json",
+    "docs/05-quality/evidence/TASK-266/review-round-2.json"
+  ],
+  "review_history": [
+    {
+      "path": "docs/05-quality/evidence/TASK-266/review-round-1.json",
+      "sha256": "18eaa3b083c9823a0a375ed9804c16ed6eb07622e207ac08a5c159f37420f7fb",
+      "result": "passed",
+      "round_id": "RR-c677071e8ee14c68ac37ae47ea6209ff",
+      "recorded_at": "2026-08-26T08:50:54.502881Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-266/review-round-2.json",
+      "sha256": "cbb2097d99e35b0c42752b5b51c0756859a84d4dc8af1c4e8a3d4425aed1c59c",
+      "result": "passed",
+      "round_id": "RR-8acba69ffdaa451981629d54f6e35cb4",
+      "recorded_at": "2026-08-26T08:53:36.2934812Z"
+    }
+  ],
   "review": {
     "required": false,
     "reviewer_task_id": "",
@@ -30,5 +52,5 @@
   },
   "last_error": "",
   "created_at": "2026-08-26T08:36:44.7441959Z",
-  "updated_at": "2026-08-26T08:36:44.7441959Z"
+  "updated_at": "2026-08-26T08:53:36.6235277Z"
 }
