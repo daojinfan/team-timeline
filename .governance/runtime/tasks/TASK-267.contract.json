@@ -1,0 +1,77 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-267",
+  "work_package": "WP-013",
+  "title": "实现 V5 工作区默认状态配置",
+  "goal": "在资源维护中提供全量编辑台与执行中心各自的状态默认值设置，使用版本化浏览器本地偏好持久化并在两个视图初始化时应用，同时保持手动筛选临时性与全部状态兼容行为。",
+  "baseline": "BL-009",
+  "profile": "Standard",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/index.html",
+    "public/app.js",
+    "tests"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/app.js",
+    "tests",
+    "docs/02-product/requirements-v5.md",
+    "docs/03-architecture/components/v5-detailed-design.md",
+    "docs/05-quality/traceability-v5.md",
+    "docs/07-decisions/DEC-005.md",
+    "docs/08-changes/CR-009.md",
+    "docs/04-delivery/WORK-PACKAGES.md",
+    "docs/04-delivery/WORK-STATUS.md"
+  ],
+  "write_paths": [
+    "public/index.html",
+    "public/app.js",
+    "tests"
+  ],
+  "out_of_scope": [
+    "数据库、服务端 API、V5/V3/V2/V1 任务事实和状态计算规则",
+    "共享用户配置、登录权限、云同步和远程发布"
+  ],
+  "authoritative_documents": [
+    "REQ-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "DEC-005",
+    "CR-009",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [],
+  "acceptance_criteria": [
+    "资源维护页面可进入工作区默认值设置，且编辑台与执行中心分别展示当前默认状态集合。",
+    "两视图默认状态集合可独立保存 0 至 5 类状态；空集合表示全部状态。",
+    "刷新或重新进入对应模块时应用已保存默认值；手动修改当前筛选不覆盖已保存默认值。",
+    "无效 JSON、未知状态、重复状态或不兼容版本安全回退为全部状态；重置操作清除配置并恢复全部状态。",
+    "新增 V5 静态回归覆盖存取、校验、应用、临时筛选与重置行为，npm test 和 node --check public/app.js 通过。"
+  ],
+  "validations": [
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-26T16:45:23.2514521Z"
+}

@@ -13,7 +13,8 @@
     "docs/07-decisions/DEC-005.md",
     "docs/08-changes/CR-009.md",
     "docs/04-delivery/WORK-PACKAGES.md",
-    "docs/04-delivery/WORK-STATUS.md"
+    "docs/04-delivery/WORK-STATUS.md",
+    "docs/05-quality/evidence"
   ],
   "required_documents": [
     {

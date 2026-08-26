@@ -1,0 +1,71 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-268",
+  "work_package": "WP-013",
+  "title": "独立复审 V5 默认状态配置",
+  "goal": "依据 WP-013 与 BL-009 审查 TASK-267 的实际变更清单、默认状态偏好解析保存应用重置逻辑、两个视图初始化行为和回归证据，按 Standard 双轮规则记录审核证据。",
+  "baseline": "BL-009",
+  "profile": "Standard",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-268"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/app.js",
+    "tests",
+    "docs/02-product/requirements-v5.md",
+    "docs/03-architecture/components/v5-detailed-design.md",
+    "docs/05-quality/traceability-v5.md",
+    "docs/07-decisions/DEC-005.md",
+    "docs/08-changes/CR-009.md",
+    "docs/04-delivery/WORK-PACKAGES.md",
+    "docs/04-delivery/WORK-STATUS.md",
+    "docs/05-quality/evidence/TASK-267"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-268"
+  ],
+  "out_of_scope": [
+    "修改产品代码、测试实现、数据库、服务端 API、治理运行状态和其他审核任务证据"
+  ],
+  "authoritative_documents": [
+    "REQ-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "DEC-005",
+    "CR-009",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-267"
+  ],
+  "acceptance_criteria": [
+    "审核实际 Git 变更及变更类型清单，并核对其与 TASK-267 启动提交后的范围一致。",
+    "独立验证 npm test、node --check public/app.js 及 V5 静态回归结果，检查无效配置回退、两视图独立默认值、临时筛选不持久化和重置行为。",
+    "Standard 审核第一轮形成 provisional-passed，完成 ReopenReview 后对同一最终内容进行第二轮全量复审并形成 passed；发现问题则记录 changes-required。"
+  ],
+  "validations": [
+    {
+      "id": "npm-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-26T16:46:44.0011554Z"
+}
