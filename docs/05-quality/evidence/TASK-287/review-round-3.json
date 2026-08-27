@@ -1,0 +1,64 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-287",
+  "reviewed_task_ids": ["TASK-286"],
+  "work_package": "WP-014",
+  "baseline": "BL-010",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-286",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "将排期详情与执行工作区选中状态联动，增加关闭、全量编辑和详情成员隔离渲染；在执行视图切换 html/body 窄屏类，并以任务编辑、成员编辑、普通选择三个互斥分支路由排期交互，成员入口先更新选择并重绘详情。"
+    },
+    {
+      "task_id": "TASK-286",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "将默认隐藏的排期详情卡移入执行工作区作为第三个网格子项，增加可访问标题关联和关闭按钮，移除原独立详情卡的重复编辑入口与空状态占位。"
+    },
+    {
+      "task_id": "TASK-286",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "实现宽屏三栏、1180px 两栏及 720px 单栏回落，设置右侧粘性详情及内部滚动，显式修复事实字段列宽与详情成员样式串扰，并仅在窄屏执行中心解除全局 1100px 最小宽度。"
+    },
+    {
+      "task_id": "TASK-286",
+      "path": "tests/v5-execution-detail-layout.test.js",
+      "change_type": "added",
+      "summary": "新增三项源码级回归，覆盖详情卡工作区位置和默认隐藏、三档响应式与根类切换、关闭行为、事实字段、成员样式隔离、精简动作及任务/成员/普通选择路由顺序。"
+    }
+  ],
+  "change_summary": "profile=Standard；候选通过轮次=1（审核记录 round-3）。本轮独立审核 task_id=TASK-286、reviewer_task_id=TASK-287、start_git_commit=93d2be89e8caf17a30d08a4d1350bdfa66e4a756、subject_git_commit=c0f35a4b7a2cd252d27c96724b092e03732c23f4。完整业务 manifest 精确为 public/app.js、public/index.html、public/styles.css 三项 modified 和 tests/v5-execution-detail-layout.test.js 一项 added；没有业务文件删除或重命名，全部位于 TASK-286 allowed_paths。治理状态、验证输出和既有审核记录不计入业务 changes 清单。",
+  "scope_checked": [
+    "重新读取 TASK-286/TASK-287 契约、最新状态、WP-014 上下文路由及项目 review-evidence schema，并按 REQ-V5-001、ARC-COMP-V5-001、QUAL-TRACE-V5-001、DEC-005、CR-009、DEL-WORK-001 的当前上下文复核目标和边界。",
+    "从 start_git_commit 93d2be89e8caf17a30d08a4d1350bdfa66e4a756 到 subject_git_commit c0f35a4b7a2cd252d27c96724b092e03732c23f4 检查完整 name-status、逐行业务差异和 git diff --check，确认 changes 类型、路径和数量准确。",
+    "逐行检查 v5RenderExecutionDetail、v5SetView 包装、甘特条标记和执行中心事件委派，确认任务编辑、成员编辑、普通选择按顺序互斥并提前返回，且没有修改排期预览、保存负载、冲突确认、版本校验、API、服务端或数据库。",
+    "完整审查详情卡 DOM 位置、默认 hidden、关闭清空、动作精简、事实网格、成员样式隔离、宽屏 sticky/max-height、<=1180 两栏落位及 <=720 单栏和最小宽度隔离规则。",
+    "在 700×720 真实页面分别执行普通行选择、成员甘特条、详情成员修改、详情任务修改和全量编辑离开五条路径，检查弹窗模式、同步选项、详情选择、根类和横向尺寸。",
+    "在 1280×720 真实页面重新执行选中和关闭流程，测量三栏/双栏、详情卡、日期、事实字段、动作、成员行及页面横向尺寸。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "check=app-syntax：独立执行 node --check public/app.js，exit 0。",
+    "check=detail-layout-test：独立执行 node --test tests/v5-execution-detail-layout.test.js，3/3 通过，0 失败。",
+    "check=full-test：独立执行 npm test，82/82 通过，0 失败、0 跳过、0 取消。",
+    "check=diff：git diff --check 93d2be8..c0f35a4 对四项业务文件 exit 0；name-status 精确为三项 M 和一项 A。",
+    "check=700-width：innerWidth=700px；因 15px 垂直滚动条，可用 html/body clientWidth 与 scrollWidth 均为 685px；执行工作区和详情卡均为 x=32..652.667px、宽 620.667px，操作区 x=48.667..636px，无横向越界。",
+    "check=700-root-scope：进入执行中心后 html/body 均带 v5-execution-active，未选择时详情 hidden 且无弹窗；全量编辑离开后两处根类清空、编辑面板可见、执行面板隐藏，body clientWidth/scrollWidth 恢复 1100/1100px。",
+    "check=ordinary-selection：普通成员行按钮仅选择任务，详情 cardHidden=false、has-detail=true、选中甘特行数=1，排期弹窗保持关闭，证明普通选择分支不误入编辑。",
+    "check=member-gantt：成员甘特条同时携带 select 与 edit-member 标记时优先进入成员分支，弹窗标题“修改成员排期”、同步字段 hidden=true/display=none；详情卡同步可见、has-detail=true、选中行数=1。",
+    "check=detail-member：详情成员行“修改”打开“修改成员排期”，同步字段 hidden=true/display=none，详情卡保持可见。",
+    "check=detail-task：精确选择器 #v5ExecutionDetail [data-v5-exec-edit-task][data-v5-exec-schedule-mode=\"task\"] 打开“修改任务时间”，同步字段 hidden=false/display=flex 且 checkbox checked=true。",
+    "check=member-style-isolation：700px 下左侧 .v5-execution-member-list 为 min-height=100px、overflow=auto；详情 .v5-execution-detail-members 为 min-height=auto、overflow=visible，未继承侧栏滚动约束。",
+    "check=1280-layout：innerWidth=1280px，页面 html/body clientWidth 与 scrollWidth 均为 1265px；选择后工作区列宽 210px/578.667px/360px，详情卡宽 360px、position=sticky、max-height=598px。",
+    "check=1280-facts-actions：任务日期“2026-05-12 → 2026-11-12”边界为 211.333×18.594px并横向显示；三个事实块均为 84px/211.333px 两列；详情动作仅“修改任务时间”“全量编辑”，不存在 data-v5-back-editor，详情成员行使用独立类名。",
+    "check=close：1280px 关闭后 detail card hidden=true、has-detail=false、详情内容清空，工作区由三栏恢复为 226px/934.667px 双栏，页面仍无横向溢出。",
+    "审核结论 summary：subject_git_commit=c0f35a4b7a2cd252d27c96724b092e03732c23f4 的全部业务差异、自动化验证与双视口交互均满足 WP-014 验收；本审核成员未调用任何治理状态 Action。"
+  ],
+  "created_at": "2026-08-27T14:21:00Z"
+}
