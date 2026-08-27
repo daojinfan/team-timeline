@@ -5,12 +5,12 @@
   "work_package": "WP-014",
   "contract_sha256": "fe686f53852040dbbff4517dcba14082ccc0a6c31576db81c2cdd0446420cee2",
   "baseline": "BL-010",
-  "state": "planned",
+  "state": "verified",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
   "acceptance_git_commit": "",
-  "start_git_commit": "c0f35a4b7a2cd252d27c96724b092e03732c23f4",
+  "start_git_commit": "2865121c3692bf38c4af2a5257ef70ac006b8531",
   "execution_lease": "",
   "execution_lease_owner": "",
   "execution_lease_expires_at": "",
@@ -39,7 +39,11 @@
       "rebased_at": "2026-08-27T13:38:37.0375366Z"
     }
   ],
-  "evidence": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-287/20260827T141904743Z-3308cce5-app-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-287/20260827T141904743Z-3308cce5-detail-layout-test.evidence.json",
+    "docs/05-quality/evidence/TASK-287/20260827T141904743Z-3308cce5-governance-strict.evidence.json"
+  ],
   "evidence_history": [
     "docs/05-quality/evidence/TASK-287/20260827T134854577Z-08e1d36b-app-syntax.evidence.json",
     "docs/05-quality/evidence/TASK-287/20260827T134854577Z-08e1d36b-detail-layout-test.evidence.json",
@@ -52,7 +56,11 @@
     "docs/05-quality/evidence/TASK-287/20260827T141258285Z-3cc6ca8a-app-syntax.evidence.json",
     "docs/05-quality/evidence/TASK-287/20260827T141258285Z-3cc6ca8a-detail-layout-test.evidence.json",
     "docs/05-quality/evidence/TASK-287/20260827T141258285Z-3cc6ca8a-governance-strict.evidence.json",
-    "docs/05-quality/evidence/TASK-287/review-round-3.json"
+    "docs/05-quality/evidence/TASK-287/review-round-3.json",
+    "docs/05-quality/evidence/TASK-287/20260827T141904743Z-3308cce5-app-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-287/20260827T141904743Z-3308cce5-detail-layout-test.evidence.json",
+    "docs/05-quality/evidence/TASK-287/20260827T141904743Z-3308cce5-governance-strict.evidence.json",
+    "docs/05-quality/evidence/TASK-287/review-round-4.json"
   ],
   "review_history": [
     {
@@ -75,6 +83,13 @@
       "result": "passed",
       "round_id": "RR-070bf7e69ecc47deb5bed0d63fd54913",
       "recorded_at": "2026-08-27T14:18:15.0050783Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-287/review-round-4.json",
+      "sha256": "83b7906d629b6f639dc10639de72212ce9afc3d07bbce7d714914bc6095b394e",
+      "result": "passed",
+      "round_id": "RR-6ed147102b5d4e9e83ad20c99c8142a0",
+      "recorded_at": "2026-08-27T14:22:48.5943360Z"
     }
   ],
   "review": {
@@ -87,5 +102,5 @@
   },
   "last_error": "",
   "created_at": "2026-08-27T13:37:34.6511229Z",
-  "updated_at": "2026-08-27T14:18:43.1562762Z"
+  "updated_at": "2026-08-27T14:22:48.9982876Z"
 }

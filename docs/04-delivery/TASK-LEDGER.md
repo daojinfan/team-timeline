@@ -36,8 +36,8 @@ review_policy: independent-required
 
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| WP-014 | TASK-287 | pending | REVIEWER | 独立复审执行中心排期详情 UI 优化 | BL-010 | pending | TASK-286 | pending | docs/05-quality/evidence/TASK-287 | app-syntax, detail-layout-test, governance-strict | n/a | n/a | n/a | Plan 自动登记，等待调度 |
-| WP-014 | TASK-286 | pending | IMPLEMENTER | 优化执行中心排期详情信息层级与响应式布局 | BL-010 | pending | TASK-284 | running | public/index.html, public/app.js, public/styles.css, tests/v5-execution-detail-layout.test.js | app-syntax, detail-layout-test, full-test | TASK-287 | pending |  | Plan 自动登记，等待调度 |
+| WP-014 | TASK-287 | pending | REVIEWER | 独立复审执行中心排期详情 UI 优化 | BL-010 | pending | TASK-286 | completed | docs/05-quality/evidence/TASK-287 | app-syntax, detail-layout-test, governance-strict | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-014 | TASK-286 | pending | IMPLEMENTER | 优化执行中心排期详情信息层级与响应式布局 | BL-010 | pending | TASK-284 | running | public/index.html, public/app.js, public/styles.css, tests/v5-execution-detail-layout.test.js | app-syntax, detail-layout-test, full-test | TASK-287 | passed | docs/05-quality/evidence/TASK-287/review-round-4.json | Plan 自动登记，等待调度 |
 | WP-013 | TASK-285 | pending | REVIEWER | 独立复审执行中心成员排期同步复选框布局 | BL-009 | pending | TASK-284 | completed | docs/05-quality/evidence/TASK-285 | required-validation, app-syntax, governance-strict | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-013 | TASK-284 | pending | IMPLEMENTER | 修正执行中心成员排期同步复选框布局 | BL-009 | pending | TASK-280 | completed | public/index.html, public/app.js, tests | required-validation, app-syntax, governance-strict | TASK-285 | passed | docs/05-quality/evidence/TASK-285/review-round-2.json | Plan 自动登记，等待调度 |
 | WP-013 | TASK-283 | pending | REVIEWER | 独立复审执行中心成员排期同步复选框布局 | BL-009 | pending | TASK-282 | replaced | docs/05-quality/evidence/TASK-283 | required-validation, app-syntax, governance-strict | n/a | n/a | n/a | Plan 自动登记，等待调度 |

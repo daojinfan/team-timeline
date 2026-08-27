@@ -1,0 +1,66 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-287",
+  "reviewed_task_ids": ["TASK-286"],
+  "work_package": "WP-014",
+  "baseline": "BL-010",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-286",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "把详情卡显隐和工作区 has-detail 状态绑定，增加关闭与全量编辑流程及独立详情成员渲染；执行视图负责限定窄屏根类，事件委派按任务编辑、成员编辑、普通选择顺序互斥处理，并在成员甘特入口先选中任务、重绘详情后打开成员排期。"
+    },
+    {
+      "task_id": "TASK-286",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "把排期详情卡从工作区外部移至执行工作区第三个子项，默认 hidden，补充标题关联和关闭按钮，同时移除原详情卡的重复编辑操作与空占位。"
+    },
+    {
+      "task_id": "TASK-286",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "为详情实现 1280 宽屏三栏、<=1180 两栏和 <=720 单栏布局，设置粘性高度与内部滚动，明确事实字段列宽并隔离详情成员样式；只在窄屏执行中心激活时解除 html/body 的 1100px 最小宽度。"
+    },
+    {
+      "task_id": "TASK-286",
+      "path": "tests/v5-execution-detail-layout.test.js",
+      "change_type": "added",
+      "summary": "新增三项静态回归，覆盖详情卡位置和初始隐藏、三档响应式和根类、关闭行为、事实网格、成员样式隔离、精简动作，以及任务/成员/普通选择分支的顺序和提前返回。"
+    }
+  ],
+  "change_summary": "profile=Standard；候选通过轮次=2（审核记录 round-4）。审核元数据：task_id=TASK-286，reviewer_task_id=TASK-287，work_package=WP-014，baseline=BL-010，start_git_commit=93d2be89e8caf17a30d08a4d1350bdfa66e4a756，subject_git_commit=2865121c3692bf38c4af2a5257ef70ac006b8531。首先独立执行 c0f35a4b7a2cd252d27c96724b092e03732c23f4..2865121 的四个业务文件 diff，name-status 为空且 git diff --exit-code=0，证明本轮 HEAD 只落账第一轮治理证据，业务内容与第一轮审核对象完全一致。随后重新审核 93d2be8..2865121，业务 manifest 仍精确为 public/app.js、public/index.html、public/styles.css 三项 modified 和 tests/v5-execution-detail-layout.test.js 一项 added；无删除、重命名或越界业务文件。",
+  "scope_checked": [
+    "核对 TASK-286 最新状态仍为 verified、start_git_commit 为 93d2be8、review pass_streak 为 1；核对 TASK-287 最新状态及第一轮 passed 记录已登记，当前工作包和基线仍为 WP-014/BL-010。",
+    "独立比较 c0f35a4..2865121 中四个业务文件，内容差异与 name-status 均为空；再从 93d2be8 到当前 HEAD 重新检查完整业务 name-status、逐行实现差异与 git diff --check。",
+    "重新审查详情 DOM 归属、默认无占位、关闭回双栏、动作精简、日期事实字段、详情成员类名、宽屏 sticky 卡、<=1180 两栏落位、<=720 单栏和执行视图最小宽度作用域。",
+    "重新逐行核验成员甘特条同时具有 select/edit-member 属性时由成员分支优先处理；详情任务、详情成员和普通选择三个分支各自提前返回，不共享错误后续路径。",
+    "在全新本地页面以 700×720 独立执行未选择、普通选择、成员甘特条、详情成员、详情任务和全量编辑离开流程，并读取真实 computed style、边界、弹窗标题及同步字段状态。",
+    "在同一本轮会话切换到 1280×720，重新测量选中后三栏、粘性详情、事实字段、动作和成员行，并执行关闭后双栏恢复；未引用第一轮浏览器结果。",
+    "复核业务差异未触及 v5PreviewSchedule、v5SaveSchedule、expected_version、冲突确认、API 请求、服务端、数据库和任务事实，保持 WP-014 兼容边界。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "check=business-immutability：git diff --exit-code c0f35a4..2865121 -- public/index.html public/app.js public/styles.css tests/v5-execution-detail-layout.test.js 返回 0，四个业务文件在候选通过两轮之间无内容变化。",
+    "check=final-manifest：git diff --name-status 93d2be8..2865121 的业务结果精确为 M public/app.js、M public/index.html、M public/styles.css、A tests/v5-execution-detail-layout.test.js；git diff --check 返回 0。",
+    "check=app-syntax：本轮独立执行 node --check public/app.js，exit 0。",
+    "check=detail-layout-test：本轮独立执行 node --test tests/v5-execution-detail-layout.test.js，3/3 通过，0 失败。",
+    "check=full-test：本轮独立执行 npm test，82/82 通过，0 失败、0 跳过、0 取消。",
+    "check=700-empty：innerWidth=700px；执行中心激活后 html/body 均含 v5-execution-active，clientWidth 与 scrollWidth 均为 685px（扣除 15px 垂直滚动条），详情 cardHidden=true、弹窗关闭，工作区 x=32..652.667px。",
+    "check=700-ordinary：点击普通成员行选择按钮后 cardHidden=false、has-detail=true、selectedRows=1，排期弹窗仍关闭，普通选择未误入编辑分支。",
+    "check=700-member-gantt：点击成员甘特条后标题为“修改成员排期”，同步字段 hidden=true/display=none；详情已选中可见、has-detail=true、selectedRows=1。",
+    "check=700-detail-member：点击详情成员“修改”后标题为“修改成员排期”，同步字段 hidden=true/display=none，详情卡保持可见。",
+    "check=700-detail-task：通过 #v5ExecutionDetail [data-v5-exec-edit-task][data-v5-exec-schedule-mode=\"task\"] 点击后标题为“修改任务时间”，同步字段 hidden=false/display=flex，checkbox checked=true。",
+    "check=700-layout：工作区和详情卡均为 x=32..652.667px、宽 620.667px，操作区 x=48.667..636px，html/body clientWidth==scrollWidth==685px，无横向越界；事实块为 566px 单列。",
+    "check=700-style-scope：左侧成员列表 computed min-height=100px/overflow=auto，详情成员列表为 min-height=auto/overflow=visible；全量编辑离开后 html/body 根类清空，编辑面板显示、执行面板隐藏，body 恢复 clientWidth/scrollWidth=1100/1100px。",
+    "check=1280-layout：innerWidth=1280px，html/body clientWidth 与 scrollWidth 均为 1265px；选择任务后工作区为 210px/578.667px/360px 三栏，详情卡宽 360px、position=sticky、max-height=598px。",
+    "check=1280-content：日期“2026-05-12 → 2026-11-12”为 211.333×18.594px横排；三个事实块均为 84px/211.333px 两列；动作精确为“修改任务时间”“全量编辑”，headerBackCount=0，详情成员使用独立行类且未出现侧栏成员列表类。",
+    "check=1280-close：关闭后 cardHidden=true、has-detail=false、详情文本为空，工作区恢复 226px/934.667px 双栏；页面 body clientWidth/scrollWidth 仍为 1265/1265px。",
+    "summary：当前 subject_git_commit=2865121c3692bf38c4af2a5257ef70ac006b8531 的业务内容与第一轮 passed 指纹一致，本轮完整差异审核、自动验证和双视口交互均通过；本审核成员未调用任何治理状态 Action。"
+  ],
+  "created_at": "2026-08-27T14:27:00Z"
+}
