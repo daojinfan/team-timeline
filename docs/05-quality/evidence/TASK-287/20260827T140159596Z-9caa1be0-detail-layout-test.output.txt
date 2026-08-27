@@ -1,0 +1,11 @@
+✔ V5 schedule detail lives inside the execution workspace and is absent until selected (1.299ms)
+✔ V5 schedule detail toggles the three-column state and supports closing (0.9894ms)
+✔ V5 schedule facts and member rows use isolated detail styles (0.9301ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 57.6842

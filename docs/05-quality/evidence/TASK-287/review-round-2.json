@@ -1,0 +1,61 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-287",
+  "reviewed_task_ids": ["TASK-286"],
+  "work_package": "WP-014",
+  "baseline": "BL-010",
+  "result": "changes-required",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-286",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "把详情显隐与执行工作区 has-detail 状态联动，增加详情关闭处理和隔离的详情成员标记；进入/离开执行中心时切换 html/body 的 v5-execution-active 类，并为详情任务按钮增加显式 task 模式后传入排期编辑器。"
+    },
+    {
+      "task_id": "TASK-286",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "将默认隐藏的排期详情卡放入执行工作区第三个网格位置，补充标题关联和可访问关闭按钮，并移除原详情卡中的重复编辑任务入口与空占位。"
+    },
+    {
+      "task_id": "TASK-286",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "实现宽屏三栏、1180px 两栏和 720px 单栏详情布局，设置粘性详情及内部滚动，修复事实字段列宽和成员样式串扰，并仅在窄屏执行中心激活时解除 html/body 的 1100px 最小宽度。"
+    },
+    {
+      "task_id": "TASK-286",
+      "path": "tests/v5-execution-detail-layout.test.js",
+      "change_type": "added",
+      "summary": "新增三项源码级回归，覆盖详情卡工作区归属与默认隐藏、三档响应式和执行中心根类、关闭行为、事实网格、成员样式隔离、操作文案及显式任务排期模式。"
+    }
+  ],
+  "change_summary": "本轮重新审核 TASK-286 从启动提交 93d2be89e8caf17a30d08a4d1350bdfa66e4a756 到修复后最终提交 084f0161f783ef14adfd735b896417bcf3a2af1e 的完整业务差异。业务 manifest 精确为 public/app.js、public/index.html、public/styles.css 三项 modified 和 tests/v5-execution-detail-layout.test.js 一项 added；不存在业务文件删除或重命名，四项均在 TASK-286 allowed_paths 内。治理状态、验证证据及审核记录不计入 TASK-286 业务 changes 清单。",
+  "scope_checked": [
+    "基于 TASK-286/TASK-287 最新契约、状态和 WP-014 权威上下文，重新核对详情结构、响应式边界、排期操作、数据兼容及 Standard 审核要求；未将前一轮发现项替代本轮完整审查。",
+    "独立检查 93d2be8..084f016 的完整 Git name-status、业务文件逐行差异和 git diff --check，逐项确认三项 modified、一项 added，无业务删除、重命名或越界路径。",
+    "重新检查 v5RenderExecutionDetail、v5SetView 包装和执行中心事件委派，并确认排期预览、保存请求、冲突确认、expected_version、API 调用、服务端和数据库均未改动。",
+    "在 700×720 下从任务全量编辑台进入执行中心，完整核验未选择与选中任务两种布局、根类和最小宽度切换、工作区和详情边界、事实字段、成员样式、任务排期按钮、成员排期按钮和全量编辑离开流程。",
+    "在 1280×720 下重新核验未选择双栏、选择后三栏、右侧粘性详情、日期横排、操作可见、成员详情渲染、关闭后的显隐和双栏恢复。"
+  ],
+  "findings": [
+    "[P1] 修复后 700px 回归仍未满足任务排期入口语义：使用指定精确选择器 #v5ExecutionDetail [data-v5-exec-edit-task][data-v5-exec-schedule-mode=\"task\"] 点击后，弹窗标题仍为“修改成员排期”，且 #v5ScheduleSyncField 的 hidden=true、computed display=none；同一详情中的成员行“修改”也打开成员排期。任务主按钮因此没有稳定进入 task 模式，存在把用户预期的任务整体改期误导为成员独立改期的风险。"
+  ],
+  "validation_evidence": [
+    "独立执行 node --check public/app.js：exit 0。",
+    "独立执行 node --test tests/v5-execution-detail-layout.test.js：3/3 通过；源码级断言能够确认 task 属性和参数传递文本存在，但未捕获真实点击后弹窗模式错误。",
+    "独立执行 npm test：82/82 通过，无失败、跳过或取消。",
+    "对 93d2be8..084f016 的最终业务差异执行 git diff --check：exit 0。",
+    "700×720 浏览器宽度回归通过：innerWidth 为 700px，受 15px 垂直滚动条影响 html/body clientWidth 与 scrollWidth 均为 685px；执行工作区和详情卡范围均为 x=32..652.667px、宽 620.667px，没有横向越界，详情操作范围 x=48.667..636px。",
+    "700×720 根类隔离通过：进入执行中心后 html/body 均含 v5-execution-active；通过全量编辑离开后两处类名均清空，执行面板隐藏、编辑面板显示，body clientWidth/scrollWidth 恢复为 1100/1100px 的旧模块桌面策略。",
+    "700×720 样式隔离通过：左侧 .v5-execution-member-list 仍为 min-height=100px、overflow=auto，而详情 .v5-execution-detail-members 为 min-height=auto、overflow=visible；事实块回落为 566px 单列。",
+    "700×720 排期交互部分失败：精确 task 模式按钮点击后标题为“修改成员排期”、syncFieldHidden=true、display=none；成员详情行的“修改”按钮则正确打开“修改成员排期”并隐藏同步字段。",
+    "1280×720 浏览器回归通过：选择后工作区列宽为 210px/578.667px/360px，详情卡宽 360px、position=sticky，页面 html/body scrollWidth 与 clientWidth 均为 1265px；日期“2026-05-12 → 2026-11-12”实测 211.333×18.594px并横向显示。",
+    "1280×720 关闭回归通过：关闭后 detail card hidden=true、has-detail=false、详情文本清空，工作区恢复 226px/934.667px 双栏；操作区可见且详情成员行正常渲染。",
+    "TASK-287 最新状态已记录修复候选的语法、专项和 Strict 证据；本审核成员只执行只读验证并写本证据，未调用治理状态动作。"
+  ],
+  "created_at": "2026-08-27T14:08:00Z"
+}

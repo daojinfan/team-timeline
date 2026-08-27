@@ -35,5 +35,7 @@ test("V5 schedule facts and member rows use isolated detail styles", () => {
   assert.match(app, />修改任务时间<\/button>/);
   assert.match(app, />全量编辑<\/button>/);
   assert.match(app, /data-v5-exec-schedule-mode="task"/);
-  assert.match(app, /v5OpenScheduleEditor\(Number\(taskEdit\.dataset\.v5ExecEditTask\), taskEdit\.dataset\.v5ExecScheduleMode\)/);
+  assert.match(app, /const taskEdit = action\("\[data-v5-exec-edit-task\]"\);[\s\S]*?v5OpenScheduleEditor\(Number\(taskEdit\.dataset\.v5ExecEditTask\), "task"\); return;[\s\S]*?const memberEdit = action\("\[data-v5-exec-edit-member\]"\);/);
+  assert.match(app, /const memberEdit = action\("\[data-v5-exec-edit-member\]"\);[\s\S]*?selectedTaskId = Number\(memberEdit\.dataset\.v5ExecEditMember\); v5RenderExecution\(\); v5OpenScheduleEditor\(Number\(memberEdit\.dataset\.v5ExecEditMember\), "member", Number\(memberEdit\.dataset\.v5ExecMember\)\); return;[\s\S]*?const selected = action\("\[data-v5-exec-select-task\]"\);/);
+  assert.match(app, /const selected = action\("\[data-v5-exec-select-task\]"\);[\s\S]*?v5RenderExecution\(\); return;/);
 });
