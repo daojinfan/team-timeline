@@ -2,9 +2,9 @@
 doc_id: DEL-WORK-001
 type: delivery.work-packages
 status: active
-version: 1.3
+version: 1.4
 owner: human
-baseline: BL-010
+baseline: BL-011
 depends_on:
   - ARC-OVERALL-001
   - ARC-OVERALL-002
@@ -33,6 +33,7 @@ last_reviewed: 2026-08-22
 | WP-012 | 收敛 V5 样品字段并保持历史数据与 V3 兼容 | BL-008 | CR-008、REQ-V5-001、ARC-OVERALL-V5-001、ARC-COMP-V5-001 | V5 表单字段回归、样品新增/编辑、编号后补、ETA 状态、历史字段保留与 API 回归 | IMPLEMENTER |
 | WP-013 | 为任务全量编辑台和执行中心增加可配置的默认状态筛选 | BL-009 | DEC-005、CR-009、REQ-V5-001、ARC-COMP-V5-001 | 默认值设置入口、独立状态集合、浏览器持久化、无效配置回退、两视图初始化与回归测试 | IMPLEMENTER |
 | WP-014 | 优化执行中心选中任务排期详情的结构与视觉层级 | BL-010 | WP-013、REQ-V5-001、ARC-COMP-V5-001 | 详情事实网格、成员列表样式隔离、桌面粘性面板、窄屏回落、操作层级与视觉回归 | IMPLEMENTER |
+| WP-015 | 重设计执行中心任务与负载数据工作区 | BL-011 | WP-014、REQ-V5-001、ARC-COMP-V5-001 | 自适应工作区高度、任务表格化、负载可视化、滚动保持、窄屏成员筛选回落与双视口回归 | IMPLEMENTER |
 
 执行状态统一记录在 `WORK-STATUS.md`，避免日常状态变化改写已经批准的工作包契约。
 每个活动工作包还必须有 `context/WP-NNN.context.json`，声明所需权威文档、读取模式、适用基线和验证。上下文路由随基线锁定；已经 `accepted` 或 `superseded` 的历史工作包可以保留旧路由。生成的 `.governance/context/*.generated.md` 只是临时输入，不是项目事实。
@@ -88,6 +89,21 @@ last_reviewed: 2026-08-22
 - 依赖：WP-013 已完成相关 V5 执行中心前置交付；实现任务依赖已验收的 TASK-284。
 - 验收：事实字段无 0px 内容列和逐字竖排；详情成员列表不继承侧栏滚动/最小高度；桌面选择后详情在右侧粘性展示且未选择时不占位；窄屏无横向溢出；操作入口无重复；`npm test`、`node --check public/app.js`、Strict 治理检查和浏览器视觉回归通过；独立 Reviewer 完成 Standard 双轮复审。
 - 回滚：回退前端和测试提交即可恢复原详情卡；不涉及数据库或数据回滚。
+- 任务档位：Standard（本地 UI 结构与样式优化，无数据/API/发布风险）。
+
+## WP-015 契约
+
+- 目标：扩大并重组执行中心“任务”和“负载”视图的数据承载区域，使主内容与成员筛选栏高度协调，在桌面和窄屏下保持清晰、稳定和高效浏览。
+- 范围：`public/index.html` 中任务列头与成员筛选折叠入口；`public/app.js` 中任务/负载渲染、相对负载条、数据视图状态和滚动位置保持；`public/styles.css` 中自适应工作区高度、固定表头、任务两行标题、负载风险提示和窄屏回落；`tests/` 中相关回归。
+- 业务规则：任务和负载继续使用现有筛选结果；任务选择仍打开右侧排期详情；成员点击仍执行成员筛选；负载统计口径保持任务数量、排期天数和重叠数量，相对负载条只把当前筛选内排期天数归一化用于视觉比较。
+- 兼容策略：不增加或改变 API、数据库、任务事实、筛选表达式、状态算法、排期预览和负载统计口径；只调整客户端 DOM、视图状态与样式。
+- 范围外：服务端、SQLite、任务全量编辑台、资源维护、甘特图排期规则、远程发布。
+- 基线：BL-011。
+- 权威文档：`REQ-V5-001`、`ARC-COMP-V5-001`、`QUAL-TRACE-V5-001`、`DEC-005`、`CR-009`、`DEL-WORK-001`。
+- 允许修改：`public/index.html`、`public/app.js`、`public/styles.css`、`tests/v5-execution-task-load-panel.test.js`、`docs/04-delivery/WORK-PACKAGES.md`、`docs/04-delivery/WORK-STATUS.md`、`docs/05-quality/evidence`、治理任务与工作状态文件。
+- 依赖：WP-014 已验收，最终执行内容由已验收的 TASK-288 提供。
+- 验收：1280×720 下任务/负载主卡与成员栏等高，任务至少可见 8 行、负载至少可见 10 名成员；任务固定列头、长标题最多两行；负载固定表头并显示相对负载条和重叠提示；重绘保持滚动位置；右侧详情不降低主卡高度；700×720 下主内容优先、成员筛选可折叠且无横向溢出；`npm test`、`node --check public/app.js`、Strict 和双视口浏览器回归通过；独立 Reviewer 完成 Standard 双轮复审。
+- 回滚：回退前端和测试交付提交即可恢复原 340px/355px 数据框；不涉及数据库或数据回滚。
 - 任务档位：Standard（本地 UI 结构与样式优化，无数据/API/发布风险）。
 
 ## WP-003 契约

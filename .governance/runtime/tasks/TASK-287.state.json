@@ -5,7 +5,7 @@
   "work_package": "WP-014",
   "contract_sha256": "fe686f53852040dbbff4517dcba14082ccc0a6c31576db81c2cdd0446420cee2",
   "baseline": "BL-010",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -108,7 +108,7 @@
     "pass_streak": 0,
     "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "TASK-286 已在用户验收前被 TASK-288 替代，TASK-287 已登记 cancelled 审核证据；BL-011 激活后将该旧 Reviewer 规范终止，避免继续作为活动审核任务。",
   "created_at": "2026-08-27T13:37:34.6511229Z",
-  "updated_at": "2026-08-27T14:46:38.2959705Z"
+  "updated_at": "2026-08-27T15:45:12.2864669Z"
 }
