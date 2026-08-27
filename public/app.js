@@ -4079,8 +4079,29 @@ function v5DefaultStatusExpression(surface, statuses) {
   if (!statuses.length) return v5EmptyFilterExpression();
   return { groups: [{ id: `default-status-${surface}`, logic: "and", connector: "and", conditions: [{ id: `default-status-${surface}`, surface, field: "status", value: statuses, match: "any", negate: false }] }] };
 }
+function v5ClearFilterQuickInputs(surface) {
+  v5FilterQuickConfig(surface).forEach(({ field, selector, negate }) => {
+    const node = $(selector);
+    if (node) {
+      node.value = "";
+      delete node.dataset.v5QuickValue;
+      node.title = "";
+    }
+    if (surface === "execution") v5State.execution[field] = "";
+    if (negate) {
+      const toggle = $(negate);
+      if (toggle) {
+        toggle.checked = false;
+        toggle.indeterminate = false;
+      }
+    }
+  });
+}
 function v5ApplyConfiguredDefaultFilters() {
-  ["editor", "execution"].forEach((surface) => { v5State.filterExpressions[surface] = v5DefaultStatusExpression(surface, v5State.preferences[`${surface}DefaultStatuses`]); });
+  ["editor", "execution"].forEach((surface) => {
+    v5ClearFilterQuickInputs(surface);
+    v5State.filterExpressions[surface] = v5DefaultStatusExpression(surface, v5State.preferences[`${surface}DefaultStatuses`]);
+  });
 }
 function v5RenderDefaultStatusSettings() {
   ["editor", "execution"].forEach((surface) => { const selected = new Set(v5State.preferences[`${surface}DefaultStatuses`]); $$(`[data-v5-default-status="${surface}"]`).forEach((input) => { input.checked = selected.has(input.value); }); });
@@ -4273,7 +4294,7 @@ function v5ApplyFilterExpression(surface, expression) {
   }
   if (surface === "editor") v5RenderTree(); else v5RenderExecution();
 }
-function v5ResetFilterSurface(surface) { v5State.filterExpressions[surface] = v5EmptyFilterExpression(); v5FilterQuickConfig(surface).forEach(({ field, selector, negate }) => { const node = $(selector); if (node) { node.value = ""; delete node.dataset.v5QuickValue; } if (surface === "execution") v5State.execution[field] = ""; if (negate) { const toggle = $(negate); if (toggle) { toggle.checked = false; toggle.indeterminate = false; } } }); if (surface === "editor") { if ($("#v5TaskStatusNot")) $("#v5TaskStatusNot").checked = false; v5RenderTree(); } else v5RenderExecution(); }
+function v5ResetFilterSurface(surface) { v5State.filterExpressions[surface] = v5EmptyFilterExpression(); v5ClearFilterQuickInputs(surface); if (surface === "editor") { if ($("#v5TaskStatusNot")) $("#v5TaskStatusNot").checked = false; v5RenderTree(); } else v5RenderExecution(); }
 function v5UpdateQuickFilter(surface, field) { const config = v5FilterQuickConfig(surface).find((item) => item.field === field); if (!config) return; const node = $(config.selector); const schema = v5FilterSchema(surface, field); const value = v5FilterQuickValue(node, schema); if (surface === "execution") v5State.execution[field] = value; const expression = v5CloneFilterExpression(v5EnsureFilterExpression(surface)); expression.groups = (expression.groups || []).map((group) => ({ ...group, conditions: (group.conditions || []).filter((condition) => condition.field !== field) })); if (value) { if (!expression.groups.length) expression.groups.push({ id: `group-${Date.now()}`, logic: "and", connector: "and", conditions: [] }); expression.groups[0].conditions.push({ ...v5FilterConditionFromField(surface, field), value: schema?.kind === "multi" ? [String(value)] : value, negate: Boolean(config.negate && $(config.negate)?.checked) }); } v5ApplyFilterExpression(surface, expression); }
 
 function v5RenderTree() {
@@ -4810,6 +4831,7 @@ function v5OpenScheduleEditor(taskId, mode = "task", memberId = null) { const ta
 async function v5PreviewSchedule() { const schedule = v5State.execution.schedule; if (!schedule) return null; const task = v5State.tasks.find((row) => Number(row.id) === Number(schedule.taskId)); if (!task) return null; const start = $("#v5ScheduleStart").value; const end = $("#v5ScheduleEnd").value; if (!start || !end || end < start) throw new Error("请填写有效的开始和结束日期。"); const path = schedule.mode === "member" ? `/api/v5/tasks/${task.id}/member-schedule-preview` : `/api/v5/tasks/${task.id}/schedule-preview`; const memberId = Number(v5TaskCombobox("schedule-member")?.dataset.v5TaskValue); if (schedule.mode === "member" && (!Number.isInteger(memberId) || memberId <= 0)) throw new Error("请选择成员"); const payload = schedule.mode === "member" ? { member_id: memberId, start_date: start, end_date: end } : { start_date: start, end_date: end, sync_members: $("#v5ScheduleSync").checked }; schedule.memberId = schedule.mode === "member" ? memberId : null; schedule.preview = await v5Api(path, v5Json("POST", payload)); return schedule.preview; }
 async function v5SaveSchedule(event) { event.preventDefault(); const schedule = v5State.execution.schedule; const task = v5State.tasks.find((row) => Number(row.id) === Number(schedule?.taskId)); if (!schedule || !task) return; try { v5SetFormError("#v5ScheduleFormError"); const preview = await v5PreviewSchedule(); if (!preview) return; const conflicts = preview.conflicts || []; const conflictText = conflicts.map((conflict) => `${conflict.type || "排期冲突"}：${conflict.message || conflict.reason || "请确认影响"}`).join("\n"); const ack = conflicts.length ? window.confirm(`排期检查发现 ${conflicts.length} 项影响：\n${conflictText}\n\n是否继续保存？`) : false; if (conflicts.length && !ack) { v5SetFormError("#v5ScheduleFormError", "已取消保存，排期未发生变化。若确认继续，请再次点击保存并在提示中确认影响。"); return; } const start = $("#v5ScheduleStart").value; const end = $("#v5ScheduleEnd").value; const payload = schedule.mode === "member" ? { member_id: schedule.memberId, start_date: start, end_date: end, preview_token: preview.preview_token, expected_version: task.version, ack } : { start_date: start, end_date: end, sync_members: $("#v5ScheduleSync").checked, preview_token: preview.preview_token, expected_version: task.version, ack }; await v5Api(`/api/v5/tasks/${task.id}/${schedule.mode === "member" ? "member-schedule" : "schedule"}`, v5Json("POST", payload)); v5Close("#v5ScheduleDialog"); v5State.execution.selectedTaskId = task.id; schedule.preview = null; await v5LoadAll(); showToast(schedule.mode === "member" ? "成员排期已更新" : "任务排期已更新"); } catch (error) { v5SetFormError("#v5ScheduleFormError", v5ErrorText(error)); } }
 
+async function v5RefreshWorkspace() { v5ApplyConfiguredDefaultFilters(); await v5LoadAll(); }
 async function v5LoadAll() { v5SetSync("正在同步 V5 数据…"); try { const topicPath = v5State.showArchivedTopics ? "/api/v5/topics?include_archived=1" : "/api/v5/topics"; const [resources, topics, tasks, samples] = await Promise.all([v5Api("/api/v5/resources"), v5Api(topicPath), v5Api("/api/v5/tasks"), v5Api("/api/v5/samples")]); v5State.resources = resources; v5State.topics = topics.items || []; v5State.tasks = tasks.items || []; v5State.samples = samples.items || []; if (!v5State.expandedTopics.size) v5State.topics.forEach((topic) => v5State.expandedTopics.add(Number(topic.id))); v5State.loaded = true; v5RenderFilterOptions(); v5RenderTree(); v5RenderSelectedTask(); v5RenderResources(); v5RenderExecution(); v5SetSync(`已同步 · ${v5State.tasks.length} 个任务 · ${new Date().toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" })}`); } catch (error) { v5SetSync(v5ErrorText(error), true); $("#v5TopicTaskTree").innerHTML = `<div class="v5-empty-state"><h3>V5 数据读取失败</h3><p>${escapeHtml(v5ErrorText(error))}</p><button class="ghost-button" type="button" data-v5-retry>重试</button></div>`; } }
 
 function v5SetView(view) { $$("[data-v5-view]").forEach((button) => { const active = button.dataset.v5View === view; button.classList.toggle("active", active); button.setAttribute("aria-selected", String(active)); }); $$("[data-v5-panel]").forEach((panel) => { const active = panel.dataset.v5Panel === view; panel.hidden = !active; panel.classList.toggle("active", active); }); const title = { editor: "任务全量编辑台", resources: "资源维护", execution: "执行中心" }[view] || "任务全量编辑台"; const hint = { editor: "在一个页面补齐任务字段，专题、资源和任务始终使用同一份事实。", resources: "维护稳定 ID 资源，名称改动会同步到任务树和执行中心。", execution: "查看成员负载与任务时间安排，所有时间修改都回写同一份任务事实。" }[view]; $("#v5PageTitle").textContent = title; $("#v5PageHint").textContent = hint; $("#v5NewTaskBtn").hidden = view !== "editor"; if (view === "resources") v5RenderResources(); }
@@ -4820,7 +4842,7 @@ v5SetView = function v5SetViewWithExecution(view) { v5SetViewBase(view); if (vie
 function bindV5Events() {
   if (window.__v5Bound) return; window.__v5Bound = true;
   $$('[data-v5-view]').forEach((button) => button.addEventListener("click", () => v5SetView(button.dataset.v5View)));
-  $("#v5RefreshBtn")?.addEventListener("click", () => v5LoadAll()); $("#v5NewTaskBtn")?.addEventListener("click", () => v5OpenTaskEditor()); $("#v5EmptyNewTaskBtn")?.addEventListener("click", () => v5OpenTaskEditor()); $("#v5NewTopicBtn")?.addEventListener("click", () => v5OpenTopicEditor()); $("#v5ExpandAllBtn")?.addEventListener("click", () => { v5State.topics.forEach((topic) => v5State.expandedTopics.add(Number(topic.id))); v5RenderTree(); }); $("#v5CollapseAllBtn")?.addEventListener("click", () => { v5State.expandedTopics.clear(); v5RenderTree(); });
+  $("#v5RefreshBtn")?.addEventListener("click", () => v5RefreshWorkspace()); $("#v5NewTaskBtn")?.addEventListener("click", () => v5OpenTaskEditor()); $("#v5EmptyNewTaskBtn")?.addEventListener("click", () => v5OpenTaskEditor()); $("#v5NewTopicBtn")?.addEventListener("click", () => v5OpenTopicEditor()); $("#v5ExpandAllBtn")?.addEventListener("click", () => { v5State.topics.forEach((topic) => v5State.expandedTopics.add(Number(topic.id))); v5RenderTree(); }); $("#v5CollapseAllBtn")?.addEventListener("click", () => { v5State.expandedTopics.clear(); v5RenderTree(); });
   $("#v5OpenEditorFilters")?.addEventListener("click", () => v5OpenFilterDialog("editor")); $("#v5ClearTaskFilters")?.addEventListener("click", () => v5ResetFilterSurface("editor"));
   $("#v5SaveDefaultStatuses")?.addEventListener("click", () => v5SaveDefaultStatusPreferences()); $("#v5ResetDefaultStatuses")?.addEventListener("click", () => v5SaveDefaultStatusPreferences({ reset: true }));
   v5FilterQuickConfig("editor").forEach(({ field, selector, negate }) => { const node = $(selector); const schema = v5FilterSchema("editor", field); node?.addEventListener(schema?.kind === "text" ? "input" : "change", () => v5UpdateQuickFilter("editor", field)); if (negate) $(negate)?.addEventListener("change", () => v5UpdateQuickFilter("editor", field)); });

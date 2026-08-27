@@ -32,3 +32,10 @@ test("V5 temporary filters do not persist default preferences", () => {
   assert.doesNotMatch(quickFilter, /localStorage|v5WritePreferences|v5SaveDefaultStatusPreferences/);
   assert.match(app, /v5State\.preferences = v5ReadPreferences\(\);[\s\S]*v5ApplyConfiguredDefaultFilters\(\);/);
 });
+
+test("V5 workspace refresh reapplies configured defaults after temporary filters", () => {
+  assert.match(app, /function v5RefreshWorkspace\(\) \{ v5ApplyConfiguredDefaultFilters\(\); await v5LoadAll\(\); \}/);
+  assert.match(app, /#v5RefreshBtn.*addEventListener\("click", \(\) => v5RefreshWorkspace\(\)\)/);
+  assert.match(app, /function v5ClearFilterQuickInputs\(surface\)/);
+  assert.match(app, /v5ClearFilterQuickInputs\(surface\);[\s\S]*v5DefaultStatusExpression/);
+});
