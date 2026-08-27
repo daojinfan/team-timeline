@@ -1,0 +1,13 @@
+✔ V5 execution selection never opens a schedule dialog (0.989ms)
+✔ V5 task schedule is edited inline with an explicit sync-all button (0.3961ms)
+✔ V5 member schedules are edited and saved independently in the detail panel (0.3564ms)
+✔ V5 full edit reuses the task modal without leaving execution center (0.3661ms)
+✔ V5 inline schedule controls remain compact and responsive (0.3359ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 59.9189

@@ -1,0 +1,68 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-289",
+  "reviewed_task_ids": ["TASK-288"],
+  "work_package": "WP-014",
+  "baseline": "BL-010",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-288",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "重构执行中心详情渲染和事件委派：甘特任务条、成员条、行标签及任务列表仅更新当前选择；详情内提供任务整体日期、默认关闭的成员同步开关、逐成员日期、内联校验与冲突确认，并通过现有 preview/save 端点提交版本化令牌；全量编辑改为复用现有任务 modal。"
+    },
+    {
+      "task_id": "TASK-288",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "补充详情排期区、同步按钮、双日期网格、成员编辑行、反馈和冲突块的紧凑样式；在既有三栏、<=1180px 回落与 <=720px 单列规则内约束控件宽度和滚动边界。"
+    },
+    {
+      "task_id": "TASK-288",
+      "path": "tests/v5-execution-detail-layout.test.js",
+      "change_type": "modified",
+      "summary": "将详情布局回归更新为内联整体/成员保存入口、显式同步按钮、现有全量编辑 modal 路由和无旧排期弹窗入口，同时保留显隐、三档布局及样式隔离断言。"
+    },
+    {
+      "task_id": "TASK-288",
+      "path": "tests/v5-execution-detail-inline-edit.test.js",
+      "change_type": "added",
+      "summary": "增加五个针对执行详情的源代码契约测试，覆盖只选中不弹窗、任务 preview/save 和同步参数、成员独立保存、全量编辑视图保持及响应式控件。"
+    }
+  ],
+  "change_summary": "profile=Standard；候选通过轮次=2（review-round-2）。本轮独立审核对象：task_id=TASK-288，reviewer_task_id=TASK-289，work_package=WP-014，baseline=BL-010，start_git_commit=80185aee961db3136f3f6b4a2b6d5c78f2603130，subject_git_commit=6aa3756de6cc2016a4a166450f96087dcfb391a4。重新从启动提交审查当前 HEAD 的业务范围，manifest 仅有 M public/app.js、M public/styles.css、M tests/v5-execution-detail-layout.test.js、A tests/v5-execution-detail-inline-edit.test.js；public/index.html 无差异，也没有业务删除或重命名。另以 git diff --exit-code 和逐文件 blob 对比证明第一轮对象 6a6cd80 到当前 HEAD 的四项业务内容完全未变。",
+  "scope_checked": [
+    "重新读取 TASK-288/TASK-289 契约和最新状态、两任务当前验证证据、WP-014 上下文路由及全部必需权威文档；核对 Standard 档位、BL-010、任务依赖、允许读写路径和验收标准。",
+    "独立重做 80185aee..HEAD 的 name-status、完整实现 diff、测试 diff和空白错误检查；把治理落账文件与 TASK-288 的四个真实业务改动分开，不把 public/index.html 或治理文件误列入 changes。",
+    "从头检查选择路由：v5ExecutionTaskBar 对任务条与成员条只生成 data-v5-exec-select-task；执行事件最后的 selected 分支只设置 selectedTaskId、重绘并 return，不调用旧 v5OpenScheduleEditor。",
+    "从头检查任务整体排期：同步按钮每次详情渲染均 aria-pressed=false；合法保存先 POST schedule-preview，再带 sync_members、preview_token、expected_version、ack POST schedule，成功后保留选中并调用 v5LoadAll 刷新全部投影。",
+    "从头检查逐成员排期：每行以成员 ID 限定输入和反馈，preview/save payload 只包含目标 member_id 与日期/令牌/版本，不包含 sync_members；取消只还原该成员当前行。",
+    "检查冲突和错误路径：普通错误由 textContent 呈现；冲突来源字段逐项 escapeHtml 后进入受控 warning markup；任务与成员确认按钮分别以 force 路径重新预览后提交，新的内联流程不依赖 window.confirm。",
+    "检查信息和操作边界：详情保留任务编号/标题/计算状态、专题/来源组/制冷机上下文、测试目的、样品和制冷机只读事实；可写区仅为整体日期、同步开关和目标成员日期；人工阶段只显示适用的开始测试或标记完成动作。",
+    "检查全量编辑路由：data-v5-edit-task 由既有全局 handler 调用 v5OpenTaskEditor，仅打开 v5TaskDialog；执行事件中不存在 v5SetView('editor')，关闭 modal 后当前执行任务详情仍保留。",
+    "检查响应式与样式隔离：宽屏 has-detail 为 210px/主栏/320-360px，<=1180px 为左栏加主栏且详情落入第二列，<=720px 为单列；详情成员类不使用左侧 v5-execution-member-list，日期输入 min-width=0 且受双列网格约束。",
+    "检查兼容边界：实现未触碰 public/index.html、服务端、数据库、V5 端点或任务状态算法；全量回归覆盖旧 API/schema/投影，现有旧排期弹窗代码虽保留但已从任务/成员选择入口断开。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "check=content-stability：git diff --exit-code 6a6cd80 HEAD -- 四个业务文件返回 0；blob 分别保持 public/app.js=39161f94217e8f5fce58d643d336e3da7714e8c5、public/styles.css=694a98ad5eb36bdc45751ef7c6b32133095d96f0、layout test=56461dede7f49bd9412817aaacfa3ee18a0cf1e1、inline test=497919439a92bd8f529f1439e18b31f9503af452。",
+    "check=manifest：git diff --name-status 80185aee961db3136f3f6b4a2b6d5c78f2603130 HEAD -- 业务路径精确返回 M public/app.js、M public/styles.css、M tests/v5-execution-detail-layout.test.js、A tests/v5-execution-detail-inline-edit.test.js；public/index.html 的 name-only 输出为空；git diff --check 返回 0。",
+    "check=app-syntax：本轮重新执行 node --check public/app.js，exit 0。",
+    "check=inline-detail-test：本轮重新执行 node --test tests/v5-execution-detail-inline-edit.test.js，5/5 通过、0 失败。",
+    "check=detail-layout-test：本轮重新执行 node --test tests/v5-execution-detail-layout.test.js，3/3 通过、0 失败。",
+    "check=full-test：本轮重新执行 npm test，87/87 通过、0 失败、0 跳过、0 取消。",
+    "check=1280-empty-and-selection：新页面以 1280x720 进入执行中心时 card.hidden=true、has-detail=false、两类 dialog 均关闭；随后分别点击 task-bar、member-bar、row-label 和 task-list，均只显示对应详情，v5ScheduleDialog=false、v5TaskDialog=false。",
+    "check=1280-layout：html/body clientWidth=scrollWidth=1265；选中后工作区 grid=210px 578.667px 360px，详情卡 x=858.667..1218.667px、宽360px，所有详情 input/button 均无横向越界；任务日期和成员日期各自保持同一行。",
+    "check=1280-content：TASK-15 详情展示上下文“试用期 · 集成测试组 · 制冷机待补充”，只读事实为测试目的/样品/制冷机，状态快捷动作是“标记完成”，同步按钮初始 aria-pressed=false且可显式切换 true 后再关闭。",
+    "check=invalid-task-date：把任务日期临时改为 2026-12-31..2026-01-01 后点击保存，详情内反馈精确为“请填写有效的任务开始和结束日期。”且 class 含 is-error；两个 modal 均未打开，也未提交有效保存。",
+    "check=member-isolation：在 TASK-7 两成员详情中，仅把宫明家日期临时改为 2026-12-31..2026-01-01，宫明家行内联报成员日期错误；钟杨仍为 2026-06-30..2026-07-03且无消息，任务整体日期也仍为 2026-06-30..2026-07-03。",
+    "check=full-edit：1280 下 TASK-15 和 700 下 TASK-7 点击“全量编辑”分别打开标题为“编辑 TASK-15”与“编辑 TASK-7”的 v5TaskDialog；两次均 execution tab selected=true、v5ExecutionView.hidden=false、v5EditorView.hidden=true、排期弹窗关闭。",
+    "check=700-layout：viewport=700x720，执行中心根类为 v5-execution-active，html/body clientWidth=scrollWidth=685；工作区和详情卡均 x=32..652.667px、宽620.667px，整体日期网格为277px/277px，审查的 card/input/button 均无横向越界。",
+    "check=700-close-and-scope：关闭详情后 card.hidden=true、has-detail=false且页面仍无横向溢出；切换到资源维护后 html/body 执行根类清空，body min-width 恢复1100px、body clientWidth=scrollWidth=1100，窄屏解除规则未泄漏到其他模块。",
+    "summary：当前 HEAD 6aa3756de6cc2016a4a166450f96087dcfb391a4 与第一轮通过时的业务内容一致；本轮独立代码审查、自动验证和双视口交互均未发现阻断问题，审核过程中未调用治理状态动作、未修改产品代码，也未保存任何有效业务排期。"
+  ],
+  "created_at": "2026-08-27T15:04:33Z"
+}
