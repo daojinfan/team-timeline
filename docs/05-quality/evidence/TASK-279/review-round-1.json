@@ -1,0 +1,42 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-279",
+  "reviewed_task_ids": [
+    "TASK-278"
+  ],
+  "work_package": "WP-013",
+  "baseline": "BL-009",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-278",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "将 V5 顶部导航和对应内容面板调整为任务全量编辑台、执行中心、资源维护顺序；保留既有面板 ID、data 属性、标签和内容。"
+    },
+    {
+      "task_id": "TASK-278",
+      "path": "tests/v5-nav-order.test.js",
+      "change_type": "added",
+      "summary": "新增静态回归测试，锁定 V5 导航与内容面板顺序及导航到面板的 aria/data 关联。"
+    }
+  ],
+  "change_summary": "从 TASK-278 启动提交 6b58f516376a451eacf9df3112d06ff4c19c904f 到交付提交 8fac65a29f06f995854124083e9240de9f75efed 的产品差异精确为 public/index.html modified 与 tests/v5-nav-order.test.js added；未修改 public/app.js、styles.css、服务端、API、数据库、任务数据或默认状态逻辑。",
+  "scope_checked": [
+    "完整读取 TASK-278/TASK-279 契约与状态、WP-013 路由文档及 V5 需求/详细设计/质量追踪/决策/变更文档。",
+    "独立复核 6b58f516..8fac65a 的完整 Git 变更、变更类型和当前工作树，确认清单与实际差异一致且所有产品变更均在 TASK-278 allowed_paths 内。",
+    "完整读取 public/index.html 的 V5 shell，确认导航顺序、三个顶层面板顺序、aria-controls、data-v5-panel、面板 ID 和模块内容均保持配对。",
+    "复核 public/app.js 的 v5SetView 仍按 data-v5-view/data-v5-panel 选择器切换，不依赖原 DOM 顺序；默认状态、筛选、API 与数据库代码未发生变更。",
+    "复核新增静态测试覆盖导航顺序、面板顺序、aria-controls/data-v5-panel 映射及切换选择器。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "npm test：72 tests、72 pass、0 fail，包含新增 V5 导航顺序回归。",
+    "node --check public/app.js：exit 0；git diff --check：exit 0。",
+    "浏览器回归：初始 tablist 为任务全量编辑台、执行中心、资源维护；点击执行中心和资源维护后分别显示对应 tabpanel 与标题；返回编辑台后默认状态仍为已完成筛选。刷新页面后导航顺序和编辑台默认状态保持不变。",
+    "治理 Strict 验证由 TASK-279 Verify 生成证据并通过。"
+  ],
+  "created_at": "2026-08-27T02:53:30Z"
+}

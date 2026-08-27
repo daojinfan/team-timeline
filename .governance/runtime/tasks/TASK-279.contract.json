@@ -1,0 +1,82 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-279",
+  "work_package": "WP-013",
+  "title": "审核 V5 顶部模块导航顺序调整",
+  "goal": "独立审核 V5 顶部模块导航顺序调整的实际变更、功能回归与范围约束，确认导航和面板顺序一致且无越界修改。",
+  "baseline": "BL-009",
+  "profile": "Standard",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-279"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/app.js",
+    "tests",
+    "docs/02-product/requirements-v5.md",
+    "docs/03-architecture/components/v5-detailed-design.md",
+    "docs/05-quality/traceability-v5.md",
+    "docs/07-decisions/DEC-005.md",
+    "docs/08-changes/CR-009.md",
+    "docs/04-delivery/WORK-PACKAGES.md",
+    "docs/04-delivery/WORK-STATUS.md",
+    "docs/05-quality/evidence"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-279"
+  ],
+  "out_of_scope": [],
+  "authoritative_documents": [
+    "REQ-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "DEC-005",
+    "CR-009",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-278"
+  ],
+  "acceptance_criteria": [
+    "审核本次实际新增、修改、删除或重命名内容并逐项记录变更清单。",
+    "确认 V5 导航顺序为任务全量编辑台、执行中心、资源维护且内容面板顺序一致。",
+    "确认导航切换与现有 V5 功能行为通过回归验证，且无 API、数据库或无关逻辑变更。",
+    "按 Standard 档位完成两轮全量审核，第二轮内容指纹与最终交付一致。"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "governance-strict",
+      "command": "powershell",
+      "args": [
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-Level",
+        "Strict"
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-27T02:45:34.3227401Z"
+}

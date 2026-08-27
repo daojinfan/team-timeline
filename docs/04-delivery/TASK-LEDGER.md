@@ -36,6 +36,8 @@ review_policy: independent-required
 
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| WP-013 | TASK-279 | pending | REVIEWER | 审核 V5 顶部模块导航顺序调整 | BL-009 | pending | TASK-278 | completed | docs/05-quality/evidence/TASK-279 | required-validation, app-syntax, governance-strict | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-013 | TASK-278 | pending | IMPLEMENTER | 调整 V5 顶部模块导航顺序 | BL-009 | pending | TASK-276 | completed | public/index.html, tests | required-validation, app-syntax, governance-strict | TASK-279 | passed | docs/05-quality/evidence/TASK-279/review-round-2.json | Plan 自动登记，等待调度 |
 | WP-013 | TASK-277 | pending | REVIEWER | 复审筛选态专题树空占位优化 | BL-009 | pending | TASK-276 | completed | docs/05-quality/evidence/TASK-277 | required-validation, app-syntax, governance-strict | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-013 | TASK-276 | pending | IMPLEMENTER | 优化筛选态专题树空占位 | BL-009 | pending | TASK-274 | completed | public/app.js, tests | required-validation, app-syntax, governance-strict | TASK-277 | passed | docs/05-quality/evidence/TASK-277/review-round-3-passed.json | Plan 自动登记，等待调度 |
 | WP-013 | TASK-275 | pending | REVIEWER | 复审刷新默认状态读取与恢复（最终） | BL-009 | pending | TASK-274 | completed | docs/05-quality/evidence/TASK-275 | required-validation, app-syntax, governance-strict | n/a | n/a | n/a | Plan 自动登记，等待调度 |
