@@ -1,34 +1,52 @@
 {
-  "$schema": "schemas/governed-work-state.schema.json",
-  "schema_version": 2,
-  "task_id": "TASK-290",
-  "work_package": "WP-015",
-  "contract_sha256": "6dc31094992a730a322678a6fad57a5bb3ef3bdf7cd5312f5942f11a6607d3c8",
-  "baseline": "BL-011",
-  "state": "planned",
-  "approval_id": "",
-  "acceptance_subject_sha256": "",
-  "acceptance_evidence_sha256": "",
-  "acceptance_git_commit": "",
-  "start_git_commit": "",
-  "execution_lease": "",
-  "execution_lease_owner": "",
-  "execution_lease_expires_at": "",
-  "preexisting_changes": [],
-  "plan_checkpoint_git_commit": "bc2b6232a01fa0dacf1b6b6a59b740987c5aae4a",
-  "plan_rebase_history": [],
-  "evidence": [],
-  "evidence_history": [],
-  "review_history": [],
-  "review": {
-    "required": true,
-    "reviewer_task_id": "TASK-291",
-    "status": "pending",
-    "evidence": [],
-    "pass_streak": 0,
-    "subject_sha256": ""
-  },
-  "last_error": "",
-  "created_at": "2026-08-27T15:46:10.3389562Z",
-  "updated_at": "2026-08-27T15:46:34.1383861Z"
+    "$schema":  "schemas/governed-work-state.schema.json",
+    "schema_version":  2,
+    "task_id":  "TASK-290",
+    "work_package":  "WP-015",
+    "contract_sha256":  "6dc31094992a730a322678a6fad57a5bb3ef3bdf7cd5312f5942f11a6607d3c8",
+    "baseline":  "BL-011",
+    "state":  "verified",
+    "approval_id":  "APR-194",
+    "acceptance_subject_sha256":  "",
+    "acceptance_evidence_sha256":  "",
+    "acceptance_git_commit":  "",
+    "start_git_commit":  "9440fb49009ed4a7c11c5f4b997e7c1744e9d18b",
+    "execution_lease":  "",
+    "execution_lease_owner":  "",
+    "execution_lease_expires_at":  "",
+    "preexisting_changes":  [
+
+                            ],
+    "plan_checkpoint_git_commit":  "bc2b6232a01fa0dacf1b6b6a59b740987c5aae4a",
+    "plan_rebase_history":  [
+
+                            ],
+    "evidence":  [
+                     "docs/05-quality/evidence/TASK-290/20260827T160556432Z-8723fc62-app-syntax.evidence.json",
+                     "docs/05-quality/evidence/TASK-290/20260827T160556432Z-8723fc62-task-load-panel-test.evidence.json",
+                     "docs/05-quality/evidence/TASK-290/20260827T160556432Z-8723fc62-execution-regression.evidence.json",
+                     "docs/05-quality/evidence/TASK-290/20260827T160556432Z-8723fc62-full-test.evidence.json"
+                 ],
+    "evidence_history":  [
+                             "docs/05-quality/evidence/TASK-290/20260827T160556432Z-8723fc62-app-syntax.evidence.json",
+                             "docs/05-quality/evidence/TASK-290/20260827T160556432Z-8723fc62-task-load-panel-test.evidence.json",
+                             "docs/05-quality/evidence/TASK-290/20260827T160556432Z-8723fc62-execution-regression.evidence.json",
+                             "docs/05-quality/evidence/TASK-290/20260827T160556432Z-8723fc62-full-test.evidence.json"
+                         ],
+    "review_history":  [
+
+                       ],
+    "review":  {
+                   "required":  true,
+                   "reviewer_task_id":  "TASK-291",
+                   "status":  "pending",
+                   "evidence":  [
+
+                                ],
+                   "pass_streak":  0,
+                   "subject_sha256":  ""
+               },
+    "last_error":  "",
+    "created_at":  "2026-08-27T15:46:10.3389562Z",
+    "updated_at":  "2026-08-27T16:06:12.5580852Z"
 }

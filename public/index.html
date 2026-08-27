@@ -97,20 +97,22 @@
           <nav id="v5ExecutionSubnav" class="v5-execution-subnav" role="tablist" aria-label="执行中心视图"><button class="active" type="button" role="tab" aria-selected="true" aria-controls="v5ExecutionGanttPanel" data-v5-exec-view="gantt">甘特图</button><button type="button" role="tab" aria-selected="false" aria-controls="v5ExecutionTasksPanel" data-v5-exec-view="tasks">任务</button><button type="button" role="tab" aria-selected="false" aria-controls="v5ExecutionLoadPanel" data-v5-exec-view="load">负载</button></nav>
           <section class="v5-execution-workspace">
             <aside class="v5-execution-member-sidebar" aria-label="成员负载筛选">
-              <header class="v5-execution-sidebar-heading"><div><span class="v5-eyebrow">Team / 成员</span><h3>成员负载</h3></div><span id="v5ExecutionLoadCount" class="v5-muted">—</span></header>
-              <label class="v5-execution-member-search">搜索成员<div class="v5-resource-search-autocomplete" data-v5-resource-combobox="execution-members"><input id="v5ExecutionMemberSearch" data-v5-execution-member-search type="search" autocomplete="off" aria-autocomplete="list" aria-expanded="false" aria-controls="v5ExecutionMemberSearchOptions" placeholder="姓名或角色"><div id="v5ExecutionMemberSearchOptions" class="v5-filter-autocomplete-menu" data-v5-execution-member-options role="listbox" hidden></div></div></label>
-              <label class="v5-check-inline v5-execution-sidebar-option"><input id="v5ExecutionOnlyBusy" type="checkbox"> 只看有任务成员</label>
-              <div id="v5ExecutionMemberList" class="v5-execution-member-list" aria-live="polite"><div class="v5-empty-state compact"><p>正在读取成员…</p></div></div>
+              <header class="v5-execution-sidebar-heading"><div><span class="v5-eyebrow">Team / 成员</span><h3>成员负载</h3></div><div class="v5-execution-sidebar-meta"><span id="v5ExecutionLoadCount" class="v5-muted">—</span><button class="v5-execution-sidebar-toggle" type="button" data-v5-exec-toggle-members aria-expanded="true" aria-controls="v5ExecutionMemberSidebarBody">收起</button></div></header>
+              <div id="v5ExecutionMemberSidebarBody" class="v5-execution-member-sidebar-body">
+                <label class="v5-execution-member-search">搜索成员<div class="v5-resource-search-autocomplete" data-v5-resource-combobox="execution-members"><input id="v5ExecutionMemberSearch" data-v5-execution-member-search type="search" autocomplete="off" aria-autocomplete="list" aria-expanded="false" aria-controls="v5ExecutionMemberSearchOptions" placeholder="姓名或角色"><div id="v5ExecutionMemberSearchOptions" class="v5-filter-autocomplete-menu" data-v5-execution-member-options role="listbox" hidden></div></div></label>
+                <label class="v5-check-inline v5-execution-sidebar-option"><input id="v5ExecutionOnlyBusy" type="checkbox"> 只看有任务成员</label>
+                <div id="v5ExecutionMemberList" class="v5-execution-member-list" aria-live="polite"><div class="v5-empty-state compact"><p>正在读取成员…</p></div></div>
+              </div>
             </aside>
             <main class="v5-execution-main">
               <section id="v5ExecutionGanttPanel" class="v5-execution-view-panel" data-v5-exec-panel="gantt" role="tabpanel" aria-label="甘特图">
                 <article class="v5-execution-card v5-execution-gantt-card"><header class="v5-card-header"><div><span class="v5-eyebrow">排期总览</span><h3>任务与成员甘特图</h3></div><div class="v5-execution-legend"><span><i class="v5-legend-task"></i>任务整体</span><span><i class="v5-legend-member"></i>成员排期</span><span><i class="v5-legend-today"></i>今天</span></div></header><div id="v5ExecutionRangeLabel" class="v5-execution-range-label">正在计算范围…</div><div id="v5ExecutionGantt" class="v5-execution-gantt" aria-live="polite"><div class="v5-empty-state"><p>正在读取执行数据…</p></div></div></article>
               </section>
               <section id="v5ExecutionTasksPanel" class="v5-execution-view-panel" data-v5-exec-panel="tasks" role="tabpanel" aria-label="任务" hidden>
-                <article class="v5-execution-card v5-execution-task-list-card"><header class="v5-card-header"><div><span class="v5-eyebrow">当前筛选结果</span><h3>任务列表</h3></div><span id="v5ExecutionTaskCount" class="v5-muted">—</span></header><div id="v5ExecutionTaskList" class="v5-execution-task-list"></div></article>
+                <article class="v5-execution-card v5-execution-task-list-card"><header class="v5-card-header"><div><span class="v5-eyebrow">当前筛选结果</span><h3>任务列表</h3></div><span id="v5ExecutionTaskCount" class="v5-muted">—</span></header><div class="v5-execution-task-list-head" aria-hidden="true"><span></span><span>任务 / 专题与排期</span><span>状态</span><span>参与成员</span></div><div id="v5ExecutionTaskList" class="v5-execution-task-list"></div></article>
               </section>
               <section id="v5ExecutionLoadPanel" class="v5-execution-view-panel" data-v5-exec-panel="load" role="tabpanel" aria-label="负载" hidden>
-                <article class="v5-execution-card"><header class="v5-card-header"><div><span class="v5-eyebrow">成员负载</span><h3>当前筛选范围</h3></div><span class="v5-muted">按成员统计</span></header><div id="v5ExecutionLoad" class="v5-execution-load"></div></article>
+                <article class="v5-execution-card v5-execution-load-card"><header class="v5-card-header"><div><span class="v5-eyebrow">成员负载</span><h3>当前筛选范围</h3></div><span class="v5-muted">按成员统计</span></header><div id="v5ExecutionLoad" class="v5-execution-load"></div></article>
               </section>
             </main>
             <article id="v5ExecutionDetailCard" class="v5-execution-card v5-execution-detail-card" aria-labelledby="v5ExecutionDetailTitle" hidden>
