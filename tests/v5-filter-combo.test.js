@@ -163,6 +163,7 @@ test("V5 editor hides topic groups without matching tasks only while filters are
   assert.match(tree, /data-v5-clear-editor-filters/);
   assert.doesNotMatch(tree, /没有符合当前筛选的任务/);
   assert.match(app, /if \(action\("\[data-v5-clear-editor-filters\]"\)\) return v5ResetFilterSurface\("editor"\)/);
+  assert.match(app, /function v5ResetFilterSurface\(surface\) \{[^}]*v5RenderQuickFilterState\(surface\)/);
 });
 
 test("V5 filter styling keeps builder groups readable on narrow screens", () => {

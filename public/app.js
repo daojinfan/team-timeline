@@ -4295,7 +4295,7 @@ function v5ApplyFilterExpression(surface, expression) {
   }
   if (surface === "editor") v5RenderTree(); else v5RenderExecution();
 }
-function v5ResetFilterSurface(surface) { v5State.filterExpressions[surface] = v5EmptyFilterExpression(); v5ClearFilterQuickInputs(surface); if (surface === "editor") { if ($("#v5TaskStatusNot")) $("#v5TaskStatusNot").checked = false; v5RenderTree(); } else v5RenderExecution(); }
+function v5ResetFilterSurface(surface) { v5State.filterExpressions[surface] = v5EmptyFilterExpression(); v5ClearFilterQuickInputs(surface); v5RenderQuickFilterState(surface); if (surface === "editor") { if ($("#v5TaskStatusNot")) $("#v5TaskStatusNot").checked = false; v5RenderTree(); } else v5RenderExecution(); }
 function v5UpdateQuickFilter(surface, field) { const config = v5FilterQuickConfig(surface).find((item) => item.field === field); if (!config) return; const node = $(config.selector); const schema = v5FilterSchema(surface, field); const value = v5FilterQuickValue(node, schema); if (surface === "execution") v5State.execution[field] = value; const expression = v5CloneFilterExpression(v5EnsureFilterExpression(surface)); expression.groups = (expression.groups || []).map((group) => ({ ...group, conditions: (group.conditions || []).filter((condition) => condition.field !== field) })); if (value) { if (!expression.groups.length) expression.groups.push({ id: `group-${Date.now()}`, logic: "and", connector: "and", conditions: [] }); expression.groups[0].conditions.push({ ...v5FilterConditionFromField(surface, field), value: schema?.kind === "multi" ? [String(value)] : value, negate: Boolean(config.negate && $(config.negate)?.checked) }); } v5ApplyFilterExpression(surface, expression); }
 
 function v5RenderTree() {
