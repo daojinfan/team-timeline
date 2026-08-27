@@ -17,10 +17,13 @@ test("V5 schedule detail toggles the three-column state and supports closing", (
   assert.match(app, /card\.hidden = !task/);
   assert.match(app, /workspace\.classList\.toggle\("has-detail", Boolean\(task\)\)/);
   assert.match(app, /data-v5-exec-close-detail[\s\S]*selectedTaskId = null; v5RenderExecution\(\)/);
+  assert.match(app, /document\.documentElement\.classList\.toggle\("v5-execution-active", executionActive\)/);
+  assert.match(app, /document\.body\.classList\.toggle\("v5-execution-active", executionActive\)/);
   assert.match(styles, /\.v5-execution-workspace\.has-detail\s*\{[^}]*grid-template-columns:\s*210px minmax\(0, 1fr\) minmax\(320px, 360px\)/);
   assert.match(styles, /@media \(max-width: 1180px\)[^{]*\{[^}]*\.v5-execution-workspace\.has-detail[^}]*grid-template-columns:\s*200px minmax\(0, 1fr\)/);
-  assert.match(styles, /@media \(max-width: 720px\)[^{]*\{[^}]*\.v5-execution-workspace\.has-detail[^}]*grid-template-columns:\s*minmax\(0, 1fr\)/);
+  assert.match(styles, /@media \(max-width: 720px\)[^{]*\{[\s\S]*?\.v5-execution-workspace\.has-detail[^}]*grid-template-columns:\s*minmax\(0, 1fr\)/);
   assert.match(styles, /@media \(max-width: 720px\)[\s\S]*?\.v5-execution-detail-card\s*\{[^}]*width:\s*min\(100%, calc\(100vw - 16px\)\)/);
+  assert.match(styles, /@media \(max-width: 720px\)[^{]*\{[^}]*html\.v5-execution-active, body\.v5-execution-active\s*\{[^}]*min-width:\s*0/);
 });
 
 test("V5 schedule facts and member rows use isolated detail styles", () => {
@@ -31,4 +34,6 @@ test("V5 schedule facts and member rows use isolated detail styles", () => {
   assert.doesNotMatch(app.match(/function v5RenderExecutionDetail\(\)[\s\S]*?\n\}/)?.[0] || "", /class="v5-execution-member-list"/);
   assert.match(app, />修改任务时间<\/button>/);
   assert.match(app, />全量编辑<\/button>/);
+  assert.match(app, /data-v5-exec-schedule-mode="task"/);
+  assert.match(app, /v5OpenScheduleEditor\(Number\(taskEdit\.dataset\.v5ExecEditTask\), taskEdit\.dataset\.v5ExecScheduleMode\)/);
 });

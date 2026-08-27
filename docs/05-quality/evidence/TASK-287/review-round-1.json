@@ -1,0 +1,60 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-287",
+  "reviewed_task_ids": ["TASK-286"],
+  "work_package": "WP-014",
+  "baseline": "BL-010",
+  "result": "changes-required",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-286",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "将排期详情的显示状态与执行工作区 has-detail 三栏状态绑定，未选任务时清空并隐藏详情；新增关闭详情处理，将详情成员列表改用隔离类名，并把次操作文案收敛为“全量编辑”。"
+    },
+    {
+      "task_id": "TASK-286",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "将隐藏的排期详情卡移入执行工作区作为第三个网格子项，以可访问标题关联详情卡，并用带 aria-label 的关闭按钮替代原头部编辑入口。"
+    },
+    {
+      "task_id": "TASK-286",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "新增宽屏三栏、1180px 两栏及 720px 单栏回落，设置右侧粘性详情卡与内部滚动，显式修复事实网格列宽，并为详情成员列表提供独立样式。"
+    },
+    {
+      "task_id": "TASK-286",
+      "path": "tests/v5-execution-detail-layout.test.js",
+      "change_type": "added",
+      "summary": "新增三项静态回归，覆盖详情卡工作区位置和默认隐藏、三档响应式规则与关闭状态，以及事实网格、成员类名和详情操作文案。"
+    }
+  ],
+  "change_summary": "从 TASK-286 启动提交 93d2be89e8caf17a30d08a4d1350bdfa66e4a756 到最终提交 5223fe231b70a0f67efdd563d5603753a975d8ba 的完整业务差异精确为 public/app.js、public/index.html、public/styles.css 三项 modified 和 tests/v5-execution-detail-layout.test.js 一项 added；没有删除或重命名，四项均位于 TASK-286 allowed_paths，未改服务端、数据库、API 或任务事实。",
+  "scope_checked": [
+    "完整读取 TASK-286/TASK-287 契约与状态、WP-014 上下文和契约，并核对 REQ-V5-001、ARC-COMP-V5-001、QUAL-TRACE-V5-001、DEC-005、CR-009 与 DEL-WORK-001 的直接约束。",
+    "检查 93d2be8..5223fe2 的完整 name-status、逐行差异与 git diff --check，确认四项业务变更及类型与本证据 changes 清单完全一致，无删除、重命名或越界文件。",
+    "逐行核对详情渲染和事件委派，确认本次没有修改排期预览、保存请求、版本校验、冲突确认、API 调用或任务数据模型。",
+    "在本地 1280×720 页面核对未选择双栏、选择后三栏、详情粘性位置、日期横排、详情成员样式隔离、关闭与全量编辑交互。",
+    "在本地 700×720 页面核对 <=720 单栏回落、详情操作可达性、页面横向尺寸和修改任务时间交互，并重复复现两个窄屏问题。"
+  ],
+  "findings": [
+    "[P1] 700×720 实测 innerWidth 为 700px，但 html/body 的 clientWidth 与 scrollWidth 均为 1100px，执行工作区宽 1036px、右边界 1068px，详情卡右边界 716px；既有 html/body min-width:1100px 未被本次 <=720 回落覆盖，且 body overflow-x:hidden 会裁切内容，不满足 WP-014“窄屏无横向溢出”和 <=720 自然单栏验收。",
+    "[P1] 700px 下详情主按钮的实际 DOM 为 data-v5-exec-edit-task=20、文案“修改任务时间”，但点击后 v5ScheduleDialogTitle 两次均显示“修改成员排期”；该入口没有稳定进入任务排期模式，违反“修改任务时间”操作语义，存在用户误改成员日期的风险。"
+  ],
+  "validation_evidence": [
+    "独立执行 node --check public/app.js：exit 0。",
+    "独立执行 node --test tests/v5-execution-detail-layout.test.js：3/3 通过；这些静态断言未覆盖真实窄屏宽度和点击后的排期模式。",
+    "独立执行 npm test：82/82 通过，无失败、跳过或取消。",
+    "对 93d2be8..5223fe2 的四项业务差异执行 git diff --check：exit 0。",
+    "1280×720 浏览器实测：未选择时详情 hidden 且工作区为 226px/934.667px 双栏；选择后为 210px/578.667px/360px 三栏，详情卡宽 360px、position=sticky，任务日期 dd 宽 211.333px、高 18.594px并横向显示，页面 scrollWidth/clientWidth 均为 1265px。",
+    "1280×720 详情操作实测可见；全量编辑切换到任务全量编辑台成功，关闭后详情 hidden=true、工作区移除 has-detail 且详情内容清空。",
+    "700×720 浏览器实测：媒体规则将事实块降为单列且两个详情操作按钮均能渲染，但 body clientWidth/scrollWidth=1100/1100px、workspace 宽 1036px、详情卡范围 x=32..716px，页面内容被 700px 视口裁切。",
+    "700×720 交互复现：#v5ExecutionDetail [data-v5-exec-edit-task] 的 outerHTML 明确为“修改任务时间”按钮，点击后弹窗可见但标题为“修改成员排期”；重复通过按可访问名称和精确 CSS 定位点击均得到相同结果。",
+    "TASK-287 运行状态已记录治理 Strict 验证证据 docs/05-quality/evidence/TASK-287/20260827T134854577Z-08e1d36b-governance-strict.evidence.json；本审核成员未调用任何治理状态动作。"
+  ],
+  "created_at": "2026-08-27T13:56:00Z"
+}
