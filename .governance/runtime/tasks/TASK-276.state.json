@@ -1,0 +1,47 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-276",
+  "work_package": "WP-013",
+  "contract_sha256": "7ed12b3967860e2fa265d3520875290ba59c361e988b57768b25aa7a79bae280",
+  "baseline": "BL-009",
+  "state": "accepted",
+  "approval_id": "APR-181",
+  "acceptance_subject_sha256": "caa9a939f0250a5b0f5568c9074129433f2aaa18056e659f6809d04db8b818a0",
+  "acceptance_evidence_sha256": "10cf1d31c94105141d579c4cbcd7534e826d362b869972b7d81e03ddf070af4e",
+  "acceptance_git_commit": "93f2a5cfd0d45feb3d258e943327114b4116b4db",
+  "start_git_commit": "127df93c2ba2368e75989a0ca4b08767e9c40814",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [],
+  "plan_checkpoint_git_commit": "127df93c2ba2368e75989a0ca4b08767e9c40814",
+  "plan_rebase_history": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-276/20260827T022206553Z-7efa533e-required-validation.evidence.json",
+    "docs/05-quality/evidence/TASK-276/20260827T022206553Z-7efa533e-app-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-276/20260827T022206553Z-7efa533e-governance-strict.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-276/20260827T021803274Z-f75b5530-required-validation.evidence.json",
+    "docs/05-quality/evidence/TASK-276/20260827T021803274Z-f75b5530-app-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-276/20260827T021803274Z-f75b5530-governance-strict.evidence.json",
+    "docs/05-quality/evidence/TASK-276/20260827T022206553Z-7efa533e-required-validation.evidence.json",
+    "docs/05-quality/evidence/TASK-276/20260827T022206553Z-7efa533e-app-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-276/20260827T022206553Z-7efa533e-governance-strict.evidence.json"
+  ],
+  "review_history": [],
+  "review": {
+    "required": true,
+    "reviewer_task_id": "TASK-277",
+    "status": "passed",
+    "evidence": [
+      "docs/05-quality/evidence/TASK-277/review-round-3-passed.json"
+    ],
+    "pass_streak": 2,
+    "subject_sha256": "caa9a939f0250a5b0f5568c9074129433f2aaa18056e659f6809d04db8b818a0"
+  },
+  "last_error": "",
+  "created_at": "2026-08-27T02:14:26.4356713Z",
+  "updated_at": "2026-08-27T02:30:40.2190649Z"
+}

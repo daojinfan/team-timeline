@@ -1,0 +1,82 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-276",
+  "work_package": "WP-013",
+  "title": "优化筛选态专题树空占位",
+  "goal": "任务全量编辑台存在有效任务筛选时只渲染包含匹配任务的专题，无匹配结果时显示单一全局空状态；无筛选时保留空专题管理入口。",
+  "baseline": "BL-009",
+  "profile": "Standard",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/app.js",
+    "tests"
+  ],
+  "read_paths": [
+    "public/app.js",
+    "tests",
+    "docs/02-product/requirements-v5.md",
+    "docs/03-architecture/components/v5-detailed-design.md",
+    "docs/07-decisions/DEC-005.md",
+    "docs/08-changes/CR-009.md"
+  ],
+  "write_paths": [
+    "public/app.js",
+    "tests"
+  ],
+  "out_of_scope": [],
+  "authoritative_documents": [
+    "REQ-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "DEC-005",
+    "CR-009",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-274"
+  ],
+  "acceptance_criteria": [
+    "有任务筛选时只显示至少一个匹配任务的专题",
+    "筛选无匹配任务时显示单一全局空状态且统计为 0 个任务、0 个专题",
+    "无任务筛选时保留空专题及新增任务入口",
+    "归档专题开关、现有筛选语义、任务数据和 API 保持不变",
+    "npm test、node --check public/app.js 与治理 Strict 校验通过"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "governance-strict",
+      "command": "powershell",
+      "args": [
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-Level",
+        "Strict"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-27T02:14:26.4356713Z"
+}

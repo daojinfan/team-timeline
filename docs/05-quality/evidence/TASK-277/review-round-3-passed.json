@@ -1,0 +1,41 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-277",
+  "reviewed_task_ids": ["TASK-276"],
+  "work_package": "WP-013",
+  "baseline": "BL-009",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-276",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "第二轮重新检查筛选表达式判定、专题与匹配任务预分组、空专题裁剪、可见计数、全局无结果提示和清空后的完整界面状态同步。"
+    },
+    {
+      "task_id": "TASK-276",
+      "path": "tests/v5-filter-combo.test.js",
+      "change_type": "modified",
+      "summary": "第二轮重新检查自动化契约，确认筛选态和无筛选态边界、空状态、计数及摘要重置均有防回归断言。"
+    }
+  ],
+  "change_summary": "第二轮全量审核再次从 TASK-276 启动提交 127df93c2ba2368e75989a0ca4b08767e9c40814 对比最终提交 93f2a5cfd0d45feb3d258e943327114b4116b4db；最终内容指纹与上一通过轮次一致，实际变更保持为两个 modified 文件。",
+  "scope_checked": [
+    "重新核对 name-status 和完整 diff，确认两轮之间产品代码与最终提交未变化。",
+    "重新检查 filterActive 仅由规范化表达式中的有效条件决定，空表达式不会隐藏空专题。",
+    "重新检查有筛选时 visibleTopicRows 排除零任务专题，折叠和展开状态不会重新引入空专题。",
+    "重新检查全局零结果状态与清空按钮，确认统计、输入值、否定状态和组合筛选摘要同步恢复。",
+    "重新检查任务内容、专题内容、默认状态偏好、执行中心、归档开关、API 和数据库均未被改写。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: node --check public/app.js",
+    "PASS: npm test（71/71）",
+    "PASS: 两次 TASK-276 Verify 均保存验证历史，修复后当前证据全部通过。",
+    "PASS: 最终 HEAD 仍为 93f2a5cfd0d45feb3d258e943327114b4116b4db。",
+    "PASS: 页面回归覆盖有结果筛选、零结果全局空状态和清空后摘要/树恢复。"
+  ],
+  "created_at": "2026-08-27T02:25:23Z"
+}

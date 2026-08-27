@@ -1,0 +1,42 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-277",
+  "reviewed_task_ids": ["TASK-276"],
+  "work_package": "WP-013",
+  "baseline": "BL-009",
+  "result": "changes-required",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-276",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "新增筛选表达式有效值判断，专题树按匹配任务构建可见专题集合，并加入零结果全局空状态及清空筛选动作。"
+    },
+    {
+      "task_id": "TASK-276",
+      "path": "tests/v5-filter-combo.test.js",
+      "change_type": "modified",
+      "summary": "新增专题树筛选态回归断言，覆盖可见专题过滤、计数、零结果空状态和清空动作绑定。"
+    }
+  ],
+  "change_summary": "已从 TASK-276 启动提交 127df93c2ba2368e75989a0ca4b08767e9c40814 核对最终提交 5aa4444b4660e7881f017cee88054f8226525c62；实际产品变更仅限 public/app.js 与 tests/v5-filter-combo.test.js，但浏览器复核发现清空筛选后的组合筛选摘要未同步。",
+  "scope_checked": [
+    "核对 TASK-276 启动提交到当前 HEAD 的全部 Git 变更和变更类型。",
+    "验证有结果筛选只保留包含匹配任务的专题，未出现逐专题空占位。",
+    "验证零结果显示单一全局空状态，任务和专题统计均为零。",
+    "验证清空筛选恢复全部任务和专题，并检查筛选控件、统计与摘要的一致性。"
+  ],
+  "findings": [
+    "需要修改：零结果空状态中的“清空筛选”调用 v5ResetFilterSurface 后，任务树与快捷筛选值已清空，但“组合筛选”摘要仍显示清空前的条件数量；应在重置表达式后同步调用 v5RenderQuickFilterState(surface)，并补充回归断言。"
+  ],
+  "validation_evidence": [
+    "PASS: node --check public/app.js",
+    "PASS: npm test（71/71）",
+    "PASS: 浏览器筛选“等待样品”显示 15 个任务、8 个专题且无空专题占位。",
+    "PASS: 浏览器无匹配搜索显示单一空状态和 0 个任务、0 个专题。",
+    "FAIL: 浏览器点击清空筛选后组合筛选摘要仍显示旧的 2 条条件。"
+  ],
+  "created_at": "2026-08-27T02:19:26Z"
+}

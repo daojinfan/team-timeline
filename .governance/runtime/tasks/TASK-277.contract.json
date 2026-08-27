@@ -1,0 +1,76 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-277",
+  "work_package": "WP-013",
+  "title": "复审筛选态专题树空占位优化",
+  "goal": "独立复核筛选态只保留有匹配任务专题、零结果全局空状态和无筛选空专题管理入口，并核对最终变更清单。",
+  "baseline": "BL-009",
+  "profile": "Standard",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-277"
+  ],
+  "read_paths": [
+    "public/app.js",
+    "tests",
+    "docs/02-product/requirements-v5.md",
+    "docs/03-architecture/components/v5-detailed-design.md",
+    "docs/07-decisions/DEC-005.md",
+    "docs/08-changes/CR-009.md"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-277"
+  ],
+  "out_of_scope": [],
+  "authoritative_documents": [
+    "REQ-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "DEC-005",
+    "CR-009",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-276"
+  ],
+  "acceptance_criteria": [
+    "审核清单覆盖 TASK-276 的全部实际新增和修改",
+    "两轮全量审核均核对筛选态、无筛选态、零结果和归档专题边界",
+    "验证命令、浏览器证据和最终内容指纹一致"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "governance-strict",
+      "command": "powershell",
+      "args": [
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-Level",
+        "Strict"
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-27T02:14:26.7519919Z"
+}
