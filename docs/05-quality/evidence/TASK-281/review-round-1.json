@@ -1,0 +1,45 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-281",
+  "reviewed_task_ids": ["TASK-280"],
+  "work_package": "WP-013",
+  "baseline": "BL-009",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-280",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "新增 V5 甘特图智能范围前后天数状态、版本化偏好读写、即时调整/保存/恢复和基于筛选任务的锚点与最近任务回退算法；保留手动范围与默认状态逻辑。"
+    },
+    {
+      "task_id": "TASK-280",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "新增智能范围前后天数 range 控件、数值输出、保存为默认/恢复建议值按钮及可访问状态消息。"
+    },
+    {
+      "task_id": "TASK-280",
+      "path": "tests/v5-execution-smart-range.test.js",
+      "change_type": "added",
+      "summary": "新增静态回归测试覆盖智能范围控件、边界、持久化、筛选回退和手动范围隔离。"
+    }
+  ],
+  "change_summary": "从 TASK-280 启动提交 a2f393bcd05a3e7e6a0d4c7056264cebd239ce65 到交付提交 547673c7b6ea78d34766c52654ef35a832554c09 的产品差异精确为上述两项 modified 和一项 added；未修改服务端、API、数据库、任务数据或 styles.css。",
+  "scope_checked": [
+    "完整读取 TASK-280/TASK-281 契约与状态、WP-013 路由及 V5 相关需求/详细设计/质量追踪/决策/变更文档。",
+    "独立复核 a2f393b..547673c 的完整 Git 变更和当前产品变更清单，确认均在 TASK-280 allowed_paths 内。",
+    "复核 public/index.html 的智能范围控件、默认值、可访问名称、输出和保存/恢复按钮。",
+    "复核 public/app.js 的偏好兼容、状态默认值保留、智能范围计算、最近任务回退、手动范围分支与事件绑定。",
+    "独立执行浏览器回归：滑杆即时更新，保存后刷新恢复，手动未来30天隐藏智能控件且切回智能保留配置；最终已恢复保存建议值14/45。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "TASK-280 Verify 的 npm test 76/76 通过；node --check public/app.js exit 0；git diff --check exit 0。",
+    "浏览器初始智能范围滑杆显示14天/45天；临时调整到0/60后范围即时变化；保存提示成功；手动未来30天不受影响；恢复并保存14/45。",
+    "治理 Strict 验证由 TASK-281 Verify 生成证据并通过。"
+  ],
+  "created_at": "2026-08-27T05:20:00Z"
+}

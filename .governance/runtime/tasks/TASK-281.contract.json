@@ -1,0 +1,82 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-281",
+  "work_package": "WP-013",
+  "title": "审核 V5 甘特图智能范围偏好优化",
+  "goal": "独立审核执行中心甘特图智能范围滑杆、默认持久化和范围计算优化的实际变更、边界行为与回归证据。",
+  "baseline": "BL-009",
+  "profile": "Standard",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-281"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/app.js",
+    "tests",
+    "docs/02-product/requirements-v5.md",
+    "docs/03-architecture/components/v5-detailed-design.md",
+    "docs/05-quality/traceability-v5.md",
+    "docs/07-decisions/DEC-005.md",
+    "docs/08-changes/CR-009.md",
+    "docs/04-delivery/WORK-PACKAGES.md",
+    "docs/04-delivery/WORK-STATUS.md",
+    "docs/05-quality/evidence"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-281"
+  ],
+  "out_of_scope": [],
+  "authoritative_documents": [
+    "REQ-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "DEC-005",
+    "CR-009",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-280"
+  ],
+  "acceptance_criteria": [
+    "逐项核对 TASK-280 的实际新增、修改、删除或重命名内容并记录 changes 清单。",
+    "确认智能范围滑杆默认值、边界、即时渲染、最近任务回退与周/月对齐行为符合方案。",
+    "确认保存为默认与刷新恢复有效，且临时调整不影响手动范围、默认状态、API、数据库和任务数据。",
+    "按 Standard 档位完成两轮全量审核，第二轮内容指纹与最终交付一致。"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "governance-strict",
+      "command": "powershell",
+      "args": [
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-Level",
+        "Strict"
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-27T05:09:32.0799613Z"
+}

@@ -1,0 +1,45 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-281",
+  "reviewed_task_ids": ["TASK-280"],
+  "work_package": "WP-013",
+  "baseline": "BL-009",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-280",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "实现智能甘特图范围的14/45建议值、0-90/0-180边界校正、浏览器偏好持久化、保存与未保存恢复交互，以及筛选任务为空时按最近任务重新锚定；手动范围路径保持原行为。"
+    },
+    {
+      "task_id": "TASK-280",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "在执行中心增加仅智能模式显示的前后天数滑杆、实时数值输出、保存默认值和恢复建议值操作，并提供状态播报。"
+    },
+    {
+      "task_id": "TASK-280",
+      "path": "tests/v5-execution-smart-range.test.js",
+      "change_type": "added",
+      "summary": "补充回归断言，覆盖控件可见性、范围边界、偏好兼容、刷新应用、最近任务兜底及手动模式隔离。"
+    }
+  ],
+  "change_summary": "对 TASK-280 启动点 a2f393bcd05a3e7e6a0d4c7056264cebd239ce65 与最终点 547673c7b6ea78d34766c52654ef35a832554c09 之间的完整差异逐项核对，变更类型和路径与上述清单一致；范围仍限定于 public/app.js、public/index.html 和 tests/v5-execution-smart-range.test.js。",
+  "scope_checked": [
+    "重新读取 TASK-280/TASK-281 的最终契约、租约验证状态以及 WP-013 的 allowed_paths/read_paths，确认没有新增越界文件。",
+    "逐段复查 range 控件 DOM、默认值与辅助标签，确认保存按钮、恢复按钮和 aria-live 状态消息只在智能范围行展示。",
+    "逐段复查偏好读取/写入与刷新初始化，确认旧版状态偏好仍兼容，状态恢复操作不会覆盖已保存的甘特范围。",
+    "逐段复查范围算法，确认有筛选任务时使用锚点窗口、窗口无任务时选择最近有日期任务，并且 all/week/month/未来天数等手动分支未被改写。",
+    "第二次执行浏览器验收路径并检查最终值：调节滑杆即时重绘，保存后刷新回读，切换未来30天隐藏控件且不改变智能设置，最后保存14/45建议值。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "本轮 TASK-281 Verify 生成的 required-validation、app-syntax 和 governance-strict 证据均通过；npm test 76/76，node --check public/app.js 通过。",
+    "本轮浏览器检查确认14/45初始值、0/60临时调整、成功保存提示、手动范围隔离与重新进入智能模式的配置保留；测试结束时浏览器偏好为14/45。",
+    "git diff --check 无空白错误，最终产品提交 547673c7b6ea78d34766c52654ef35a832554c09 与审核清单指纹一致。"
+  ],
+  "created_at": "2026-08-27T05:25:00Z"
+}

@@ -1,0 +1,78 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-287",
+  "work_package": "WP-014",
+  "title": "独立复审执行中心排期详情 UI 优化",
+  "goal": "独立检查 TASK-286 的实际差异、响应式布局、交互闭环、测试结果与变更清单，形成结构化审核证据。",
+  "baseline": "BL-010",
+  "profile": "Standard",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-287"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "tests"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-287"
+  ],
+  "out_of_scope": [
+    "不得修改 TASK-286 的业务交付文件",
+    "不得递归委派或以测试通过替代实际差异审查"
+  ],
+  "authoritative_documents": [
+    "REQ-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "DEC-005",
+    "CR-009",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-286"
+  ],
+  "acceptance_criteria": [
+    "逐项列出 TASK-286 的新增和修改文件及变更类型",
+    "核对桌面与窄屏视觉结果和关闭、编辑交互",
+    "核对实际 Git 变更与审核证据清单一致",
+    "Standard 档位完成两轮完整独立审核"
+  ],
+  "validations": [
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "detail-layout-test",
+      "command": "node",
+      "args": [
+        "--test",
+        "tests/v5-execution-detail-layout.test.js"
+      ]
+    },
+    {
+      "id": "governance-strict",
+      "command": "pwsh",
+      "args": [
+        "-NoProfile",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-Level",
+        "Strict"
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-27T13:37:34.6511229Z"
+}

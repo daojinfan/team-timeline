@@ -2,7 +2,7 @@
   "$schema": "schemas/work-package-context.schema.json",
   "schema_version": 1,
   "work_package": "WP-013",
-  "baseline": "BL-009",
+  "baseline": "BL-010",
   "scope": [
     "public/index.html",
     "public/app.js",

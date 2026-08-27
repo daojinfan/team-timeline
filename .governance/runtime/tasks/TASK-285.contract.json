@@ -1,0 +1,81 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-285",
+  "work_package": "WP-013",
+  "title": "独立复审执行中心成员排期同步复选框布局",
+  "goal": "独立检查 TASK-284 的执行中心排期弹窗界面修复，核对成员排期模式隐藏同步选项、任务排期模式的复选框紧凑布局、范围清单和回归证据。",
+  "baseline": "BL-009",
+  "profile": "Standard",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-285"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/app.js",
+    "tests",
+    "docs/02-product/requirements-v5.md",
+    "docs/03-architecture/components/v5-detailed-design.md",
+    "docs/05-quality/traceability-v5.md",
+    "docs/07-decisions/DEC-005.md",
+    "docs/08-changes/CR-009.md",
+    "docs/04-delivery/WORK-PACKAGES.md",
+    "docs/04-delivery/WORK-STATUS.md",
+    "docs/05-quality/evidence"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-285"
+  ],
+  "out_of_scope": [],
+  "authoritative_documents": [
+    "REQ-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "DEC-005",
+    "CR-009",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-284"
+  ],
+  "acceptance_criteria": [
+    "独立复核最终 Git 差异与 TASK-284 allowed_paths，变更清单逐项准确且无越界。",
+    "独立复核两种排期模式的 DOM、可见性、复选框尺寸和布局行为，确认与 V5 设计一致。",
+    "独立执行自动化验证和浏览器回归并形成结构化审核证据。"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "governance-strict",
+      "command": "powershell",
+      "args": [
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-Level",
+        "Strict"
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-27T11:29:18.7971796Z"
+}

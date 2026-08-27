@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [string]$ProjectPath = (Get-Location).Path,
-    [Parameter(Mandatory = $true)][ValidateSet("Plan", "RebasePlan", "MigrateTask", "AssignReview", "MigrateReviewer", "ReopenReview", "ReopenAcceptance", "RecordReview", "RecordApproval", "Start", "Block", "NeedsDecision", "Resume", "Recover", "Supersede", "Verify", "Accept", "Status")][string]$Action,
+    [Parameter(Mandatory = $true)][ValidateSet("Plan", "RebasePlan", "MigrateTask", "AssignReview", "MigrateReviewer", "MigrateCompletedReviewerBaseline", "ReopenReview", "ReopenAcceptance", "RecordReview", "RecordApproval", "Start", "Block", "NeedsDecision", "Resume", "Recover", "Supersede", "Verify", "Accept", "Status")][string]$Action,
     [ValidatePattern('^TASK-\d{3,}$')][string]$TaskId,
     [ValidatePattern('^WP-\d{3,}$')][string]$WorkPackage,
     [string]$Title,
@@ -1037,6 +1037,53 @@ Invoke-WithGovernanceLock -LockPath $lockPath -ScriptBlock {
             Update-TeamLedgerTaskState -TaskId $TaskId -RuntimeState 'verified' -LedgerState 'completed'
             Sync-WorkPackageStatus -Id ([string]$pair.Contract.work_package)
             Invoke-StrictValidation -AllowLegacyTaskStates
+        } catch {
+            Write-AtomicUtf8Text -Path $pair.Paths.State -Content $stateSnapshot
+            Write-AtomicUtf8Text -Path $ledgerPath -Content $ledgerSnapshot
+            Write-AtomicUtf8Text -Path $workStatusPath -Content $workStatusSnapshot
+            throw
+        }
+        Write-Output $pair.Paths.State
+        return
+    }
+
+    if ($Action -eq 'MigrateCompletedReviewerBaseline') {
+        if ([string](Get-Property $pair.Contract 'role') -ne 'REVIEWER' -or [string]$pair.State.state -ne 'needs-decision') { throw "MigrateCompletedReviewerBaseline only restores a REVIEWER task stopped at needs-decision." }
+        if ([string]::IsNullOrWhiteSpace($Reason)) { throw 'MigrateCompletedReviewerBaseline requires Reason.' }
+        $governance = Read-GovernanceJson -Path $governancePath
+        if ([string]$pair.Contract.baseline -eq [string]$governance.current_baseline) { throw "Reviewer task $TaskId is already on the current baseline and is not eligible for historical migration." }
+        $acceptedDeliveries = [System.Collections.Generic.List[string]]::new()
+        foreach ($candidateStatePath in @(Get-ChildItem -LiteralPath $runtimeRoot -File -Filter 'TASK-*.state.json' -ErrorAction SilentlyContinue)) {
+            try { $candidateState = [System.IO.File]::ReadAllText($candidateStatePath.FullName, $script:GovernanceUtf8NoBom) | ConvertFrom-Json -ErrorAction Stop } catch { continue }
+            $candidateReview = Get-Property $candidateState 'review'
+            if ([string](Get-Property $candidateState 'state') -eq 'accepted' -and [string](Get-Property $candidateReview 'reviewer_task_id') -eq $TaskId -and [string](Get-Property $candidateReview 'status') -eq 'passed') {
+                $acceptedDeliveries.Add([string](Get-Property $candidateState 'task_id'))
+            }
+        }
+        if ($acceptedDeliveries.Count -eq 0) { throw "Reviewer task $TaskId is not bound to an accepted delivery with a final passed review." }
+        $passedHistory = @((Get-Property $pair.State 'review_history') | Where-Object { [string](Get-Property $_ 'result') -eq 'passed' })
+        if ($passedHistory.Count -eq 0) { throw "Reviewer task $TaskId has no immutable passed review history." }
+        foreach ($historyEntry in $passedHistory) {
+            $historyPath = [string](Get-Property $historyEntry 'path')
+            $resolvedHistoryPath = [System.IO.Path]::GetFullPath((Join-Path $root $historyPath))
+            $rootPrefix = $root.TrimEnd([char[]]@('\', '/')) + [System.IO.Path]::DirectorySeparatorChar
+            if (-not $resolvedHistoryPath.StartsWith($rootPrefix, $script:GovernancePathComparison) -or -not (Test-Path -LiteralPath $resolvedHistoryPath -PathType Leaf)) { throw "Reviewer task $TaskId has missing or out-of-project passed evidence: $historyPath" }
+            $currentHistoryHash = (Get-FileHash -LiteralPath $resolvedHistoryPath -Algorithm SHA256).Hash.ToLowerInvariant()
+            if ([string](Get-Property $historyEntry 'sha256') -ne $currentHistoryHash) { throw "Reviewer task $TaskId passed evidence has changed: $historyPath" }
+        }
+        $stateSnapshot = [System.IO.File]::ReadAllText($pair.Paths.State, $script:GovernanceUtf8NoBom)
+        $ledgerRelative = [string]$governance.authoritative_documents.task_ledger
+        $ledgerPath = [System.IO.Path]::GetFullPath((Join-Path $root $ledgerRelative))
+        $ledgerSnapshot = [System.IO.File]::ReadAllText($ledgerPath, $script:GovernanceUtf8NoBom)
+        $workStatusSnapshot = [System.IO.File]::ReadAllText($workStatusPath, $script:GovernanceUtf8NoBom)
+        try {
+            $pair.State.state = 'verified'
+            $pair.State.approval_id = ''
+            Clear-ExecutionLease $pair
+            $pair.State.last_error = "Completed reviewer baseline migration confirmed for $($acceptedDeliveries -join ', '): $($Reason.Trim())"
+            Write-State $pair
+            Update-TeamLedgerTaskState -TaskId $TaskId -RuntimeState 'verified' -LedgerState 'completed'
+            Sync-WorkPackageStatus -Id ([string]$pair.Contract.work_package)
         } catch {
             Write-AtomicUtf8Text -Path $pair.Paths.State -Content $stateSnapshot
             Write-AtomicUtf8Text -Path $ledgerPath -Content $ledgerSnapshot

@@ -1,0 +1,48 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-285",
+  "reviewed_task_ids": ["TASK-284"],
+  "work_package": "WP-013",
+  "baseline": "BL-009",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-284",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "在排期编辑器每次打开时同时设置同步字段的 important 级 display 和 hidden 状态，成员模式为 none、任务模式为 inline-flex；预览、保存和版本校验代码未改。"
+    },
+    {
+      "task_id": "TASK-284",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "将同步所有成员复选框固定为 14×14px、零 margin/padding、固定 flex 基准并左对齐标签，保留原 ID、文案和复选框语义。"
+    },
+    {
+      "task_id": "TASK-284",
+      "path": "tests/v5-schedule-sync-checkbox.test.js",
+      "change_type": "added",
+      "summary": "新增三项回归测试，分别覆盖紧凑对齐标记、成员模式隐藏控制和任务/成员请求负载隔离。"
+    }
+  ],
+  "change_summary": "第二轮独立审查了 TASK-284 从启动提交 547673c7b6ea78d34766c52654ef35a832554c09 到最终提交 2a35353eb5755bd0675d60ed4642b7080f9d7b65 的完整业务差异；manifest 精确为 public/app.js modified、public/index.html modified、tests/v5-schedule-sync-checkbox.test.js added，未包含治理文件，也未触及 styles.css、服务端、API、数据库或任务数据。",
+  "scope_checked": [
+    "重新读取 TASK-284 契约和 TASK-284/TASK-285 最新运行状态，复核 REQ-V5-018～022、ARC-COMP-V5-001 §4.1～4.2、QUAL-TRACE-V5-001 双层时间追踪与 WP-013 边界。",
+    "独立检查 547673c..2a35353 的完整 Git name-status、numstat 和逐行差异，确认最终提交父提交正是 TASK-284 启动提交且三项变更均在 allowed_paths 内。",
+    "分别提取启动提交和最终提交中的 v5PreviewSchedule、v5SaveSchedule 并进行区分大小写精确比较，确认两组函数完全一致。",
+    "重新读取新增测试全部内容，核对其覆盖紧凑样式、隐藏逻辑、任务 sync_members 和成员独立负载，而非仅复查第一轮结论。",
+    "刷新最终提交页面，在 1280×720 下重新打开 TASK-27 的成员排期与任务排期弹窗，独立测量可见性、占位、尺寸、中心线、左对齐和横向溢出。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "第二轮独立执行 npm test：79/79 通过，新增的三项 V5 排期同步复选框测试全部通过。",
+    "第二轮独立执行 node --check public/app.js：exit 0；对 547673c..2a35353 的业务差异执行 git diff --check：exit 0。",
+    "请求负载精确比较通过：v5PreviewSchedule 和 v5SaveSchedule 在启动提交与最终提交中完全一致；成员请求不含 sync_members，任务请求继续读取 #v5ScheduleSync，并保留 preview_token、expected_version 和 ack。",
+    "成员模式浏览器证据：标题为修改成员排期，sync 字段 hidden=true、display=none，标签和复选框边界均为 0×0；日期区到提示仅保留正常 14px 间距，无空白控件占位。",
+    "任务模式浏览器证据：标题为修改任务时间，复选框实测 14×14px，min-width/min-height 均为 14px，flex 为 0 0 14px，margin/padding 为 0；标签 align-items=center、justify-self=start，框与文字中心线差为 0px，标签与日期区左边缘差为 0px。",
+    "1280×720 下两种模式的弹窗 scrollWidth/clientWidth 均为 860/860px，页面 body scrollWidth/clientWidth 均为 1265/1265px，没有额外横向溢出。"
+  ],
+  "created_at": "2026-08-27T11:43:48Z"
+}

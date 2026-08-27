@@ -1,0 +1,46 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-285",
+  "reviewed_task_ids": ["TASK-284"],
+  "work_package": "WP-013",
+  "baseline": "BL-009",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-284",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "在打开排期编辑器时显式以 important 级 display 控制同步字段，并同步 hidden 属性，使成员模式完全隐藏、任务模式恢复紧凑显示；未修改预览或保存请求负载。"
+    },
+    {
+      "task_id": "TASK-284",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "把同步所有成员复选框固定为 14×14px、清除多余间距和背景边框，并将标签左对齐，保持原控件 ID、文案和表单语义。"
+    },
+    {
+      "task_id": "TASK-284",
+      "path": "tests/v5-schedule-sync-checkbox.test.js",
+      "change_type": "added",
+      "summary": "新增三项静态回归，覆盖复选框紧凑样式、成员模式隐藏逻辑以及任务/成员两种请求负载隔离。"
+    }
+  ],
+  "change_summary": "从 TASK-284 启动提交 547673c7b6ea78d34766c52654ef35a832554c09 到当前交付工作树的业务差异精确为上述两项 modified 和一项 added；均位于 TASK-284 allowed_paths，未修改 styles.css、服务端、API、数据库或任务数据。",
+  "scope_checked": [
+    "完整读取 TASK-284/TASK-285 契约与状态，并核对 REQ-V5-001、ARC-COMP-V5-001、QUAL-TRACE-V5-001、DEC-005、CR-009、DEL-WORK-001 和 WP-013 交付状态。",
+    "独立复核启动提交 547673c.. 到当前工作树的完整业务差异、未跟踪测试文件和 git diff --check，确认变更清单准确且无越界。",
+    "逐行比对 v5PreviewSchedule 与 v5SaveSchedule，确认成员模式仍只发送 member_id/start_date/end_date，任务模式仍由原复选框生成 sync_members，预览令牌、expected_version 和 ack 逻辑未变化。",
+    "在本地 1280×720 页面选择 TASK-27，分别打开、关闭并重新打开修改任务时间和修改成员排期弹窗，检查可见性、尺寸、对齐、占位和横向滚动。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "独立执行 npm test：79/79 通过，其中新增 V5 schedule sync checkbox 三项回归全部通过。",
+    "独立执行 node --check public/app.js：exit 0；git diff --check：exit 0。",
+    "成员排期浏览器回归：v5ScheduleSyncField 的 hidden=true、computed display=none，标签和复选框边界均为 0×0；日期区域到后续提示间距为 14px，不存在空白控件占位。",
+    "任务排期浏览器回归：复选框实测 14×14px，flex 为 0 0 14px，margin/padding 均为 0；标签 align-items=center、justify-self=start，复选框与文字中心线差值为 0px。",
+    "1280×720 下任务/成员两种弹窗的 scrollWidth 与 clientWidth 均为 860px，页面 body scrollWidth 与 clientWidth 均为 1265px，无额外横向溢出；任务弹窗重复打开前后全部测量值一致。"
+  ],
+  "created_at": "2026-08-27T11:38:18Z"
+}

@@ -1,0 +1,62 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-285",
+  "work_package": "WP-013",
+  "contract_sha256": "4d71bc0b9f7142e00048a7ecfe39af8557b80ff419d8fa6d0401fdd98ccb3c3c",
+  "baseline": "BL-009",
+  "state": "verified",
+  "approval_id": "",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "2a35353eb5755bd0675d60ed4642b7080f9d7b65",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [],
+  "plan_checkpoint_git_commit": "547673c7b6ea78d34766c52654ef35a832554c09",
+  "plan_rebase_history": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-285/20260827T114434948Z-7c5ae348-required-validation.evidence.json",
+    "docs/05-quality/evidence/TASK-285/20260827T114434948Z-7c5ae348-app-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-285/20260827T114434948Z-7c5ae348-governance-strict.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-285/20260827T114018399Z-d7c7af8c-required-validation.evidence.json",
+    "docs/05-quality/evidence/TASK-285/20260827T114018399Z-d7c7af8c-app-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-285/20260827T114018399Z-d7c7af8c-governance-strict.evidence.json",
+    "docs/05-quality/evidence/TASK-285/review-round-1.json",
+    "docs/05-quality/evidence/TASK-285/20260827T114434948Z-7c5ae348-required-validation.evidence.json",
+    "docs/05-quality/evidence/TASK-285/20260827T114434948Z-7c5ae348-app-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-285/20260827T114434948Z-7c5ae348-governance-strict.evidence.json",
+    "docs/05-quality/evidence/TASK-285/review-round-2.json"
+  ],
+  "review_history": [
+    {
+      "path": "docs/05-quality/evidence/TASK-285/review-round-1.json",
+      "sha256": "ebd0fe332e52f81665c329f4b3ec10a5969128a1c4fd637c89eac343ee9434c9",
+      "result": "passed",
+      "round_id": "RR-b038a0dd294045eb9508fb03ab32895c",
+      "recorded_at": "2026-08-27T11:41:10.2399652Z"
+    },
+    {
+      "path": "docs/05-quality/evidence/TASK-285/review-round-2.json",
+      "sha256": "fad8c1fa30a9392176848a956d482559eed3c92e21ca36f97a7598cf8d0cf988",
+      "result": "passed",
+      "round_id": "RR-b15dd601079a460783dfe60f47da1c98",
+      "recorded_at": "2026-08-27T11:45:30.348749Z"
+    }
+  ],
+  "review": {
+    "required": false,
+    "reviewer_task_id": "",
+    "status": "not-applicable",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
+  },
+  "last_error": "Completed reviewer baseline migration confirmed for TASK-284: CONF-GOV-BL010-COMPLETED-REVIEWER-MIGRATION-REPAIR-20260827-01：BL-010 激活后恢复已验收交付所绑定的历史 completed reviewer；保留不可变审核证据，不允许继续执行。",
+  "created_at": "2026-08-27T11:29:18.7971796Z",
+  "updated_at": "2026-08-27T13:35:26.8163157Z"
+}

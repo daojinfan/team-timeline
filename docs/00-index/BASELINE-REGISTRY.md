@@ -45,4 +45,5 @@ last_reviewed: 2026-08-20
 | BL-006 | superseded | baselines/BL-006/manifest.json | be88bd0c89fbd8bcb63a74b5a0784ebdfe970f07 | APR-103 | 2026-08-23 | V5 三模块任务管理与执行设计基线（资源维护、任务全量编辑台、执行中心） |
 | BL-007 | superseded | baselines/BL-007/manifest.json | 32aaad33cf4aaca89f208f9fb5fdbfd35b12c52b | APR-146 | 2026-08-25 | BL-006 V5 三模块范围延续，并新增 WP-011 单个测控需求受控导入 |
 | BL-008 | superseded | baselines/BL-008/manifest.json | d159ed6226199215e9f549ac9fbfba604e6ccfa2 | APR-150 | 2026-08-25 | V5 样品字段收敛：保留型号、编号、ETA、备注，历史字段兼容 |
-| BL-009 | active | baselines/BL-009/manifest.json | ef484c114c8f3f176e724fead04c4d11152ee0cc | APR-173 | 2026-08-26 | V5 任务全量编辑台与执行中心默认状态可配置 |
+| BL-009 | superseded | baselines/BL-009/manifest.json | ef484c114c8f3f176e724fead04c4d11152ee0cc | APR-173 | 2026-08-26 | V5 任务全量编辑台与执行中心默认状态可配置 |
+| BL-010 | active | baselines/BL-010/manifest.json | 2a35353eb5755bd0675d60ed4642b7080f9d7b65 | APR-189 | 2026-08-27 | V5 执行中心选中任务排期详情结构与视觉优化，延续 WP-013 并新增 WP-014 |

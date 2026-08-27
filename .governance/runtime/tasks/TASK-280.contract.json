@@ -1,0 +1,90 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-280",
+  "work_package": "WP-013",
+  "title": "为 V5 甘特图智能范围增加可调默认偏好",
+  "goal": "为执行中心甘特图智能时间范围增加向前/向后天数滑杆、即时预览和保存为默认能力；沿用浏览器偏好持久化，保持手动范围、任务数据与现有默认状态设置不变。",
+  "baseline": "BL-009",
+  "profile": "Standard",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/index.html",
+    "public/app.js",
+    "tests"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/app.js",
+    "tests",
+    "docs/02-product/requirements-v5.md",
+    "docs/03-architecture/components/v5-detailed-design.md",
+    "docs/05-quality/traceability-v5.md",
+    "docs/07-decisions/DEC-005.md",
+    "docs/08-changes/CR-009.md",
+    "docs/04-delivery/WORK-PACKAGES.md",
+    "docs/04-delivery/WORK-STATUS.md",
+    "docs/05-quality/evidence"
+  ],
+  "write_paths": [
+    "public/index.html",
+    "public/app.js",
+    "tests"
+  ],
+  "out_of_scope": [],
+  "authoritative_documents": [
+    "REQ-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "DEC-005",
+    "CR-009",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-278"
+  ],
+  "acceptance_criteria": [
+    "执行中心智能模式提供向前天数与向后天数两个可访问滑杆，默认值为前14天、后45天并实时显示数值。",
+    "智能范围根据滑杆值和当前锚点计算，筛选结果无近期任务时能够回退到最近已排期任务；周/月视图继续正确对齐。",
+    "点击保存为默认后智能范围偏好写入版本化浏览器配置，刷新后恢复；未保存的临时调整不覆盖默认值。",
+    "今天按钮、现有全部/本周/本月/未来7/30/90天选项、默认状态设置和任务/API/数据库行为保持不变。",
+    "新增静态与运行回归覆盖控件、边界、持久化和手动范围隔离。"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "governance-strict",
+      "command": "powershell",
+      "args": [
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-Level",
+        "Strict"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface",
+    "scope"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-27T05:09:17.9097530Z"
+}

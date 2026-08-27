@@ -78,7 +78,7 @@
     "pass_streak": 0,
     "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "Completed reviewer baseline migration confirmed for TASK-276: CONF-GOV-BL010-COMPLETED-REVIEWER-MIGRATION-REPAIR-20260827-01：BL-010 激活后恢复已验收交付所绑定的历史 completed reviewer；保留不可变审核证据，不允许继续执行。",
   "created_at": "2026-08-27T02:14:26.7519919Z",
-  "updated_at": "2026-08-27T02:26:32.2322251Z"
+  "updated_at": "2026-08-27T13:35:25.7713194Z"
 }

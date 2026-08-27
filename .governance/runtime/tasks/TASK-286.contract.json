@@ -1,0 +1,83 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-286",
+  "work_package": "WP-014",
+  "title": "优化执行中心排期详情信息层级与响应式布局",
+  "goal": "将选中任务排期详情整合进执行工作区，修复日期纵排和成员列表样式串扰，提供清晰的关闭与编辑动作，并保持宽屏和窄屏可用。",
+  "baseline": "BL-010",
+  "profile": "Standard",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "tests/v5-execution-detail-layout.test.js"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "tests"
+  ],
+  "write_paths": [
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "tests/v5-execution-detail-layout.test.js"
+  ],
+  "out_of_scope": [
+    "不修改接口、数据库、排期计算或任务状态业务逻辑",
+    "不改动全量编辑台和成员排期表单的数据行为"
+  ],
+  "authoritative_documents": [
+    "REQ-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "DEC-005",
+    "CR-009",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-284"
+  ],
+  "acceptance_criteria": [
+    "桌面宽屏选择任务后详情作为工作区第三栏展示，关闭后回到双栏",
+    "任务排期日期横向可读且事实字段不受全局 dl 样式影响",
+    "详情成员列表样式与左侧成员筛选列表隔离",
+    "窄屏详情自然落到任务区下方且无横向溢出",
+    "详情动作仅保留修改任务时间、全量编辑和关闭"
+  ],
+  "validations": [
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "detail-layout-test",
+      "command": "node",
+      "args": [
+        "--test",
+        "tests/v5-execution-detail-layout.test.js"
+      ]
+    },
+    {
+      "id": "full-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-27T13:37:34.3965905Z"
+}

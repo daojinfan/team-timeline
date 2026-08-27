@@ -1,0 +1,96 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-284",
+  "work_package": "WP-013",
+  "title": "修正执行中心成员排期同步复选框布局",
+  "goal": "修正执行中心排期弹窗中成员排期与任务排期的同步选项显示和复选框尺寸，确保成员排期模式不显示无关的全员同步选项，任务排期模式保持可用且布局紧凑；不改变排期同步接口和任务数据。",
+  "baseline": "BL-009",
+  "profile": "Standard",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/index.html",
+    "public/app.js",
+    "tests"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/app.js",
+    "tests",
+    "docs/02-product/requirements-v5.md",
+    "docs/03-architecture/components/v5-detailed-design.md",
+    "docs/05-quality/traceability-v5.md",
+    "docs/07-decisions/DEC-005.md",
+    "docs/08-changes/CR-009.md",
+    "docs/04-delivery/WORK-PACKAGES.md",
+    "docs/04-delivery/WORK-STATUS.md",
+    "docs/05-quality/evidence"
+  ],
+  "write_paths": [
+    "public/index.html",
+    "public/app.js",
+    "tests"
+  ],
+  "out_of_scope": [
+    "public/styles.css",
+    "src",
+    "db",
+    "API",
+    "数据库",
+    "远程发布"
+  ],
+  "authoritative_documents": [
+    "REQ-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "DEC-005",
+    "CR-009",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-280"
+  ],
+  "acceptance_criteria": [
+    "修改成员排期模式不显示同步所有成员的排期控件且不留下空白占位。",
+    "修改任务时间模式保留同步所有成员的排期功能，复选框约为14×14px并与文字垂直居中左对齐。",
+    "关闭和重新打开两种排期弹窗时布局稳定，桌面窄宽度下不产生额外横向溢出。",
+    "排期保存请求、预览确认、任务版本校验和成员日期数据行为保持不变。",
+    "新增回归测试覆盖隐藏逻辑、控件尺寸样式和两种模式的 DOM 结构。"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "governance-strict",
+      "command": "powershell",
+      "args": [
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-Level",
+        "Strict"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-27T11:29:18.4950114Z"
+}

@@ -4,7 +4,7 @@ type: delivery.work-packages
 status: active
 version: 1.3
 owner: human
-baseline: BL-009
+baseline: BL-010
 depends_on:
   - ARC-OVERALL-001
   - ARC-OVERALL-002
@@ -32,6 +32,7 @@ last_reviewed: 2026-08-22
 | WP-011 | 从已确认的测控任务需求文档受控导入单个 V5 任务 | BL-006 | REQ-V5-001、ARC-OVERALL-V5-001、ARC-COMP-V5-001 | 来源哈希、备份、精确字段映射、V5/V1 投影与数据库完整性 | PM |
 | WP-012 | 收敛 V5 样品字段并保持历史数据与 V3 兼容 | BL-008 | CR-008、REQ-V5-001、ARC-OVERALL-V5-001、ARC-COMP-V5-001 | V5 表单字段回归、样品新增/编辑、编号后补、ETA 状态、历史字段保留与 API 回归 | IMPLEMENTER |
 | WP-013 | 为任务全量编辑台和执行中心增加可配置的默认状态筛选 | BL-009 | DEC-005、CR-009、REQ-V5-001、ARC-COMP-V5-001 | 默认值设置入口、独立状态集合、浏览器持久化、无效配置回退、两视图初始化与回归测试 | IMPLEMENTER |
+| WP-014 | 优化执行中心选中任务排期详情的结构与视觉层级 | BL-010 | WP-013、REQ-V5-001、ARC-COMP-V5-001 | 详情事实网格、成员列表样式隔离、桌面粘性面板、窄屏回落、操作层级与视觉回归 | IMPLEMENTER |
 
 执行状态统一记录在 `WORK-STATUS.md`，避免日常状态变化改写已经批准的工作包契约。
 每个活动工作包还必须有 `context/WP-NNN.context.json`，声明所需权威文档、读取模式、适用基线和验证。上下文路由随基线锁定；已经 `accepted` 或 `superseded` 的历史工作包可以保留旧路由。生成的 `.governance/context/*.generated.md` 只是临时输入，不是项目事实。
@@ -67,12 +68,27 @@ last_reviewed: 2026-08-22
 - 业务规则：任务全量编辑台和执行中心分别保存状态集合；空集合表示全部状态；手动修改当前筛选不覆盖默认值；配置损坏或版本不兼容回退到全部状态。
 - 兼容策略：使用版本化浏览器 `localStorage`，不增加数据库表、不改变 V5/V3/V2/V1 API 和任务事实；不影响其他浏览器或历史数据。
 - 范围外：共享用户配置、登录权限、云同步、数据库迁移、V5 API 变化、状态计算规则变化、远程发布。
-- 基线：BL-009。
+- 基线：BL-010。
 - 权威文档：`REQ-V5-001`、`ARC-COMP-V5-001`、`QUAL-TRACE-V5-001`、`DEC-005`、`CR-009`、`DEL-WORK-001`。
 - 允许修改：`public/index.html`、`public/app.js`、`tests/`、`docs/02-product/requirements-v5.md`、`docs/03-architecture/components/v5-detailed-design.md`、`docs/05-quality/traceability-v5.md`、`docs/07-decisions/DEC-005.md`、`docs/08-changes/CR-009.md`、`docs/04-delivery/WORK-PACKAGES.md`、`docs/04-delivery/WORK-STATUS.md`、`docs/00-index/CURRENT-STATE.md`、`docs/05-quality/evidence`、治理任务与工作状态文件。
 - 验收：设置入口可达；两视图可独立保存 0～5 类状态；刷新或重新进入对应模块后应用配置；空集合显示全部状态；无效 JSON/未知状态/旧版本回退到全部状态；手动筛选不覆盖默认值；重置清除配置并恢复全部状态；`npm test`、`node --check public/app.js` 和 V5 静态回归通过；独立 Reviewer 完成 Standard 双轮复审。
 - 回滚：回退前端、测试和文档交付提交；清除本地偏好键即可恢复固定“全部状态”行为；不涉及数据库回滚。
 - 任务档位：Standard（本地展示偏好，无数据/API/发布风险）。
+
+## WP-014 契约
+
+- 目标：修复执行中心“选中任务 / 排期详情”的日期竖排、异常留白和成员列表样式串扰，并把详情重组为与当前选择保持上下文关联的响应式面板。
+- 范围：`public/index.html` 中详情卡位置与头部操作；`public/app.js` 中详情渲染、打开/关闭和选择状态；`public/styles.css` 中执行工作区三列/两列回落、事实信息块、详情成员列表与响应式样式；`tests/` 中相关回归。
+- 业务规则：未选择任务时详情不占用桌面第三列；选择任务后桌面端显示右侧粘性详情面板；较窄屏幕回落到主内容下方；任务选择高亮、排期编辑、全量编辑和成员排期入口保持可用。
+- 兼容策略：不增加或改变 API、数据库、排期计算、冲突预览、版本校验和任务事实；只调整客户端 DOM、交互状态与样式。
+- 范围外：服务端、数据库、排期业务规则、任务状态算法、全量编辑台结构、远程发布。
+- 基线：BL-010。
+- 权威文档：`REQ-V5-001`、`ARC-COMP-V5-001`、`QUAL-TRACE-V5-001`、`DEC-005`、`CR-009`、`DEL-WORK-001`。
+- 允许修改：`public/index.html`、`public/app.js`、`public/styles.css`、`tests/`、`docs/04-delivery/WORK-PACKAGES.md`、`docs/04-delivery/WORK-STATUS.md`、`docs/05-quality/evidence`、治理任务与工作状态文件。
+- 依赖：WP-013 已完成相关 V5 执行中心前置交付；实现任务依赖已验收的 TASK-284。
+- 验收：事实字段无 0px 内容列和逐字竖排；详情成员列表不继承侧栏滚动/最小高度；桌面选择后详情在右侧粘性展示且未选择时不占位；窄屏无横向溢出；操作入口无重复；`npm test`、`node --check public/app.js`、Strict 治理检查和浏览器视觉回归通过；独立 Reviewer 完成 Standard 双轮复审。
+- 回滚：回退前端和测试提交即可恢复原详情卡；不涉及数据库或数据回滚。
+- 任务档位：Standard（本地 UI 结构与样式优化，无数据/API/发布风险）。
 
 ## WP-003 契约
 

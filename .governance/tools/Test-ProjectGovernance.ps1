@@ -995,6 +995,18 @@ if ($levelRank -ge 2) {
         $hasBoundLegacyReviewMigration = $isLegacyContract -and $null -ne $legacyMigrationEntry -and [string](Get-Property $legacyMigrationEntry 'source_contract_sha256') -eq $contractRecord.Hash -and [string](Get-Property $legacyMigrationEntry 'disposition') -in @('reopened-for-review','pending-review')
         $taskRole = [string](Get-Property $contract "role")
         if ($isLegacyContract -and [string]::IsNullOrWhiteSpace($taskRole)) { $taskRole = 'IMPLEMENTER' }
+        $hasAcceptedReviewedDelivery = $false
+        if ($taskRole -eq 'REVIEWER') {
+            foreach ($candidateStateRecord in $taskStates.Values) {
+                $candidateState = $candidateStateRecord.Value
+                $candidateReview = Get-Property $candidateState 'review'
+                if ([string](Get-Property $candidateState 'state') -eq 'accepted' -and [string](Get-Property $candidateReview 'reviewer_task_id') -eq $taskId -and [string](Get-Property $candidateReview 'status') -eq 'passed') {
+                    $hasAcceptedReviewedDelivery = $true
+                    break
+                }
+            }
+        }
+        $isCompletedHistoricalReviewer = $taskRole -eq 'REVIEWER' -and $stateValue -eq 'verified' -and $hasAcceptedReviewedDelivery -and $null -ne $teamLedgerTasks -and $teamLedgerTasks.ContainsKey($taskId) -and [string]$teamLedgerTasks[$taskId].State -eq 'completed' -and [string](Get-Property $contract 'baseline') -ne $currentBaseline
         $executionLease = [string](Get-Property $taskState 'execution_lease')
         $executionLeaseOwner = [string](Get-Property $taskState 'execution_lease_owner')
         $executionLeaseExpires = [string](Get-Property $taskState 'execution_lease_expires_at')
@@ -1140,7 +1152,7 @@ if ($levelRank -ge 2) {
         }
         if (-not $workPackageIds.Contains($workPackage)) { Add-Error "AI 执行任务引用了未定义工作包：$taskId -> $workPackage" }
         $taskRoutePath = Join-Path $root "docs/04-delivery/context/$workPackage.context.json"
-        if ($stateValue -notin @('accepted', 'superseded', 'needs-decision') -and -not ($AllowLegacyTaskStates -and $isLegacyContract) -and -not $hasBoundLegacyReviewMigration -and (Test-Path -LiteralPath $taskRoutePath -PathType Leaf)) {
+        if ($stateValue -notin @('accepted', 'superseded', 'needs-decision') -and -not $isCompletedHistoricalReviewer -and -not ($AllowLegacyTaskStates -and $isLegacyContract) -and -not $hasBoundLegacyReviewMigration -and (Test-Path -LiteralPath $taskRoutePath -PathType Leaf)) {
             try { $taskRoute = Read-Utf8 $taskRoutePath | ConvertFrom-Json -ErrorAction Stop } catch { $taskRoute = $null }
             if ($null -ne $taskRoute) {
                 if ([string](Get-Property $taskRoute "baseline") -ne [string](Get-Property $contract "baseline")) { Add-Error "AI 执行任务与工作包路由基线不一致：$taskId" }
@@ -1188,7 +1200,7 @@ if ($levelRank -ge 2) {
             if ($repairTarget -notin @((Get-Property $contract 'dependencies'))) { Add-Error "AI 修复任务 repair_of 必须同时属于 dependencies：$taskId -> $repairTarget" }
         }
         if ($taskRole -eq 'REVIEWER' -and $repairTargets.Count -gt 0) { Add-Error "REVIEWER 任务不得声明 repair_of：$taskId" }
-        if ($stateValue -in @('in-progress', 'implemented', 'verified') -and [string](Get-Property $contract "baseline") -ne $currentBaseline -and -not ($AllowLegacyTaskStates -and $isLegacyContract) -and -not $hasBoundLegacyReviewMigration) { Add-Error "活动 AI 执行任务使用了过期基线：$taskId" }
+        if ($stateValue -in @('in-progress', 'implemented', 'verified') -and [string](Get-Property $contract "baseline") -ne $currentBaseline -and -not $isCompletedHistoricalReviewer -and -not ($AllowLegacyTaskStates -and $isLegacyContract) -and -not $hasBoundLegacyReviewMigration) { Add-Error "活动 AI 执行任务使用了过期基线：$taskId" }
         $evidencePaths = @((Get-Property $taskState "evidence"))
         $evidenceHistory = @((Get-Property $taskState "evidence_history"))
         if (@($evidencePaths | Where-Object { $_ -and $_ -notin $evidenceHistory }).Count -gt 0) { Add-Error "AI 执行任务当前证据未纳入 evidence_history：$taskId" }

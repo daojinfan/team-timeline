@@ -1,0 +1,42 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-282",
+  "work_package": "WP-013",
+  "contract_sha256": "663abe2c36f089cb3b970a859b8880d1ffcc8a15bcebc1b053ad04e69a74f3ad",
+  "baseline": "BL-009",
+  "state": "superseded",
+  "approval_id": "APR-185",
+  "acceptance_subject_sha256": "",
+  "acceptance_evidence_sha256": "",
+  "acceptance_git_commit": "",
+  "start_git_commit": "547673c7b6ea78d34766c52654ef35a832554c09",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [],
+  "plan_checkpoint_git_commit": "547673c7b6ea78d34766c52654ef35a832554c09",
+  "plan_rebase_history": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-282/20260827T055631200Z-7d30e52c-required-validation.evidence.json",
+    "docs/05-quality/evidence/TASK-282/20260827T055631200Z-7d30e52c-app-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-282/20260827T055631200Z-7d30e52c-governance-strict.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-282/20260827T055631200Z-7d30e52c-required-validation.evidence.json",
+    "docs/05-quality/evidence/TASK-282/20260827T055631200Z-7d30e52c-app-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-282/20260827T055631200Z-7d30e52c-governance-strict.evidence.json"
+  ],
+  "review_history": [],
+  "review": {
+    "required": true,
+    "reviewer_task_id": "TASK-283",
+    "status": "pending",
+    "evidence": [],
+    "pass_streak": 0,
+    "subject_sha256": ""
+  },
+  "last_error": "前置 TASK-280 已完成验收；原任务因前置验收时序进入 needs-decision，按人类确认 CONF-V5-EXEC-SCHEDULE-SYNC-CHECKBOX-REPLAN-20260827-01 从干净验收检查点重新规划。",
+  "created_at": "2026-08-27T05:52:31.354731Z",
+  "updated_at": "2026-08-27T11:27:44.1934409Z"
+}
