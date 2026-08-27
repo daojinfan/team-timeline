@@ -3983,6 +3983,8 @@ const v5State = {
     scale: "week",
     granularity: 3,
     range: "smart",
+    smartPastDays: 14,
+    smartFutureDays: 45,
     onlyBusy: false,
     stack: true,
     search: "",
@@ -4013,6 +4015,8 @@ const v5ResourceLabels = { "source-groups": "来源小组", members: "测控成�
 const v5ResourceKeys = { "source-groups": "source_groups", members: "members", cryostats: "cryostats" };
 const V5_PREFS_KEY = "teamTaskGantt.v5Prefs.v1";
 const V5_PREFS_VERSION = 1;
+const V5_SMART_RANGE_DEFAULTS = { pastDays: 14, futureDays: 45 };
+const V5_SMART_RANGE_LIMITS = { pastDays: { min: 0, max: 90 }, futureDays: { min: 0, max: 180 } };
 function v5ResourceRows(kind) { return v5State.resources[v5ResourceKeys[kind] || kind] || []; }
 
 async function v5Api(path, options = {}) {
@@ -4049,6 +4053,12 @@ function v5TaskSearchText(task) { return [task.task_number, task.title, task.pur
 const v5FilterStatusOptions = [{ value: "waiting", label: "等待样品" }, { value: "sample-delayed", label: "样品交付延期" }, { value: "testing", label: "正在测试" }, { value: "test-delayed", label: "测试延期" }, { value: "completed", label: "已完成" }];
 const v5FilterStatusValues = new Set(v5FilterStatusOptions.map(({ value }) => value));
 function v5DefaultStatusPreferences() { return { version: V5_PREFS_VERSION, editorDefaultStatuses: [], executionDefaultStatuses: [] }; }
+function v5DefaultPreferences() { return { ...v5DefaultStatusPreferences(), executionSmartPastDays: V5_SMART_RANGE_DEFAULTS.pastDays, executionSmartFutureDays: V5_SMART_RANGE_DEFAULTS.futureDays }; }
+function v5NormaliseSmartRangeDays(value, key) {
+  const limits = V5_SMART_RANGE_LIMITS[key] || { min: 0, max: 180 };
+  const parsed = Number(value);
+  return Number.isInteger(parsed) ? clamp(parsed, limits.min, limits.max) : V5_SMART_RANGE_DEFAULTS[key] ?? limits.min;
+}
 function v5NormaliseDefaultStatuses(value) {
   if (!Array.isArray(value) || value.length > v5FilterStatusOptions.length) return [];
   const values = value.map((item) => String(item));
@@ -4056,13 +4066,13 @@ function v5NormaliseDefaultStatuses(value) {
   return values;
 }
 function v5ReadPreferences() {
-  const fallback = v5DefaultStatusPreferences();
+  const fallback = v5DefaultPreferences();
   try {
     const raw = window.localStorage.getItem(V5_PREFS_KEY);
     if (!raw) return fallback;
     const value = JSON.parse(raw);
     if (!value || value.version !== V5_PREFS_VERSION) return fallback;
-    return { version: V5_PREFS_VERSION, editorDefaultStatuses: v5NormaliseDefaultStatuses(value.editorDefaultStatuses), executionDefaultStatuses: v5NormaliseDefaultStatuses(value.executionDefaultStatuses) };
+    return { ...fallback, editorDefaultStatuses: v5NormaliseDefaultStatuses(value.editorDefaultStatuses), executionDefaultStatuses: v5NormaliseDefaultStatuses(value.executionDefaultStatuses), executionSmartPastDays: v5NormaliseSmartRangeDays(value.executionSmartPastDays, "pastDays"), executionSmartFutureDays: v5NormaliseSmartRangeDays(value.executionSmartFutureDays, "futureDays") };
   } catch {
     return fallback;
   }
@@ -4110,7 +4120,8 @@ function v5RenderDefaultStatusSettings() {
 }
 function v5DefaultStatusValuesFromForm(surface) { return $$(`[data-v5-default-status="${surface}"]:checked`).map((input) => input.value); }
 function v5SaveDefaultStatusPreferences({ reset = false } = {}) {
-  const next = reset ? v5DefaultStatusPreferences() : { version: V5_PREFS_VERSION, editorDefaultStatuses: v5DefaultStatusValuesFromForm("editor"), executionDefaultStatuses: v5DefaultStatusValuesFromForm("execution") };
+  const current = v5State.preferences || v5ReadPreferences();
+  const next = reset ? { ...current, ...v5DefaultStatusPreferences() } : { ...current, version: V5_PREFS_VERSION, editorDefaultStatuses: v5DefaultStatusValuesFromForm("editor"), executionDefaultStatuses: v5DefaultStatusValuesFromForm("execution") };
   if (!v5WritePreferences(next)) { const message = $("#v5DefaultStatusMessage"); if (message) message.textContent = "浏览器暂时无法保存偏好"; return false; }
   v5State.preferences = next;
   v5ApplyConfiguredDefaultFilters();
@@ -4727,11 +4738,40 @@ function v5RenderExecutionFilterOptions() {
   ["#v5ExecutionSearch", "#v5ExecutionFrom", "#v5ExecutionTo"].forEach((selector) => { const node = $(selector); if (node) node.value = execution[selector === "#v5ExecutionSearch" ? "search" : selector === "#v5ExecutionFrom" ? "from" : "to"] || ""; });
   const selects = [["#v5ExecutionScale", execution.scale], ["#v5ExecutionRange", execution.range]];
   selects.forEach(([selector, value]) => { const node = $(selector); if (node) node.value = value || ""; });
+  v5RenderSmartRangeControls();
   const granularity = v5ExecutionGranularityValue(); const granularityInput = $("#v5ExecutionGranularity"); const granularityOutput = $("#v5ExecutionGranularityValue");
   if (granularityInput) { granularityInput.value = String(granularity); granularityInput.setAttribute("aria-valuetext", v5ExecutionGranularityLabel(granularity)); }
   if (granularityOutput) granularityOutput.textContent = v5ExecutionGranularityLabel(granularity);
   const onlyBusy = $("#v5ExecutionOnlyBusy"); const stack = $("#v5ExecutionStack"); if (onlyBusy) onlyBusy.checked = Boolean(execution.onlyBusy); if (stack) stack.checked = execution.stack !== false;
   v5RenderQuickFilterState("execution");
+}
+function v5ExecutionSmartDays(key) { const stateKey = key === "pastDays" ? "smartPastDays" : "smartFutureDays"; return v5NormaliseSmartRangeDays(v5State.execution[stateKey], key); }
+function v5ApplySmartRangePreferences() {
+  v5State.execution.smartPastDays = v5NormaliseSmartRangeDays(v5State.preferences.executionSmartPastDays, "pastDays");
+  v5State.execution.smartFutureDays = v5NormaliseSmartRangeDays(v5State.preferences.executionSmartFutureDays, "futureDays");
+}
+function v5RenderSmartRangeControls() {
+  const controls = $("#v5ExecutionSmartRangeControls"); if (!controls) return;
+  const smart = v5State.execution.range === "smart"; controls.hidden = !smart;
+  const values = [["pastDays", "#v5ExecutionSmartPastDays", "#v5ExecutionSmartPastDaysValue"], ["futureDays", "#v5ExecutionSmartFutureDays", "#v5ExecutionSmartFutureDaysValue"]];
+  values.forEach(([key, inputSelector, outputSelector]) => { const value = v5ExecutionSmartDays(key); const input = $(inputSelector); const output = $(outputSelector); if (input) { input.value = String(value); input.setAttribute("aria-valuetext", `${value} 天`); } if (output) output.textContent = `${value} 天`; });
+}
+function v5UpdateSmartRange(key, value) {
+  const rangeKey = key === "smartPastDays" ? "pastDays" : "futureDays";
+  v5State.execution[key] = v5NormaliseSmartRangeDays(value, rangeKey);
+  v5RenderSmartRangeControls();
+  if (v5State.execution.range === "smart") v5RenderExecutionGantt(v5ExecutionFilteredTasks());
+}
+function v5SaveSmartRangePreferences() {
+  const next = { ...v5State.preferences, version: V5_PREFS_VERSION, executionSmartPastDays: v5ExecutionSmartDays("pastDays"), executionSmartFutureDays: v5ExecutionSmartDays("futureDays") };
+  const message = $("#v5ExecutionSmartRangeMessage");
+  if (!v5WritePreferences(next)) { if (message) message.textContent = "浏览器暂时无法保存偏好"; return false; }
+  v5State.preferences = next; v5ApplySmartRangePreferences(); v5RenderSmartRangeControls(); if (message) message.textContent = "智能范围默认值已保存"; return true;
+}
+function v5ResetSmartRangePreferences() {
+  v5State.execution.smartPastDays = V5_SMART_RANGE_DEFAULTS.pastDays; v5State.execution.smartFutureDays = V5_SMART_RANGE_DEFAULTS.futureDays; v5RenderSmartRangeControls();
+  const message = $("#v5ExecutionSmartRangeMessage"); if (message) message.textContent = "已恢复建议值（未保存）";
+  if (v5State.execution.range === "smart") v5RenderExecutionGantt(v5ExecutionFilteredTasks());
 }
 function v5ExecutionGranularityValue(value = v5State.execution.granularity) { const parsed = Number(value); return Number.isFinite(parsed) ? clamp(Math.round(parsed), 1, 5) : 3; }
 function v5ExecutionGranularityLabel(value) { return ({ 1: "紧凑", 2: "精简", 3: "标准", 4: "细致", 5: "精细" })[v5ExecutionGranularityValue(value)] || "标准"; }
@@ -4752,7 +4792,22 @@ function v5ExecutionBuildRange(tasks) {
   const execution = v5State.execution; const dated = tasks.filter((task) => v5ExecutionDateValue(task.start_date) && v5ExecutionDateValue(task.end_date));
   const today = todayLocalDate(); let start = execution.anchorDate || today; let end = addDays(start, 30);
   if (execution.range === "all" && dated.length) { start = dated.map((task) => task.start_date).sort()[0]; end = dated.map((task) => task.end_date).sort().at(-1); }
-  else if (execution.range === "smart" && dated.length) { if (execution.anchorDate) { start = addDays(execution.anchorDate, -7); end = addDays(execution.anchorDate, 30); } else { start = addDays(dated.map((task) => task.start_date).sort()[0], -3); end = addDays(dated.map((task) => task.end_date).sort().at(-1), 3); } }
+  else if (execution.range === "smart" && dated.length) {
+    const anchor = v5ExecutionDateValue(execution.anchorDate) || today;
+    const pastDays = v5ExecutionSmartDays("pastDays"); const futureDays = v5ExecutionSmartDays("futureDays");
+    const windowStart = addDays(anchor, -pastDays); const windowEnd = addDays(anchor, futureDays);
+    const relevant = dated.filter((task) => task.end_date >= windowStart && task.start_date <= windowEnd);
+    let smartAnchor = anchor;
+    if (!relevant.length) {
+      const nearest = dated.slice().sort((left, right) => {
+        const leftDistance = left.start_date > anchor ? daysBetween(anchor, left.start_date) : left.end_date < anchor ? daysBetween(left.end_date, anchor) : 0;
+        const rightDistance = right.start_date > anchor ? daysBetween(anchor, right.start_date) : right.end_date < anchor ? daysBetween(right.end_date, anchor) : 0;
+        return leftDistance - rightDistance || String(left.start_date).localeCompare(String(right.start_date));
+      })[0];
+      smartAnchor = nearest.start_date > anchor ? nearest.start_date : nearest.end_date < anchor ? nearest.end_date : anchor;
+    }
+    start = addDays(smartAnchor, -pastDays); end = addDays(smartAnchor, futureDays);
+  }
   else if (/^\d+$/.test(execution.range)) { start = execution.anchorDate || today; end = addDays(start, Number(execution.range)); }
   else if (execution.range === "week") { start = v5ExecutionStartOfUnit(execution.anchorDate || today, "week"); end = addDays(start, 6); }
   else if (execution.range === "month") { start = v5ExecutionStartOfUnit(execution.anchorDate || today, "month"); const next = new Date(`${start}T00:00:00`); next.setMonth(next.getMonth() + 1, 0); end = formatLocalDate(next); }
@@ -4840,6 +4895,7 @@ async function v5SaveSchedule(event) { event.preventDefault(); const schedule = 
 async function v5RefreshWorkspace() {
   v5State.preferences = v5ReadPreferences();
   v5ApplyConfiguredDefaultFilters();
+  v5ApplySmartRangePreferences();
   await v5LoadAll();
 }
 async function v5LoadAll() { v5SetSync("正在同步 V5 数据…"); try { const topicPath = v5State.showArchivedTopics ? "/api/v5/topics?include_archived=1" : "/api/v5/topics"; const [resources, topics, tasks, samples] = await Promise.all([v5Api("/api/v5/resources"), v5Api(topicPath), v5Api("/api/v5/tasks"), v5Api("/api/v5/samples")]); v5State.resources = resources; v5State.topics = topics.items || []; v5State.tasks = tasks.items || []; v5State.samples = samples.items || []; if (!v5State.expandedTopics.size) v5State.topics.forEach((topic) => v5State.expandedTopics.add(Number(topic.id))); v5State.loaded = true; v5RenderFilterOptions(); v5RenderTree(); v5RenderSelectedTask(); v5RenderResources(); v5RenderExecution(); v5SetSync(`已同步 · ${v5State.tasks.length} 个任务 · ${new Date().toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" })}`); } catch (error) { v5SetSync(v5ErrorText(error), true); $("#v5TopicTaskTree").innerHTML = `<div class="v5-empty-state"><h3>V5 数据读取失败</h3><p>${escapeHtml(v5ErrorText(error))}</p><button class="ghost-button" type="button" data-v5-retry>重试</button></div>`; } }
@@ -4973,6 +5029,8 @@ function bindV5ExecutionEvents() {
   v5FilterQuickConfig("execution").forEach(({ field, selector, negate }) => { const node = $(selector); const schema = v5FilterSchema("execution", field); node?.addEventListener(schema?.kind === "text" ? "input" : "change", () => v5UpdateQuickFilter("execution", field)); if (negate) $(negate)?.addEventListener("change", () => v5UpdateQuickFilter("execution", field)); });
   [["#v5ExecutionScale", "scale"], ["#v5ExecutionRange", "range"]].forEach(([selector, key]) => $(selector)?.addEventListener("change", (event) => update(key, event.target.value)));
   $("#v5ExecutionGranularity")?.addEventListener("input", (event) => { const value = v5ExecutionGranularityValue(event.target.value); v5State.execution.granularity = value; event.target.setAttribute("aria-valuetext", v5ExecutionGranularityLabel(value)); const output = $("#v5ExecutionGranularityValue"); if (output) output.textContent = v5ExecutionGranularityLabel(value); v5RenderExecutionGantt(v5ExecutionFilteredTasks()); });
+  $("#v5ExecutionSmartPastDays")?.addEventListener("input", (event) => v5UpdateSmartRange("smartPastDays", event.target.value)); $("#v5ExecutionSmartFutureDays")?.addEventListener("input", (event) => v5UpdateSmartRange("smartFutureDays", event.target.value));
+  $("#v5ExecutionSaveSmartRange")?.addEventListener("click", () => v5SaveSmartRangePreferences()); $("#v5ExecutionResetSmartRange")?.addEventListener("click", () => v5ResetSmartRangePreferences());
   $("#v5ExecutionOnlyBusy")?.addEventListener("change", (event) => update("onlyBusy", event.target.checked)); $("#v5ExecutionStack")?.addEventListener("change", (event) => update("stack", event.target.checked)); $("#v5ExecutionMemberSearch")?.addEventListener("focus", (event) => v5RenderExecutionMemberSearchOptions(event.target.value)); $("#v5ExecutionMemberSearch")?.addEventListener("input", (event) => { update("memberSearch", event.target.value); v5RenderExecutionMemberSearchOptions(event.target.value); });
   $("#v5ExecutionToday")?.addEventListener("click", () => { v5State.execution.anchorDate = todayLocalDate(); v5State.execution.range = "smart"; v5RenderExecutionFilterOptions(); v5RenderExecution(); });
   $("#v5ExecutionClear")?.addEventListener("click", () => { v5ResetFilterSurface("execution"); Object.assign(v5State.execution, { search: "", sourceId: "", topicId: "", status: "", memberId: "", sampleId: "", cryostatId: "", from: "", to: "", memberSearch: "", anchorDate: null }); });
@@ -4982,5 +5040,6 @@ function bindV5ExecutionEvents() {
 bindV5ExecutionEvents();
 v5State.preferences = v5ReadPreferences();
 v5ApplyConfiguredDefaultFilters();
+v5ApplySmartRangePreferences();
 v5SetView("editor");
 v5LoadAll();

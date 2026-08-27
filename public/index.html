@@ -80,6 +80,18 @@
               <div class="v5-toolbar-actions"><label class="v5-execution-unit-control">时间单位<select id="v5ExecutionScale"><option value="day">日</option><option value="week" selected>周</option><option value="month">月</option></select></label><label class="v5-execution-granularity-control" for="v5ExecutionGranularity"><span>粒度</span><input id="v5ExecutionGranularity" type="range" min="1" max="5" step="1" value="3" aria-label="甘特图时间粒度"><output id="v5ExecutionGranularityValue" for="v5ExecutionGranularity">标准</output></label><label>范围<select id="v5ExecutionRange"><option value="smart" selected>智能</option><option value="all">全部</option><option value="week">本周</option><option value="month">本月</option><option value="7">未来 7 天</option><option value="30">未来 30 天</option><option value="90">未来 90 天</option></select></label><button id="v5ExecutionToday" class="ghost-button" type="button">今天</button></div>
               <div class="v5-toolbar-actions"><label class="v5-check-inline"><input id="v5ExecutionStack" type="checkbox" checked> 任务堆叠</label><button id="v5OpenExecutionFilters" class="ghost-button" type="button">组合筛选 <span id="v5ExecutionFilterSummary" class="v5-filter-summary">未设置</span></button><button id="v5ExecutionClear" class="ghost-button" type="button">一键还原</button></div>
             </div>
+            <div id="v5ExecutionSmartRangeControls" class="v5-execution-toolbar-row" aria-label="智能时间范围设置" hidden>
+              <div class="v5-toolbar-actions">
+                <span class="v5-muted">智能范围</span>
+                <label class="v5-execution-granularity-control" for="v5ExecutionSmartPastDays"><span>前</span><input id="v5ExecutionSmartPastDays" type="range" min="0" max="90" step="1" value="14" aria-label="智能范围向前天数"><output id="v5ExecutionSmartPastDaysValue" for="v5ExecutionSmartPastDays">14 天</output></label>
+                <label class="v5-execution-granularity-control" for="v5ExecutionSmartFutureDays"><span>后</span><input id="v5ExecutionSmartFutureDays" type="range" min="0" max="180" step="1" value="45" aria-label="智能范围向后天数"><output id="v5ExecutionSmartFutureDaysValue" for="v5ExecutionSmartFutureDays">45 天</output></label>
+              </div>
+              <div class="v5-toolbar-actions">
+                <button id="v5ExecutionSaveSmartRange" class="primary-action" type="button">保存为默认</button>
+                <button id="v5ExecutionResetSmartRange" class="ghost-button" type="button">恢复建议值</button>
+                <span id="v5ExecutionSmartRangeMessage" class="v5-muted" role="status" aria-live="polite"></span>
+              </div>
+            </div>
           </div>
           <section id="v5ExecutionStats" class="v5-execution-stats" aria-label="执行中心汇总统计" aria-live="polite"></section>
           <nav id="v5ExecutionSubnav" class="v5-execution-subnav" role="tablist" aria-label="执行中心视图"><button class="active" type="button" role="tab" aria-selected="true" aria-controls="v5ExecutionGanttPanel" data-v5-exec-view="gantt">甘特图</button><button type="button" role="tab" aria-selected="false" aria-controls="v5ExecutionTasksPanel" data-v5-exec-view="tasks">任务</button><button type="button" role="tab" aria-selected="false" aria-controls="v5ExecutionLoadPanel" data-v5-exec-view="load">负载</button></nav>
