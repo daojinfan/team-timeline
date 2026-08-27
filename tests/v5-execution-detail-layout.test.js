@@ -32,10 +32,11 @@ test("V5 schedule facts and member rows use isolated detail styles", () => {
   assert.match(app, /class="v5-execution-detail-members"/);
   assert.match(app, /class="v5-execution-detail-member-row"/);
   assert.doesNotMatch(app.match(/function v5RenderExecutionDetail\(\)[\s\S]*?\n\}/)?.[0] || "", /class="v5-execution-member-list"/);
-  assert.match(app, />修改任务时间<\/button>/);
+  assert.match(app, />保存整体排期<\/button>/);
+  assert.match(app, />保存成员排期<\/button>/);
   assert.match(app, />全量编辑<\/button>/);
-  assert.match(app, /data-v5-exec-schedule-mode="task"/);
-  assert.match(app, /const taskEdit = action\("\[data-v5-exec-edit-task\]"\);[\s\S]*?v5OpenScheduleEditor\(Number\(taskEdit\.dataset\.v5ExecEditTask\), "task"\); return;[\s\S]*?const memberEdit = action\("\[data-v5-exec-edit-member\]"\);/);
-  assert.match(app, /const memberEdit = action\("\[data-v5-exec-edit-member\]"\);[\s\S]*?selectedTaskId = Number\(memberEdit\.dataset\.v5ExecEditMember\); v5RenderExecution\(\); v5OpenScheduleEditor\(Number\(memberEdit\.dataset\.v5ExecEditMember\), "member", Number\(memberEdit\.dataset\.v5ExecMember\)\); return;[\s\S]*?const selected = action\("\[data-v5-exec-select-task\]"\);/);
+  assert.match(app, /data-v5-exec-sync-members="\$\{task\.id\}" aria-pressed="false"/);
+  assert.match(app, /data-v5-edit-task="\$\{task\.id\}">全量编辑/);
+  assert.doesNotMatch(app.match(/function v5RenderExecutionDetail\(\)[\s\S]*?\n\}/)?.[0] || "", /data-v5-open-editor|data-v5-exec-edit-task|data-v5-exec-edit-member/);
   assert.match(app, /const selected = action\("\[data-v5-exec-select-task\]"\);[\s\S]*?v5RenderExecution\(\); return;/);
 });

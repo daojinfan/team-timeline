@@ -1,0 +1,97 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-288",
+  "work_package": "WP-014",
+  "title": "执行中心任务详情改为无弹窗选中与右侧内联排期",
+  "goal": "任务或成员甘特条的单击只选中任务；在右侧详情内编辑任务整体排期和单个成员排期，提供显式同步全部成员按钮及内联冲突确认，并让全量编辑在当前执行中心以任务弹窗打开。",
+  "baseline": "BL-010",
+  "profile": "Standard",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "tests/v5-execution-detail-inline-edit.test.js",
+    "tests/v5-execution-detail-layout.test.js"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "tests"
+  ],
+  "write_paths": [
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "tests/v5-execution-detail-inline-edit.test.js",
+    "tests/v5-execution-detail-layout.test.js"
+  ],
+  "out_of_scope": [
+    "不增加或修改 V5 API、SQLite schema 和服务端排期规则",
+    "不改变冲突预览、版本校验和任务状态算法",
+    "不重构任务全量编辑台页面结构或远程发布"
+  ],
+  "authoritative_documents": [
+    "REQ-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "DEC-005",
+    "CR-009",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-286"
+  ],
+  "acceptance_criteria": [
+    "单击任务条、成员条、任务列表或行标签只选中任务并显示右侧详情，不自动打开任何排期弹窗",
+    "右侧整体排期提供开始和结束日期、显式同步全部成员切换按钮、取消和保存；保存复用预览令牌与版本校验",
+    "右侧每位成员可独立修改起止日期并保存，且不会修改其他成员或任务整体日期",
+    "排期冲突在右侧内联展示，只有用户点击仍然保存才提交，不使用选择即弹窗或 window.confirm",
+    "保存成功后甘特图、任务列表、负载和详情同步刷新并保持当前任务选中",
+    "全量编辑打开现有任务编辑弹窗，主视图保持执行中心且关闭后仍保留当前任务",
+    "1280×720 与 700×720 下详情可编辑控件无横向溢出"
+  ],
+  "validations": [
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "inline-detail-test",
+      "command": "node",
+      "args": [
+        "--test",
+        "tests/v5-execution-detail-inline-edit.test.js"
+      ]
+    },
+    {
+      "id": "detail-layout-test",
+      "command": "node",
+      "args": [
+        "--test",
+        "tests/v5-execution-detail-layout.test.js"
+      ]
+    },
+    {
+      "id": "full-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "success_criteria",
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-27T14:36:05.8463196Z"
+}

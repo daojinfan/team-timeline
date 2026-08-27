@@ -4823,7 +4823,7 @@ function v5ExecutionPosition(range, start, end) { const width = v5ExecutionUnitW
 function v5ExecutionTaskBar(task, range, member = null, lane = 0) {
   const start = v5ExecutionDateValue(member ? (member.start_date || task.start_date) : task.start_date); const end = v5ExecutionDateValue(member ? (member.end_date || task.end_date) : task.end_date); if (!start || !end) return ""; const position = v5ExecutionPosition(range, start, end); if (!position.width) return "";
   const label = member ? `${member.name} · ${task.title}` : task.title; const tone = member ? "member-bar" : "task-bar"; const color = /^#[0-9a-f]{3,8}$/i.test(task.color || "") ? task.color : "#2563eb"; const barLabel = member?.__ganttLabel || (member ? member.name : task.title);
-  return `<button type="button" class="v5-execution-bar ${tone}${task.status === "test-delayed" || task.status === "sample-delayed" ? " is-delayed" : ""}" style="left:${position.left}px;width:${position.width}px;top:${member ? 10 + lane * 28 : 10}px;--task-accent:${escapeHtml(color)}" data-v5-exec-select-task="${task.id}"${member ? ` data-v5-exec-edit-member="${task.id}" data-v5-exec-member="${member.id}"` : ""} title="${escapeHtml(label)}：${escapeHtml(start)} 至 ${escapeHtml(end)}">${escapeHtml(barLabel)}</button>`;
+  return `<button type="button" class="v5-execution-bar ${tone}${task.status === "test-delayed" || task.status === "sample-delayed" ? " is-delayed" : ""}" style="left:${position.left}px;width:${position.width}px;top:${member ? 10 + lane * 28 : 10}px;--task-accent:${escapeHtml(color)}" data-v5-exec-select-task="${task.id}" title="${escapeHtml(label)}：${escapeHtml(start)} 至 ${escapeHtml(end)}">${escapeHtml(barLabel)}</button>`;
 }
 function v5ExecutionMemberLanes(task, members) {
   const lanes = []; return members.slice().sort((a, b) => String(a.start_date || "").localeCompare(String(b.start_date || ""))).map((member) => { if (v5State.execution.stack === false) return { member, lane: 0 }; let lane = lanes.findIndex((end) => !end || member.start_date > end); if (lane < 0) { lane = lanes.length; lanes.push(member.end_date); } else lanes[lane] = member.end_date; return { member, lane }; });
@@ -4883,7 +4883,78 @@ function v5RenderExecutionMemberList(tasks) {
 }
 function v5RenderExecutionLoad(tasks) { const node = $("#v5ExecutionLoad"); const rows = v5ExecutionVisibleMemberRows(tasks); $("#v5ExecutionLoadCount").textContent = `${rows.length} 名成员`; v5RenderExecutionMemberList(tasks); if (!node) return; node.innerHTML = rows.length ? `<table class="v5-execution-load-table"><thead><tr><th>成员</th><th>任务数</th><th>排期天数</th><th>重叠</th></tr></thead><tbody>${rows.map((row) => `<tr class="${String(row.member.id) === String(v5State.execution.memberId) ? "is-selected" : ""}"><td><button type="button" data-v5-exec-member-filter="${row.member.id}"><strong>${escapeHtml(row.member.name)}</strong><small>${escapeHtml(row.member.role || "测控成员")}</small></button></td><td>${row.tasks.length}</td><td>${row.days}</td><td>${row.overlaps || "—"}</td></tr>`).join("")}</tbody></table>` : `<div class="v5-empty-state" style="padding:24px 10px"><p>当前筛选没有成员负载。</p></div>`; }
 function v5RenderExecutionStats(tasks) { const stats = $("#v5ExecutionStats"); if (!stats) return; const delayed = tasks.filter((task) => task.status === "sample-delayed" || task.status === "test-delayed").length; const testing = tasks.filter((task) => task.status === "testing").length; const scheduled = tasks.filter((task) => task.start_date && task.end_date).length; const members = new Set(tasks.flatMap((task) => v5ExecutionTaskMembers(task).map((member) => Number(member.id)))); stats.innerHTML = `<article><span>当前任务</span><strong>${tasks.length}</strong><small>${scheduled} 个已排期</small></article><article><span>正在测试</span><strong>${testing}</strong><small>需要人工切换阶段</small></article><article class="is-warning"><span>延期任务</span><strong>${delayed}</strong><small>按当前日期自动计算</small></article><article><span>涉及成员</span><strong>${members.size}</strong><small>当前筛选范围</small></article>`; }
-function v5RenderExecutionDetail() { const node = $("#v5ExecutionDetail"); const card = $("#v5ExecutionDetailCard"); const workspace = $(".v5-execution-workspace"); if (!node || !card || !workspace) return; const task = v5State.tasks.find((row) => Number(row.id) === Number(v5State.execution.selectedTaskId)); card.hidden = !task; workspace.classList.toggle("has-detail", Boolean(task)); if (!task) { node.innerHTML = ""; return; } const members = v5ExecutionTaskMembers(task); node.innerHTML = `<div class="v5-execution-detail-body"><div class="v5-execution-detail-title"><strong>${escapeHtml(task.task_number || `TASK-${task.id}`)} · ${escapeHtml(task.title)}</strong>${v5StatusChip(task)}</div><p class="v5-muted">${escapeHtml(v5TopicName(task.topic_id))} · ${escapeHtml(task.source_group?.name || "来源小组待补充")} · ${escapeHtml(task.cryostat?.name || "制冷机待补充")}</p><dl class="v5-execution-facts"><div><dt>任务排期</dt><dd>${escapeHtml(task.start_date || "未排期")} → ${escapeHtml(task.end_date || "—")}</dd></div><div><dt>测试目的</dt><dd>${escapeHtml(task.purpose || "待补充")}</dd></div><div><dt>样品</dt><dd>${escapeHtml((task.samples || []).map((sample) => [sample.model, sample.sample_no].filter(Boolean).join(" · ")).filter(Boolean).join("、") || "待补充")}</dd></div></dl><div class="v5-execution-detail-actions"><button type="button" class="primary-action" data-v5-exec-edit-task="${task.id}" data-v5-exec-schedule-mode="task">修改任务时间</button><button type="button" class="ghost-button" data-v5-open-editor="${task.id}">全量编辑</button></div><section class="v5-execution-detail-members" aria-label="成员排期"><h4>成员排期</h4>${members.length ? members.map((member) => `<div class="v5-execution-detail-member-row"><span><strong>${escapeHtml(member.name)}</strong><small>${escapeHtml(member.start_date || "未排期")} → ${escapeHtml(member.end_date || "—")}</small></span><button type="button" class="small-button" data-v5-exec-edit-member="${task.id}" data-v5-exec-member="${member.id}">修改</button></div>`).join("") : `<p class="v5-muted">尚未分配成员。</p>`}</section></div>`; }
+function v5ExecutionDetailStatusAction(task) {
+  if (task.manual_phase === "completed") return "";
+  return task.manual_phase === "testing"
+    ? `<button type="button" class="ghost-button" data-v5-complete-task="${task.id}">标记完成</button>`
+    : `<button type="button" class="ghost-button" data-v5-start-testing="${task.id}">开始测试</button>`;
+}
+
+function v5RenderExecutionDetail() {
+  const node = $("#v5ExecutionDetail"); const card = $("#v5ExecutionDetailCard"); const workspace = $(".v5-execution-workspace");
+  if (!node || !card || !workspace) return;
+  const task = v5State.tasks.find((row) => Number(row.id) === Number(v5State.execution.selectedTaskId));
+  card.hidden = !task; workspace.classList.toggle("has-detail", Boolean(task));
+  if (!task) { node.innerHTML = ""; return; }
+  const members = v5ExecutionTaskMembers(task);
+  const sampleSummary = (task.samples || []).map((sample) => [sample.model, sample.sample_no].filter(Boolean).join(" · ")).filter(Boolean).join("、") || "待补充";
+  node.innerHTML = `<div class="v5-execution-detail-body">
+    <div class="v5-execution-detail-title"><strong>${escapeHtml(task.task_number || `TASK-${task.id}`)} · ${escapeHtml(task.title)}</strong>${v5StatusChip(task)}</div>
+    <p class="v5-muted">${escapeHtml(v5TopicName(task.topic_id))} · ${escapeHtml(task.source_group?.name || "来源小组待补充")} · ${escapeHtml(task.cryostat?.name || "制冷机待补充")}</p>
+    <section class="v5-execution-detail-section" aria-labelledby="v5ExecutionTaskScheduleTitle-${task.id}">
+      <div class="v5-execution-detail-section-heading"><div><span class="v5-eyebrow">整体排期</span><h4 id="v5ExecutionTaskScheduleTitle-${task.id}">任务开始与结束</h4></div><button type="button" class="v5-execution-sync-button" data-v5-exec-sync-members="${task.id}" aria-pressed="false"><span aria-hidden="true">⇄</span> 同步全部成员</button></div>
+      <div class="v5-execution-detail-date-grid"><label>开始日期<input type="date" value="${escapeHtml(task.start_date || "")}" data-v5-exec-task-start="${task.id}"></label><label>结束日期<input type="date" value="${escapeHtml(task.end_date || "")}" data-v5-exec-task-end="${task.id}"></label></div>
+      <p class="v5-execution-detail-help">点亮“同步全部成员”后，本次保存会同步调整所有成员排期。</p>
+      <div id="v5ExecutionTaskScheduleMessage-${task.id}" class="v5-execution-detail-feedback" role="status" aria-live="polite"></div>
+      <div class="v5-execution-detail-section-actions"><button type="button" class="ghost-button" data-v5-exec-reset-task-schedule="${task.id}">取消修改</button><button type="button" class="primary-action" data-v5-exec-save-task-schedule="${task.id}">保存整体排期</button></div>
+    </section>
+    <section class="v5-execution-detail-members" aria-labelledby="v5ExecutionMemberScheduleTitle-${task.id}">
+      <div class="v5-execution-detail-section-heading"><div><span class="v5-eyebrow">人员安排</span><h4 id="v5ExecutionMemberScheduleTitle-${task.id}">成员排期</h4></div><span class="v5-muted">${members.length} 人</span></div>
+      ${members.length ? members.map((member) => `<article class="v5-execution-detail-member-row" data-v5-exec-member-row="${member.id}"><div class="v5-execution-detail-member-heading"><strong>${escapeHtml(member.name)}</strong><small>${escapeHtml(member.role || "测控成员")}</small></div><div class="v5-execution-detail-date-grid"><label>开始<input type="date" value="${escapeHtml(member.start_date || task.start_date || "")}" data-v5-exec-member-start="${member.id}"></label><label>结束<input type="date" value="${escapeHtml(member.end_date || task.end_date || "")}" data-v5-exec-member-end="${member.id}"></label></div><div id="v5ExecutionMemberScheduleMessage-${task.id}-${member.id}" class="v5-execution-detail-feedback" role="status" aria-live="polite"></div><div class="v5-execution-detail-section-actions"><button type="button" class="small-button" data-v5-exec-reset-member-schedule="${task.id}" data-v5-exec-member="${member.id}">取消</button><button type="button" class="small-button primary-action" data-v5-exec-save-member-schedule="${task.id}" data-v5-exec-member="${member.id}">保存成员排期</button></div></article>`).join("") : `<p class="v5-muted">尚未分配成员；可通过“全量编辑”添加参与成员。</p>`}
+    </section>
+    <dl class="v5-execution-facts"><div><dt>测试目的</dt><dd>${escapeHtml(task.purpose || "待补充")}</dd></div><div><dt>样品</dt><dd>${escapeHtml(sampleSummary)}</dd></div><div><dt>制冷机</dt><dd>${escapeHtml(task.cryostat?.name || "待补充")}</dd></div></dl>
+    <div class="v5-execution-detail-actions">${v5ExecutionDetailStatusAction(task)}<button type="button" class="primary-action" data-v5-edit-task="${task.id}">全量编辑</button></div>
+  </div>`;
+}
+
+function v5ExecutionDetailConflictMarkup(conflicts, confirmAttribute, taskId, memberId = null) {
+  const items = conflicts.map((conflict) => `<li>${escapeHtml(conflict.message || conflict.reason || conflict.title || conflict.type || "排期冲突")}</li>`).join("");
+  const memberAttribute = memberId == null ? "" : ` data-v5-exec-member="${memberId}"`;
+  return `<div class="v5-execution-detail-conflicts"><strong>发现 ${conflicts.length} 项影响</strong><ul>${items}</ul><button type="button" class="small-button danger-button" ${confirmAttribute}="${taskId}"${memberAttribute}>仍然保存</button></div>`;
+}
+
+function v5ExecutionDetailMessage(selector, content = "", tone = "") {
+  const node = $(selector); if (!node) return;
+  node.className = `v5-execution-detail-feedback${tone ? ` is-${tone}` : ""}`;
+  if (tone === "warning") node.innerHTML = content; else node.textContent = content;
+}
+
+async function v5SaveExecutionTaskSchedule(taskId, force = false) {
+  const task = v5State.tasks.find((row) => Number(row.id) === Number(taskId)); if (!task) return;
+  const start = $(`[data-v5-exec-task-start="${task.id}"]`)?.value || ""; const end = $(`[data-v5-exec-task-end="${task.id}"]`)?.value || "";
+  const syncMembers = $(`[data-v5-exec-sync-members="${task.id}"]`)?.getAttribute("aria-pressed") === "true"; const messageSelector = `#v5ExecutionTaskScheduleMessage-${task.id}`;
+  if (!start || !end || end < start) return v5ExecutionDetailMessage(messageSelector, "请填写有效的任务开始和结束日期。", "error");
+  try {
+    v5ExecutionDetailMessage(messageSelector, "正在检查成员、制冷机和样品时间…");
+    const preview = await v5Api(`/api/v5/tasks/${task.id}/schedule-preview`, v5Json("POST", { start_date: start, end_date: end, sync_members: syncMembers })); const conflicts = preview.conflicts || [];
+    if (conflicts.length && !force) return v5ExecutionDetailMessage(messageSelector, v5ExecutionDetailConflictMarkup(conflicts, "data-v5-exec-confirm-task-schedule", task.id), "warning");
+    await v5Api(`/api/v5/tasks/${task.id}/schedule`, v5Json("POST", { start_date: start, end_date: end, sync_members: syncMembers, preview_token: preview.preview_token, expected_version: task.version, ack: Boolean(conflicts.length) }));
+    v5State.execution.selectedTaskId = task.id; await v5LoadAll(); showToast(syncMembers ? "任务和全部成员排期已更新" : "任务整体排期已更新");
+  } catch (error) { v5ExecutionDetailMessage(messageSelector, v5ErrorText(error), "error"); }
+}
+
+async function v5SaveExecutionMemberSchedule(taskId, memberId, force = false) {
+  const task = v5State.tasks.find((row) => Number(row.id) === Number(taskId)); const member = v5ExecutionTaskMembers(task).find((row) => Number(row.id) === Number(memberId)); if (!task || !member) return;
+  const row = $(`[data-v5-exec-member-row="${member.id}"]`); const start = row?.querySelector(`[data-v5-exec-member-start="${member.id}"]`)?.value || ""; const end = row?.querySelector(`[data-v5-exec-member-end="${member.id}"]`)?.value || ""; const messageSelector = `#v5ExecutionMemberScheduleMessage-${task.id}-${member.id}`;
+  if (!start || !end || end < start) return v5ExecutionDetailMessage(messageSelector, "请填写有效的成员开始和结束日期。", "error");
+  try {
+    v5ExecutionDetailMessage(messageSelector, "正在检查成员排期冲突…");
+    const preview = await v5Api(`/api/v5/tasks/${task.id}/member-schedule-preview`, v5Json("POST", { member_id: member.id, start_date: start, end_date: end })); const conflicts = preview.conflicts || [];
+    if (conflicts.length && !force) return v5ExecutionDetailMessage(messageSelector, v5ExecutionDetailConflictMarkup(conflicts, "data-v5-exec-confirm-member-schedule", task.id, member.id), "warning");
+    await v5Api(`/api/v5/tasks/${task.id}/member-schedule`, v5Json("POST", { member_id: member.id, start_date: start, end_date: end, preview_token: preview.preview_token, expected_version: task.version, ack: Boolean(conflicts.length) }));
+    v5State.execution.selectedTaskId = task.id; await v5LoadAll(); showToast(`${member.name}的成员排期已更新`);
+  } catch (error) { v5ExecutionDetailMessage(messageSelector, v5ErrorText(error), "error"); }
+}
 function v5RenderExecutionTaskList(tasks) { const node = $("#v5ExecutionTaskList"); if (!node) return; $("#v5ExecutionTaskCount").textContent = `${tasks.length} 个任务`; node.innerHTML = tasks.length ? tasks.map((task) => `<button type="button" class="v5-execution-task-list-row${Number(task.id) === Number(v5State.execution.selectedTaskId) ? " is-selected" : ""}" data-v5-exec-select-task="${task.id}"><span class="v5-task-accent${task.color ? " has-color" : ""}"${task.color ? ` style="--task-accent:${escapeHtml(task.color)}"` : ""}></span><span><strong>${escapeHtml(task.task_number || `TASK-${task.id}`)} · ${escapeHtml(task.title)}</strong><small>${escapeHtml(v5TopicName(task.topic_id))} · ${escapeHtml(task.start_date || "未排期")} → ${escapeHtml(task.end_date || "—")}</small></span><span>${v5StatusChip(task)}</span><span class="v5-execution-task-members">${escapeHtml(v5ExecutionTaskMembers(task).map((member) => member.name).join("、") || "未分配")}</span></button>`).join("") : `<div class="v5-empty-state" style="padding:24px"><p>没有符合条件的任务。</p></div>`; }
 function v5SetExecutionSubView(view) { const next = ["gantt", "tasks", "load"].includes(view) ? view : "gantt"; v5State.execution.activeView = next; $$('[data-v5-exec-view]').forEach((button) => { const active = button.dataset.v5ExecView === next; button.classList.toggle("active", active); button.setAttribute("aria-selected", String(active)); }); $$('[data-v5-exec-panel]').forEach((panel) => { const active = panel.dataset.v5ExecPanel === next; panel.hidden = !active; panel.classList.toggle("active", active); }); }
 function v5RenderExecution() { const tasks = v5ExecutionFilteredTasks(); v5RenderExecutionFilterOptions(); v5RenderExecutionStats(tasks); v5RenderExecutionGantt(tasks); v5RenderExecutionLoad(tasks); v5RenderExecutionDetail(); v5RenderExecutionTaskList(tasks); v5SetExecutionSubView(v5State.execution.activeView); }
@@ -5035,7 +5106,26 @@ function bindV5ExecutionEvents() {
   $("#v5ExecutionToday")?.addEventListener("click", () => { v5State.execution.anchorDate = todayLocalDate(); v5State.execution.range = "smart"; v5RenderExecutionFilterOptions(); v5RenderExecution(); });
   $("#v5ExecutionClear")?.addEventListener("click", () => { v5ResetFilterSurface("execution"); Object.assign(v5State.execution, { search: "", sourceId: "", topicId: "", status: "", memberId: "", sampleId: "", cryostatId: "", from: "", to: "", memberSearch: "", anchorDate: null }); });
   $("#v5ScheduleForm")?.addEventListener("submit", v5SaveSchedule);
-  document.body.addEventListener("click", (event) => { const action = (selector) => event.target.closest(selector); const view = action("[data-v5-exec-view]"); if (view) { v5SetExecutionSubView(view.dataset.v5ExecView); return; } const closeDetail = action("[data-v5-exec-close-detail]"); if (closeDetail) { v5State.execution.selectedTaskId = null; v5RenderExecution(); return; } const taskEdit = action("[data-v5-exec-edit-task]"); if (taskEdit) { v5State.execution.selectedTaskId = Number(taskEdit.dataset.v5ExecEditTask); v5OpenScheduleEditor(Number(taskEdit.dataset.v5ExecEditTask), "task"); return; } const memberEdit = action("[data-v5-exec-edit-member]"); if (memberEdit) { v5State.execution.selectedTaskId = Number(memberEdit.dataset.v5ExecEditMember); v5RenderExecution(); v5OpenScheduleEditor(Number(memberEdit.dataset.v5ExecEditMember), "member", Number(memberEdit.dataset.v5ExecMember)); return; } const selected = action("[data-v5-exec-select-task]"); if (selected) { v5State.execution.selectedTaskId = Number(selected.dataset.v5ExecSelectTask); v5RenderExecution(); return; } const memberFilter = action("[data-v5-exec-member-filter]"); if (memberFilter) { const memberSelect = $("#v5ExecutionMember"); const selectedId = String(memberFilter.dataset.v5ExecMemberFilter); if (memberSelect) memberSelect.value = selectedId === String(memberSelect.value) ? "" : selectedId; v5UpdateQuickFilter("execution", "memberId"); } const editor = action("[data-v5-open-editor]"); if (editor) { v5State.selectedTaskId = Number(editor.dataset.v5OpenEditor); v5SetView("editor"); v5RenderTree(); v5RenderSelectedTask(); } });
+  document.body.addEventListener("input", (event) => {
+    const taskInput = event.target.closest("[data-v5-exec-task-start], [data-v5-exec-task-end]");
+    if (taskInput) return v5ExecutionDetailMessage(`#v5ExecutionTaskScheduleMessage-${taskInput.dataset.v5ExecTaskStart || taskInput.dataset.v5ExecTaskEnd}`, "有未保存的任务排期修改。", "dirty");
+    const memberInput = event.target.closest("[data-v5-exec-member-start], [data-v5-exec-member-end]");
+    if (memberInput) { const row = memberInput.closest("[data-v5-exec-member-row]"); const taskId = v5State.execution.selectedTaskId; return v5ExecutionDetailMessage(`#v5ExecutionMemberScheduleMessage-${taskId}-${row?.dataset.v5ExecMemberRow}`, "有未保存的成员排期修改。", "dirty"); }
+  });
+  document.body.addEventListener("click", (event) => {
+    const action = (selector) => event.target.closest(selector);
+    const view = action("[data-v5-exec-view]"); if (view) { v5SetExecutionSubView(view.dataset.v5ExecView); return; }
+    const closeDetail = action("[data-v5-exec-close-detail]"); if (closeDetail) { v5State.execution.selectedTaskId = null; v5RenderExecution(); return; }
+    const syncMembers = action("[data-v5-exec-sync-members]"); if (syncMembers) { const active = syncMembers.getAttribute("aria-pressed") !== "true"; syncMembers.setAttribute("aria-pressed", String(active)); syncMembers.classList.toggle("is-active", active); syncMembers.innerHTML = active ? '<span aria-hidden="true">✓</span> 已同步全部成员' : '<span aria-hidden="true">⇄</span> 同步全部成员'; v5ExecutionDetailMessage(`#v5ExecutionTaskScheduleMessage-${syncMembers.dataset.v5ExecSyncMembers}`, active ? "保存整体排期时将同步全部成员。" : "本次保存只修改任务整体排期。", "dirty"); return; }
+    const resetTask = action("[data-v5-exec-reset-task-schedule]"); if (resetTask) { v5RenderExecutionDetail(); return; }
+    const saveTask = action("[data-v5-exec-save-task-schedule]"); if (saveTask) { v5SaveExecutionTaskSchedule(Number(saveTask.dataset.v5ExecSaveTaskSchedule)); return; }
+    const confirmTask = action("[data-v5-exec-confirm-task-schedule]"); if (confirmTask) { v5SaveExecutionTaskSchedule(Number(confirmTask.dataset.v5ExecConfirmTaskSchedule), true); return; }
+    const resetMember = action("[data-v5-exec-reset-member-schedule]"); if (resetMember) { const task = v5State.tasks.find((row) => Number(row.id) === Number(resetMember.dataset.v5ExecResetMemberSchedule)); const memberId = Number(resetMember.dataset.v5ExecMember); const member = v5ExecutionTaskMembers(task).find((row) => Number(row.id) === memberId); const row = resetMember.closest("[data-v5-exec-member-row]"); const start = row?.querySelector(`[data-v5-exec-member-start="${memberId}"]`); const end = row?.querySelector(`[data-v5-exec-member-end="${memberId}"]`); if (start) start.value = member?.start_date || task?.start_date || ""; if (end) end.value = member?.end_date || task?.end_date || ""; v5ExecutionDetailMessage(`#v5ExecutionMemberScheduleMessage-${task?.id}-${memberId}`); return; }
+    const saveMember = action("[data-v5-exec-save-member-schedule]"); if (saveMember) { v5SaveExecutionMemberSchedule(Number(saveMember.dataset.v5ExecSaveMemberSchedule), Number(saveMember.dataset.v5ExecMember)); return; }
+    const confirmMember = action("[data-v5-exec-confirm-member-schedule]"); if (confirmMember) { v5SaveExecutionMemberSchedule(Number(confirmMember.dataset.v5ExecConfirmMemberSchedule), Number(confirmMember.dataset.v5ExecMember), true); return; }
+    const selected = action("[data-v5-exec-select-task]"); if (selected) { v5State.execution.selectedTaskId = Number(selected.dataset.v5ExecSelectTask); v5RenderExecution(); return; }
+    const memberFilter = action("[data-v5-exec-member-filter]"); if (memberFilter) { const memberSelect = $("#v5ExecutionMember"); const selectedId = String(memberFilter.dataset.v5ExecMemberFilter); if (memberSelect) memberSelect.value = selectedId === String(memberSelect.value) ? "" : selectedId; v5UpdateQuickFilter("execution", "memberId"); }
+  });
 }
 bindV5ExecutionEvents();
 v5State.preferences = v5ReadPreferences();

@@ -1,0 +1,57 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-287",
+  "reviewed_task_ids": ["TASK-286"],
+  "work_package": "WP-014",
+  "baseline": "BL-010",
+  "result": "cancelled",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-286",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "TASK-286 将排期详情显隐与工作区选中状态联动，增加关闭和详情成员隔离渲染、执行视图窄屏根类，并实现任务编辑、成员编辑与普通选择的确定性事件路由。"
+    },
+    {
+      "task_id": "TASK-286",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "TASK-286 将默认隐藏的排期详情卡移入执行工作区第三列，增加可访问标题和关闭按钮，移除原独立详情卡的重复入口与空占位。"
+    },
+    {
+      "task_id": "TASK-286",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "TASK-286 增加宽屏三栏、1180px 两栏、720px 单栏和执行中心最小宽度作用域，修复事实字段横排并隔离详情成员列表样式。"
+    },
+    {
+      "task_id": "TASK-286",
+      "path": "tests/v5-execution-detail-layout.test.js",
+      "change_type": "added",
+      "summary": "TASK-286 新增详情位置、响应式、事实字段、成员样式和原排期事件路由的静态回归；TASK-288 后续对该文件的未提交修改不属于本取消证据。"
+    }
+  ],
+  "change_summary": "取消审核映射：review_task_id=TASK-287，delivery_task_id=TASK-286，work_package_id=WP-014，baseline_id=BL-010。TASK-286 在用户验收前被新需求取代：用户要求将选择即弹窗改为右侧内联排期，TASK-286 已正式 Supersede，TASK-288 已在相同工作包和基线上承接最终交互。此前 review-round-3.json 与 review-round-4.json 对 TASK-286 旧最终内容形成的两个 passed 结论因此注销为 cancelled，不再以旧 subject_sha256 约束替代任务。TASK-286 自 start_git_commit 93d2be89e8caf17a30d08a4d1350bdfa66e4a756 到完成落账提交 80185aee961db3136f3f6b4a2b6d5c78f2603130 的允许范围 manifest 精确为 public/app.js、public/index.html、public/styles.css 三项 modified 和 tests/v5-execution-detail-layout.test.js 一项 added；无删除或重命名。",
+  "scope_checked": [
+    "读取 TASK-286 合同，确认 role=IMPLEMENTER、profile=Standard、work_package=WP-014、baseline=BL-010，allowed_paths 精确包含三个 public 文件和 tests/v5-execution-detail-layout.test.js。",
+    "读取 TASK-286 最新状态，确认 state=superseded；last_error 明确记录用户在验收前以 CONF-V5-EXEC-SCHEDULE-DETAIL-INLINE-EDIT-20260827-01 将弹窗交互升级为右侧内联编辑，并由 TASK-288 替代最终交互。",
+    "读取 TASK-287 合同与状态，确认其为 TASK-286 的独立 REVIEWER；review_history 已登记 review-round-3 和 review-round-4 两个 passed 记录，旧审核 subject_sha256 为 2933dff86ea712083f0b5065ed9c5d9a450c4fe61acd013e440b5d96702d2c55。",
+    "读取 TASK-288 合同与状态，确认其目标为任务或成员甘特条只选中、右侧内联编辑整体与成员排期，依赖 TASK-286，并以新的 IMPLEMENTER/REVIEWER 任务对 TASK-287 旧审核结果进行替代。",
+    "用 Git 独立核对 93d2be8..80185ae 的 TASK-286 允许范围，name-status 精确为三项 M 和一项 A；c0f35a4..80185ae 在同一业务范围无内容变化。",
+    "检查当前工作树，确认 TASK-288 正在修改 public/app.js、public/styles.css、tests/v5-execution-detail-layout.test.js，并新增 tests/v5-execution-detail-inline-edit.test.js；这些后续内容均不计入 TASK-286 changes。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "governance-state：TASK-286.state.json 的 state=superseded，review.status=passed/pass_streak=2 保留为历史事实，但本 cancelled 证据用于注销其旧最终内容结论。",
+    "replacement-contract：TASK-288.contract.json 的 goal 和 acceptance_criteria 明确承接右侧内联任务/成员排期、只选中不弹窗和内联冲突确认，证明替代范围与取消原因一致。",
+    "git-manifest：git diff --name-status 93d2be8..80185ae -- TASK-286 四个允许文件，结果为 M public/app.js、M public/index.html、M public/styles.css、A tests/v5-execution-detail-layout.test.js。",
+    "git-integrity：对同一提交范围和四个文件执行 git diff --check，exit 0；未发现删除或重命名。",
+    "business-finality：git diff c0f35a4..80185ae -- TASK-286 四个业务文件为空，说明两个 passed 轮次绑定的旧业务最终内容在 TASK-286 落账前保持不变。",
+    "prior-review-evidence：review-round-3.json SHA256=50610163b027e689e7640b054e5fa53c0ea957c44858603b0c81d368039b0a27，review-round-4.json SHA256=83b7906d629b6f639dc10639de72212ce9afc3d07bbce7d714914bc6095b394e；两者历史结果均为 passed，现因交付被替代而取消。",
+    "scope-exclusion：当前 TASK-288 新增的 tests/v5-execution-detail-inline-edit.test.js 未纳入 changes；TASK-288 对 app.js、styles.css 和原 layout test 的后续工作树修改也未混入 TASK-286 启动提交后的已提交 manifest。",
+    "cancellation-summary：用户验收尚未发生，TASK-286 已由正式 Supersede 状态停止作为最终交付，TASK-288 成为新交互的实现任务；本审核结果因此为 cancelled，而非 passed 或 changes-required。"
+  ],
+  "created_at": "2026-08-27T14:47:00Z"
+}

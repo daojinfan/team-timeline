@@ -5,7 +5,7 @@
   "work_package": "WP-014",
   "contract_sha256": "0ba865d9ddd8f3a1a148b9d788c0efba43dd7aed2bbd7cf669ab905b5f48c789",
   "baseline": "BL-010",
-  "state": "verified",
+  "state": "superseded",
   "approval_id": "APR-190",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
@@ -59,14 +59,14 @@
   "review": {
     "required": true,
     "reviewer_task_id": "TASK-287",
-    "status": "passed",
+    "status": "cancelled",
     "evidence": [
-      "docs/05-quality/evidence/TASK-287/review-round-4.json"
+      "docs/05-quality/evidence/TASK-287/review-superseded-20260827.json"
     ],
-    "pass_streak": 2,
-    "subject_sha256": "2933dff86ea712083f0b5065ed9c5d9a450c4fe61acd013e440b5d96702d2c55"
+    "pass_streak": 0,
+    "subject_sha256": ""
   },
-  "last_error": "",
+  "last_error": "用户在验收前以 CONF-V5-EXEC-SCHEDULE-DETAIL-INLINE-EDIT-20260827-01 将选择弹窗交互升级为右侧内联编辑；TASK-288 在保留已验证布局基础上替代其最终交互。",
   "created_at": "2026-08-27T13:37:34.3965905Z",
-  "updated_at": "2026-08-27T14:22:48.8880710Z"
+  "updated_at": "2026-08-27T14:46:38.1956664Z"
 }

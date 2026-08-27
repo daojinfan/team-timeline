@@ -1,0 +1,87 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-289",
+  "work_package": "WP-014",
+  "title": "独立审核执行中心右侧内联排期交互",
+  "goal": "独立审核 TASK-288 的全部实际变更、无弹窗选中、右侧内联保存、同步全部成员、全量编辑弹窗、响应式与回归结果。",
+  "baseline": "BL-010",
+  "profile": "Standard",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-289"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "tests/v5-execution-detail-inline-edit.test.js",
+    "tests/v5-execution-detail-layout.test.js"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-289"
+  ],
+  "out_of_scope": [
+    "不得修改实现代码、测试和治理运行状态",
+    "不得替代实现者修复问题或自行扩展范围"
+  ],
+  "authoritative_documents": [
+    "REQ-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "DEC-005",
+    "CR-009",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-288"
+  ],
+  "acceptance_criteria": [
+    "审核清单与 TASK-288 启动提交后的真实 Git 变更类型完全一致",
+    "独立复现所有无弹窗选择、内联任务/成员保存、冲突确认、全量编辑弹窗和响应式场景",
+    "Standard 连续两轮完整审核通过且两轮间业务内容指纹不变"
+  ],
+  "validations": [
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "inline-detail-test",
+      "command": "node",
+      "args": [
+        "--test",
+        "tests/v5-execution-detail-inline-edit.test.js"
+      ]
+    },
+    {
+      "id": "detail-layout-test",
+      "command": "node",
+      "args": [
+        "--test",
+        "tests/v5-execution-detail-layout.test.js"
+      ]
+    },
+    {
+      "id": "governance-strict",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-Strict"
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-27T14:36:17.6581949Z"
+}
