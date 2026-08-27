@@ -1,0 +1,65 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-289",
+  "reviewed_task_ids": ["TASK-288"],
+  "work_package": "WP-014",
+  "baseline": "BL-010",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-288",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "将任务条和成员条统一收敛为只选中任务；把任务整体排期、显式同步全部成员开关、逐成员独立排期、冲突确认和状态快捷动作放入右侧详情，并复用既有任务全量编辑弹窗。整体与成员保存分别调用既有 preview/save 接口，携带 preview_token、expected_version 和 ack，错误与冲突均在详情内联呈现。"
+    },
+    {
+      "task_id": "TASK-288",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "新增详情内联排期分区、同步开关、日期网格、成员排期行、反馈和冲突提示样式，并在 <=1180px 与 <=720px 下压缩或堆叠控件，保持执行中心窄屏边界和内部滚动。"
+    },
+    {
+      "task_id": "TASK-288",
+      "path": "tests/v5-execution-detail-layout.test.js",
+      "change_type": "modified",
+      "summary": "更新排期详情布局契约，覆盖新的整体/成员保存动作、同步按钮、全量编辑入口、详情显隐与响应式样式，并排除已移除的弹窗排期路由。"
+    },
+    {
+      "task_id": "TASK-288",
+      "path": "tests/v5-execution-detail-inline-edit.test.js",
+      "change_type": "added",
+      "summary": "新增五项静态回归，覆盖甘特选择不弹窗、整体排期 preview/save 与显式同步、成员独立保存、全量编辑留在执行中心以及紧凑响应式控件。"
+    }
+  ],
+  "change_summary": "profile=Standard；候选通过轮次=1（review-round-1）。审核元数据：task_id=TASK-288，reviewer_task_id=TASK-289，work_package=WP-014，baseline=BL-010，start_git_commit=80185aee961db3136f3f6b4a2b6d5c78f2603130，subject_git_commit=6a6cd80aabbf8524f3dbe32bae36570da13cebfc。独立执行 start..subject 的完整 name-status、逐行 diff 和 diff check 后，业务 manifest 精确为 M public/app.js、M public/styles.css、M tests/v5-execution-detail-layout.test.js、A tests/v5-execution-detail-inline-edit.test.js；public/index.html 未变化，无删除、重命名或其他业务文件。",
+  "scope_checked": [
+    "读取 TASK-288/TASK-289 契约与最新运行状态、TASK-288 验证证据、WP-014 路由上下文和审核 schema，确认交付冻结提交、起始提交、工作包、基线、Standard 档位及独立审核边界一致。",
+    "从 80185aee..6a6cd80 独立检查全部实际新增/修改内容：甘特任务条、成员条和普通任务行只保留 data-v5-exec-select-task，点击分支只设置 selectedTaskId 并重绘，不再调用 v5OpenScheduleEditor。",
+    "逐行审查任务整体排期：同步全部成员按钮 aria-pressed 默认 false，保存先调用 schedule-preview，再以 start/end、sync_members、preview_token、expected_version 和 ack 调用 schedule；冲突通过详情内仍然保存按钮二次确认。",
+    "逐行审查成员排期：每个成员行具有独立 start/end、反馈和保存/取消动作，分别调用 member-schedule-preview/member-schedule，仅发送目标 member_id，不携带 sync_members，不会修改其他成员输入。",
+    "审查错误与安全边界：日期先在客户端校验；API 错误通过 v5ErrorText 写入 textContent；冲突文案逐项 escapeHtml 后才进入受控 warning markup；新内联排期流程未调用 window.confirm。",
+    "审查详情信息架构与操作边界：任务编号、标题、状态、专题/来源组/制冷机上下文、测试目的、样品和制冷机为只读事实；整体排期和成员排期为明确可编辑区；仅保留适用状态快捷动作与全量编辑。",
+    "审查全量编辑事件路由：详情按钮使用既有 data-v5-edit-task 全局流程打开 v5TaskDialog，不调用 v5SetView('editor')，因此执行中心视图和已选任务上下文保持不变。",
+    "审查 CSS 三档布局和作用域：宽屏详情第三栏保持 360px，<=1180px 详情回落，<=720px 工作区单列且日期/成员控件受容器约束；v5-execution-active 仅在执行中心窄屏解除全局 1100px 最小宽度。",
+    "复核服务端与数据兼容性：本次未修改 public/index.html、server/API 路由、数据库或数据模型；既有 V5 preview/save、版本令牌和确认令牌语义由全量 API 测试继续覆盖。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "check=manifest：git diff --name-status 80185aee961db3136f3f6b4a2b6d5c78f2603130 6a6cd80 返回 M public/app.js、M public/styles.css、M tests/v5-execution-detail-layout.test.js、A tests/v5-execution-detail-inline-edit.test.js；public/index.html 未列入；git diff --check 返回 0。",
+    "check=app-syntax：独立执行 node --check public/app.js，exit 0。",
+    "check=inline-detail-test：独立执行 node --test tests/v5-execution-detail-inline-edit.test.js，5/5 通过，0 失败。",
+    "check=detail-layout-test：独立执行 node --test tests/v5-execution-detail-layout.test.js，3/3 通过，0 失败。",
+    "check=full-test：独立执行 npm test，87/87 通过，0 失败、0 跳过、0 取消。",
+    "check=browser-selection：真实页面中分别点击 .v5-execution-bar.task-bar 与 .v5-execution-bar.member-bar，右侧详情均完成选中且 v5ScheduleDialog=false、v5TaskDialog=false；任务条示例选中 TASK-59，成员条示例选中 TASK-15。",
+    "check=browser-task-inline：整体排期同步按钮初始 aria-pressed=false；可切换 true 后再恢复 false。输入 start=2026-12-31、end=2026-01-01 后点击保存，右侧反馈为“请填写有效的任务开始和结束日期。”且 class=is-error，排期弹窗保持关闭，未发送有效保存。",
+    "check=browser-member-isolation：选择含宫明家、钟杨两名成员的 TASK-7，只把首行日期改为 2026-12-31..2026-01-01 后，首行内联显示成员日期错误；第二行仍为 2026-06-30..2026-07-03且反馈为空，任务整体反馈也为空。",
+    "check=browser-full-edit：在 1280 与 700 宽度下点击详情“全量编辑”均打开既有 v5TaskDialog，标题为“编辑 TASK-7”；执行中心 tab aria-selected=true、v5ExecutionView.hidden=false、v5EditorView.hidden=true，未切换到任务全量编辑台。",
+    "check=browser-1280：viewport=1280x720，html/body clientWidth=scrollWidth=1265；选中任务后工作区 grid=210px 578.667px 360px，详情卡 x=858.667..1218.667px、宽 360px；任务和成员两组开始/结束日期输入均同一行，所有测量对象无横向页面溢出。",
+    "check=browser-700：viewport=700x720，执行中心根类为 v5-execution-active，html/body clientWidth=scrollWidth=685；工作区和详情卡均 x=32..652.667px、宽 620.667px，日期网格为 277px/277px，审查的详情 input/button/card 均无越界；详情关闭后 card.hidden=true 且 has-detail=false。",
+    "check=browser-scope：700 宽度离开执行中心到资源维护后根类清空，body min-width 恢复 1100px、body clientWidth/scrollWidth=1100/1100，证明窄屏解除策略仅作用于执行中心。",
+    "summary：冻结提交 6a6cd80aabbf8524f3dbe32bae36570da13cebfc 的实际业务差异、API/安全实现、自动测试和双视口真实交互均未发现阻断或回归；本审核成员未调用任何治理状态动作，也未提交有效排期或修改产品数据。"
+  ],
+  "created_at": "2026-08-27T14:55:19Z"
+}

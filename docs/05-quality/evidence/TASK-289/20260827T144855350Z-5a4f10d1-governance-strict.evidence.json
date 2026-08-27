@@ -1,0 +1,25 @@
+{
+  "$schema": "schemas/validation-evidence.schema.json",
+  "schema_version": 1,
+  "task_id": "TASK-289",
+  "work_package": "WP-014",
+  "baseline": "BL-010",
+  "contract_sha256": "e62a8e44f41a6c7859440345e85025e1806a3eb07eb01b017649c57c41b22aa1",
+  "git_commit": "6a6cd80aabbf8524f3dbe32bae36570da13cebfc",
+  "validation_id": "governance-strict",
+  "command": "powershell",
+  "args": [
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    ".governance/tools/Test-ProjectGovernance.ps1",
+    "-Strict"
+  ],
+  "started_at": "2026-08-27T14:48:59.2674888Z",
+  "finished_at": "2026-08-27T14:49:24.0257527Z",
+  "exit_code": 0,
+  "redactions_applied": 0,
+  "output_path": "docs/05-quality/evidence/TASK-289/20260827T144855350Z-5a4f10d1-governance-strict.output.txt",
+  "output_sha256": "b6640047ab47f951a623841a2689e65506f71834b8997e672f6b7c876e28cdd8"
+}
