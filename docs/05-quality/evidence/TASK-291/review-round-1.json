@@ -1,0 +1,68 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-291",
+  "reviewed_task_ids": ["TASK-290"],
+  "work_package": "WP-015",
+  "baseline": "BL-011",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-290",
+      "path": "public/index.html",
+      "change_type": "modified",
+      "summary": "调整执行中心数据视图结构：为成员筛选增加可折叠正文和带 aria-expanded/aria-controls 的移动端开关，为任务视图增加固定视觉列头，并为负载卡增加独立样式钩子。"
+    },
+    {
+      "task_id": "TASK-290",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "增加成员栏折叠状态、任务与负载滚动位置捕获/恢复和数据视图状态路由；负载强度按当前可见成员最大排期天数归一化渲染，并保留既有成员统计、任务筛选、详情选择和 API 行为。"
+    },
+    {
+      "task_id": "TASK-290",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "为任务/负载视图设置自适应等高数据区、内部滚动、任务固定列头和两行标题、负载粘性表头/相对负载条/重叠风险样式；在 <=720px 下令主内容优先、成员筛选可折叠，并以 grid、width:auto、min-width:0 和 overflow-x:hidden 消除负载表横向溢出。"
+    },
+    {
+      "task_id": "TASK-290",
+      "path": "tests/v5-execution-task-load-panel.test.js",
+      "change_type": "added",
+      "summary": "新增四项源代码契约回归，覆盖等高数据区与滚动保持、任务固定列头/稳定列和两行标题、负载相对强度/重叠提示/粘性表头，以及 720px 移动端折叠和 min-width:0 防溢出规则。"
+    }
+  ],
+  "change_summary": "profile=Standard；候选通过轮次=1（review-round-1）。本轮独立审核对象 task_id=TASK-290、reviewer_task_id=TASK-291、work_package=WP-015、baseline=BL-011；start_git_commit=9440fb49009ed4a7c11c5f4b997e7c1744e9d18b，subject_git_commit=2ed472a8126243fd92f9230e5c1946f4e1f1aad0。对启动提交至冻结交付提交的完整业务差异重新核验，manifest 精确为 M public/index.html、M public/app.js、M public/styles.css、A tests/v5-execution-task-load-panel.test.js；不存在业务删除或重命名，治理运行文件和自动验证证据未计入交付 changes。",
+  "scope_checked": [
+    "完整读取 TASK-290/TASK-291 契约与当前状态、WP-015 上下文和所路由的需求、详细设计、追踪矩阵、DEC-005、CR-009、工作包清单及适用治理规则；核对 Standard 档位、BL-011、依赖、只读/写入边界和审核要求。",
+    "独立执行 9440fb49009ed4a7c11c5f4b997e7c1744e9d18b..2ed472a8126243fd92f9230e5c1946f4e1f1aad0 的 name-status、完整源码/测试 diff、stat 和 diff-check，逐项核对所有新增、修改、删除与重命名类型。",
+    "检查数据视图等高与内部滚动：任务和负载卡、成员筛选栏共享 --v5-execution-data-height，任务/负载主体负责纵向滚动；完整重绘前保存 scrollTop，渲染结束后即时及 requestAnimationFrame 恢复。",
+    "检查任务视图信息架构：独立固定列头展示任务/专题与排期、状态、参与成员；任务行使用稳定 grid 列，标题 normal white-space、overflow hidden、-webkit-line-clamp:2，成员列在窄屏隐藏且未改变任务选择/详情路由。",
+    "检查成员负载表：沿用既有 v5ExecutionVisibleMemberRows 与 v5ExecutionLoadRows 数据语义，表头 sticky top=0；负载条以可见成员最大 days 归一化为 0-100%，带 role=img 和 aria-label；仅 overlap>0 显示风险样式，零重叠保留中性占位。",
+    "检查响应式：<=1180px 延续既有主栏/详情回落；<=720px 数据主内容 order=1、成员栏 order=2、详情继续在其后呈现，首次从甘特进入数据视图时自动折叠成员正文，按钮可显式展开/收起并同步 aria-expanded。",
+    "重点检查移动端负载防溢出：滚动容器 width/max-width=100%、overflow-x:hidden；表切换为 grid 且 width:auto、min-width:0、max-width:none，各列 minmax(0,...) 并令 thead/tbody/tr display:contents，避免旧固定表宽撑开页面。",
+    "检查详情栏兼容：任务行仍仅更新 selectedTaskId 并调用既有详情渲染，宽屏三栏与 <=1180/<=720 回落规则未被数据区定高覆盖；关闭详情后 has-detail 消失且详情节点零尺寸不占位。",
+    "检查回归边界：未修改服务端、数据库、V5 API、成员排期保存、状态算法或任务事实结构；全量测试覆盖既有 API/schema/投影和执行中心交互，审查未发现 XSS、事件路由或数据语义新增风险。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "check=subject-and-manifest：当前 HEAD 与冻结交付提交均为 2ed472a8126243fd92f9230e5c1946f4e1f1aad0；git diff --name-status 9440fb49009ed4a7c11c5f4b997e7c1744e9d18b 2ed472a8126243fd92f9230e5c1946f4e1f1aad0 精确返回 M public/app.js、M public/index.html、M public/styles.css、A tests/v5-execution-task-load-panel.test.js，git diff --check 返回 0。",
+    "check=subject-blobs：冻结交付内容指纹为 public/index.html=b91fef80d2806e485639bafc05b64bf8d875011c、public/app.js=03ab9330b52c04e05bf4610f09aaa083f8d900d8、public/styles.css=20bdb87c639afce934d309a63b3abb7f108ebb5f、tests/v5-execution-task-load-panel.test.js=790e4b99238cf5a2a60f310f350fa95735628f47。",
+    "check=app-syntax：独立执行 node --check public/app.js，exit 0。",
+    "check=task-load-panel-test：独立执行 node --test tests/v5-execution-task-load-panel.test.js，4/4 通过、0 失败、0 跳过、0 取消。",
+    "check=execution-regression：独立执行 node --test tests/v5-execution.test.js tests/v5-execution-detail-layout.test.js tests/v5-execution-detail-inline-edit.test.js，13/13 通过、0 失败。",
+    "check=full-test：独立执行 npm test，91/91 通过、0 失败、0 跳过、0 取消。",
+    "check=governance-strict：独立执行 powershell -NoProfile -ExecutionPolicy Bypass -File .governance/tools/Test-ProjectGovernance.ps1 -Strict，Errors=0、Warnings=0；未调用任何治理状态 Action。",
+    "check=1280-task-layout：新页面以 1280x720 进入执行中心并切换任务视图，html/body clientWidth=scrollWidth=1265；workspace 带 is-data-view，成员栏与任务卡均高 598px且上下边界一致；任务列表 37 行、滚动区 clientHeight=489/scrollHeight=2171、一次可见 9 行，列头文本为任务/专题与排期、状态、参与成员。",
+    "check=1280-task-scroll-detail：点击第 19 个任务行触发自动滚动和完整重绘后 task list scrollTop=841.33，证明非零位置被保留；has-detail 出现，任务卡仍高 598px，详情卡 x=859.33、宽358.67且页面 clientWidth=scrollWidth，既有详情栏未挤出视口。",
+    "check=1280-load-layout：负载视图中成员栏与负载卡均高 598px；17 行数据的滚动区 clientHeight=508/scrollHeight=905、一次可见 10 行；五列表头文本完整且 position=sticky、top=0px。",
+    "check=1280-load-semantics-and-scroll：17 个负载条均提供相对排期负载 aria-label，抽样宽度与标签一致为 26%、26%、20%、59%、36%；当前数据 9 行存在风险重叠提示；点击较后成员触发重绘后 load scrollTop=396.67、行数仍为17，滚动位置保持。",
+    "check=700-task-and-sidebar：viewport=700x720，html/body clientWidth=scrollWidth=685；任务卡和主栏 x=32..652.67、宽620.67、列表 clientWidth=scrollWidth=604；主内容 order=1、成员栏 order=2并默认 is-collapsed，成员正文 display=none、开关 aria-expanded=false。",
+    "check=700-sidebar-toggle：点击成员筛选开关后正文 display=flex、aria-expanded=true、文本为收起；再次点击恢复 display=none、aria-expanded=false、文本为展开，用户显式选择可覆盖默认折叠。",
+    "check=700-load-min-width：负载容器 clientWidth=scrollWidth=604、overflow-x=hidden；表格 computed display=grid、width=584px、min-width=0px、max-width=none，表格边界完全位于容器内，html/body 仍 clientWidth=scrollWidth=685。",
+    "check=700-detail-compatibility：任务数据卡高度为489.59px，选择任务后详情卡位于主内容和折叠成员栏之后，x=32.67..652.00、宽619.33px且未造成横向溢出；关闭后 workspace 移除 has-detail，详情节点宽高归零不占位，再次选择可正常恢复。",
+    "summary：对 TASK-290 冻结内容完成源码、差异、自动化、Strict 和双视口真实页面全量审核；未发现阻断或非阻断 finding，审核过程中未修改产品/测试/治理状态，也未产生业务写入。"
+  ],
+  "created_at": "2026-08-27T16:14:20Z"
+}

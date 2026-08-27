@@ -1,0 +1,12 @@
+✔ execution task and load views use one adaptive data workspace (1.0085ms)
+✔ task list has stable columns, two-line titles, and preserved scroll (0.8248ms)
+✔ load table keeps statistics and adds a relative visual meter (0.604ms)
+✔ narrow data views put content first and expose a member-filter disclosure (0.8072ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 61.7948
