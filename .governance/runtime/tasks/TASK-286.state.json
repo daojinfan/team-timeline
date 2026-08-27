@@ -5,36 +5,50 @@
   "work_package": "WP-014",
   "contract_sha256": "0ba865d9ddd8f3a1a148b9d788c0efba43dd7aed2bbd7cf669ab905b5f48c789",
   "baseline": "BL-010",
-  "state": "planned",
-  "approval_id": "",
+  "state": "verified",
+  "approval_id": "APR-190",
   "acceptance_subject_sha256": "",
   "acceptance_evidence_sha256": "",
   "acceptance_git_commit": "",
-  "start_git_commit": "",
+  "start_git_commit": "93d2be89e8caf17a30d08a4d1350bdfa66e4a756",
   "execution_lease": "",
   "execution_lease_owner": "",
   "execution_lease_expires_at": "",
-  "preexisting_changes": [
-    ".governance/framework-manifest.json",
-    ".governance/tools/Invoke-AIGovernedTask.ps1",
-    ".governance/tools/Test-ProjectGovernance.ps1",
-    "docs/00-index/BASELINE-REGISTRY.md",
-    "docs/00-index/CURRENT-STATE.md",
-    "docs/00-index/DOC-REGISTRY.md",
-    "docs/04-delivery/WORK-PACKAGES.md",
-    "docs/04-delivery/context/WP-013.context.json",
-    "governance.json",
-    ".governance/baseline-activation.lock",
-    "baselines/BL-010/activation.json",
-    "baselines/BL-010/manifest.json",
-    "docs/00-index/.BASELINE-REGISTRY.md.lock",
-    "docs/04-delivery/context/.context-routes.lock",
-    "docs/04-delivery/context/WP-014.context.json"
+  "preexisting_changes": [],
+  "plan_checkpoint_git_commit": "93d2be89e8caf17a30d08a4d1350bdfa66e4a756",
+  "plan_rebase_history": [
+    {
+      "previous_changes": [
+        ".governance/framework-manifest.json",
+        ".governance/tools/Invoke-AIGovernedTask.ps1",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "docs/00-index/BASELINE-REGISTRY.md",
+        "docs/00-index/CURRENT-STATE.md",
+        "docs/00-index/DOC-REGISTRY.md",
+        "docs/04-delivery/WORK-PACKAGES.md",
+        "docs/04-delivery/context/WP-013.context.json",
+        "governance.json",
+        ".governance/baseline-activation.lock",
+        "baselines/BL-010/activation.json",
+        "baselines/BL-010/manifest.json",
+        "docs/00-index/.BASELINE-REGISTRY.md.lock",
+        "docs/04-delivery/context/.context-routes.lock",
+        "docs/04-delivery/context/WP-014.context.json"
+      ],
+      "checkpoint_git_commit": "93d2be89e8caf17a30d08a4d1350bdfa66e4a756",
+      "rebased_at": "2026-08-27T13:38:22.2913417Z"
+    }
   ],
-  "plan_checkpoint_git_commit": "2a35353eb5755bd0675d60ed4642b7080f9d7b65",
-  "plan_rebase_history": [],
-  "evidence": [],
-  "evidence_history": [],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-286/20260827T134717161Z-417fa373-app-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-286/20260827T134717161Z-417fa373-detail-layout-test.evidence.json",
+    "docs/05-quality/evidence/TASK-286/20260827T134717161Z-417fa373-full-test.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-286/20260827T134717161Z-417fa373-app-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-286/20260827T134717161Z-417fa373-detail-layout-test.evidence.json",
+    "docs/05-quality/evidence/TASK-286/20260827T134717161Z-417fa373-full-test.evidence.json"
+  ],
   "review_history": [],
   "review": {
     "required": true,
@@ -46,5 +60,5 @@
   },
   "last_error": "",
   "created_at": "2026-08-27T13:37:34.3965905Z",
-  "updated_at": "2026-08-27T13:37:41.9928452Z"
+  "updated_at": "2026-08-27T13:47:22.5640906Z"
 }

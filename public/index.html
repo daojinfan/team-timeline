@@ -113,8 +113,11 @@
                 <article class="v5-execution-card"><header class="v5-card-header"><div><span class="v5-eyebrow">成员负载</span><h3>当前筛选范围</h3></div><span class="v5-muted">按成员统计</span></header><div id="v5ExecutionLoad" class="v5-execution-load"></div></article>
               </section>
             </main>
+            <article id="v5ExecutionDetailCard" class="v5-execution-card v5-execution-detail-card" aria-labelledby="v5ExecutionDetailTitle" hidden>
+              <header class="v5-card-header"><div><span class="v5-eyebrow">选中任务</span><h3 id="v5ExecutionDetailTitle">排期详情</h3></div><button class="small-button v5-execution-detail-close" type="button" data-v5-exec-close-detail aria-label="关闭排期详情">×</button></header>
+              <div id="v5ExecutionDetail" class="v5-execution-detail"></div>
+            </article>
           </section>
-          <article class="v5-execution-card v5-execution-detail-card"><header class="v5-card-header"><div><span class="v5-eyebrow">选中任务</span><h3>排期详情</h3></div><button class="small-button" type="button" data-v5-back-editor>编辑任务</button></header><div id="v5ExecutionDetail" class="v5-execution-detail"><div class="v5-empty-state" style="padding:25px 12px"><p>点击任务条或任务列表查看详情。</p></div></div></article>
         </section>
         <section id="v5ResourcesView" class="v5-view" data-v5-panel="resources" role="tabpanel" aria-label="资源维护" hidden>
           <div class="v5-resource-intro"><div><span class="v5-eyebrow">稳定 ID 资源</span><h3>资源维护</h3><p>维护来源小组、测控成员和制冷机。停用只影响新关联，历史任务仍保留当前名称。</p></div><span id="v5ResourceUpdated" class="v5-muted">—</span></div>
