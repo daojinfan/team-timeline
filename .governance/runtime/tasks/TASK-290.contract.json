@@ -1,0 +1,97 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-290",
+  "work_package": "WP-015",
+  "title": "重设计执行中心任务与负载数据工作区",
+  "goal": "把执行中心任务列表和成员负载从固定小高度改为与成员栏对齐的自适应数据工作区；增加任务列头、负载强度与重叠提示、窄屏成员筛选折叠，并在选择和重绘时保持列表滚动位置。",
+  "baseline": "BL-011",
+  "profile": "Standard",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "tests/v5-execution-task-load-panel.test.js"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "tests"
+  ],
+  "write_paths": [
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "tests/v5-execution-task-load-panel.test.js"
+  ],
+  "out_of_scope": [
+    "不修改 V5 API、SQLite schema、服务端和排期业务规则",
+    "不改变任务筛选、状态计算和成员负载统计口径",
+    "不重构任务全量编辑台、资源维护或远程发布"
+  ],
+  "authoritative_documents": [
+    "REQ-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "DEC-005",
+    "CR-009",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-288"
+  ],
+  "acceptance_criteria": [
+    "1280×720 下任务和负载主卡与左侧成员栏等高，任务可见至少 8 行、负载可见至少 10 名成员",
+    "任务视图提供固定列头、任务标题最多两行、状态和成员独立列，内容区独立滚动",
+    "负载视图提供固定表头、任务数、排期天数、重叠提示和基于排期天数的相对负载条",
+    "选择任务或成员导致执行中心重绘时保持任务列表与负载表的滚动位置",
+    "打开右侧排期详情不降低任务/负载主卡高度且不产生页面横向溢出",
+    "700×720 下任务/负载主内容优先显示，成员筛选可折叠，主内容无横向溢出",
+    "不改变接口、数据结构、筛选逻辑、负载统计口径和排期逻辑"
+  ],
+  "validations": [
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "task-load-panel-test",
+      "command": "node",
+      "args": [
+        "--test",
+        "tests/v5-execution-task-load-panel.test.js"
+      ]
+    },
+    {
+      "id": "execution-regression",
+      "command": "node",
+      "args": [
+        "--test",
+        "tests/v5-execution.test.js",
+        "tests/v5-execution-detail-layout.test.js",
+        "tests/v5-execution-detail-inline-edit.test.js"
+      ]
+    },
+    {
+      "id": "full-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "success_criteria",
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-27T15:46:10.3389562Z"
+}
