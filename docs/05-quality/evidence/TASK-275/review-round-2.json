@@ -1,0 +1,41 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-275",
+  "reviewed_task_ids": ["TASK-274"],
+  "work_package": "WP-013",
+  "baseline": "BL-009",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-274",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "第二轮全量复核确认刷新入口先通过 v5ReadPreferences 获取最新版本化配置，再清理并应用编辑台、执行中心默认表达式，最后请求任务数据并重绘。"
+    },
+    {
+      "task_id": "TASK-274",
+      "path": "tests/v5-default-status.test.js",
+      "change_type": "modified",
+      "summary": "第二轮复核确认测试精确约束偏好重读与默认状态应用的执行次序，同时检查刷新按钮仍调用统一刷新入口。"
+    }
+  ],
+  "change_summary": "第二轮重新从 TASK-274 启动提交 355672891f664dee75a092e0a01dcbe5910e2395 检查最终 HEAD a0beb1372c3c828a7afa621a50f4bf0f081cadc2；最终产品差异仍严格为两个 modified 文件，轮次之间产品内容和提交指纹未发生变化。",
+  "scope_checked": [
+    "重新获取并核对启动提交至最终 HEAD 的 name-status；public/app.js 与 tests/v5-default-status.test.js 均为 modified，无新增、删除或重命名遗漏。",
+    "重新检查刷新链路：持久化偏好重读发生在默认表达式应用之前，数据载入发生在筛选恢复之后。",
+    "重新检查临时筛选与持久化边界：普通快捷筛选不写入偏好，顶部刷新以已保存配置覆盖临时值。",
+    "重新检查空配置、编辑台配置和执行中心配置路径，确认清理快捷控件后不会由残留 DOM 值重建旧条件。",
+    "重新确认变更不涉及服务端路由、数据库表、数据迁移、任务更新接口或用户业务数据。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: node --check public/app.js",
+    "PASS: npm test（70/70）",
+    "PASS: TASK-274 Standard Verify 证据齐全且状态保持 verified",
+    "PASS: 最终提交仍为 a0beb1372c3c828a7afa621a50f4bf0f081cadc2，第一、第二轮之间产品代码未变。",
+    "PASS: 页面全量回归覆盖编辑台、执行中心顶部刷新与整页刷新，均恢复各自已保存默认状态。"
+  ],
+  "created_at": "2026-08-27T01:44:41Z"
+}

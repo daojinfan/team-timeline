@@ -1,0 +1,67 @@
+{
+    "$schema":  "schemas/governed-work-state.schema.json",
+    "schema_version":  2,
+    "task_id":  "TASK-273",
+    "work_package":  "WP-013",
+    "contract_sha256":  "23b905edebb848230c833ecfd13a579a168fbb1be164b64f577f1f3db64b780a",
+    "baseline":  "BL-009",
+    "state":  "superseded",
+    "approval_id":  "",
+    "acceptance_subject_sha256":  "",
+    "acceptance_evidence_sha256":  "",
+    "acceptance_git_commit":  "",
+    "start_git_commit":  "355672891f664dee75a092e0a01dcbe5910e2395",
+    "execution_lease":  "",
+    "execution_lease_owner":  "",
+    "execution_lease_expires_at":  "",
+    "preexisting_changes":  [
+
+                            ],
+    "plan_checkpoint_git_commit":  "355672891f664dee75a092e0a01dcbe5910e2395",
+    "plan_rebase_history":  [
+                                {
+                                    "previous_changes":  [
+                                                             "public/app.js",
+                                                             "tests/v5-default-status.test.js"
+                                                         ],
+                                    "checkpoint_git_commit":  "355672891f664dee75a092e0a01dcbe5910e2395",
+                                    "rebased_at":  "2026-08-27T00:50:56.4932854Z"
+                                }
+                            ],
+    "evidence":  [
+                     "docs/05-quality/evidence/TASK-273/20260827T005531526Z-78d44044-required-validation.evidence.json",
+                     "docs/05-quality/evidence/TASK-273/20260827T005531526Z-78d44044-app-syntax.evidence.json",
+                     "docs/05-quality/evidence/TASK-273/20260827T005531526Z-78d44044-governance-strict.evidence.json"
+                 ],
+    "evidence_history":  [
+                             "docs/05-quality/evidence/TASK-273/20260827T005320560Z-da5eb40b-required-validation.evidence.json",
+                             "docs/05-quality/evidence/TASK-273/20260827T005320560Z-da5eb40b-app-syntax.evidence.json",
+                             "docs/05-quality/evidence/TASK-273/20260827T005320560Z-da5eb40b-governance-strict.evidence.json",
+                             "docs/05-quality/evidence/TASK-273/review-round-1.json",
+                             "docs/05-quality/evidence/TASK-273/20260827T005531526Z-78d44044-required-validation.evidence.json",
+                             "docs/05-quality/evidence/TASK-273/20260827T005531526Z-78d44044-app-syntax.evidence.json",
+                             "docs/05-quality/evidence/TASK-273/20260827T005531526Z-78d44044-governance-strict.evidence.json"
+                         ],
+    "review_history":  [
+                           {
+                               "path":  "docs/05-quality/evidence/TASK-273/review-round-1.json",
+                               "sha256":  "3e0ebf9fe54f07bd3f0b37af1fc7896123f2871540ca8d295f6d606aa38a1382",
+                               "result":  "passed",
+                               "round_id":  "RR-97ba93d8b4614aacbaa1c813194aca2f",
+                               "recorded_at":  "2026-08-27T00:54:02.5460889Z"
+                           }
+                       ],
+    "review":  {
+                   "required":  false,
+                   "reviewer_task_id":  "",
+                   "status":  "not-applicable",
+                   "evidence":  [
+
+                                ],
+                   "pass_streak":  0,
+                   "subject_sha256":  ""
+               },
+    "last_error":  "复审任务的实现任务台账绑定已被替换的旧 Reviewer，无法在当前台账结构完成落账；保留复审证据并重新配对。",
+    "created_at":  "2026-08-27T00:50:25.3863014Z",
+    "updated_at":  "2026-08-27T00:57:43.1528950Z"
+}

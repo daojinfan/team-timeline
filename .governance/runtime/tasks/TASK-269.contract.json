@@ -1,0 +1,83 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-269",
+  "work_package": "WP-013",
+  "title": "修复刷新后默认状态未恢复",
+  "goal": "让顶部刷新动作重新应用已保存的编辑台与执行中心默认状态，再同步数据；保留临时筛选不覆盖默认偏好，并增加回归测试。",
+  "baseline": "BL-009",
+  "profile": "Standard",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/app.js",
+    "tests"
+  ],
+  "read_paths": [
+    "public/app.js",
+    "tests",
+    "docs/02-product/requirements-v5.md",
+    "docs/03-architecture/components/v5-detailed-design.md",
+    "docs/07-decisions/DEC-005.md",
+    "docs/08-changes/CR-009.md"
+  ],
+  "write_paths": [
+    "public/app.js",
+    "tests"
+  ],
+  "out_of_scope": [],
+  "authoritative_documents": [
+    "REQ-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "DEC-005",
+    "CR-009",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-267"
+  ],
+  "acceptance_criteria": [
+    "顶部刷新重新应用两视图已保存的默认状态集合",
+    "刷新不会修改默认偏好，也不改变任务数据与 API",
+    "npm test、node --check public/app.js 与治理校验通过"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "governance-standard",
+      "command": "powershell",
+      "args": [
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-Level",
+        "Standard"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-08-26T23:42:58.7747911Z",
+  "repair_of": [
+    "TASK-267"
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-273",
+  "reviewed_task_ids": ["TASK-271"],
+  "work_package": "WP-013",
+  "baseline": "BL-009",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-271",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "复核默认状态应用前清理快捷筛选控件、顶部刷新重新应用两视图默认表达式并同步数据，确保空默认集合也不会被旧临时筛选重新带回。"
+    },
+    {
+      "task_id": "TASK-271",
+      "path": "tests/v5-default-status.test.js",
+      "change_type": "modified",
+      "summary": "复核新增刷新回归静态断言，覆盖刷新入口、默认应用和快捷筛选控件清理逻辑。"
+    }
+  ],
+  "change_summary": "已从 TASK-271 启动提交核对最终差异，实际变更仅限 public/app.js 与 tests/v5-default-status.test.js；刷新会清除临时筛选并恢复已保存的编辑台和执行中心默认状态，未触及任务数据、数据库或 API。",
+  "scope_checked": [
+    "核对 TASK-271 从启动提交到当前 HEAD 的 Git 变更清单与变更类型，和 evidence changes 完全一致。",
+    "检查 v5ClearFilterQuickInputs 与 v5ApplyConfiguredDefaultFilters 的调用顺序，确认非空默认状态和空默认状态都能覆盖旧临时筛选。",
+    "检查 v5RefreshWorkspace 仅在顶部刷新动作中重置默认筛选后调用 v5LoadAll，保存偏好与视图切换边界保持清晰。",
+    "确认实现仍使用浏览器版本化偏好，不改变 SQLite schema、V5 API、任务事实或其他模块。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: node --check public/app.js",
+    "PASS: npm test（70/70）",
+    "PASS: Test-ProjectGovernance.ps1 -Level Strict（0 错误、0 警告）",
+    "PASS: 浏览器回归：编辑台和执行中心临时状态筛选后点击顶部刷新，分别恢复各自配置的默认状态；空默认集合恢复全部状态。"
+  ],
+  "created_at": "2026-08-27T00:50:00Z"
+}

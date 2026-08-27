@@ -1,0 +1,46 @@
+{
+    "$schema":  "schemas/governed-work-state.schema.json",
+    "schema_version":  2,
+    "task_id":  "TASK-272",
+    "work_package":  "WP-013",
+    "contract_sha256":  "73c06873852ef2d2dc12176c29b47c3163c1d97b7bc10d01d4d316ae81959b81",
+    "baseline":  "BL-009",
+    "state":  "superseded",
+    "approval_id":  "",
+    "acceptance_subject_sha256":  "",
+    "acceptance_evidence_sha256":  "",
+    "acceptance_git_commit":  "",
+    "start_git_commit":  "",
+    "execution_lease":  "",
+    "execution_lease_owner":  "",
+    "execution_lease_expires_at":  "",
+    "preexisting_changes":  [
+
+                            ],
+    "plan_checkpoint_git_commit":  "463213703fb5d052993ea879574073dcadcccc1a",
+    "plan_rebase_history":  [
+
+                            ],
+    "evidence":  [
+
+                 ],
+    "evidence_history":  [
+
+                         ],
+    "review_history":  [
+
+                       ],
+    "review":  {
+                   "required":  false,
+                   "reviewer_task_id":  "",
+                   "status":  "not-applicable",
+                   "evidence":  [
+
+                                ],
+                   "pass_streak":  0,
+                   "subject_sha256":  ""
+               },
+    "last_error":  "复审任务在实现变更前规划，启动门检测到实现代码为规划后变更；改为在实现验证完成后重新规划复审。",
+    "created_at":  "2026-08-27T00:44:55.8690870Z",
+    "updated_at":  "2026-08-27T00:50:13.9253390Z"
+}

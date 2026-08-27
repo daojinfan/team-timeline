@@ -1,0 +1,39 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-275",
+  "reviewed_task_ids": ["TASK-274"],
+  "work_package": "WP-013",
+  "baseline": "BL-009",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-274",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "顶部刷新在重新应用编辑台和执行中心默认筛选前重新读取版本化偏好，确保同页临时筛选或其他标签页刚保存的配置都以最新持久化值为准。"
+    },
+    {
+      "task_id": "TASK-274",
+      "path": "tests/v5-default-status.test.js",
+      "change_type": "modified",
+      "summary": "刷新回归断言新增偏好重读检查，并保留默认筛选应用、数据刷新和刷新按钮绑定覆盖。"
+    }
+  ],
+  "change_summary": "已从 TASK-274 启动提交 355672891f664dee75a092e0a01dcbe5910e2395 核对到最终提交 a0beb1372c3c828a7afa621a50f4bf0f081cadc2；实际变更仅为 public/app.js 与 tests/v5-default-status.test.js 的修改，未触及数据库、API 或任务事实。",
+  "scope_checked": [
+    "核对 TASK-274 启动提交到当前 HEAD 的 Git 变更清单与变更类型，和 changes 清单完全一致。",
+    "检查 v5RefreshWorkspace 的顺序为读取最新偏好、应用两视图默认筛选、再同步 V5 数据。",
+    "确认 v5ApplyConfiguredDefaultFilters 仍会先清理快捷筛选控件，空默认集合不会被旧临时筛选重新构造。",
+    "确认实现仍只使用版本化浏览器偏好，不改变 SQLite schema、V5 API 或默认状态配置界面。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: node --check public/app.js",
+    "PASS: npm test（70/70）",
+    "PASS: TASK-274 Standard Verify（required validation、app syntax、governance strict 均已生成证据）",
+    "PASS: 浏览器回归：编辑台临时切换为正在测试后顶部刷新恢复已完成；执行中心临时切换为正在测试后恢复等待样品；整页刷新重新读取已保存默认状态。"
+  ],
+  "created_at": "2026-08-27T01:42:52Z"
+}

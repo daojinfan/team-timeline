@@ -1,0 +1,50 @@
+{
+    "$schema":  "schemas/governed-work-state.schema.json",
+    "schema_version":  2,
+    "task_id":  "TASK-271",
+    "work_package":  "WP-013",
+    "contract_sha256":  "5c5bae4073592c82c739d73c8ae2abd8a89fedecbbee72db04a770ae8131b2af",
+    "baseline":  "BL-009",
+    "state":  "superseded",
+    "approval_id":  "APR-177",
+    "acceptance_subject_sha256":  "",
+    "acceptance_evidence_sha256":  "",
+    "acceptance_git_commit":  "",
+    "start_git_commit":  "463213703fb5d052993ea879574073dcadcccc1a",
+    "execution_lease":  "",
+    "execution_lease_owner":  "",
+    "execution_lease_expires_at":  "",
+    "preexisting_changes":  [
+
+                            ],
+    "plan_checkpoint_git_commit":  "463213703fb5d052993ea879574073dcadcccc1a",
+    "plan_rebase_history":  [
+
+                            ],
+    "evidence":  [
+                     "docs/05-quality/evidence/TASK-271/20260827T004916792Z-c34e98d3-required-validation.evidence.json",
+                     "docs/05-quality/evidence/TASK-271/20260827T004916792Z-c34e98d3-app-syntax.evidence.json",
+                     "docs/05-quality/evidence/TASK-271/20260827T004916792Z-c34e98d3-governance-strict.evidence.json"
+                 ],
+    "evidence_history":  [
+                             "docs/05-quality/evidence/TASK-271/20260827T004916792Z-c34e98d3-required-validation.evidence.json",
+                             "docs/05-quality/evidence/TASK-271/20260827T004916792Z-c34e98d3-app-syntax.evidence.json",
+                             "docs/05-quality/evidence/TASK-271/20260827T004916792Z-c34e98d3-governance-strict.evidence.json"
+                         ],
+    "review_history":  [
+
+                       ],
+    "review":  {
+                   "required":  true,
+                   "reviewer_task_id":  "TASK-273",
+                   "status":  "pending",
+                   "evidence":  [
+
+                                ],
+                   "pass_streak":  1,
+                   "subject_sha256":  "3055d92452e553b598fa51eb2573d45e942181dc77e9455eaa2f50a5c799ec02"
+               },
+    "last_error":  "原实现任务的 Reviewer 绑定在规划时误指向已替换任务，导致复审无法落账；保留实现与复审证据并重新建立最终配对。",
+    "created_at":  "2026-08-27T00:44:43.2750447Z",
+    "updated_at":  "2026-08-27T00:57:43.7615662Z"
+}

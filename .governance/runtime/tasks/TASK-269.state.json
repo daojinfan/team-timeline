@@ -1,0 +1,50 @@
+{
+    "$schema":  "schemas/governed-work-state.schema.json",
+    "schema_version":  2,
+    "task_id":  "TASK-269",
+    "work_package":  "WP-013",
+    "contract_sha256":  "891583f3111db59c3e93ab1ee12b35a0b468d24693188b3249456ba8fd072bd1",
+    "baseline":  "BL-009",
+    "state":  "superseded",
+    "approval_id":  "APR-176",
+    "acceptance_subject_sha256":  "",
+    "acceptance_evidence_sha256":  "",
+    "acceptance_git_commit":  "",
+    "start_git_commit":  "463213703fb5d052993ea879574073dcadcccc1a",
+    "execution_lease":  "",
+    "execution_lease_owner":  "",
+    "execution_lease_expires_at":  "",
+    "preexisting_changes":  [
+
+                            ],
+    "plan_checkpoint_git_commit":  "463213703fb5d052993ea879574073dcadcccc1a",
+    "plan_rebase_history":  [
+
+                            ],
+    "evidence":  [
+                     "docs/05-quality/evidence/TASK-269/20260827T004038226Z-df55398d-required-validation.evidence.json",
+                     "docs/05-quality/evidence/TASK-269/20260827T004038226Z-df55398d-app-syntax.evidence.json",
+                     "docs/05-quality/evidence/TASK-269/20260827T004038226Z-df55398d-governance-standard.evidence.json"
+                 ],
+    "evidence_history":  [
+                             "docs/05-quality/evidence/TASK-269/20260827T004038226Z-df55398d-required-validation.evidence.json",
+                             "docs/05-quality/evidence/TASK-269/20260827T004038226Z-df55398d-app-syntax.evidence.json",
+                             "docs/05-quality/evidence/TASK-269/20260827T004038226Z-df55398d-governance-standard.evidence.json"
+                         ],
+    "review_history":  [
+
+                       ],
+    "review":  {
+                   "required":  true,
+                   "reviewer_task_id":  "TASK-270",
+                   "status":  "pending",
+                   "evidence":  [
+
+                                ],
+                   "pass_streak":  0,
+                   "subject_sha256":  ""
+               },
+    "last_error":  "规划时误将治理校验参数写为不支持的 Standard，无法形成可验证的执行契约；保留失败证据并重建正确校验契约。",
+    "created_at":  "2026-08-26T23:42:58.7747911Z",
+    "updated_at":  "2026-08-27T00:44:21.8764481Z"
+}

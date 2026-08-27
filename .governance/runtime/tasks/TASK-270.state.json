@@ -1,0 +1,46 @@
+{
+    "$schema":  "schemas/governed-work-state.schema.json",
+    "schema_version":  2,
+    "task_id":  "TASK-270",
+    "work_package":  "WP-013",
+    "contract_sha256":  "ebe883c82c9ab1b35bab849bc93faa37fdc3b7813c7eae4243725f638e66c4ed",
+    "baseline":  "BL-009",
+    "state":  "superseded",
+    "approval_id":  "",
+    "acceptance_subject_sha256":  "",
+    "acceptance_evidence_sha256":  "",
+    "acceptance_git_commit":  "",
+    "start_git_commit":  "",
+    "execution_lease":  "",
+    "execution_lease_owner":  "",
+    "execution_lease_expires_at":  "",
+    "preexisting_changes":  [
+
+                            ],
+    "plan_checkpoint_git_commit":  "463213703fb5d052993ea879574073dcadcccc1a",
+    "plan_rebase_history":  [
+
+                            ],
+    "evidence":  [
+
+                 ],
+    "evidence_history":  [
+
+                         ],
+    "review_history":  [
+
+                       ],
+    "review":  {
+                   "required":  false,
+                   "reviewer_task_id":  "",
+                   "status":  "not-applicable",
+                   "evidence":  [
+
+                                ],
+                   "pass_streak":  0,
+                   "subject_sha256":  ""
+               },
+    "last_error":  "对应的实现任务 TASK-269 因校验契约错误被替换，当前复审任务不再具备有效依赖。",
+    "created_at":  "2026-08-26T23:43:10.5276873Z",
+    "updated_at":  "2026-08-27T00:44:29.6121051Z"
+}

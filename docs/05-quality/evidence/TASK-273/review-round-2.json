@@ -1,0 +1,39 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-273",
+  "reviewed_task_ids": ["TASK-271"],
+  "work_package": "WP-013",
+  "baseline": "BL-009",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-271",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "第二轮重新核对默认状态应用前清理快捷筛选控件、顶部刷新重新应用两视图默认表达式并同步数据，确认空默认集合不会恢复旧临时筛选。"
+    },
+    {
+      "task_id": "TASK-271",
+      "path": "tests/v5-default-status.test.js",
+      "change_type": "modified",
+      "summary": "第二轮重新核对刷新回归静态断言，确认刷新入口、默认应用和快捷筛选控件清理逻辑仍被覆盖。"
+    }
+  ],
+  "change_summary": "第二轮从同一最终内容重新检查 TASK-271 的完整产品差异；变更清单、变更类型和内容指纹与第一轮一致，未发现新增问题。",
+  "scope_checked": [
+    "重新核对 TASK-271 启动提交到当前 HEAD 的 Git 变更清单，确认仅包含 public/app.js 和 tests/v5-default-status.test.js。",
+    "重新检查空集合与多状态集合的默认表达式、快捷输入清理和顶部刷新调用顺序。",
+    "重新检查默认偏好仍通过版本化浏览器存储读取，临时筛选不写回偏好，任务数据、数据库和 API 未变化。",
+    "确认第二轮复核前后最终内容未发生变化，变更指纹与第一轮相同。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "PASS: node --check public/app.js",
+    "PASS: npm test（70/70）",
+    "PASS: Test-ProjectGovernance.ps1 -Level Strict（0 错误、0 警告）",
+    "PASS: 第二轮浏览器回归：编辑台和执行中心点击顶部刷新均恢复各自默认状态，空默认集合恢复全部状态。"
+  ],
+  "created_at": "2026-08-27T00:58:00Z"
+}

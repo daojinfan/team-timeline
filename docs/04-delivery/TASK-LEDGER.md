@@ -36,8 +36,15 @@ review_policy: independent-required
 
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| WP-013 | TASK-268 | pending | REVIEWER | 独立复审 V5 默认状态配置 | BL-009 | pending | TASK-267 | completed | docs/05-quality/evidence/TASK-268 | npm-test, app-syntax | n/a | n/a | n/a | Plan 自动登记，等待调度 |
-| WP-013 | TASK-267 | pending | IMPLEMENTER | 实现 V5 工作区默认状态配置 | BL-009 | pending | n/a | completed | public/index.html, public/app.js, tests | npm-test, app-syntax | TASK-268 | passed | docs/05-quality/evidence/TASK-268/review-round-2.json | Plan 自动登记，等待调度 |
+| WP-013 | TASK-275 | pending | REVIEWER | 复审刷新默认状态读取与恢复（最终） | BL-009 | pending | TASK-274 | completed | docs/05-quality/evidence/TASK-275 | required-validation, app-syntax, governance-strict | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-013 | TASK-274 | pending | IMPLEMENTER | 修复刷新默认状态读取与恢复（最终重规划） | BL-009 | pending | TASK-267 | completed | public/app.js, tests | required-validation, app-syntax, governance-strict | TASK-275 | passed | docs/05-quality/evidence/TASK-275/review-round-2.json | Plan 自动登记，等待调度 |
+| WP-013 | TASK-273 | pending | REVIEWER | 复审刷新默认状态修复（最终） | BL-009 | pending | TASK-271 | replaced | docs/05-quality/evidence/TASK-273 | required-validation, app-syntax, governance-strict | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-013 | TASK-272 | pending | REVIEWER | 复审刷新默认状态修复（重规划） | BL-009 | pending | TASK-271 | replaced | docs/05-quality/evidence/TASK-272 | required-validation, app-syntax, governance-strict | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-013 | TASK-271 | pending | IMPLEMENTER | 修复刷新后默认状态未恢复（重规划） | BL-009 | pending | TASK-267 | replaced | public/app.js, tests | required-validation, app-syntax, governance-strict | TASK-272 | pending |  | Plan 自动登记，等待调度 |
+| WP-013 | TASK-270 | pending | REVIEWER | 复审刷新默认状态修复 | BL-009 | pending | TASK-269 | replaced | docs/05-quality/evidence/TASK-270 | required-validation, app-syntax, governance-standard | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-013 | TASK-269 | pending | IMPLEMENTER | 修复刷新后默认状态未恢复 | BL-009 | pending | TASK-267 | replaced | public/app.js, tests | required-validation, app-syntax, governance-standard | TASK-270 | pending | pending | Plan 自动登记，等待调度 |
+| WP-013 | TASK-268 | pending | REVIEWER | 独立复审 V5 默认状态配置 | BL-009 | pending | TASK-267 | running | docs/05-quality/evidence/TASK-268 | npm-test, app-syntax | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-013 | TASK-267 | pending | IMPLEMENTER | 实现 V5 工作区默认状态配置 | BL-009 | pending | n/a | running | public/index.html, public/app.js, tests | npm-test, app-syntax | TASK-268 | changes-required |  | Plan 自动登记，等待调度 |
 | WP-012 | TASK-266 | pending | REVIEWER | 独立复审 V5 全量编辑参与成员单行布局 | BL-008 | pending | TASK-265 | replaced | docs/05-quality/evidence/TASK-266 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-012 | TASK-265 | pending | IMPLEMENTER | 修正 V5 全量编辑参与成员单行布局 | BL-008 | pending | TASK-263 | replaced | public/app.js, tests | required-validation | TASK-266 | cancelled | docs/05-quality/evidence/TASK-266/review-cancelled-bl009-migration-20260827.json | BL-008 历史交付由已批准的 BL-009 替代；保留原审核证据 |
 | WP-012 | TASK-264 | pending | REVIEWER | 独立复审 V5 两处成员时间同步入口 | BL-008 | pending | TASK-263 | replaced | docs/05-quality/evidence/TASK-264 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |

@@ -1,0 +1,75 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-270",
+  "work_package": "WP-013",
+  "title": "复审刷新默认状态修复",
+  "goal": "独立检查刷新动作是否重新应用两视图默认状态、是否保持偏好与数据边界，并核对回归证据。",
+  "baseline": "BL-009",
+  "profile": "Standard",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-270"
+  ],
+  "read_paths": [
+    "public/app.js",
+    "tests",
+    "docs/02-product/requirements-v5.md",
+    "docs/03-architecture/components/v5-detailed-design.md",
+    "docs/07-decisions/DEC-005.md",
+    "docs/08-changes/CR-009.md"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-270"
+  ],
+  "out_of_scope": [],
+  "authoritative_documents": [
+    "REQ-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "DEC-005",
+    "CR-009",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-269"
+  ],
+  "acceptance_criteria": [
+    "复审清单逐项覆盖本次刷新默认状态修复的实际变更",
+    "验证命令与证据完整且结论与最终内容指纹一致"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "governance-standard",
+      "command": "powershell",
+      "args": [
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-Level",
+        "Standard"
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-26T23:43:10.5276873Z"
+}

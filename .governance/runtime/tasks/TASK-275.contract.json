@@ -1,0 +1,75 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-275",
+  "work_package": "WP-013",
+  "title": "复审刷新默认状态读取与恢复（最终）",
+  "goal": "独立复核刷新是否重新读取并应用两视图默认状态、是否清理临时筛选并保持数据与接口边界。",
+  "baseline": "BL-009",
+  "profile": "Standard",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-275"
+  ],
+  "read_paths": [
+    "public/app.js",
+    "tests",
+    "docs/02-product/requirements-v5.md",
+    "docs/03-architecture/components/v5-detailed-design.md",
+    "docs/07-decisions/DEC-005.md",
+    "docs/08-changes/CR-009.md"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-275"
+  ],
+  "out_of_scope": [],
+  "authoritative_documents": [
+    "REQ-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "DEC-005",
+    "CR-009",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-274"
+  ],
+  "acceptance_criteria": [
+    "复审清单覆盖最终刷新修复的所有实际变更",
+    "验证命令、浏览器证据和变更清单完整且与最终内容一致"
+  ],
+  "validations": [
+    {
+      "id": "required-validation",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "governance-strict",
+      "command": "powershell",
+      "args": [
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-Level",
+        "Strict"
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-08-27T00:58:27.5970367Z"
+}

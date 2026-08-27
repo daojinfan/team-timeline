@@ -1,42 +1,48 @@
 {
-  "$schema": "schemas/governed-work-state.schema.json",
-  "schema_version": 2,
-  "task_id": "TASK-267",
-  "work_package": "WP-013",
-  "contract_sha256": "c889078217265c70f40575740ad607140eb0b8de1d2a75740cc70f6e6e06d43d",
-  "baseline": "BL-009",
-  "state": "accepted",
-  "approval_id": "APR-175",
-  "acceptance_subject_sha256": "9c8411d3751cecf91f5976142f6ddcd3bfa64f63bf34961b787ca432cbfec172",
-  "acceptance_evidence_sha256": "315d3aa2142997e93b3592da16dbd8bc57e55e0edf6db0992c66754630721e28",
-  "acceptance_git_commit": "052e027cae8672973c83dc998d74c677ffaca854",
-  "start_git_commit": "b40b1f7f164438281353c47039c133698cdcd2cc",
-  "execution_lease": "",
-  "execution_lease_owner": "",
-  "execution_lease_expires_at": "",
-  "preexisting_changes": [],
-  "plan_checkpoint_git_commit": "f0fb4660b79d5755efd2df370456b7ae3952577a",
-  "plan_rebase_history": [],
-  "evidence": [
-    "docs/05-quality/evidence/TASK-267/20260826T165552688Z-9da4038a-npm-test.evidence.json",
-    "docs/05-quality/evidence/TASK-267/20260826T165552688Z-9da4038a-app-syntax.evidence.json"
-  ],
-  "evidence_history": [
-    "docs/05-quality/evidence/TASK-267/20260826T165552688Z-9da4038a-npm-test.evidence.json",
-    "docs/05-quality/evidence/TASK-267/20260826T165552688Z-9da4038a-app-syntax.evidence.json"
-  ],
-  "review_history": [],
-  "review": {
-    "required": true,
-    "reviewer_task_id": "TASK-268",
-    "status": "passed",
-    "evidence": [
-      "docs/05-quality/evidence/TASK-268/review-round-2.json"
-    ],
-    "pass_streak": 2,
-    "subject_sha256": "9c8411d3751cecf91f5976142f6ddcd3bfa64f63bf34961b787ca432cbfec172"
-  },
-  "last_error": "",
-  "created_at": "2026-08-26T16:45:23.2514521Z",
-  "updated_at": "2026-08-26T17:13:43.8350579Z"
+    "$schema":  "schemas/governed-work-state.schema.json",
+    "schema_version":  2,
+    "task_id":  "TASK-267",
+    "work_package":  "WP-013",
+    "contract_sha256":  "c889078217265c70f40575740ad607140eb0b8de1d2a75740cc70f6e6e06d43d",
+    "baseline":  "BL-009",
+    "state":  "verified",
+    "approval_id":  "",
+    "acceptance_subject_sha256":  "",
+    "acceptance_evidence_sha256":  "",
+    "acceptance_git_commit":  "",
+    "start_git_commit":  "b40b1f7f164438281353c47039c133698cdcd2cc",
+    "execution_lease":  "",
+    "execution_lease_owner":  "",
+    "execution_lease_expires_at":  "",
+    "preexisting_changes":  [
+
+                            ],
+    "plan_checkpoint_git_commit":  "f0fb4660b79d5755efd2df370456b7ae3952577a",
+    "plan_rebase_history":  [
+
+                            ],
+    "evidence":  [
+                     "docs/05-quality/evidence/TASK-267/20260826T165552688Z-9da4038a-npm-test.evidence.json",
+                     "docs/05-quality/evidence/TASK-267/20260826T165552688Z-9da4038a-app-syntax.evidence.json"
+                 ],
+    "evidence_history":  [
+                             "docs/05-quality/evidence/TASK-267/20260826T165552688Z-9da4038a-npm-test.evidence.json",
+                             "docs/05-quality/evidence/TASK-267/20260826T165552688Z-9da4038a-app-syntax.evidence.json"
+                         ],
+    "review_history":  [
+
+                       ],
+    "review":  {
+                   "required":  true,
+                   "reviewer_task_id":  "TASK-268",
+                   "status":  "changes-required",
+                   "evidence":  [
+
+                                ],
+                   "pass_streak":  0,
+                   "subject_sha256":  ""
+               },
+    "last_error":  "Acceptance reopened: 用户反馈顶部刷新后未回到已配置的默认状态，需要修复刷新流程并补充回归测试。",
+    "created_at":  "2026-08-26T16:45:23.2514521Z",
+    "updated_at":  "2026-08-26T23:41:14.0410703Z"
 }
