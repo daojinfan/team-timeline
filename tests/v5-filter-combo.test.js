@@ -150,6 +150,21 @@ test("V5 editor projection cannot regress to an out-of-scope task reference", ()
   assert.doesNotMatch(source, /legacyStatusMatcher/);
 });
 
+test("V5 editor hides topic groups without matching tasks only while filters are active", () => {
+  const start = app.indexOf("function v5RenderTree()");
+  const end = app.indexOf("function v5InlineTestItemMarkup", start);
+  const tree = start >= 0 && end > start ? app.slice(start, end) : "";
+  assert.ok(tree, "V5 tree renderer should exist");
+  assert.match(tree, /const filterActive = v5FilterExpressionHasValue\(expression\)/);
+  assert.match(tree, /const visibleTopicRows = filterActive \? topicRows\.filter\(\(row\) => row\.tasks\.length\) : topicRows/);
+  assert.match(tree, /const visibleTaskCount = visibleTopicRows\.reduce/);
+  assert.match(tree, /\$\("#v5TreeCount"\)\.textContent = `\$\{visibleTaskCount\} 个任务 · \$\{visibleTopicRows\.length\} 个专题`/);
+  assert.match(tree, /<h3>没有匹配任务<\/h3>/);
+  assert.match(tree, /data-v5-clear-editor-filters/);
+  assert.doesNotMatch(tree, /没有符合当前筛选的任务/);
+  assert.match(app, /if \(action\("\[data-v5-clear-editor-filters\]"\)\) return v5ResetFilterSurface\("editor"\)/);
+});
+
 test("V5 filter styling keeps builder groups readable on narrow screens", () => {
   for (const selector of [".v5-filter-dialog", ".v5-filter-group", ".v5-filter-condition", ".v5-filter-group-connector", ".v5-filter-builder-actions"]) {
     assert.match(styles, new RegExp(selector.replace(/[.]/g, "\\.")));
