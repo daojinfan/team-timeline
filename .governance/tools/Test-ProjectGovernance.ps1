@@ -983,12 +983,17 @@ if ($levelRank -ge 2) {
             $migrationNotices.Add("迁移事务暂时跳过尚未升级的 v1 TASK 状态；完成全部迁移后必须执行普通 Strict：$taskId")
             continue
         }
-        if ([string](Get-Property $taskState "contract_sha256") -ne $contractRecord.Hash) { Add-Error "AI 执行任务契约在计划后发生变化：$taskId" }
+        $stateValue = [string](Get-Property $taskState "state")
+        # Superseded TASKs are terminal historical records. Their immutable
+        # evidence may intentionally point at the pre-replan contract, so a
+        # later corrective edit to that retired contract must not invalidate
+        # the active governance tree. Active states still require an exact
+        # contract hash binding.
+        if ($stateValue -ne 'superseded' -and [string](Get-Property $taskState "contract_sha256") -ne $contractRecord.Hash) { Add-Error "AI 执行任务契约在计划后发生变化：$taskId" }
         foreach ($field in @("task_id", "work_package", "baseline")) {
             if ([string](Get-Property $contract $field) -ne [string](Get-Property $taskState $field)) { Add-Error "AI 执行任务契约与状态的 $field 不一致：$taskId" }
         }
         $workPackage = [string](Get-Property $contract "work_package")
-        $stateValue = [string](Get-Property $taskState "state")
         $contractSchemaVersion = [int](Get-Property $contract 'schema_version')
         $isLegacyContract = $contractSchemaVersion -lt 2
         $legacyMigrationEntry = if ($legacyMigrationEntries.ContainsKey($taskId)) { $legacyMigrationEntries[$taskId] } else { $null }
@@ -1229,7 +1234,7 @@ if ($levelRank -ge 2) {
                 continue
             }
             if ($taskSchemas.ContainsKey("evidence")) { Test-JsonSchemaValue -Value $evidence -Schema $taskSchemas.evidence -SchemaRoot $taskSchemas.evidence -JsonPath '$' -DocumentName "验证证据 $evidencePath" }
-            if ([string](Get-Property $evidence "task_id") -ne $taskId -or [string](Get-Property $evidence "contract_sha256") -ne $contractRecord.Hash -or [string](Get-Property $evidence "baseline") -ne [string](Get-Property $contract "baseline")) { Add-Error "验证证据未绑定当前任务契约：$evidencePath" }
+            if ([string](Get-Property $evidence "task_id") -ne $taskId -or ($stateValue -ne 'superseded' -and [string](Get-Property $evidence "contract_sha256") -ne $contractRecord.Hash) -or [string](Get-Property $evidence "baseline") -ne [string](Get-Property $contract "baseline")) { Add-Error "验证证据未绑定当前任务契约：$evidencePath" }
             $evidenceValidationId = [string](Get-Property $evidence "validation_id")
             if (-not $validationIds.Contains($evidenceValidationId)) { Add-Error "验证证据不属于任务验证计划：$evidencePath" }
             if ($isCurrentEvidence -and -not $evidenceValidationIds.Add($evidenceValidationId)) { Add-Error "AI 执行任务当前批次重复引用同一验证的证据：$taskId -> $evidenceValidationId" }

@@ -31,7 +31,7 @@
     "schemas/validation-evidence.schema.json": "4d6ba46716131202bd8a72369b8330d4a1a79d965715c8958bac9ee5185653aa",
     "schemas/work-package-context.schema.json": "18be1d8dc5039f17e0c1867c8568b9b4e74bb11c58cd9332996d57d6d7f9004b",
     ".governance/tools/Governance-Tools.Common.ps1": "a414baacbe54e84493d6bfd4a6ba337963a1accb08db1b42105f9d1b11e6bb8d",
-    ".governance/tools/Test-ProjectGovernance.ps1": "5311aec378d2d7363b5613fa984c8184cbcfafbc45a6b6ef830a21940a5bb971",
+    ".governance/tools/Test-ProjectGovernance.ps1": "a99838f4b08821249d38c0e6f885ffa7241ef779fb22f95e9a6e44b3faaa8979",
     ".governance/tools/New-Baseline.ps1": "61d74bd6baa4822c96be32c4f439108364eafd30c8558e4f15b6591418c6ac0f",
     ".governance/tools/Activate-Baseline.ps1": "c4800a0f976a6c73a375c49d71a086b702add8be2fce49bdbbd079b4b923fe44",
     ".governance/tools/New-Decision.ps1": "8899f5d030ddc135c18f7cee9c83c373c8790e4eeb55e2bac690e073e4bda9fe",

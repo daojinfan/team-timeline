@@ -201,7 +201,7 @@
       "path": "docs/07-decisions/DEC-005.md",
       "version": "1.0",
       "status": "proposed",
-      "sha256": "cba94b7323b4f1b6be1b99bc27b89fc3a9fd6316d2ed823083da0412bd7cd157"
+      "sha256": "b66c6c1b45c3ac00663781aef6b05a877de878b949c5550044d4e9987678c6b1"
     }
   ],
   "operational_documents": [
@@ -274,13 +274,13 @@
       "work_package": "WP-013",
       "baseline": "BL-011",
       "path": "docs/04-delivery/context/WP-013.context.json",
-      "sha256": "9e0ebe8d977f858d7526ded9e015438f4cd816a9d3c2b58f6b585d60fd3736f8"
+      "sha256": "00af6bd06ac5e7ccafc3c836698566c7663db6cc1be0fdbeee8be21d3ae35af3"
     },
     {
       "work_package": "WP-015",
       "baseline": "BL-011",
       "path": "docs/04-delivery/context/WP-015.context.json",
-      "sha256": "e46670dd400da02842b6b07b82cf95fbb4cf77e5cb793d4e3c2eeba50adb153c"
+      "sha256": "4fe582de11ffa1bf0bc0426e80e0da7513d457d244188d49545b2bb2ffe6c39a"
     }
   ]
 }
