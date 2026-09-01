@@ -3397,11 +3397,11 @@ button.v3-task-card:disabled small {
 .v5-task-meta { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 1.35; }
 .v5-task-status { display: flex; min-width: 0; align-items: center; }
 .v5-status-chip { display: inline-flex; align-items: center; justify-content: center; width: max-content; max-width: 100%; padding: 3px 7px; border-radius: 999px; font-size: 11px; font-weight: 800; white-space: nowrap; }
-.v5-status-chip.status-waiting { color: var(--v5-waiting-fg); background: var(--v5-waiting-bg); }
-.v5-status-chip.status-sample-delayed { color: var(--v5-sample-delayed-fg); background: var(--v5-sample-delayed-bg); }
-.v5-status-chip.status-testing { color: var(--v5-testing-fg); background: var(--v5-testing-bg); }
-.v5-status-chip.status-test-delayed { color: var(--v5-test-delayed-fg); background: var(--v5-test-delayed-bg); }
-.v5-status-chip.status-completed { color: var(--v5-completed-fg); background: var(--v5-completed-bg); }
+.v5-status-chip.status-waiting, .v5-execution-status-count.status-waiting { color: var(--v5-waiting-fg); background: var(--v5-waiting-bg); }
+.v5-status-chip.status-sample-delayed, .v5-execution-status-count.status-sample-delayed { color: var(--v5-sample-delayed-fg); background: var(--v5-sample-delayed-bg); }
+.v5-status-chip.status-testing, .v5-execution-status-count.status-testing { color: var(--v5-testing-fg); background: var(--v5-testing-bg); }
+.v5-status-chip.status-test-delayed, .v5-execution-status-count.status-test-delayed { color: var(--v5-test-delayed-fg); background: var(--v5-test-delayed-bg); }
+.v5-status-chip.status-completed, .v5-execution-status-count.status-completed { color: var(--v5-completed-fg); background: var(--v5-completed-bg); }
 .v5-notice { min-height: 0; padding: 0 17px; color: var(--muted); font-size: 12px; }
 .v5-notice:not(:empty) { padding-top: 9px; padding-bottom: 2px; }
 .v5-empty-state { display: grid; justify-items: center; gap: 8px; padding: 42px 20px; color: var(--muted); text-align: center; }
@@ -3566,8 +3566,8 @@ button.v3-task-card:disabled small {
 .v5-execution-range-label { padding: 8px 16px 0; color: var(--muted); font-size: 11px; }
 .v5-execution-gantt { min-width: 0; padding: 8px 0 12px; }
 .v5-execution-gantt-scroll { width: 100%; overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; }
-.v5-execution-gantt-canvas { min-width: calc(var(--v5-exec-track-width) + 190px); }
-.v5-execution-gantt-header, .v5-execution-gantt-row { display: grid; grid-template-columns: 190px var(--v5-exec-track-width); min-width: 0; }
+.v5-execution-gantt-canvas { min-width: calc(var(--v5-exec-track-width) + 210px); }
+.v5-execution-gantt-header, .v5-execution-gantt-row { display: grid; grid-template-columns: 210px var(--v5-exec-track-width); min-width: 0; }
 .v5-execution-label-heading { display: flex; align-items: end; padding: 0 10px 6px 16px; color: var(--muted); font-size: 11px; font-weight: 800; }
 .v5-execution-timeline-header { display: flex; height: 34px; border-bottom: 1px solid var(--border); background: #fbfcfe; }
 .v5-execution-timeline-header span { flex: 0 0 auto; padding: 6px 7px; border-left: 1px solid #edf0f4; color: var(--muted); font-size: 10px; font-weight: 800; }
@@ -3577,7 +3577,11 @@ button.v3-task-card:disabled small {
 .v5-execution-row-label { min-width: 0; padding: 7px 9px 7px 16px; }
 .v5-execution-row-label > button { display: grid; width: 100%; min-width: 0; gap: 3px; padding: 0; border: 0; background: transparent; color: var(--text); text-align: left; cursor: pointer; }
 .v5-execution-row-label strong, .v5-execution-row-label small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.v5-execution-row-label strong { font-size: 12px; }.v5-execution-row-label small { color: var(--muted); font-size: 10px; }.v5-execution-row-label span { display: flex; align-items: center; gap: 4px; min-width: 0; overflow: hidden; }.v5-execution-row-label em { overflow: hidden; color: var(--muted); font-size: 10px; font-style: normal; text-overflow: ellipsis; white-space: nowrap; }
+.v5-execution-row-label strong { font-size: 12px; }.v5-execution-row-label small { color: var(--muted); font-size: 10px; }
+.v5-execution-status-summary { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: center; gap: 3px; min-width: 0; }
+.v5-execution-status-summary.is-empty { display: block; color: var(--muted); font-size: 10px; }
+.v5-execution-status-count { display: flex; align-items: center; gap: 3px; min-width: 0; padding: 2px 5px; overflow: hidden; border-radius: 999px; font-size: 9px; font-weight: 700; line-height: 14px; white-space: nowrap; }
+.v5-execution-status-count b { min-width: 12px; margin-left: auto; font-size: 10px; line-height: 1; text-align: right; }
 .v5-execution-timeline { position: relative; min-width: 0; border-left: 1px solid var(--border); background-color: #fff; }
 .v5-execution-today-line { position: absolute; top: 0; bottom: 0; z-index: 2; width: 2px; background: #ef4444; opacity: .78; pointer-events: none; }
 .v5-execution-bar { position: absolute; z-index: 3; min-width: 18px; height: 22px; overflow: hidden; padding: 0 7px; border: 0; border-left: 3px solid var(--task-accent, #2563eb); border-radius: 4px; background: var(--task-accent, #2563eb); color: #fff; font-size: 10px; line-height: 22px; text-align: left; text-overflow: ellipsis; white-space: nowrap; box-shadow: 0 2px 5px rgba(15,23,42,.12); cursor: pointer; }
@@ -3666,8 +3670,8 @@ button.v3-task-card:disabled small {
 .v5-execution-main { min-width: 0; }
 .v5-execution-view-panel { min-width: 0; }
 .v5-execution-view-panel[hidden] { display: none; }
-.v5-execution-gantt-canvas { min-width: calc(var(--v5-exec-track-width) + 168px); }
-.v5-execution-gantt-header, .v5-execution-gantt-row { grid-template-columns: 168px var(--v5-exec-track-width); }
+.v5-execution-gantt-canvas { min-width: calc(var(--v5-exec-track-width) + 210px); }
+.v5-execution-gantt-header, .v5-execution-gantt-row { grid-template-columns: 210px var(--v5-exec-track-width); }
 .v5-execution-label-heading { padding-left: 12px; }
 .v5-execution-row-label { padding-left: 12px; }
 .v5-execution-row-label > button { min-height: 42px; }

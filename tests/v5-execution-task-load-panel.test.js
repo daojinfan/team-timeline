@@ -62,3 +62,19 @@ test("narrow data views put content first and expose a member-filter disclosure"
   assert.match(styles, /@media \(max-width: 720px\)[\s\S]*\.v5-execution-load\s*\{[^}]*overflow-x:\s*hidden/);
   assert.match(styles, /@media \(max-width: 720px\)[\s\S]*\.v5-execution-load-table\s*\{[^}]*display:\s*grid/);
 });
+
+test("gantt member rows summarize every task status in a stable order", () => {
+  const render = sourceBetween("function v5ExecutionStatusSummary", "function v5ExecutionLoadRows");
+  assert.match(render, /new Map\(v5FilterStatusOptions\.map\(\(\{ value \}\) => \[value, 0\]\)\)/);
+  assert.match(render, /v5FilterStatusValues\.has\(rawStatus\) \? rawStatus : "waiting"/);
+  assert.match(render, /v5FilterStatusOptions\.map\([\s\S]*\.filter\(\(\{ count \}\) => count > 0\)/);
+  assert.match(render, /return \{ rows: Math\.ceil\(entries\.length \/ 2\), html \}/);
+  assert.match(render, /const statusSummary = v5ExecutionStatusSummary\(row\.items\)/);
+  assert.match(render, /48 \+ statusSummary\.rows \* 20/);
+  assert.match(render, /\$\{statusSummary\.html\}/);
+  assert.doesNotMatch(render, /v5StatusChip\(labelTask\)/);
+  assert.doesNotMatch(render, /labelTask\?\.source_group/);
+  assert.match(styles, /\.v5-execution-status-summary\s*\{[^}]*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/);
+  assert.match(styles, /\.v5-execution-status-count\s*\{[^}]*border-radius:\s*999px/);
+  assert.match(styles, /\.v5-execution-status-count\.status-test-delayed/);
+});
