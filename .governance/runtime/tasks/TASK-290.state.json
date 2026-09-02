@@ -5,11 +5,11 @@
     "work_package":  "WP-015",
     "contract_sha256":  "6dc31094992a730a322678a6fad57a5bb3ef3bdf7cd5312f5942f11a6607d3c8",
     "baseline":  "BL-011",
-    "state":  "accepted",
-    "approval_id":  "APR-195",
-    "acceptance_subject_sha256":  "4a93a0274f9e3eced62dc1f7f67bf6a1aac8a3e9876ac9c897cba549675abf5e",
-    "acceptance_evidence_sha256":  "9dfb034bb3eb4c643c08f1e1171465798ee5a9e60730d3401b90eaaa457185bf",
-    "acceptance_git_commit":  "e19af8b7a77c54cdbd98976f8858d0a3d8e2f250",
+    "state":  "superseded",
+    "approval_id":  "",
+    "acceptance_subject_sha256":  "",
+    "acceptance_evidence_sha256":  "",
+    "acceptance_git_commit":  "",
     "start_git_commit":  "9440fb49009ed4a7c11c5f4b997e7c1744e9d18b",
     "execution_lease":  "",
     "execution_lease_owner":  "",
@@ -39,14 +39,14 @@
     "review":  {
                    "required":  true,
                    "reviewer_task_id":  "TASK-291",
-                   "status":  "passed",
+                   "status":  "changes-required",
                    "evidence":  [
-                                    "docs/05-quality/evidence/TASK-291/review-round-2.json"
+
                                 ],
-                   "pass_streak":  2,
-                   "subject_sha256":  "4a93a0274f9e3eced62dc1f7f67bf6a1aac8a3e9876ac9c897cba549675abf5e"
+                   "pass_streak":  0,
+                   "subject_sha256":  ""
                },
-    "last_error":  "",
+    "last_error":  "WP-015 原交付在验收后因成员多任务状态摘要被重新打开，最终修复已由 TASK-292 完成、TASK-293 双轮审核通过并获 APR-197 验收；旧交付状态据此收口为 superseded。",
     "created_at":  "2026-08-27T15:46:10.3389562Z",
-    "updated_at":  "2026-08-27T23:51:06.9698517Z"
+    "updated_at":  "2026-09-02T05:29:00.5537634Z"
 }

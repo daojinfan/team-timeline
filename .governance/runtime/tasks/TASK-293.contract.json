@@ -1,0 +1,96 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-293",
+  "work_package": "WP-015",
+  "title": "独立审核执行中心甘特图成员多任务状态数量摘要",
+  "goal": "独立审核 TASK-292 的全部实际差异，核对全任务聚合、固定状态顺序、非零摘要、未知状态回退、动态行高和既有交互不变。",
+  "baseline": "BL-011",
+  "profile": "Standard",
+  "role": "REVIEWER",
+  "allowed_paths": [
+    "docs/05-quality/evidence/TASK-293"
+  ],
+  "read_paths": [
+    "public/app.js",
+    "public/styles.css",
+    "tests/v5-execution-task-load-panel.test.js",
+    "docs/05-quality/evidence/TASK-292"
+  ],
+  "write_paths": [
+    "docs/05-quality/evidence/TASK-293"
+  ],
+  "out_of_scope": [
+    "不得修改实现代码、测试和治理运行状态",
+    "不得替代实现者修复问题或自行扩展范围"
+  ],
+  "authoritative_documents": [
+    "REQ-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "DEC-005",
+    "CR-009",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-292"
+  ],
+  "acceptance_criteria": [
+    "审核清单与 TASK-292 启动提交后的真实 Git 变更类型完全一致",
+    "独立验证多任务状态数量聚合、固定顺序、未知状态回退、完整换行与动态行高",
+    "确认任务条、状态算法、筛选、选中和排期数据未发生行为变化",
+    "Standard 连续两轮完整审核通过且两轮间业务内容指纹不变"
+  ],
+  "validations": [
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "task-load-panel-test",
+      "command": "node",
+      "args": [
+        "--test",
+        "tests/v5-execution-task-load-panel.test.js"
+      ]
+    },
+    {
+      "id": "execution-regression",
+      "command": "node",
+      "args": [
+        "--test",
+        "tests/v5-execution.test.js",
+        "tests/v5-execution-detail-layout.test.js",
+        "tests/v5-execution-detail-inline-edit.test.js"
+      ]
+    },
+    {
+      "id": "full-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "id": "governance-strict",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "-Strict"
+      ]
+    }
+  ],
+  "risk_flags": [],
+  "review": {
+    "required": false
+  },
+  "created_at": "2026-09-01T11:26:11.4433938Z"
+}

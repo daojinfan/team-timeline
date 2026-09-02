@@ -2,7 +2,7 @@
 doc_id: DEL-TASK-LEDGER-001
 type: delivery.task-ledger
 status: active
-version: 1.0
+version: 1.1
 owner: human
 baseline: BL-001
 depends_on:
@@ -10,7 +10,7 @@ depends_on:
 affects:
   - PROJ-STATE-001
 supersedes: null
-last_reviewed: 2026-08-20
+last_reviewed: 2026-09-02
 project_mode: TEAM_PROJECT
 ledger_status: active
 project_manager_task_id: 01a01ef6-d413-7660-bdc5-62bd5873cbf4
@@ -30,16 +30,18 @@ review_policy: independent-required
 - 项目经理任务标识：01a01ef6-d413-7660-bdc5-62bd5873cbf4
 - 项目经理宿主标识：01a01ef6-d413-7660-bdc5-62bd5873cbf4
 - 当前阶段：EXECUTION_PLANNING
-- 当前基线：BL-001
+- 当前基线：BL-011
 
 ## 任务列表
 
 | 工作包 | 独立任务标识 | 宿主标识 | 任务角色 | 任务标题 | 基线 | 环境/分支 | 依赖 | 状态 | 交付物 | 验证 | 审核任务 | 审核状态 | 审核证据 | 最近进展 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| WP-015 | TASK-291 | pending | REVIEWER | 独立审核执行中心任务与负载数据工作区 | BL-011 | pending | TASK-290 | completed | docs/05-quality/evidence/TASK-291 | app-syntax, task-load-panel-test, full-test, governance-strict | n/a | n/a | n/a | Plan 自动登记，等待调度 |
-| WP-015 | TASK-290 | pending | IMPLEMENTER | 重设计执行中心任务与负载数据工作区 | BL-011 | pending | TASK-288 | completed | public/index.html, public/app.js, public/styles.css, tests/v5-execution-task-load-panel.test.js | app-syntax, task-load-panel-test, execution-regression, full-test | TASK-291 | passed | docs/05-quality/evidence/TASK-291/review-round-2.json | Plan 自动登记，等待调度 |
-| WP-014 | TASK-289 | pending | REVIEWER | 独立审核执行中心右侧内联排期交互 | BL-010 | pending | TASK-288 | completed | docs/05-quality/evidence/TASK-289 | app-syntax, inline-detail-test, detail-layout-test, governance-strict | n/a | n/a | n/a | Plan 自动登记，等待调度 |
-| WP-014 | TASK-288 | pending | IMPLEMENTER | 执行中心任务详情改为无弹窗选中与右侧内联排期 | BL-010 | pending | TASK-286 | completed | public/index.html, public/app.js, public/styles.css, tests/v5-execution-detail-inline-edit.test.js, tests/v5-execution-detail-layout.test.js | app-syntax, inline-detail-test, detail-layout-test, full-test | TASK-289 | passed | docs/05-quality/evidence/TASK-289/review-round-2.json | Plan 自动登记，等待调度 |
+| WP-015 | TASK-293 | pending | REVIEWER | 独立审核执行中心甘特图成员多任务状态数量摘要 | BL-011 | pending | TASK-292 | completed | docs/05-quality/evidence/TASK-293 | app-syntax, task-load-panel-test, execution-regression, full-test, governance-strict | n/a | n/a | n/a | 两轮独立审核通过；已登记最终审核证据 |
+| WP-015 | TASK-292 | pending | IMPLEMENTER | 执行中心甘特图成员多任务状态数量摘要修复 | BL-011 | pending | TASK-290 | completed | public/app.js, public/styles.css, tests/v5-execution-task-load-panel.test.js | app-syntax, task-load-panel-test, execution-regression, full-test | TASK-293 | passed | docs/05-quality/evidence/TASK-293/review-round-2-20260901.json | 已获 APR-197 验收；实现、回归与独立审核证据齐全 |
+| WP-015 | TASK-291 | pending | REVIEWER | 独立审核执行中心任务与负载数据工作区 | BL-011 | pending | TASK-290 | completed | docs/05-quality/evidence/TASK-291 | app-syntax, task-load-panel-test, full-test, governance-strict | n/a | n/a | n/a | 两轮独立审核通过；后续修复由 TASK-292/TASK-293 接续 |
+| WP-015 | TASK-290 | pending | IMPLEMENTER | 重设计执行中心任务与负载数据工作区 | BL-011 | pending | TASK-288 | replaced | public/index.html, public/app.js, public/styles.css, tests/v5-execution-task-load-panel.test.js | app-syntax, task-load-panel-test, execution-regression, full-test | TASK-291 | changes-required |  | 已由最终修复 TASK-292 及 Reviewer TASK-293 替代并保留历史证据 |
+| WP-014 | TASK-289 | pending | REVIEWER | 独立审核执行中心右侧内联排期交互 | BL-010 | pending | TASK-288 | completed | docs/05-quality/evidence/TASK-289 | app-syntax, inline-detail-test, detail-layout-test, governance-strict | n/a | n/a | n/a | 两轮独立审核通过；WP-014 工作包已接受 |
+| WP-014 | TASK-288 | pending | IMPLEMENTER | 执行中心任务详情改为无弹窗选中与右侧内联排期 | BL-010 | pending | TASK-286 | completed | public/index.html, public/app.js, public/styles.css, tests/v5-execution-detail-inline-edit.test.js, tests/v5-execution-detail-layout.test.js | app-syntax, inline-detail-test, detail-layout-test, full-test | TASK-289 | passed | docs/05-quality/evidence/TASK-289/review-round-2.json | 已完成实现与回归验证；WP-014 工作包已接受 |
 | WP-014 | TASK-287 | pending | REVIEWER | 独立复审执行中心排期详情 UI 优化 | BL-010 | pending | TASK-286 | replaced | docs/05-quality/evidence/TASK-287 | app-syntax, detail-layout-test, governance-strict | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-014 | TASK-286 | pending | IMPLEMENTER | 优化执行中心排期详情信息层级与响应式布局 | BL-010 | pending | TASK-284 | replaced | public/index.html, public/app.js, public/styles.css, tests/v5-execution-detail-layout.test.js | app-syntax, detail-layout-test, full-test | TASK-287 | cancelled | docs/05-quality/evidence/TASK-287/review-superseded-20260827.json | Plan 自动登记，等待调度 |
 | WP-013 | TASK-285 | pending | REVIEWER | 独立复审执行中心成员排期同步复选框布局 | BL-009 | pending | TASK-284 | completed | docs/05-quality/evidence/TASK-285 | required-validation, app-syntax, governance-strict | n/a | n/a | n/a | Plan 自动登记，等待调度 |
@@ -59,8 +61,8 @@ review_policy: independent-required
 | WP-013 | TASK-271 | pending | IMPLEMENTER | 修复刷新后默认状态未恢复（重规划） | BL-009 | pending | TASK-267 | replaced | public/app.js, tests | required-validation, app-syntax, governance-strict | TASK-272 | pending |  | Plan 自动登记，等待调度 |
 | WP-013 | TASK-270 | pending | REVIEWER | 复审刷新默认状态修复 | BL-009 | pending | TASK-269 | replaced | docs/05-quality/evidence/TASK-270 | required-validation, app-syntax, governance-standard | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-013 | TASK-269 | pending | IMPLEMENTER | 修复刷新后默认状态未恢复 | BL-009 | pending | TASK-267 | replaced | public/app.js, tests | required-validation, app-syntax, governance-standard | TASK-270 | pending | pending | Plan 自动登记，等待调度 |
-| WP-013 | TASK-268 | pending | REVIEWER | 独立复审 V5 默认状态配置 | BL-009 | pending | TASK-267 | needs-attention | docs/05-quality/evidence/TASK-268 | npm-test, app-syntax | n/a | n/a | n/a | Plan 自动登记，等待调度 |
-| WP-013 | TASK-267 | pending | IMPLEMENTER | 实现 V5 工作区默认状态配置 | BL-009 | pending | n/a | needs-attention | public/index.html, public/app.js, tests | npm-test, app-syntax | TASK-268 | changes-required |  | Plan 自动登记，等待调度 |
+| WP-013 | TASK-268 | pending | REVIEWER | 独立复审 V5 默认状态配置 | BL-009 | pending | TASK-267 | replaced | docs/05-quality/evidence/TASK-268 | npm-test, app-syntax | n/a | n/a | n/a | Plan 自动登记，等待调度 |
+| WP-013 | TASK-267 | pending | IMPLEMENTER | 实现 V5 工作区默认状态配置 | BL-009 | pending | n/a | replaced | public/index.html, public/app.js, tests | npm-test, app-syntax | TASK-268 | changes-required |  | Plan 自动登记，等待调度 |
 | WP-012 | TASK-266 | pending | REVIEWER | 独立复审 V5 全量编辑参与成员单行布局 | BL-008 | pending | TASK-265 | replaced | docs/05-quality/evidence/TASK-266 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |
 | WP-012 | TASK-265 | pending | IMPLEMENTER | 修正 V5 全量编辑参与成员单行布局 | BL-008 | pending | TASK-263 | replaced | public/app.js, tests | required-validation | TASK-266 | cancelled | docs/05-quality/evidence/TASK-266/review-cancelled-bl009-migration-20260827.json | BL-008 历史交付由已批准的 BL-009 替代；保留原审核证据 |
 | WP-012 | TASK-264 | pending | REVIEWER | 独立复审 V5 两处成员时间同步入口 | BL-008 | pending | TASK-263 | replaced | docs/05-quality/evidence/TASK-264 | required-validation | n/a | n/a | n/a | Plan 自动登记，等待调度 |

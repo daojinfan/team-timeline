@@ -1,0 +1,56 @@
+{
+  "$schema": "schemas/governed-work-state.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-292",
+  "work_package": "WP-015",
+  "contract_sha256": "33e75a7125fac3014626d50a45f4251ab60c122909ab6ae4f912e205485bdab6",
+  "baseline": "BL-011",
+  "state": "accepted",
+  "approval_id": "APR-197",
+  "acceptance_subject_sha256": "34d5ed95c0e6ee3115b99d57bf8509ba911204720ae26a5c4ee67b57625d0927",
+  "acceptance_evidence_sha256": "51905ef8a984485069b20773ca3bd2c3d5a31f004a6c71750bb6b410983f5767",
+  "acceptance_git_commit": "c85cf5568338cf0a6cd9626493c49996046564c8",
+  "start_git_commit": "0f5b60d6f89e5f8e331fd6f8d7a471ccd272b0b4",
+  "execution_lease": "",
+  "execution_lease_owner": "",
+  "execution_lease_expires_at": "",
+  "preexisting_changes": [],
+  "plan_checkpoint_git_commit": "0f5b60d6f89e5f8e331fd6f8d7a471ccd272b0b4",
+  "plan_rebase_history": [
+    {
+      "previous_changes": [
+        ".governance/framework-manifest.json",
+        ".governance/tools/Test-ProjectGovernance.ps1",
+        "baselines/BL-011/manifest.json"
+      ],
+      "checkpoint_git_commit": "0f5b60d6f89e5f8e331fd6f8d7a471ccd272b0b4",
+      "rebased_at": "2026-09-01T11:27:16.5637817Z"
+    }
+  ],
+  "evidence": [
+    "docs/05-quality/evidence/TASK-292/20260901T113254225Z-f4100dfb-app-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-292/20260901T113254225Z-f4100dfb-task-load-panel-test.evidence.json",
+    "docs/05-quality/evidence/TASK-292/20260901T113254225Z-f4100dfb-execution-regression.evidence.json",
+    "docs/05-quality/evidence/TASK-292/20260901T113254225Z-f4100dfb-full-test.evidence.json"
+  ],
+  "evidence_history": [
+    "docs/05-quality/evidence/TASK-292/20260901T113254225Z-f4100dfb-app-syntax.evidence.json",
+    "docs/05-quality/evidence/TASK-292/20260901T113254225Z-f4100dfb-task-load-panel-test.evidence.json",
+    "docs/05-quality/evidence/TASK-292/20260901T113254225Z-f4100dfb-execution-regression.evidence.json",
+    "docs/05-quality/evidence/TASK-292/20260901T113254225Z-f4100dfb-full-test.evidence.json"
+  ],
+  "review_history": [],
+  "review": {
+    "required": true,
+    "reviewer_task_id": "TASK-293",
+    "status": "passed",
+    "evidence": [
+      "docs/05-quality/evidence/TASK-293/review-round-2-20260901.json"
+    ],
+    "pass_streak": 2,
+    "subject_sha256": "34d5ed95c0e6ee3115b99d57bf8509ba911204720ae26a5c4ee67b57625d0927"
+  },
+  "last_error": "",
+  "created_at": "2026-09-01T11:26:01.4094993Z",
+  "updated_at": "2026-09-02T00:06:39.2507817Z"
+}

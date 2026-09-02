@@ -1,0 +1,21 @@
+✔ V5 execution selection never opens a schedule dialog (1.0939ms)
+✔ V5 task schedule is edited inline with an explicit sync-all button (0.488ms)
+✔ V5 member schedules are edited and saved independently in the detail panel (0.5779ms)
+✔ V5 full edit reuses the task modal without leaving execution center (0.6246ms)
+✔ V5 inline schedule controls remain compact and responsive (0.3875ms)
+✔ V5 schedule detail lives inside the execution workspace and is absent until selected (0.994ms)
+✔ V5 schedule detail toggles the three-column state and supports closing (1.3518ms)
+✔ V5 schedule facts and member rows use isolated detail styles (1.9997ms)
+✔ V5 execution center is a real projection, not the legacy placeholder (1.6702ms)
+✔ V5 execution center direct save uses an automatic conflict check without manual preview (1.0348ms)
+✔ V5 execution center keeps internal gantt scrolling and synchronizes all V5 projections (0.9175ms)
+✔ V5 gantt is grouped by member and preserves unassigned work (0.731ms)
+✔ V5 gantt exposes a continuous granularity control without changing date units (0.7063ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 70.9789

@@ -1,0 +1,97 @@
+{
+  "$schema": "schemas/governed-work.schema.json",
+  "schema_version": 2,
+  "task_id": "TASK-292",
+  "work_package": "WP-015",
+  "title": "执行中心甘特图成员多任务状态数量摘要修复",
+  "goal": "修复排期总览任务与成员甘特图的成员行状态展示：按该成员当前行全部任务聚合各状态数量，以固定业务顺序展示非零状态摘要，并移除误导性的首任务单状态与首任务专题；保持任务条、状态算法、筛选、选中和排期数据不变。",
+  "baseline": "BL-011",
+  "profile": "Standard",
+  "role": "IMPLEMENTER",
+  "allowed_paths": [
+    "public/app.js",
+    "public/styles.css",
+    "tests/v5-execution-task-load-panel.test.js"
+  ],
+  "read_paths": [
+    "public/index.html",
+    "public/app.js",
+    "public/styles.css",
+    "tests/v5-execution-task-load-panel.test.js"
+  ],
+  "write_paths": [
+    "public/app.js",
+    "public/styles.css",
+    "tests/v5-execution-task-load-panel.test.js"
+  ],
+  "out_of_scope": [
+    "不修改 V5 API、SQLite schema、服务端和排期业务规则",
+    "不改变任务状态判定、筛选、任务条样式、任务选中和成员负载统计口径",
+    "不重构任务全量编辑台、资源维护或远程发布"
+  ],
+  "authoritative_documents": [
+    "REQ-V5-001",
+    "ARC-COMP-V5-001",
+    "QUAL-TRACE-V5-001",
+    "DEC-005",
+    "CR-009",
+    "DEL-WORK-001"
+  ],
+  "dependencies": [
+    "TASK-290"
+  ],
+  "acceptance_criteria": [
+    "成员行按当前行全部任务聚合状态数量，不再仅显示第一条任务状态",
+    "状态摘要只展示数量大于零的状态，并按等待样品、样品交付延期、正在测试、测试延期、已完成的固定顺序排列",
+    "单任务与多任务统一显示状态名称和数量，未知状态按等待样品归并",
+    "多状态摘要可完整换行显示且对应甘特行高同步扩展，不遮挡相邻成员行",
+    "移除成员行中来自第一条任务的专题名称，保留任务总数与成员角色信息",
+    "任务条、状态算法、筛选、任务选中和排期数据行为保持不变"
+  ],
+  "validations": [
+    {
+      "id": "app-syntax",
+      "command": "node",
+      "args": [
+        "--check",
+        "public/app.js"
+      ]
+    },
+    {
+      "id": "task-load-panel-test",
+      "command": "node",
+      "args": [
+        "--test",
+        "tests/v5-execution-task-load-panel.test.js"
+      ]
+    },
+    {
+      "id": "execution-regression",
+      "command": "node",
+      "args": [
+        "--test",
+        "tests/v5-execution.test.js",
+        "tests/v5-execution-detail-layout.test.js",
+        "tests/v5-execution-detail-inline-edit.test.js"
+      ]
+    },
+    {
+      "id": "full-test",
+      "command": "npm",
+      "args": [
+        "test"
+      ]
+    }
+  ],
+  "risk_flags": [
+    "success_criteria",
+    "public_interface"
+  ],
+  "review": {
+    "required": true
+  },
+  "created_at": "2026-09-01T11:26:01.4094993Z",
+  "repair_of": [
+    "TASK-290"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "schemas/validation-evidence.schema.json",
+  "schema_version": 1,
+  "task_id": "TASK-293",
+  "work_package": "WP-015",
+  "baseline": "BL-011",
+  "contract_sha256": "e8012da90e79b4147d96468487b8b0f2cae8a9ba9bccf32c05f7d0aec33db214",
+  "git_commit": "c85cf5568338cf0a6cd9626493c49996046564c8",
+  "validation_id": "task-load-panel-test",
+  "command": "node",
+  "args": [
+    "--test",
+    "tests/v5-execution-task-load-panel.test.js"
+  ],
+  "started_at": "2026-09-01T13:55:32.4125697Z",
+  "finished_at": "2026-09-01T13:55:32.9484000Z",
+  "exit_code": 0,
+  "redactions_applied": 0,
+  "output_path": "docs/05-quality/evidence/TASK-293/20260901T135530572Z-96156547-task-load-panel-test.output.txt",
+  "output_sha256": "f2b54230093d8621df0b4b5424a86d432b28a2ee78156d8c0d723bc4fe61f850"
+}

@@ -3513,6 +3513,7 @@ button.v3-task-card:disabled small {
 .v5-member-choice-item > input[type="date"] { min-width: 132px; }
 .v5-phase-options { display: flex; flex-wrap: wrap; gap: 8px; }
 .v5-phase-options label { display: inline-flex; align-items: center; gap: 5px; padding: 7px 10px; border: 1px solid var(--border); border-radius: 7px; background: #fbfcfe; }
+.v5-default-status-settings input[type="checkbox"] { width: 14px; min-width: 14px; height: 14px; min-height: 14px; margin: 0; padding: 0; border: 0; background: transparent; accent-color: var(--accent); flex: 0 0 14px; }
 .v5-preview-box { padding: 10px 12px; border: 1px dashed var(--border-strong); border-radius: 8px; background: #f8fafc; }
 .v5-preview-box strong { font-size: 12px; }
 .v5-preview-box p { margin: 4px 0 0; color: var(--muted); font-size: 11px; line-height: 1.5; }

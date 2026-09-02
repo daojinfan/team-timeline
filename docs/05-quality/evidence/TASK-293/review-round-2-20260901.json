@@ -1,0 +1,55 @@
+{
+  "$schema": "schemas/review-evidence.schema.json",
+  "schema_version": 1,
+  "reviewer_task_id": "TASK-293",
+  "reviewed_task_ids": [
+    "TASK-292"
+  ],
+  "work_package": "WP-015",
+  "baseline": "BL-011",
+  "result": "passed",
+  "diff_checked": true,
+  "changes": [
+    {
+      "task_id": "TASK-292",
+      "path": "public/app.js",
+      "change_type": "modified",
+      "summary": "将甘特成员行标签改为调用 v5ExecutionStatusSummary(row.items)，新增全任务状态聚合、状态枚举回退、非零摘要渲染和摘要行数驱动的行高；首任务仅保留既有点击选择用途。"
+    },
+    {
+      "task_id": "TASK-292",
+      "path": "public/styles.css",
+      "change_type": "modified",
+      "summary": "新增双列状态摘要网格和可访问数量胶囊，复用等待样品/样品延期/测试中/测试延期/完成的颜色 token，并将甘特标签列设置为 210px。"
+    },
+    {
+      "task_id": "TASK-292",
+      "path": "tests/v5-execution-task-load-panel.test.js",
+      "change_type": "modified",
+      "summary": "增加状态摘要源代码契约测试，核验全部任务输入、固定顺序、非零项、未知状态、动态行高、首任务专题移除及双列样式。"
+    }
+  ],
+  "change_summary": "round=2；从头复审 TASK-292 的同一冻结交付内容（start_git_commit=0f5b60d6f89e5f8e331fd6f8d7a471ccd272b0b4，subject_git_commit=c85cf5568338cf0a6cd9626493c49996046564c8）。业务差异仍精确为 3 个 modified、无 added/deleted/renamed；本轮重新确认五类状态计数使用 row.items 全量输入，输出顺序固定为 waiting、sample-delayed、testing、test-delayed、completed，只显示非零项，未知值归并 waiting，空成员行显示暂无任务。摘要容器通过 role/list 和 aria-label 暴露文字，多状态使用双列换行，rowHeight 按摘要行数与任务 lane 数扩展；任务条、状态判定、筛选、选中、成员排期和数据事实未变化。",
+  "scope_checked": [
+    "第二轮重新读取 AGENTS.md、governance.json、PROJECT.md、CURRENT-STATE.md、WP-015.context.json、TASK-292/TASK-293 契约与当前状态及六份权威需求/设计/决策文档，确认审核角色、Standard 双轮要求、BL-011 和写入边界。",
+    "重新执行并阅读 git diff --name-status、--numstat、完整 unified diff 和 git diff --check（0f5b60d6..c85cf556），确认 changes 清单与真实 Git 变更类型一致，并确认 HEAD 与目标提交均为 c85cf5568338cf0a6cd9626493c49996046564c8。",
+    "从头检查 v5ExecutionStatusSummary：Map 初始化来自冻结 v5FilterStatusOptions，v5FilterStatusValues 负责合法性，未知/空值进入 waiting，entries 按选项顺序过滤 count>0；HTML 文本、图标、title 和 aria-label 经过安全转义。",
+    "重新检查甘特渲染路径和任务事实边界：row.items 传入摘要，状态条仍由原 v5ExecutionTaskBar 绘制，首任务 ID 仅用于行按钮既有选择事件，未改动 v5ExecutionMemberGanttRows、筛选、排期或状态计算。",
+    "重新检查 CSS 双列 minmax(0,1fr)、胶囊 overflow/min-width、210px 标签列和 rowHeight=Math.max(60,48+rows*20,36+laneCount*28) 的配合，覆盖空行、单状态、五状态和多 lane 情景。",
+    "重新检查可访问性和安全性：状态文字与固定 token 同时呈现，列表/列表项角色及摘要辅助文本可读，用户数据未直接拼接到 HTML；差异范围未越出 TASK-292 allowed_paths。",
+    "重新确认工作区未发生业务内容漂移：c85cf556 之后三个业务文件无 diff；第一轮与第二轮审核所依据的三项 Git blob 指纹完全一致。"
+  ],
+  "findings": [],
+  "validation_evidence": [
+    "check=subject-and-manifest-round-2：git rev-parse HEAD=c85cf5568338cf0a6cd9626493c49996046564c8；git diff --name-status 0f5b60d6f89e5f8e331fd6f8d7a471ccd272b0b4 c85cf5568338cf0a6cd9626493c49996046564c8 返回 M public/app.js、M public/styles.css、M tests/v5-execution-task-load-panel.test.js；git diff --check exit 0。",
+    "check=content-stability：git diff --exit-code c85cf5568338cf0a6cd9626493c49996046564c8 -- public/app.js public/styles.css tests/v5-execution-task-load-panel.test.js 返回 0；与第一轮业务内容无漂移。",
+    "check=subject-blobs：public/app.js=1e3a1c4dc0c121543d7ccfd18916e3f669c0e878，public/styles.css=e405d676b0d0fbe4d00f861c82cceb5501314394，tests/v5-execution-task-load-panel.test.js=51e8d4b344a5600f776e55e69b851a9e9132197d；与第一轮记录一致。",
+    "check=app-syntax：node --check public/app.js，exit 0。",
+    "check=task-load-panel-test：node --test tests/v5-execution-task-load-panel.test.js，5/5 通过、0 失败、0 跳过、0 取消。",
+    "check=execution-regression：node --test tests/v5-execution.test.js tests/v5-execution-detail-layout.test.js tests/v5-execution-detail-inline-edit.test.js，13/13 通过、0 失败、0 跳过、0 取消。",
+    "check=full-test：npm test，92/92 通过、0 失败、0 跳过、0 取消。",
+    "check=governance-strict：powershell -NoProfile -ExecutionPolicy Bypass -File .governance/tools/Test-ProjectGovernance.ps1 -ProjectPath . -Level Strict，扫描 59 份文档，Errors=0、Warnings=0。",
+    "check=status-summary-boundaries-round-2：独立提取并执行 v5ExecutionStatusSummary；空数组 rows=0 且输出暂无任务，testing×2+completed×1+unknown×1 输出 waiting 1、testing 2、completed 1 且 rows=2，五类各 1 按固定顺序输出且 rows=3。"
+  ],
+  "created_at": "2026-09-01T14:00:24.5641221Z"
+}
