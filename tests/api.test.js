@@ -8,7 +8,7 @@ import { createAppServer, initDatabase } from "../src/server.js";
 async function fixture() {
   const dir = await mkdtemp(path.join(tmpdir(), "team-task-gantt-"));
   const database = await initDatabase(path.join(dir, "test.sqlite"));
-  const server = createAppServer(database);
+  const server = createAppServer(database, { auth: false });
   await new Promise((resolve) => server.listen(0, resolve));
   const baseUrl = `http://127.0.0.1:${server.address().port}`;
   const request = async (route, options = {}) => {

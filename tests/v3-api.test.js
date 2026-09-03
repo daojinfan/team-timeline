@@ -9,7 +9,7 @@ import { V3_ENDPOINTS, V3_INDEXES, V3_SCHEMA_CHECKSUM, V3_TABLES } from "../src/
 async function fixture() {
   const dir = await mkdtemp(path.join(tmpdir(), "team-task-v3-"));
   const database = await initDatabase(path.join(dir, "team_tasks.sqlite"));
-  const server = createAppServer(database);
+  const server = createAppServer(database, { auth: false });
   await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
   const base = `http://127.0.0.1:${server.address().port}`;
   const request = async (route, { method = "GET", body, expected = [200] } = {}) => {

@@ -5,7 +5,9 @@ import { createHash, randomUUID } from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { DatabaseSync } from "node:sqlite";
-import { migrateV3Schema, routeV3Api, V3_ENDPOINTS, migrateV5Schema, routeV5Api, V5_ENDPOINTS } from "./v3/index.js";
+import { migrateV3Schema, routeV3Api, V3_ENDPOINTS, migrateV5Schema, routeV5Api, V5_ENDPOINTS, seedV3ReferenceResources } from "./v3/index.js";
+import { createAuthService, migrateAuthSchema } from "./auth.js";
+import { requestContextStorage } from "./request-context.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -75,8 +77,8 @@ function todayIsoDate() {
   return formatLocalIsoDate(new Date());
 }
 
-function sendJson(res, status, payload) {
-  res.writeHead(status, jsonHeaders);
+function sendJson(res, status, payload, headers = {}) {
+  res.writeHead(status, { ...jsonHeaders, ...headers });
   res.end(JSON.stringify(payload));
 }
 
@@ -254,9 +256,20 @@ async function parseBody(req) {
     req.on("end", () => {
       if (!body) return resolve({});
       try {
-        resolve(JSON.parse(body));
+        const payload = JSON.parse(body);
+        if (req.authContext?.user) {
+          const actor = req.authContext.user.display_name;
+          for (const field of ["actor", "actor_label", "submitted_by", "reviewer", "reviewer_label", "submitter_label"]) {
+            if (Object.prototype.hasOwnProperty.call(payload, field)) payload[field] = actor;
+          }
+          Object.defineProperty(payload, "__authActor", { value: actor, enumerable: false });
+        }
+        resolve(payload);
       } catch {
-        reject(new Error("请求 JSON 格式错误"));
+        const error = new Error("请求 JSON 格式错误");
+        error.code = "VALIDATION_ERROR";
+        error.status = 400;
+        reject(error);
       }
     });
     req.on("error", reject);
@@ -824,9 +837,13 @@ export async function initDatabase(customPath = dbPath) {
     }
     const hadVersion3 = Boolean(database.prepare("SELECT 1 FROM sqlite_master WHERE type='table' AND name='app_schema_versions'").get() && database.prepare("SELECT 1 FROM app_schema_versions WHERE version=3").get());
     migrateV3Schema(database);
+    seedV3ReferenceResources(database);
     seedIfEmpty(database, isNewDatabase ? todayIsoDate() : null);
     if (hadVersion3 && !hasTable(database, "v5_schema_versions")) await createPreV5Backup(database, customPath);
     migrateV5Schema(database);
+    migrateAuthSchema(database);
+    const auth = createAuthService(database);
+    await auth.bootstrapFromEnv();
     validateV2Schema(database);
     return database;
   } catch (error) {
@@ -1646,9 +1663,11 @@ function daysBetween(left, right) {
   return Math.round((toUtc(right) - toUtc(left)) / 86_400_000);
 }
 
-function actorLabel(value) {
+function actorLabel(value, field = "actor_label") {
+  const authenticatedActor = requestContextStorage.getStore()?.user?.display_name;
+  if (authenticatedActor) return trimText(authenticatedActor, field, 1, 100);
   if (value === undefined || value === null || (typeof value === "string" && !value.trim())) return "本地用户";
-  return trimText(value, "actor_label", 1, 100);
+  return trimText(value, field, 1, 100);
 }
 
 function normalizedName(value) {
@@ -2985,7 +3004,7 @@ function createV2Submission(taskId, payload) {
   const link = db.prepare("SELECT * FROM v2_plan_tasks WHERE task_id=?").get(taskId);
   if (!link) v2NotFound("task", taskId);
   const description = trimText(payload.description, "description", 1, 4000);
-  const submitter = payload.submitter_label === undefined || payload.submitter_label === null || !String(payload.submitter_label).trim() ? "本地用户" : trimText(payload.submitter_label, "submitter_label", 1, 100);
+  const submitter = actorLabel(payload.submitter_label, "submitter_label");
   if (!["url", "local_path"].includes(payload.resource_kind)) validation("resource_kind", "enum");
   const resourceValue = trimText(payload.resource_value, "resource_value", 1, 2000);
   if (payload.resource_kind === "url") {
@@ -3036,7 +3055,7 @@ function reviewV2Submission(submissionId, payload) {
   if (db.prepare("SELECT 1 FROM v2_acceptance_reviews WHERE submission_id=?").get(submissionId)) v2Fail(409, "SUBMISSION_ALREADY_REVIEWED", { submission_id: submissionId, status: submission.status });
   if (submission.status !== "submitted" || submission.task_id === null) v2Fail(409, "SUBMISSION_NOT_REVIEWABLE", { submission_id: submissionId, status: submission.task_id === null ? "task_deleted" : submission.status });
   if (!["accepted", "returned"].includes(payload.decision)) validation("decision", "enum");
-  const reviewer = payload.reviewer_label === undefined || payload.reviewer_label === null || !String(payload.reviewer_label).trim() ? "本地用户" : trimText(payload.reviewer_label, "reviewer_label", 1, 100);
+  const reviewer = actorLabel(payload.reviewer_label, "reviewer_label");
   const comment = trimText(payload.comment, "comment", 0, 4000);
   if (payload.decision === "returned" && !comment) validation("comment", "required");
   const checklist = checklistIds(payload.checklist, "review");
@@ -3145,7 +3164,7 @@ async function routeV2Api(req, res, url) {
   }
 }
 
-async function routeApi(req, res, url) {
+async function routeBusinessApi(req, res, url) {
   if (url.pathname === "/api/v5" || url.pathname.startsWith("/api/v5/")) return routeV5Api(req, res, db, url);
   if (url.pathname === "/api/v3" || url.pathname.startsWith("/api/v3/")) return routeV3Api(req, res, db, url);
   if (url.pathname === "/api/v2" || url.pathname.startsWith("/api/v2/")) return routeV2Api(req, res, url);
@@ -3211,6 +3230,237 @@ async function routeApi(req, res, url) {
   }
 }
 
+function requestIp(req) {
+  const forwarded = String(req.headers["x-forwarded-for"] || "").split(",")[0].trim();
+  return forwarded || req.socket?.remoteAddress || null;
+}
+
+function isAdminOnlyPath(method, pathname) {
+  if (pathname.startsWith("/api/admin/") || pathname === "/api/audit") return true;
+  if (pathname === "/api/logs" || pathname === "/api/backup" || pathname === "/api/maintenance/preview") return true;
+  if (/^\/api\/(v2|v3)\/backup$/.test(pathname) || pathname === "/api/v5/events") return true;
+  if (/^\/api\/v[23]\/.*\/events$/.test(pathname)) return true;
+  return method === "GET" ? false : true;
+}
+
+function syntheticTestContext(req, url) {
+  return {
+    user: { id: null, username: "test-admin", display_name: "测试管理员", role: "admin", is_active: true, must_change_password: false },
+    sessionId: null,
+    token: null,
+    method: req.method,
+    path: url.pathname,
+    ip: requestIp(req),
+    userAgent: req.headers["user-agent"] || null,
+    bypass: true
+  };
+}
+
+function writeAuthError(res, status, code, message, details = {}) {
+  return sendJson(res, status, { error: message, code, details });
+}
+
+const AUDIT_REDACTED_KEYS = new Set(["password", "password_hash", "current_password", "new_password", "temporary_password", "token", "session", "session_token"]);
+
+function auditSafe(value, depth = 0) {
+  if (depth > 4) return "[truncated]";
+  if (value === null || value === undefined || typeof value === "string" || typeof value === "number" || typeof value === "boolean") return value;
+  if (Array.isArray(value)) return value.slice(0, 50).map((item) => auditSafe(item, depth + 1));
+  if (typeof value === "object") {
+    return Object.fromEntries(Object.entries(value).slice(0, 80).map(([key, item]) => [key, AUDIT_REDACTED_KEYS.has(key.toLowerCase()) ? "[redacted]" : auditSafe(item, depth + 1)]));
+  }
+  return String(value);
+}
+
+function auditTarget(pathname) {
+  const match = pathname.match(/^\/api\/(v2|v3|v5)\/([^/?]+)(?:\/(\d+))?/);
+  if (match) return { target_type: `${match[1]}_${match[2].replace(/-/g, "_")}`, target_id: match[3] || null };
+  const adminMatch = pathname.match(/^\/api\/admin\/users\/(\d+)/);
+  if (adminMatch) return { target_type: "user", target_id: adminMatch[1] };
+  return { target_type: "http_request", target_id: null };
+}
+
+function auditEventWatermark() {
+  const max = (table) => db?.prepare(`SELECT COALESCE(MAX(id),0) AS id FROM ${table}`).get()?.id || 0;
+  return { v2: max("v2_plan_events"), v3: max("v3_topic_events"), v5: max("v5_events") };
+}
+
+function auditBeforeSnapshot(pathname, auth) {
+  const matchers = [
+    [/^\/api\/admin\/users\/(\d+)/, "users"],
+    [/^\/api\/tasks\/(\d+)/, "tasks"],
+    [/^\/api\/members\/(\d+)/, "members"],
+    [/^\/api\/templates\/(\d+)/, "task_templates"],
+    [/^\/api\/v2\/plans\/(\d+)/, "v2_control_plans"],
+    [/^\/api\/v3\/topics\/(\d+)/, "v3_topics"],
+    [/^\/api\/v5\/topics\/(\d+)/, "v5_topics"],
+    [/^\/api\/v5\/tasks\/(\d+)/, "v5_tasks"]
+  ];
+  for (const [pattern, table] of matchers) {
+    const match = pathname.match(pattern);
+    if (!match) continue;
+    const row = db?.prepare(`SELECT * FROM ${table} WHERE id=?`).get(Number(match[1]));
+    return table === "users" ? auth.publicUser(row) : auditSafe(row);
+  }
+  return null;
+}
+
+function latestAuditEvent(watermark) {
+  const candidates = [];
+  const v2 = db?.prepare("SELECT id,old_value_json AS before_json,new_value_json AS after_json,plan_id AS target_id,event_type FROM v2_plan_events WHERE id>? ORDER BY id DESC LIMIT 1").get(watermark.v2);
+  if (v2) candidates.push({ ...v2, target_type: "v2_plan" });
+  const v3 = db?.prepare("SELECT id,before_json,after_json,topic_id,topic_task_id AS task_id,sample_id,event_type FROM v3_topic_events WHERE id>? ORDER BY id DESC LIMIT 1").get(watermark.v3);
+  if (v3) candidates.push({ ...v3, target_type: v3.task_id ? "v3_task" : v3.sample_id ? "v3_sample" : "v3_topic", target_id: v3.task_id || v3.sample_id || v3.topic_id });
+  const v5 = db?.prepare("SELECT id,before_json,after_json,topic_id,task_id,sample_id,event_type FROM v5_events WHERE id>? ORDER BY id DESC LIMIT 1").get(watermark.v5);
+  if (v5) candidates.push({ ...v5, target_type: v5.task_id ? "v5_task" : v5.sample_id ? "v5_sample" : "v5_topic", target_id: v5.task_id || v5.sample_id || v5.topic_id });
+  return candidates.sort((a, b) => Number(b.id) - Number(a.id))[0] || null;
+}
+
+function auditResponseSummary(chunks) {
+  const text = chunks.join("");
+  if (!text) return null;
+  try { return auditSafe(JSON.parse(text)); } catch { return { content_type: "non_json", length: text.length }; }
+}
+
+async function routeApi(req, res, url, options = {}) {
+  const auth = options.service;
+  const authEnabled = options.enabled !== false;
+  const pathname = url.pathname;
+  const ip = requestIp(req);
+  const requestMeta = { ip, userAgent: req.headers["user-agent"] || null };
+
+  if (req.method === "GET" && pathname === "/api/health") return sendJson(res, 200, { status: "ok", auth_initialized: auth?.hasInitializedUsers?.() ?? false });
+  if (req.method === "GET" && pathname === "/api/auth/bootstrap-status") {
+    return sendJson(res, 200, { initialized: auth?.hasInitializedUsers?.() ?? false, registration: "disabled" });
+  }
+  if (req.method === "POST" && pathname === "/api/auth/login") {
+    if (!authEnabled) return writeAuthError(res, 400, "AUTH_DISABLED", "当前服务器未启用认证");
+    if (!auth?.hasInitializedUsers?.()) return writeAuthError(res, 503, "AUTH_NOT_INITIALIZED", "尚未初始化管理员，请先配置一次性引导账号");
+    try {
+      const result = await auth.login(await parseBody(req), requestMeta);
+      auth.audit({ user: result.user, method: req.method, path: pathname, ip }, { action: "login", result: "success" });
+      return sendJson(res, 200, { user: result.user }, { "set-cookie": auth.cookieHeader(result.token, req) });
+    } catch (error) {
+      if (error.code === "INVALID_CREDENTIALS" || error.code === "LOGIN_RATE_LIMITED") {
+        auth.audit({ method: req.method, path: pathname, ip }, { action: "login", result: "failure" });
+      }
+      return writeAuthError(res, error.status || 401, error.code || "INVALID_CREDENTIALS", error.message || "登录失败", error.details || {});
+    }
+  }
+  if (req.method === "POST" && pathname === "/api/auth/logout") {
+    const token = auth?.tokenFromRequest(req);
+    auth?.logout(token);
+    return sendJson(res, 200, { ok: true }, { "set-cookie": auth?.clearCookieHeader(req) || "session=; Max-Age=0; Path=/" });
+  }
+
+  let context = null;
+  if (!authEnabled) {
+    context = syntheticTestContext(req, url);
+  } else {
+    context = auth?.authenticate(req);
+    if (!context) {
+      if (!auth?.hasInitializedUsers?.()) return writeAuthError(res, 503, "AUTH_NOT_INITIALIZED", "尚未初始化管理员，请先配置一次性引导账号");
+      return writeAuthError(res, 401, "AUTH_REQUIRED", "请先登录");
+    }
+    context = { ...context, method: req.method, path: pathname, ip, userAgent: requestMeta.userAgent };
+  }
+  if (req.method === "GET" && pathname === "/api/auth/me") return sendJson(res, 200, { user: context.user });
+  if (req.method === "POST" && pathname === "/api/auth/change-password") {
+    try {
+      const payload = await parseBody(req);
+      const user = await auth.changePassword(context.user.id, payload.current_password, payload.new_password);
+      auth.audit(context, { action: "change_password", target_type: "user", target_id: context.user.id, result: "success" });
+      return sendJson(res, 200, { user });
+    } catch (error) {
+      return writeAuthError(res, error.status || 400, error.code || "VALIDATION_ERROR", error.message || "密码修改失败", error.details || {});
+    }
+  }
+  if (pathname.startsWith("/api/auth/")) return writeAuthError(res, 404, "API_NOT_FOUND", "认证接口不存在");
+  if (context.user.must_change_password) return writeAuthError(res, 403, "PASSWORD_CHANGE_REQUIRED", "首次登录必须先修改密码");
+  if (isAdminOnlyPath(req.method, pathname) && context.user.role !== "admin") return writeAuthError(res, 403, "FORBIDDEN", "当前角色没有执行此操作的权限");
+  req.authContext = context;
+
+  const shouldAudit = authEnabled && context.user.role === "admin" && !pathname.startsWith("/api/auth/") && !["GET", "HEAD", "OPTIONS"].includes(req.method);
+  if (shouldAudit) {
+    const originalEnd = res.end;
+    const auditWatermark = auditEventWatermark();
+    const initialSnapshot = auditBeforeSnapshot(pathname, auth);
+    const responseChunks = [];
+    let recorded = false;
+    res.end = function auditedEnd(...args) {
+      const chunk = args[0];
+      if (chunk) responseChunks.push(Buffer.isBuffer(chunk) ? chunk.toString("utf8") : String(chunk));
+      if (!recorded) {
+        recorded = true;
+        try {
+          const event = latestAuditEvent(auditWatermark);
+          const target = event ? { target_type: event.target_type, target_id: event.target_id } : auditTarget(pathname);
+          const response = auditResponseSummary(responseChunks);
+          auth.audit(context, {
+            action: `${req.method} ${pathname}`,
+            target_type: target.target_type,
+            target_id: target.target_id,
+            before: event?.before_json ? auditSafe(JSON.parse(event.before_json)) : initialSnapshot,
+            after: event?.after_json ? auditSafe(JSON.parse(event.after_json)) : response,
+            result: Number(res.statusCode) >= 400 ? "failure" : "success"
+          });
+        } catch {
+          // An audit failure must not corrupt the business response.
+        }
+      }
+      return originalEnd.apply(this, args);
+    };
+    const originalWrite = res.write;
+    res.write = function auditedWrite(chunk, ...args) {
+      if (chunk) responseChunks.push(Buffer.isBuffer(chunk) ? chunk.toString("utf8") : String(chunk));
+      return originalWrite.call(this, chunk, ...args);
+    };
+  }
+  if (pathname === "/api/admin/users" && req.method === "GET") return sendJson(res, 200, { items: auth.listUsers() });
+  if (pathname === "/api/admin/users" && req.method === "POST") {
+    try {
+      const user = await auth.createUser(await parseBody(req));
+      return sendJson(res, 201, { user });
+    } catch (error) {
+      return writeAuthError(res, error.status || 400, error.code || "VALIDATION_ERROR", error.message || "用户创建失败", error.details || {});
+    }
+  }
+  const userMatch = pathname.match(/^\/api\/admin\/users\/(\d+)$/);
+  if (userMatch && req.method === "PUT") {
+    try {
+      const user = await auth.updateUser(Number(userMatch[1]), await parseBody(req), context.user.id);
+      return sendJson(res, 200, { user });
+    } catch (error) {
+      return writeAuthError(res, error.status || 400, error.code || "VALIDATION_ERROR", error.message || "用户更新失败", error.details || {});
+    }
+  }
+  const resetMatch = pathname.match(/^\/api\/admin\/users\/(\d+)\/reset-password$/);
+  if (resetMatch && req.method === "POST") {
+    try {
+      const resetPayload = await parseBody(req);
+      const nextPassword = resetPayload.password ?? resetPayload.temporary_password;
+      if (nextPassword === undefined || nextPassword === null) {
+        return writeAuthError(res, 400, "VALIDATION_ERROR", "密码重置需要提供 password 或 temporary_password");
+      }
+      const user = await auth.updateUser(Number(resetMatch[1]), { password: nextPassword }, context.user.id);
+      return sendJson(res, 200, { user });
+    } catch (error) {
+      return writeAuthError(res, error.status || 400, error.code || "VALIDATION_ERROR", error.message || "密码重置失败", error.details || {});
+    }
+  }
+  const activeMatch = pathname.match(/^\/api\/admin\/users\/(\d+)\/(disable|enable)$/);
+  if (activeMatch && req.method === "POST") {
+    try {
+      const user = await auth.updateUser(Number(activeMatch[1]), { is_active: activeMatch[2] === "enable" }, context.user.id);
+      return sendJson(res, 200, { user });
+    } catch (error) {
+      return writeAuthError(res, error.status || 400, error.code || "VALIDATION_ERROR", error.message || "用户状态更新失败", error.details || {});
+    }
+  }
+  if ((pathname === "/api/audit" || pathname === "/api/admin/audit-log") && req.method === "GET") return sendJson(res, 200, { items: auth.listAudit(url.searchParams.get("limit")) });
+  return requestContextStorage.run(context, () => routeBusinessApi(req, res, url));
+}
+
 async function serveStatic(req, res, url) {
   const relative = url.pathname === "/"
     ? "index.html"
@@ -3228,11 +3478,13 @@ async function serveStatic(req, res, url) {
   }
 }
 
-export function createAppServer(database) {
+export function createAppServer(database, options = {}) {
   db = database;
+  migrateAuthSchema(database);
+  const auth = createAuthService(database, options);
   return createServer(async (req, res) => {
     const url = new URL(req.url || "/", `http://${req.headers.host || "localhost"}`);
-    if (url.pathname.startsWith("/api/")) return routeApi(req, res, url);
+    if (url.pathname.startsWith("/api/")) return routeApi(req, res, url, { service: auth, enabled: options.auth !== false });
     return serveStatic(req, res, url);
   });
 }

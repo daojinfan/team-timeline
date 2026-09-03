@@ -1,4 +1,5 @@
 import { createHash, randomUUID } from "node:crypto";
+import { requestContextStorage } from "../request-context.js";
 
 /**
  * V3 is deliberately isolated from the V1/V2 route and schema modules.  The
@@ -320,7 +321,7 @@ function date(value, field, nullable = true) { if (value == null && nullable) re
 function bool(value, field) { if (value === undefined) return 0; if (value !== 0 && value !== 1 && value !== true && value !== false) fail(400, "VALIDATION_ERROR", { field, reason: "boolean required" }); return value ? 1 : 0; }
 function response(res, status, data, meta = {}) { res.writeHead(status, { "content-type": "application/json; charset=utf-8" }); res.end(JSON.stringify({ data, ...(Object.keys(meta).length ? { meta } : {}) })); }
 function errorResponse(res, error) { const e = error instanceof V3Error ? error : new V3Error(500, "INTERNAL_ERROR", {}, error?.message || "service error"); res.writeHead(e.status, { "content-type": "application/json; charset=utf-8" }); res.end(JSON.stringify({ error: { code: e.code, message: e.message, details: e.details }, meta: { request_id: randomUUID() } })); }
-async function body(req) { return await new Promise((resolve, reject) => { let text = ""; req.on("data", (chunk) => { text += chunk; if (text.length > 3_000_000) reject(new V3Error(413, "PAYLOAD_TOO_LARGE")); }); req.on("end", () => { if (!text) return resolve({}); try { resolve(JSON.parse(text)); } catch { reject(new V3Error(400, "VALIDATION_ERROR", { reason: "invalid JSON" })); } }); req.on("error", reject); }); }
+async function body(req) { return await new Promise((resolve, reject) => { let text = ""; req.on("data", (chunk) => { text += chunk; if (text.length > 3_000_000) reject(new V3Error(413, "PAYLOAD_TOO_LARGE")); }); req.on("end", () => { if (!text) return resolve({}); try { const payload = JSON.parse(text); if (req.authContext?.user) { const actorName = req.authContext.user.display_name; Object.defineProperty(payload, "__authActor", { value: actorName, enumerable: false }); payload.submitted_by = actorName; payload.reviewer = actorName; } resolve(payload); } catch { reject(new V3Error(400, "VALIDATION_ERROR", { reason: "invalid JSON" })); } }); req.on("error", reject); }); }
 function transaction(database, fn) { database.exec("BEGIN IMMEDIATE"); try { const out = fn(); database.exec("COMMIT"); return out; } catch (e) { database.exec("ROLLBACK"); throw e; } }
 function tables(database, type) { return database.prepare("SELECT name FROM sqlite_master WHERE type=? ORDER BY name").all(type).map((r) => r.name); }
 
@@ -577,7 +578,7 @@ export function migrateV5Schema(database) {
 function ensureTopic(database, topicId, includeArchived = false) { const row = database.prepare("SELECT * FROM v3_topics WHERE id=?").get(topicId); if (!row || (!includeArchived && row.archived_at)) fail(404, "NOT_FOUND", { resource: "topic", id: topicId }); return row; }
 function ensureSample(database, sampleId, includeArchived = false) { const row = database.prepare("SELECT * FROM v3_samples WHERE id=?").get(sampleId); if (!row || (!includeArchived && row.archived_at)) fail(404, "NOT_FOUND", { resource: "sample", id: sampleId }); return row; }
 function ensureTask(database, taskId) { const row = database.prepare("SELECT * FROM v3_topic_tasks WHERE id=?").get(taskId); if (!row) fail(404, "NOT_FOUND", { resource: "topic_task", id: taskId }); return row; }
-function actor(payload) { return trim(payload.actor ?? payload.submitted_by ?? payload.reviewer ?? "本地用户", "actor", 1, 100); }
+function actor(payload) { return trim(requestContextStorage.getStore()?.user?.display_name ?? payload.__authActor ?? payload.actor ?? payload.submitted_by ?? payload.reviewer ?? "本地用户", "actor", 1, 100); }
 function event(database, topicId, type, values = {}) { database.prepare("INSERT INTO v3_topic_events(topic_id,topic_task_id,sample_id,event_type,actor,before_json,after_json,created_at) VALUES(?,?,?,?,?,?,?,?)").run(topicId, values.taskId ?? null, values.sampleId ?? null, type, values.actor || "本地用户", values.before == null ? null : JSON.stringify(values.before), values.after == null ? null : JSON.stringify(values.after), now()); }
 function expected(row, payload) { if (payload.expected_version !== undefined && Number(payload.expected_version) !== row.version) fail(409, "VERSION_CONFLICT", { expected_version: payload.expected_version, actual_version: row.version }); }
 function listIds(input, field) { if (input === undefined) return []; if (!Array.isArray(input)) fail(400, "VALIDATION_ERROR", { field, reason: "array required" }); const values = input.map((v) => id(v, field)); const unique = [...new Set(values)].sort((a, b) => a - b); if (unique.length !== values.length) fail(400, "VALIDATION_ERROR", { field, reason: "duplicates are not allowed" }); return unique; }
@@ -700,7 +701,6 @@ function cryostatPreviewState(database, topicId, taskIds, cryostatId) {
 
 export async function routeV3Api(req, res, database, url) {
   try {
-    seedV3ReferenceResources(database);
     const path = url.pathname; const method = req.method; let match;
     if (method === "GET" && path === "/api/v3/status") return response(res, 200, { schema_version: 3, checksum: V3_SCHEMA_CHECKSUM, tables: V3_TABLES.length, indexes: V3_INDEXES.length, endpoints: V3_ENDPOINTS.length, v2_compat: true });
     if (method === "GET" && path === "/api/v3/backup") return response(res, 200, { created_at: now(), source: "sqlite", checksum: V3_SCHEMA_CHECKSUM });
@@ -845,9 +845,9 @@ function v5ComputedStatus(database, row, at = todayIsoDate()) {
   return "waiting";
 }
 function v5TaskData(database, row) {
-  const topic = database.prepare("SELECT id,name,purpose,status FROM v5_topics WHERE id=?").get(row.topic_id);
-  const source = row.source_group_id == null ? null : database.prepare("SELECT id,name,is_active FROM v2_source_groups WHERE id=?").get(row.source_group_id);
-  const cryostat = row.cryostat_id == null ? null : database.prepare("SELECT id,name,status FROM v2_cryostats WHERE id=?").get(row.cryostat_id);
+  const topic = database.prepare("SELECT id,name,purpose,status,notes FROM v5_topics WHERE id=?").get(row.topic_id);
+  const source = row.source_group_id == null ? null : database.prepare("SELECT id,name,note,is_active FROM v2_source_groups WHERE id=?").get(row.source_group_id);
+  const cryostat = row.cryostat_id == null ? null : database.prepare("SELECT id,name,note,status FROM v2_cryostats WHERE id=?").get(row.cryostat_id);
   const statusCode = v5ComputedStatus(database, row);
   const statusMeta = V5_STATUS_META[statusCode];
   const samples = v5TaskSamples(database, row.id).map((sample) => ({ id: sample.id, planning_label: sample.planning_label, model: sample.model, sample_no: sample.sample_no, eta_date: sample.eta_date, arrival_date: sample.arrival_date, eta_pending: sample.eta_pending, is_required: sample.is_required, notes: sample.notes }));
@@ -997,7 +997,6 @@ export async function routeV5Api(req, res, database, url) {
     const path = url.pathname; const method = req.method; let match;
     if (method === "GET" && path === "/api/v5/status") return response(res, 200, { schema_version: 1, checksum: V5_SCHEMA_CHECKSUM, tables: V5_TABLES.length, indexes: V5_INDEXES.length, endpoints: V5_ENDPOINTS.length, v1_compat: true, v2_compat: true, v3_compat: true });
     if (method === "GET" && path === "/api/v5/resources") {
-      seedV3ReferenceResources(database);
       return response(res, 200, {
         source_groups: database.prepare("SELECT r.id,r.name,r.note,r.is_active,r.created_at,r.updated_at,(SELECT COUNT(*) FROM v5_tasks t WHERE t.source_group_id=r.id) AS reference_count,(SELECT COUNT(*) FROM v5_tasks t WHERE t.source_group_id=r.id AND t.manual_phase<>'completed') AS current_task_count FROM v2_source_groups r ORDER BY r.name COLLATE NOCASE").all(),
         members: database.prepare("SELECT r.id,r.name,r.role,r.status,r.created_at,r.updated_at,(SELECT COUNT(*) FROM v5_task_members tm WHERE tm.member_id=r.id) AS reference_count,(SELECT COUNT(*) FROM v5_task_members tm JOIN v5_tasks t ON t.id=tm.task_id WHERE tm.member_id=r.id AND t.manual_phase<>'completed') AS current_task_count FROM members r WHERE r.deleted_at IS NULL ORDER BY r.status,r.name COLLATE NOCASE").all(),

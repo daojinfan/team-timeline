@@ -83,7 +83,7 @@ async function fixture() {
   const dir = await mkdtemp(path.join(tmpdir(), "team-task-v2-"));
   const databasePath = path.join(dir, "team_tasks.sqlite");
   const database = await initDatabase(databasePath);
-  const server = createAppServer(database);
+  const server = createAppServer(database, { auth: false });
   await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
   const baseUrl = `http://127.0.0.1:${server.address().port}`;
   const request = async (route, { method = "GET", body, expected = [200] } = {}) => {
@@ -257,7 +257,7 @@ test("resource, plan, test-item, template, event, archive, arrival, and backup A
     const state = await createPlanFixture(app);
 
     const groups = await app.request("/api/v2/source-groups?include_inactive=1&sort=name_asc");
-    assert.equal(groups.payload.meta.total, 1);
+    assert.equal(groups.payload.meta.total, 5);
     const updatedGroup = (await app.request(`/api/v2/source-groups/${state.group.id}`, {
       method: "PUT",
       body: { name: "量子器件组", note: "已复核", is_active: true, expected_updated_at: state.group.updated_at }
@@ -273,7 +273,7 @@ test("resource, plan, test-item, template, event, archive, arrival, and backup A
     assert.equal(updatedContact.title, "对方负责人");
 
     const cryostats = await app.request("/api/v2/cryostats?include_inactive=1");
-    assert.equal(cryostats.payload.meta.total, 2);
+    assert.equal(cryostats.payload.meta.total, 5);
     const updatedCryostat = (await app.request(`/api/v2/cryostats/${state.secondCryostat.id}`, {
       method: "PUT",
       body: { name: "DR-2", note: "备用冷机", status: "active", expected_updated_at: state.secondCryostat.updated_at }

@@ -7,6 +7,25 @@
     <link rel="stylesheet" href="/styles.css">
   </head>
   <body>
+    <div id="authGate" class="auth-gate" hidden>
+      <section class="auth-card" aria-labelledby="authTitle">
+        <div class="auth-brand">团队任务管理系统</div>
+        <h2 id="authTitle">登录系统</h2>
+        <p id="authMessage" class="auth-message">请输入系统账号和密码。</p>
+        <form id="loginForm" class="auth-form">
+          <label>用户名<input id="loginUsername" name="username" autocomplete="username" required autofocus></label>
+          <label>密码<input id="loginPassword" name="password" type="password" autocomplete="current-password" required></label>
+          <button type="submit" class="primary-action">登录</button>
+        </form>
+        <form id="changePasswordForm" class="auth-form" hidden>
+          <label>当前密码<input name="current_password" type="password" autocomplete="current-password" required></label>
+          <label>新密码<input name="new_password" type="password" autocomplete="new-password" minlength="12" required></label>
+          <label>确认新密码<input name="confirm_password" type="password" autocomplete="new-password" minlength="12" required></label>
+          <button type="submit" class="primary-action">保存新密码</button>
+        </form>
+        <div id="bootstrapMessage" class="auth-bootstrap" hidden>系统尚未初始化管理员，请在服务器环境变量中配置一次性引导账号后重启服务。</div>
+      </section>
+    </div>
     <header class="topbar">
       <div class="brand-block">
         <h1>小组任务管理与甘特图系统</h1>
@@ -31,6 +50,10 @@
           </div>
           <div class="v5-header-actions">
             <span id="v5SyncStatus" class="v5-sync-status" role="status" aria-live="polite">正在读取 V5 数据…</span>
+            <span id="authUserBadge" class="auth-user-badge" hidden></span>
+            <button id="adminUsersBtn" class="ghost-button" type="button" hidden>用户管理</button>
+            <button id="adminAuditBtn" class="ghost-button" type="button" hidden>操作审计</button>
+            <button id="logoutBtn" class="ghost-button" type="button" hidden>退出登录</button>
             <button id="v5RefreshBtn" class="ghost-button" type="button">刷新</button>
             <button id="v5NewTaskBtn" class="primary-action" type="button">＋ 新增任务</button>
           </div>
@@ -497,6 +520,13 @@
       </form>
     </dialog>
 
+    <dialog id="v5TaskViewDialog" class="v5-dialog v5-task-view-dialog" aria-labelledby="v5TaskViewDialogTitle">
+      <section class="v5-dialog-form">
+        <header class="v5-dialog-header"><div><span class="v5-eyebrow">只读详情</span><h2 id="v5TaskViewDialogTitle">任务详情</h2><p>普通用户可以查看任务的完整信息，但不能修改业务数据。</p></div><button type="button" class="icon-button" data-v5-close-dialog="v5TaskViewDialog" aria-label="关闭任务详情">×</button></header>
+        <div id="v5TaskViewContent" class="v5-dialog-body"><div class="v5-empty-state"><p>正在读取任务详情…</p></div></div>
+      </section>
+    </dialog>
+
     <dialog id="v5TopicDialog" class="v5-dialog" aria-labelledby="v5TopicDialogTitle">
       <form id="v5TopicForm" class="v5-dialog-form v5-narrow-dialog-form">
         <header class="v5-dialog-header"><div><span class="v5-eyebrow">专题管理</span><h2 id="v5TopicDialogTitle">新增专题</h2><p>专题只维护名称、目的、状态和备注。</p></div><button type="button" class="icon-button" data-v5-close-dialog="v5TopicDialog" aria-label="关闭专题编辑">×</button></header>
@@ -850,7 +880,25 @@
       </form>
     </dialog>
 
+    <dialog id="userAdminDialog" class="v5-dialog" aria-labelledby="userAdminTitle">
+      <form id="userAdminForm" class="v5-dialog-form">
+        <header class="v5-dialog-header"><div><span class="v5-eyebrow">访问控制</span><h2 id="userAdminTitle">系统用户管理</h2><p>管理员创建和停用账号；新账号首次登录必须修改密码。</p></div><button id="closeUserAdminBtn" class="icon-button" type="button" aria-label="关闭用户管理">×</button></header>
+        <div class="v5-dialog-body">
+          <div id="userAdminError" class="v5-form-error" role="alert" hidden></div>
+          <section class="dialog-section"><h3>创建用户</h3><div class="v5-form-grid"><label>用户名<input name="username" minlength="3" maxlength="64" pattern="[A-Za-z0-9][A-Za-z0-9._-]{2,63}" required></label><label>显示名称<input name="display_name" maxlength="100" required></label><label>角色<select name="role"><option value="viewer">普通用户</option><option value="admin">管理员</option></select></label><label>初始密码<input name="password" type="password" minlength="12" maxlength="200" autocomplete="new-password" required></label></div><button class="primary-action" type="submit">创建账号</button></section>
+          <section class="dialog-section"><h3>现有账号</h3><div id="userAdminList" class="v5-detail-list"><p class="v5-muted">正在读取…</p></div></section>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="auditDialog" class="v5-dialog" aria-labelledby="auditTitle">
+      <section class="v5-dialog-form">
+        <header class="v5-dialog-header"><div><span class="v5-eyebrow">安全审计</span><h2 id="auditTitle">操作审计</h2><p>仅管理员可见；记录登录、用户管理和业务写操作，不保存密码或 Session Token。</p></div><button id="closeAuditBtn" class="icon-button" type="button" aria-label="关闭操作审计">×</button></header>
+        <div class="v5-dialog-body"><div id="auditList" class="audit-list"><p class="v5-muted">正在读取…</p></div></div>
+      </section>
+    </dialog>
+
     <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
-    <script src="/app.js?v=v31" type="module"></script>
+    <script src="/app.js?v=v35" type="module"></script>
   </body>
 </html>

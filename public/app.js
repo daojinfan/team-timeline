@@ -1,4 +1,5 @@
 ﻿const state = {
+  auth: { user: null, ready: false },
   members: [],
   tasks: [],
   v3ExecutionTaskIndex: new Map(),
@@ -239,6 +240,7 @@ async function runBusyAction(key, action, options = {}) {
 async function api(path, options = {}) {
   const response = await fetch(path, {
     headers: { "content-type": "application/json" },
+    credentials: "same-origin",
     ...options
   });
   const type = response.headers.get("content-type") || "";
@@ -248,9 +250,199 @@ async function api(path, options = {}) {
     error.code = payload?.code || "REQUEST_FAILED";
     error.details = payload?.details || {};
     error.status = response.status;
+    if (response.status === 401 || response.status === 503) showAuthGate(error.code);
     throw error;
   }
   return payload;
+}
+
+function showAuthGate(code = "") {
+  const gate = $("#authGate");
+  if (!gate) return;
+  gate.hidden = false;
+  $("header.topbar")?.setAttribute("aria-hidden", "true");
+  $("main.page")?.setAttribute("aria-hidden", "true");
+  const message = $("#authMessage");
+  const bootstrap = $("#bootstrapMessage");
+  if (code === "AUTH_NOT_INITIALIZED") {
+    if (message) { message.textContent = "系统尚未初始化管理员。"; message.classList.add("is-error"); }
+    if (bootstrap) bootstrap.hidden = false;
+  } else if (message) {
+    message.textContent = code === "INVALID_CREDENTIALS" ? "用户名或密码错误，请重试。" : "请输入系统账号和密码。";
+    message.classList.toggle("is-error", Boolean(code));
+  }
+  $("#loginUsername")?.focus();
+}
+
+function hideAuthGate(user) {
+  state.auth = { user, ready: true };
+  const gate = $("#authGate");
+  const loginForm = $("#loginForm");
+  const changeForm = $("#changePasswordForm");
+  const message = $("#authMessage");
+  if (user.must_change_password) {
+    if (gate) gate.hidden = false;
+    if (loginForm) loginForm.hidden = true;
+    if (changeForm) changeForm.hidden = false;
+    if (message) { message.textContent = "首次登录需要先修改密码。"; message.classList.remove("is-error"); }
+    $("#changePasswordForm input[name=current_password]")?.focus();
+    return false;
+  }
+  if (gate) gate.hidden = true;
+  if (loginForm) loginForm.hidden = false;
+  if (changeForm) changeForm.hidden = true;
+  $("header.topbar")?.removeAttribute("aria-hidden");
+  $("main.page")?.removeAttribute("aria-hidden");
+  const badge = $("#authUserBadge");
+  if (badge) { badge.hidden = false; badge.textContent = `${user.display_name} · ${user.role === "admin" ? "管理员" : "普通用户"}`; }
+  const adminUsers = $("#adminUsersBtn");
+  if (adminUsers) adminUsers.hidden = user.role !== "admin";
+  const adminAudit = $("#adminAuditBtn");
+  if (adminAudit) adminAudit.hidden = user.role !== "admin";
+  $("#logoutBtn")?.removeAttribute("hidden");
+  applyRoleSurface(user.role);
+  return true;
+}
+
+function applyRoleSurface(role) {
+  const viewer = role === "viewer";
+  document.body.classList.toggle("viewer-mode", viewer);
+}
+
+async function initAuth() {
+  try {
+    const response = await fetch("/api/auth/me", { credentials: "same-origin", headers: { "content-type": "application/json" } });
+    const payload = response.headers.get("content-type")?.includes("application/json") ? await response.json() : {};
+    if (!response.ok) { showAuthGate(payload.code || payload.error?.code || "AUTH_REQUIRED"); return false; }
+    return hideAuthGate(payload.user);
+  } catch {
+    showAuthGate("AUTH_REQUIRED");
+    return false;
+  }
+}
+
+async function submitLogin(event) {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const button = form.querySelector("button[type=submit]");
+  if (button) button.disabled = true;
+  try {
+    const response = await fetch("/api/auth/login", { method: "POST", credentials: "same-origin", headers: { "content-type": "application/json" }, body: JSON.stringify({ username: form.elements.username.value.trim(), password: form.elements.password.value }) });
+    const payload = response.headers.get("content-type")?.includes("application/json") ? await response.json() : {};
+    if (!response.ok) { showAuthGate(payload.code || payload.error?.code || "INVALID_CREDENTIALS"); return; }
+    form.reset();
+    if (hideAuthGate(payload.user)) await loadAuthenticatedWorkspace();
+  } catch (error) {
+    showAuthGate(error.code || "AUTH_REQUIRED");
+  } finally {
+    if (button) button.disabled = false;
+  }
+}
+
+async function submitPasswordChange(event) {
+  event.preventDefault();
+  const form = event.currentTarget;
+  if (form.elements.new_password.value !== form.elements.confirm_password.value) {
+    showAuthGate("PASSWORD_MISMATCH");
+    const message = $("#authMessage");
+    if (message) message.textContent = "两次输入的新密码不一致。";
+    return;
+  }
+  const button = form.querySelector("button[type=submit]");
+  if (button) button.disabled = true;
+  try {
+    const response = await fetch("/api/auth/change-password", { method: "POST", credentials: "same-origin", headers: { "content-type": "application/json" }, body: JSON.stringify({ current_password: form.elements.current_password.value, new_password: form.elements.new_password.value }) });
+    const payload = response.headers.get("content-type")?.includes("application/json") ? await response.json() : {};
+    if (!response.ok) { showAuthGate(payload.code || payload.error?.code || "INVALID_PASSWORD"); return; }
+    form.reset();
+    if (hideAuthGate(payload.user)) await loadAuthenticatedWorkspace();
+  } catch (error) {
+    showAuthGate(error.code || "INVALID_PASSWORD");
+  } finally {
+    if (button) button.disabled = false;
+  }
+}
+
+async function logout() {
+  await fetch("/api/auth/logout", { method: "POST", credentials: "same-origin", headers: { "content-type": "application/json" }, body: "{}" });
+  state.auth = { user: null, ready: false };
+  document.body.classList.remove("viewer-mode");
+  $("#authUserBadge")?.setAttribute("hidden", "");
+  $("#adminUsersBtn")?.setAttribute("hidden", "");
+  $("#adminAuditBtn")?.setAttribute("hidden", "");
+  $("#logoutBtn")?.setAttribute("hidden", "");
+  showAuthGate("AUTH_REQUIRED");
+}
+
+function userAdminError(message = "") {
+  const node = $("#userAdminError");
+  if (node) { node.textContent = message; node.hidden = !message; }
+}
+
+function renderAdminUsers(users = []) {
+  const list = $("#userAdminList");
+  if (!list) return;
+  list.innerHTML = users.length ? users.map((user) => `<div class="v5-user-row"><div><strong>${escapeHtml(user.display_name)}</strong><span>${escapeHtml(user.username)} · ${user.role === "admin" ? "管理员" : "普通用户"}${user.is_active ? "" : " · 已停用"}</span></div><div class="v5-topic-actions"><button class="small-button" type="button" data-auth-reset="${user.id}">重置密码</button><button class="small-button" type="button" data-auth-toggle="${user.id}" data-auth-active="${user.is_active ? "1" : "0"}">${user.is_active ? "停用" : "启用"}</button></div></div>`).join("") : "<p class='v5-muted'>暂无系统用户。</p>";
+}
+
+async function loadAdminUsers() {
+  userAdminError();
+  const result = await api("/api/admin/users");
+  renderAdminUsers(result.items || []);
+}
+
+async function openAdminUsers() {
+  try {
+    await loadAdminUsers();
+    const dialog = $("#userAdminDialog");
+    if (dialog?.showModal) dialog.showModal(); else dialog?.setAttribute("open", "");
+  } catch (error) { showToast(error.message || "用户读取失败", { type: "error" }); }
+}
+
+async function submitAdminUser(event) {
+  event.preventDefault();
+  const form = event.currentTarget;
+  try {
+    await api("/api/admin/users", { method: "POST", body: JSON.stringify({ username: form.elements.username.value.trim(), display_name: form.elements.display_name.value.trim(), role: form.elements.role.value, password: form.elements.password.value }) });
+    form.reset();
+    form.elements.role.value = "viewer";
+    await loadAdminUsers();
+    showToast("系统用户已创建");
+  } catch (error) { userAdminError(error.message || "用户创建失败"); }
+}
+
+async function handleAdminUserAction(event) {
+  const toggle = event.target.closest("[data-auth-toggle]");
+  const reset = event.target.closest("[data-auth-reset]");
+  try {
+    if (toggle) {
+      const id = Number(toggle.dataset.authToggle);
+      const enable = toggle.dataset.authActive !== "1";
+      await api(`/api/admin/users/${id}/${enable ? "enable" : "disable"}`, { method: "POST", body: "{}" });
+      await loadAdminUsers();
+      showToast(enable ? "账号已启用" : "账号已停用");
+    } else if (reset) {
+      const password = window.prompt("请输入新的临时密码（至少 12 位）");
+      if (!password) return;
+      await api(`/api/admin/users/${Number(reset.dataset.authReset)}/reset-password`, { method: "POST", body: JSON.stringify({ password }) });
+      showToast("临时密码已重置");
+    }
+  } catch (error) { userAdminError(error.message || "用户操作失败"); }
+}
+
+function renderAuditRows(rows = []) {
+  const list = $("#auditList");
+  if (!list) return;
+  list.innerHTML = rows.length ? `<div class="audit-row"><strong>时间</strong><strong>操作</strong><strong>结果</strong></div>${rows.map((row) => `<div class="audit-row"><span>${escapeHtml(row.created_at)} · ${escapeHtml(row.display_name || row.username || "未知用户")}</span><span>${escapeHtml(row.action)}${row.path ? ` · ${escapeHtml(row.path)}` : ""}</span><span class="audit-result-${row.result === "success" ? "success" : "failure"}">${row.result === "success" ? "成功" : "失败"}</span></div>`).join("")}` : "<p class='v5-muted'>暂无审计记录。</p>";
+}
+
+async function openAdminAudit() {
+  try {
+    const result = await api("/api/admin/audit-log?limit=200");
+    renderAuditRows(result.items || []);
+    const dialog = $("#auditDialog");
+    if (dialog?.showModal) dialog.showModal(); else dialog?.setAttribute("open", "");
+  } catch (error) { showToast(error.message || "审计记录读取失败", { type: "error" }); }
 }
 
 function filterQuery() {
@@ -266,13 +458,14 @@ function filterQuery() {
 }
 
 async function loadData() {
+  const isAdmin = state.auth.user?.role === "admin";
   const [dashboard, logs, templates, archiveTasks, trash, maintenancePreview] = await Promise.all([
     api(`/api/dashboard${filterQuery()}`),
-    api("/api/logs"),
+    isAdmin ? api("/api/logs") : Promise.resolve([]),
     api("/api/templates"),
     api("/api/archive/tasks"),
     api("/api/trash"),
-    api("/api/maintenance/preview")
+    isAdmin ? api("/api/maintenance/preview") : Promise.resolve({ archived_tasks: 0, deleted_tasks: 0, deleted_members: 0, logs: 0 })
   ]);
   Object.assign(state, dashboard, {
     logs,
@@ -2124,6 +2317,7 @@ function saveV2Preferences() {
 async function v2Api(path, options = {}) {
   const response = await fetch(path, {
     headers: { "content-type": "application/json" },
+    credentials: "same-origin",
     ...options
   });
   const type = response.headers.get("content-type") || "";
@@ -2133,6 +2327,7 @@ async function v2Api(path, options = {}) {
     error.code = payload?.code || "REQUEST_FAILED";
     error.details = payload?.details || {};
     error.status = response.status;
+    if (response.status === 401 || response.status === 503) showAuthGate(error.code);
     throw error;
   }
   return payload;
@@ -2528,9 +2723,10 @@ async function openV2PlanDetail(planId, trigger = null) {
   }
   if (v2State.activeV2View !== "plans") setV2View("plans");
   try {
+    const eventsPromise = state.auth.user?.role === "admin" ? v2Api(`/api/v2/plans/${planId}/events?limit=50&sort=id_desc`) : Promise.resolve({ data: [] });
     const [result, events] = await Promise.all([
       v2Api(`/api/v2/plans/${planId}`),
-      v2Api(`/api/v2/plans/${planId}/events?limit=50&sort=id_desc`)
+      eventsPromise
     ]);
     result.data.events = events.data;
     v2State.activePlanId = Number(planId);
@@ -3361,9 +3557,6 @@ setDefaultDates();
 renderViewState();
 renderSelection();
 setV2View(v2State.activeV2View);
-loadData()
-  .then(loadV2Workspace)
-  .catch((error) => showToast(v2ErrorText(error), { type: "error" }));
 
 /* Topic/sample/task-chain client surface. It keeps the V1/V2 compatibility
    data and APIs intact; all writes still go through human preview/confirm
@@ -3384,7 +3577,7 @@ function v3ErrorText(error) {
 }
 
 async function v3Api(path, options = {}) {
-  const response = await fetch(path, { headers: { "content-type": "application/json", ...(options.headers || {}) }, ...options });
+  const response = await fetch(path, { credentials: "same-origin", headers: { "content-type": "application/json", ...(options.headers || {}) }, ...options });
   const type = response.headers.get("content-type") || "";
   const payload = type.includes("json") ? await response.json() : await response.text();
   if (!response.ok) {
@@ -3393,6 +3586,7 @@ async function v3Api(path, options = {}) {
     error.code = detail?.code || payload?.code || "REQUEST_FAILED";
     error.details = detail?.details || payload?.details || {};
     error.status = response.status;
+    if (response.status === 401 || response.status === 503) showAuthGate(error.code);
     throw error;
   }
   return payload;
@@ -3507,8 +3701,9 @@ async function v3LoadTopics() {
   v3State.cryostats = result.cryostats || [];
   await Promise.all(v3State.topics.map(async (topic) => {
     try {
+      const eventsPromise = state.auth.user?.role === "admin" ? v3Api(`/api/v3/topics/${topic.id}/events`) : Promise.resolve({ data: { items: [] } });
       const [samples, tasks, submissions, events] = await Promise.all([
-        v3Api(`/api/v3/topics/${topic.id}/samples`), v3Api(`/api/v3/topics/${topic.id}/tasks`), v3Api(`/api/v3/topics/${topic.id}/submissions`), v3Api(`/api/v3/topics/${topic.id}/events`)
+        v3Api(`/api/v3/topics/${topic.id}/samples`), v3Api(`/api/v3/topics/${topic.id}/tasks`), v3Api(`/api/v3/topics/${topic.id}/submissions`), eventsPromise
       ]);
       v3State.topicDetails.set(topic.id, { topic, samples: samples.data?.items || [], tasks: tasks.data?.items || [], submissions: submissions.data?.items || [], events: events.data?.items || [] });
     } catch { v3State.topicDetails.set(topic.id, { topic, samples: [], tasks: [], submissions: [], events: [] }); }
@@ -3655,7 +3850,8 @@ function v3RenderTopic() {
 }
 async function v3LoadTopic(id) {
   if (!v3State.members.length) await v3LoadMembers();
-  const [topic, samples, tasks, template, submissions, events] = await Promise.all([v3Api(`/api/v3/topics/${id}`), v3Api(`/api/v3/topics/${id}/samples`), v3Api(`/api/v3/topics/${id}/tasks`), v3Api(`/api/v3/topics/${id}/acceptance-template`), v3Api(`/api/v3/topics/${id}/submissions`), v3Api(`/api/v3/topics/${id}/events`)]);
+  const eventsPromise = state.auth.user?.role === "admin" ? v3Api(`/api/v3/topics/${id}/events`) : Promise.resolve({ data: { items: [] } });
+  const [topic, samples, tasks, template, submissions, events] = await Promise.all([v3Api(`/api/v3/topics/${id}`), v3Api(`/api/v3/topics/${id}/samples`), v3Api(`/api/v3/topics/${id}/tasks`), v3Api(`/api/v3/topics/${id}/acceptance-template`), v3Api(`/api/v3/topics/${id}/submissions`), eventsPromise]);
   v3State.topic = topic.data; v3State.samples = samples.data?.items || []; v3State.tasks = tasks.data?.items || []; v3State.template = template.data || null;
   v3State.topicDetails.set(v3State.topic.id, { topic: v3State.topic, samples: v3State.samples, tasks: v3State.tasks, submissions: submissions.data?.items || [], events: events.data?.items || [] });
   v3RebuildExecutionTaskIndex();
@@ -4022,7 +4218,7 @@ const V5_SMART_RANGE_LIMITS = { pastDays: { min: 0, max: 90 }, futureDays: { min
 function v5ResourceRows(kind) { return v5State.resources[v5ResourceKeys[kind] || kind] || []; }
 
 async function v5Api(path, options = {}) {
-  const response = await fetch(path, { headers: { "content-type": "application/json", ...(options.headers || {}) }, ...options });
+  const response = await fetch(path, { credentials: "same-origin", headers: { "content-type": "application/json", ...(options.headers || {}) }, ...options });
   const type = response.headers.get("content-type") || "";
   const payload = type.includes("application/json") ? await response.json() : await response.text();
   if (!response.ok) {
@@ -4031,6 +4227,7 @@ async function v5Api(path, options = {}) {
     error.code = (typeof apiError === "object" ? apiError?.code : payload?.code) || "REQUEST_FAILED";
     error.details = (typeof apiError === "object" ? apiError?.details : payload?.details) || {};
     error.status = response.status;
+    if (response.status === 401 || response.status === 503) showAuthGate(error.code);
     throw error;
   }
   return payload?.data !== undefined ? payload.data : payload;
@@ -4471,10 +4668,64 @@ function v5InlineTaskOptions(task) {
   return { topicOptions, sourceOptions, cryostatOptions, memberOptions };
 }
 
+function v5ManualPhaseLabel(phase) {
+  return { waiting: "等待样品", testing: "正在测试", completed: "已完成" }[phase] || "未设置";
+}
+
+function v5ReadOnlyValue(value, fallback = "未填写") {
+  const text = String(value ?? "").trim();
+  return escapeHtml(text || fallback);
+}
+
+function v5ReadOnlyField(label, value, full = false, html = false) {
+  return `<div class="v5-readonly-field${full ? " full" : ""}"><span>${escapeHtml(label)}</span><strong>${html ? value : v5ReadOnlyValue(value)}</strong></div>`;
+}
+
+function v5ReadOnlyTaskDetailsMarkup(task) {
+  const samples = Array.isArray(task.samples) ? task.samples : [];
+  const testItems = Array.isArray(task.test_items) ? task.test_items : [];
+  const participants = Array.isArray(task.participants) ? task.participants : [];
+  const topicName = task.topic?.name || v5TopicName(task.topic_id);
+  const sourceName = task.source_group?.name || "来源小组待补充";
+  const cryostatName = task.cryostat?.name || "制冷机待补充";
+  const sampleMarkup = samples.length ? samples.map((sample, index) => `<article class="v5-readonly-item"><strong>${index + 1}. ${v5ReadOnlyValue(sample.model || sample.sample_no, "未命名样品")}${sample.is_required ? " · 必需" : ""}</strong><p><strong>规划标签：</strong>${v5ReadOnlyValue(sample.planning_label)}</p><p><strong>样品型号：</strong>${v5ReadOnlyValue(sample.model)}</p><p><strong>样品编号：</strong>${v5ReadOnlyValue(sample.sample_no)}</p><p><strong>预计交付：</strong>${v5ReadOnlyValue(sample.eta_date, sample.eta_pending ? "待确认" : "未填写")}</p><p><strong>实际到样：</strong>${v5ReadOnlyValue(sample.arrival_date)}</p><p><strong>样品备注：</strong>${v5ReadOnlyValue(sample.notes)}</p></article>`).join("") : `<p class="v5-readonly-empty">未关联样品。</p>`;
+  const testMarkup = testItems.length ? testItems.map((item, index) => `<article class="v5-readonly-item"><strong>${index + 1}. ${v5ReadOnlyValue(item.name, "未命名测试项")}</strong><p><strong>测试要求：</strong>${v5ReadOnlyValue(item.acceptance_criteria)}</p><p><strong>备注：</strong>${v5ReadOnlyValue(item.note)}</p></article>`).join("") : `<p class="v5-readonly-empty">未配置测试项。</p>`;
+  const memberMarkup = participants.length ? participants.map((member) => `<article class="v5-readonly-item"><strong>${v5ReadOnlyValue(member.name, "未命名成员")}</strong><p><strong>角色：</strong>${v5ReadOnlyValue(member.role, "测控成员")} · <strong>状态：</strong>${v5ReadOnlyValue(member.status)}</p><p><strong>参与排期：</strong>${v5ReadOnlyValue(member.start_date, "未排期")} → ${v5ReadOnlyValue(member.end_date, "—")}</p></article>`).join("") : `<p class="v5-readonly-empty">未分配参与成员。</p>`;
+  const contextMarkup = `<section class="v5-readonly-section"><h4>关联上下文</h4><div class="v5-readonly-grid">${v5ReadOnlyField("专题名称", topicName)}${v5ReadOnlyField("专题状态", task.topic?.status === "archived" ? "已归档" : "进行中")}${v5ReadOnlyField("专题目的", task.topic?.purpose, true)}${v5ReadOnlyField("专题备注", task.topic?.notes, true)}${v5ReadOnlyField("来源小组", sourceName)}${v5ReadOnlyField("小组备注", task.source_group?.note, true)}${v5ReadOnlyField("制冷机", cryostatName)}${v5ReadOnlyField("设备备注", task.cryostat?.note, true)}</div></section>`;
+  return `<div class="v5-readonly-sections"><section class="v5-readonly-section"><h4>任务基本信息</h4><div class="v5-readonly-grid">${v5ReadOnlyField("任务编号", task.task_number || `TASK-${task.id}`)}${v5ReadOnlyField("所属专题", topicName)}${v5ReadOnlyField("来源小组", sourceName)}${v5ReadOnlyField("制冷机", cryostatName)}${v5ReadOnlyField("当前状态", v5StatusChip(task), false, true)}${v5ReadOnlyField("人工阶段", v5ManualPhaseLabel(task.manual_phase))}${v5ReadOnlyField("计划开始", task.start_date)}${v5ReadOnlyField("计划结束", task.end_date)}${v5ReadOnlyField("测试目的", task.purpose, true)}${v5ReadOnlyField("任务备注", task.notes, true)}</div></section>${contextMarkup}<section class="v5-readonly-section"><h4>测试项（${testItems.length}）</h4><div class="v5-readonly-list">${testMarkup}</div></section><section class="v5-readonly-section"><h4>样品信息（${samples.length}）</h4><div class="v5-readonly-list">${sampleMarkup}</div></section><section class="v5-readonly-section"><h4>参与成员（${participants.length}）</h4><div class="v5-readonly-list">${memberMarkup}</div></section><section class="v5-readonly-section"><h4>记录时间</h4><div class="v5-readonly-grid">${v5ReadOnlyField("创建时间", task.created_at)}${v5ReadOnlyField("更新时间", task.updated_at)}</div></section></div>`;
+}
+
+function v5ReadOnlyTaskPaneMarkup(task) {
+  const samples = Array.isArray(task.samples) ? task.samples : [];
+  const participants = Array.isArray(task.participants) ? task.participants : [];
+  const sampleSummary = samples.map((sample) => [sample.model, sample.sample_no].filter(Boolean).join(" · ")).filter(Boolean).join("、") || "待补充";
+  const memberSummary = participants.map((member) => member.name).filter(Boolean).join("、") || "未分配";
+  return `<div class="v5-editor-pane-header"><div><span class="v5-eyebrow">${v5ReadOnlyValue(task.task_number || `TASK-${task.id}`)}</span><h3>${v5ReadOnlyValue(task.title, "未命名任务")}</h3><small class="v5-muted">${v5ReadOnlyValue(task.topic?.name || v5TopicName(task.topic_id))} · 只读查看</small></div><div class="v5-topic-actions"><button class="small-button" type="button" data-v5-view-task="${task.id}">查看全部信息</button></div></div><div class="v5-readonly-pane-body"><section class="v5-readonly-section"><h4>任务摘要</h4><div class="v5-readonly-grid">${v5ReadOnlyField("当前状态", v5StatusChip(task), false, true)}${v5ReadOnlyField("人工阶段", v5ManualPhaseLabel(task.manual_phase))}${v5ReadOnlyField("计划排期", `${task.start_date || "未排期"} → ${task.end_date || "—"}`)}${v5ReadOnlyField("制冷机", task.cryostat?.name || "制冷机待补充")}${v5ReadOnlyField("测试项", `${(task.test_items || []).length} 项`)}${v5ReadOnlyField("参与成员", memberSummary)}${v5ReadOnlyField("样品", sampleSummary, true)}${v5ReadOnlyField("测试目的", task.purpose, true)}${v5ReadOnlyField("任务备注", task.notes, true)}</div></section><p class="v5-field-hint">当前为普通用户只读模式。需要查看样品、测试项和成员排期等完整字段时，点击“查看全部信息”。</p></div>`;
+}
+
+async function v5OpenTaskViewer(taskId) {
+  const id = Number(taskId);
+  if (!Number.isInteger(id) || id <= 0) return;
+  const content = $("#v5TaskViewContent");
+  const localTask = v5State.tasks.find((row) => Number(row.id) === id);
+  if (!content || !localTask) return;
+  $("#v5TaskViewDialogTitle").textContent = `${localTask.task_number || `TASK-${id}`} · ${localTask.title || "任务详情"}`;
+  content.innerHTML = `<div class="v5-empty-state"><p>正在读取最新任务详情…</p></div>`;
+  v5Open("#v5TaskViewDialog");
+  try {
+    const task = await v5Api(`/api/v5/tasks/${id}`);
+    $("#v5TaskViewDialogTitle").textContent = `${task.task_number || `TASK-${id}`} · ${task.title || "任务详情"}`;
+    content.innerHTML = v5ReadOnlyTaskDetailsMarkup(task);
+  } catch (error) {
+    content.innerHTML = `<div class="v5-empty-state"><h3>任务详情读取失败</h3><p>${escapeHtml(v5ErrorText(error))}</p></div>`;
+  }
+}
+
 function v5RenderSelectedTask() {
   const pane = $("#v5EditorPane"); const task = v5State.tasks.find((row) => Number(row.id) === Number(v5State.selectedTaskId));
   if (!pane) return;
   if (!task) { pane.innerHTML = `<div class="v5-empty-state"><span class="v5-empty-icon">✎</span><h3 id="v5EditorPaneTitle">选择任务开始编辑</h3><p>专题、来源小组、测试目的、样品、排期、制冷机和参与成员都可以在这里一次完成。</p><button id="v5EmptyNewTaskBtn" class="primary-action" type="button">新增任务</button></div>`; return; }
+  if (state.auth.user?.role === "viewer") { pane.innerHTML = v5ReadOnlyTaskPaneMarkup(task); return; }
   const missing = [task.source_group_id, task.purpose, task.samples?.length, task.start_date && task.end_date, task.cryostat_id, task.participant_member_ids?.length].filter((value) => !value).length;
   const options = v5InlineTaskOptions(task);
   v5State.inlineMemberIds = new Set((task.participants || []).map((member) => Number(member.id)));
@@ -4920,6 +5171,11 @@ function v5RenderExecutionDetail() {
   if (!task) { node.innerHTML = ""; return; }
   const members = v5ExecutionTaskMembers(task);
   const sampleSummary = (task.samples || []).map((sample) => [sample.model, sample.sample_no].filter(Boolean).join(" · ")).filter(Boolean).join("、") || "待补充";
+  if (state.auth.user?.role === "viewer") {
+    node.innerHTML = `<div class="v5-execution-detail-body"><div class="v5-execution-detail-title"><strong>${escapeHtml(task.task_number || `TASK-${task.id}`)} · ${escapeHtml(task.title)}</strong>${v5StatusChip(task)}</div><p class="v5-muted">${escapeHtml(v5TopicName(task.topic_id))} · ${escapeHtml(task.source_group?.name || "来源小组待补充")} · ${escapeHtml(task.cryostat?.name || "制冷机待补充")}</p><dl class="v5-execution-facts"><div><dt>整体排期</dt><dd>${escapeHtml(task.start_date || "未排期")} → ${escapeHtml(task.end_date || "—")}</dd></div><div><dt>测试目的</dt><dd>${escapeHtml(task.purpose || "待补充")}</dd></div><div><dt>样品</dt><dd>${escapeHtml(sampleSummary)}</dd></div><div><dt>参与成员</dt><dd>${escapeHtml(members.map((member) => member.name).join("、") || "未分配")}</dd></div></dl><div class="v5-execution-detail-actions"><button type="button" class="primary-action" data-v5-view-task="${task.id}">查看全部信息</button></div></div>`;
+    return;
+  }
+  const taskAction = `<button type="button" class="primary-action" data-v5-edit-task="${task.id}">全量编辑</button>`;
   node.innerHTML = `<div class="v5-execution-detail-body">
     <div class="v5-execution-detail-title"><strong>${escapeHtml(task.task_number || `TASK-${task.id}`)} · ${escapeHtml(task.title)}</strong>${v5StatusChip(task)}</div>
     <p class="v5-muted">${escapeHtml(v5TopicName(task.topic_id))} · ${escapeHtml(task.source_group?.name || "来源小组待补充")} · ${escapeHtml(task.cryostat?.name || "制冷机待补充")}</p>
@@ -4935,7 +5191,7 @@ function v5RenderExecutionDetail() {
       ${members.length ? members.map((member) => `<article class="v5-execution-detail-member-row" data-v5-exec-member-row="${member.id}"><div class="v5-execution-detail-member-heading"><strong>${escapeHtml(member.name)}</strong><small>${escapeHtml(member.role || "测控成员")}</small></div><div class="v5-execution-detail-date-grid"><label>开始<input type="date" value="${escapeHtml(member.start_date || task.start_date || "")}" data-v5-exec-member-start="${member.id}"></label><label>结束<input type="date" value="${escapeHtml(member.end_date || task.end_date || "")}" data-v5-exec-member-end="${member.id}"></label></div><div id="v5ExecutionMemberScheduleMessage-${task.id}-${member.id}" class="v5-execution-detail-feedback" role="status" aria-live="polite"></div><div class="v5-execution-detail-section-actions"><button type="button" class="small-button" data-v5-exec-reset-member-schedule="${task.id}" data-v5-exec-member="${member.id}">取消</button><button type="button" class="small-button primary-action" data-v5-exec-save-member-schedule="${task.id}" data-v5-exec-member="${member.id}">保存成员排期</button></div></article>`).join("") : `<p class="v5-muted">尚未分配成员；可通过“全量编辑”添加参与成员。</p>`}
     </section>
     <dl class="v5-execution-facts"><div><dt>测试目的</dt><dd>${escapeHtml(task.purpose || "待补充")}</dd></div><div><dt>样品</dt><dd>${escapeHtml(sampleSummary)}</dd></div><div><dt>制冷机</dt><dd>${escapeHtml(task.cryostat?.name || "待补充")}</dd></div></dl>
-    <div class="v5-execution-detail-actions">${v5ExecutionDetailStatusAction(task)}<button type="button" class="primary-action" data-v5-edit-task="${task.id}">全量编辑</button></div>
+    <div class="v5-execution-detail-actions">${v5ExecutionDetailStatusAction(task)}${taskAction}</div>
   </div>`;
 }
 
@@ -5072,6 +5328,7 @@ function bindV5Events() {
     }
   });
   document.body.addEventListener("click", async (event) => { const action = (selector) => event.target.closest(selector); try { if (action("[data-v5-clear-editor-filters]")) return v5ResetFilterSurface("editor"); if (action("[data-v5-close-dialog]")) return v5Close(`#${action("[data-v5-close-dialog]").dataset.v5CloseDialog}`); if (action("[data-v5-toggle-topic]")) { const id = Number(action("[data-v5-toggle-topic]").dataset.v5ToggleTopic); if (v5State.expandedTopics.has(id)) v5State.expandedTopics.delete(id); else v5State.expandedTopics.add(id); return v5RenderTree(); } if (action("[data-v5-move-task]")) return v5OpenTopicMove("task", Number(action("[data-v5-move-task]").dataset.v5MoveTask)); if (action("[data-v5-select-task]")) { v5State.selectedTaskId = Number(action("[data-v5-select-task]").dataset.v5SelectTask); v5RenderTree(); return v5RenderSelectedTask(); } if (action("[data-v5-edit-task]")) return v5OpenTaskEditor(Number(action("[data-v5-edit-task]").dataset.v5EditTask)); if (action("[data-v5-new-task-topic]")) return v5OpenTaskEditor(null, Number(action("[data-v5-new-task-topic]").dataset.v5NewTaskTopic)); if (action("[data-v5-new-topic]")) return v5OpenTopicEditor(); if (action("[data-v5-edit-topic]")) return v5OpenTopicEditor(Number(action("[data-v5-edit-topic]").dataset.v5EditTopic)); if (action("[data-v5-delete-topic]")) return v5OpenTopicMove("delete", Number(action("[data-v5-delete-topic]").dataset.v5DeleteTopic)); if (action("[data-v5-start-testing]")) return v5StartTesting(Number(action("[data-v5-start-testing]").dataset.v5StartTesting)); if (action("[data-v5-complete-task]")) return v5StartTesting(Number(action("[data-v5-complete-task]").dataset.v5CompleteTask), true); if (action("[data-v5-retry]")) return v5LoadAll(); if (action("[data-v5-back-editor]")) return v5SetView("editor"); if (action("[data-v5-open-maintenance]")) { $("#legacyV2Content").hidden = false; setV2View("management"); return; } if (action("[data-v5-add-resource]")) return v5OpenResourceEditor(action("[data-v5-add-resource]").dataset.v5AddResource); if (action("[data-v5-edit-resource]")) { const [kind, id] = action("[data-v5-edit-resource]").dataset.v5EditResource.split(":"); return v5OpenResourceEditor(kind, Number(id)); } if (action("[data-v5-inline-toggle-members]")) { const button = action("[data-v5-inline-toggle-members]"); const panel = document.querySelector(`#${button.getAttribute("aria-controls")}`); if (!panel) return; const open = panel.hidden; panel.hidden = !open; button.setAttribute("aria-expanded", String(open)); if (open) document.querySelector("[data-v5-inline-member-search]")?.focus(); return; } if (action("[data-v5-inline-add-test-item]")) { $("#v5InlineTestItems")?.insertAdjacentHTML("beforeend", v5InlineTestItemMarkup()); return; } if (action("[data-v5-remove-inline-test-item]")) { action("[data-v5-remove-inline-test-item]").closest(".v5-inline-test-item")?.remove(); return; } if (action("[data-v5-inline-cancel]")) return v5RenderSelectedTask(); if (action("[data-v5-remove-test-item]")) { action("[data-v5-remove-test-item]").closest(".v5-repeatable-item")?.remove(); return; } } catch (error) { showToast(v5ErrorText(error), { type: "error" }); } });
+  document.body.addEventListener("click", (event) => { const action = event.target.closest("[data-v5-view-task]"); if (action) v5OpenTaskViewer(Number(action.dataset.v5ViewTask)); });
   $("#v5FilterForm")?.addEventListener("submit", (event) => { event.preventDefault(); const surface = v5State.filterDraftSurface; if (!surface) return; v5ApplyFilterExpression(surface, v5State.filterDraft); v5Close("#v5FilterDialog"); });
   $("#v5FilterAddCondition")?.addEventListener("click", () => { const surface = v5State.filterDraftSurface; if (!surface) return; const field = $("#v5FilterAddField")?.value || v5FilterSchemas[surface][0].field; if (!v5State.filterDraft.groups.length) v5State.filterDraft.groups.push({ id: `group-${Date.now()}`, logic: "and", connector: "and", conditions: [] }); v5State.filterDraft.groups[0].conditions.push(v5FilterConditionFromField(surface, field)); v5RenderFilterBuilder(); });
   $("#v5FilterAddGroup")?.addEventListener("click", () => { const surface = v5State.filterDraftSurface; if (!surface) return; v5State.filterDraft.groups.push({ id: `group-${Date.now()}`, logic: "and", connector: "and", conditions: [] }); v5RenderFilterBuilder(); });
@@ -5181,4 +5438,19 @@ v5State.preferences = v5ReadPreferences();
 v5ApplyConfiguredDefaultFilters();
 v5ApplySmartRangePreferences();
 v5SetView("editor");
-v5LoadAll();
+$("#loginForm")?.addEventListener("submit", submitLogin);
+$("#changePasswordForm")?.addEventListener("submit", submitPasswordChange);
+$("#userAdminForm")?.addEventListener("submit", submitAdminUser);
+$("#adminUsersBtn")?.addEventListener("click", openAdminUsers);
+$("#adminAuditBtn")?.addEventListener("click", openAdminAudit);
+$("#closeUserAdminBtn")?.addEventListener("click", () => { const dialog = $("#userAdminDialog"); if (dialog?.close) dialog.close(); else dialog?.removeAttribute("open"); });
+$("#userAdminList")?.addEventListener("click", handleAdminUserAction);
+$("#closeAuditBtn")?.addEventListener("click", () => { const dialog = $("#auditDialog"); if (dialog?.close) dialog.close(); else dialog?.removeAttribute("open"); });
+$("#logoutBtn")?.addEventListener("click", () => logout().catch(() => showAuthGate("AUTH_REQUIRED")));
+async function loadAuthenticatedWorkspace() {
+  await Promise.all([
+    loadData().then(loadV2Workspace).catch((error) => showToast(v2ErrorText(error), { type: "error" })),
+    v5LoadAll()
+  ]);
+}
+initAuth().then((ready) => { if (ready) return loadAuthenticatedWorkspace(); });

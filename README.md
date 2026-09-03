@@ -14,6 +14,20 @@ npm start
 http://localhost:3000
 ```
 
+### 认证初始化
+
+生产模式默认要求登录。首次启动前通过环境变量提供一次性管理员账号，服务会创建
+`admin` 角色并要求该账号首次登录后修改密码；账号创建完成后可移除这两个变量。
+
+```powershell
+$env:AUTH_BOOTSTRAP_USERNAME = "admin"
+$env:AUTH_BOOTSTRAP_PASSWORD = "请使用至少 12 位随机密码"
+npm start
+```
+
+普通用户只能读取业务数据和导出 CSV，账号由管理员在 `/api/admin/users` 创建。测试夹具
+可显式使用 `createAppServer(database, { auth: false })` 关闭认证，生产代码不要使用该选项。
+
 数据库：
 
 ```text

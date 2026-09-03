@@ -49,6 +49,208 @@ body {
   color: var(--text);
 }
 
+.auth-gate {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(244, 246, 248, .96);
+}
+
+.auth-card {
+  width: min(410px, 100%);
+  display: grid;
+  gap: 14px;
+  padding: 30px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: var(--shadow-raised);
+}
+
+.auth-brand { color: var(--accent); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.auth-card h2 { margin: 0; font-size: 24px; }
+.auth-message, .auth-bootstrap { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
+.auth-message.is-error { color: var(--danger); }
+.auth-form { display: grid; gap: 13px; }
+.auth-form label { display: grid; gap: 6px; color: var(--muted); font-size: 12px; font-weight: 700; }
+.auth-form input { min-height: 40px; }
+.auth-user-badge { max-width: 180px; overflow: hidden; color: var(--muted); font-size: 12px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+.v5-user-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.v5-user-row > div:first-child { display: grid; gap: 3px; min-width: 0; }
+.v5-user-row span { color: var(--muted); font-size: 11px; }
+.viewer-mode [data-v5-edit-task],
+.viewer-mode [data-v5-new-task-topic],
+.viewer-mode [data-v5-new-topic],
+.viewer-mode [data-v5-delete-topic],
+.viewer-mode [data-v5-move-task],
+.viewer-mode [data-v5-start-testing],
+.viewer-mode [data-v5-complete-task],
+.viewer-mode [data-v5-add-resource],
+.viewer-mode [data-v5-edit-resource],
+.viewer-mode [data-v5-open-maintenance],
+.viewer-mode #v5NewTaskBtn,
+.viewer-mode #v5NewTopicBtn,
+.viewer-mode #newPlanBtn,
+.viewer-mode #newTaskBtn,
+.viewer-mode #adminUsersBtn,
+.viewer-mode #adminAuditBtn,
+.viewer-mode #dataMenuBtn,
+.viewer-mode .v5-inline-task-form,
+.viewer-mode .v5-dialog,
+.viewer-mode .v3-dialog,
+.viewer-mode .v2-dialog,
+.viewer-mode .task-dialog,
+.viewer-mode .edit-dialog { display: none !important; }
+.viewer-mode [data-v5-exec-save-task-schedule],
+.viewer-mode [data-v5-exec-confirm-task-schedule],
+.viewer-mode [data-v5-exec-save-member-schedule],
+.viewer-mode [data-v5-exec-confirm-member-schedule],
+.viewer-mode [data-v5-exec-sync-members],
+.viewer-mode #v5ExecutionSaveSmartRange { display: none !important; }
+.viewer-mode [data-open-plan-dialog],
+.viewer-mode [data-edit-plan],
+.viewer-mode [data-open-resource-dialog],
+.viewer-mode [data-edit-resource],
+.viewer-mode [data-open-assignment-dialog],
+.viewer-mode [data-edit-plan-task],
+.viewer-mode [data-toggle-plan-archive],
+.viewer-mode [data-confirm-arrival],
+.viewer-mode [data-add-test-item],
+.viewer-mode [data-edit-test-item],
+.viewer-mode [data-edit-acceptance-template],
+.viewer-mode [data-open-submission],
+.viewer-mode [data-open-review],
+.viewer-mode [data-v3-open-topic-dialog],
+.viewer-mode [data-v3-open-topic-edit],
+.viewer-mode [data-v3-open-sample-edit],
+.viewer-mode [data-v3-open-eta],
+.viewer-mode [data-v3-open-cryostat],
+.viewer-mode [data-v3-open-task-editor],
+.viewer-mode [data-v3-open-submission],
+.viewer-mode [data-v3-open-review],
+.viewer-mode [data-v3-move-task],
+.viewer-mode [data-v3-open-member] { display: none !important; }
+.viewer-mode [data-complete-task],
+.viewer-mode [data-archive-task],
+.viewer-mode [data-edit-task],
+.viewer-mode [data-delete-task],
+.viewer-mode [data-restore-task],
+.viewer-mode [data-restore-member],
+.viewer-mode [data-check-item],
+.viewer-mode [data-delete-check-item],
+.viewer-mode [data-new-check-title],
+.viewer-mode [data-add-check-item],
+.viewer-mode [data-edit-assignment],
+.viewer-mode [data-remove-assignment],
+.viewer-mode [data-add-members-to-task],
+.viewer-mode [data-edit-member],
+.viewer-mode [data-delete-member],
+.viewer-mode [data-edit-template],
+.viewer-mode [data-delete-template],
+.viewer-mode [data-open-task-dialog],
+.viewer-mode [data-open-plan-dialog],
+.viewer-mode [data-edit-plan],
+.viewer-mode [data-open-eta-change],
+.viewer-mode [data-open-cryostat-change],
+.viewer-mode [data-open-assignment-dialog],
+.viewer-mode [data-edit-plan-task],
+.viewer-mode [data-open-submission],
+.viewer-mode [data-open-review],
+.viewer-mode [data-toggle-plan-archive],
+.viewer-mode [data-confirm-arrival],
+.viewer-mode [data-add-test-item],
+.viewer-mode [data-edit-test-item],
+.viewer-mode [data-edit-acceptance-template],
+.viewer-mode [data-open-resource-dialog],
+.viewer-mode [data-edit-resource],
+.viewer-mode [data-v3-open-topic-dialog],
+.viewer-mode [data-v3-open-topic-edit],
+.viewer-mode [data-v3-open-sample-dialog],
+.viewer-mode [data-v3-open-sample-edit],
+.viewer-mode [data-v3-open-task-dialog],
+.viewer-mode [data-v3-open-task-editor],
+.viewer-mode [data-v3-open-member-dialog],
+.viewer-mode [data-v3-open-member],
+.viewer-mode [data-v3-open-eta],
+.viewer-mode [data-v3-open-cryostat],
+.viewer-mode [data-v3-move-task],
+.viewer-mode [data-v3-open-submission],
+.viewer-mode [data-v3-open-review],
+.viewer-mode [data-v3-edit-member],
+.viewer-mode [data-v3-edit-hours],
+.viewer-mode [data-v3-workbench-action],
+.viewer-mode [data-v5-edit-topic],
+.viewer-mode [data-v5-edit-resource],
+.viewer-mode [data-v5-remove-inline-test-item],
+.viewer-mode [data-v5-remove-test-item],
+.viewer-mode [data-v5-task-remove-member],
+.viewer-mode [data-v5-task-remove-sample],
+.viewer-mode [data-v5-inline-add-test-item],
+.viewer-mode [data-v5-inline-sync-member-dates],
+.viewer-mode [data-v5-inline-member-sync],
+.viewer-mode [data-v5-inline-member-sync-all],
+.viewer-mode .add-check-item,
+.viewer-mode .add-members,
+.viewer-mode #newMemberBtn,
+.viewer-mode #newTemplateBtn,
+.viewer-mode #newPlanBtn,
+.viewer-mode #v3NewTopicBtn,
+.viewer-mode #newTaskBtn,
+.viewer-mode #v5NewTaskBtn,
+.viewer-mode #v5NewTopicBtn,
+.viewer-mode #v5EmptyNewTaskBtn,
+.viewer-mode #v5ExecutionSaveSmartRange,
+.viewer-mode #v5ExecutionResetSmartRange,
+.viewer-mode #v5SaveDefaultStatuses,
+.viewer-mode #v5ResetDefaultStatuses,
+.viewer-mode #openAssignmentBtn,
+.viewer-mode #batchApplyBtn,
+.viewer-mode #archiveSelectedBtn,
+.viewer-mode #importMembersBtn,
+.viewer-mode #importTasksBtn,
+.viewer-mode #clearLogsBtn,
+.viewer-mode #purgeArchivedBtn,
+.viewer-mode #resetSampleBtn,
+.viewer-mode #dataMenuBtn,
+.viewer-mode a[href="/api/backup"],
+.viewer-mode a[href="/api/v2/backup"],
+.viewer-mode a[href="/api/v3/backup"],
+.viewer-mode [data-v2-view="management"],
+.viewer-mode #managementView { display: none !important; }
+.viewer-mode .v5-default-status-settings { display: none !important; }
+.viewer-mode #v5TaskViewDialog[open] { display: block !important; }
+
+.v5-readonly-pane-body,
+.v5-readonly-sections { display: grid; gap: 13px; min-width: 0; padding: 15px 17px 19px; }
+.v5-readonly-pane-body { padding-top: 13px; }
+.v5-readonly-section { min-width: 0; padding: 12px; border: 1px solid var(--border); border-radius: 10px; background: #fbfdff; }
+.v5-readonly-section h4 { margin: 0 0 9px; color: var(--text); font-size: 13px; }
+.v5-readonly-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; min-width: 0; }
+.v5-readonly-field { display: grid; min-width: 0; gap: 3px; }
+.v5-readonly-field.full { grid-column: 1 / -1; }
+.v5-readonly-field > span { color: var(--muted); font-size: 11px; font-weight: 700; }
+.v5-readonly-field > strong { min-width: 0; color: var(--text); font-size: 12px; font-weight: 600; overflow-wrap: anywhere; white-space: pre-wrap; }
+.v5-readonly-list { display: grid; gap: 8px; min-width: 0; }
+.v5-readonly-item { min-width: 0; padding: 9px 10px; border: 1px solid var(--border); border-radius: 8px; background: #fff; }
+.v5-readonly-item > strong { display: block; margin-bottom: 6px; color: var(--text); overflow-wrap: anywhere; }
+.v5-readonly-item p { margin: 4px 0 0; color: var(--muted); line-height: 1.45; overflow-wrap: anywhere; white-space: pre-wrap; }
+.v5-readonly-item p strong { color: var(--text); }
+.v5-readonly-empty { margin: 0; color: var(--muted); }
+.v5-task-view-dialog { width: min(880px, calc(100vw - 32px)); max-height: min(88vh, 900px); }
+.v5-task-view-dialog .v5-dialog-body { overflow: auto; }
+@media (max-width: 700px) {
+  .v5-readonly-grid { grid-template-columns: 1fr; }
+  .v5-readonly-field.full { grid-column: auto; }
+}
+.audit-list { display: grid; gap: 0; }
+.audit-row { display: grid; grid-template-columns: minmax(140px, .7fr) minmax(180px, 1.2fr) minmax(120px, .6fr); gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 12px; }
+.audit-row span { color: var(--muted); overflow-wrap: anywhere; }
+.audit-row .audit-result-success { color: var(--success); }
+.audit-row .audit-result-failure { color: var(--danger); }
+
 button,
 input,
 textarea,

@@ -9,7 +9,7 @@ import { V5_ENDPOINTS, V5_INDEXES, V5_SCHEMA_CHECKSUM, V5_TABLES, validateV5Sche
 async function fixture() {
   const dir = await mkdtemp(path.join(tmpdir(), "team-task-v5-"));
   const database = await initDatabase(path.join(dir, "team_tasks.sqlite"));
-  const server = createAppServer(database);
+  const server = createAppServer(database, { auth: false });
   await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
   const base = `http://127.0.0.1:${server.address().port}`;
   const request = async (route, { method = "GET", body, expected = [200] } = {}) => {
@@ -55,6 +55,10 @@ test("V5 task editor persists canonical fields and computes the five user-facing
     assert.equal(created.purpose, input.purpose);
     assert.equal(created.source_group.id, input.source_group_id);
     assert.equal(created.cryostat.id, input.cryostat_id);
+    assert.equal(created.topic.purpose, "验证样品测试窗口");
+    assert.equal(created.topic.notes, "V5");
+    assert.ok(Object.hasOwn(created.source_group, "note"));
+    assert.ok(Object.hasOwn(created.cryostat, "note"));
     assert.equal(created.samples[0].sample_no, null);
     assert.equal(created.test_items[0].name, "Q 值测试");
     assert.equal(created.status, "waiting");
