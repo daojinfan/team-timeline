@@ -5187,12 +5187,104 @@ function v5ExecutionBuildRange(tasks) {
 }
 function v5ExecutionUnitWidth() { const base = v5State.execution.scale === "day" ? 42 : v5State.execution.scale === "week" ? 106 : 145; const density = [0.7, 0.85, 1, 1.2, 1.42][v5ExecutionGranularityValue() - 1]; return Math.max(28, Math.round(base * density)); }
 function v5ExecutionOffset(range, date) { if (!date || date < range.start) return 0; const unit = v5State.execution.scale; if (unit === "day") return daysBetween(range.start, date); if (unit === "week") return Math.floor(daysBetween(range.start, date) / 7); const start = new Date(`${range.start}T00:00:00`); const value = new Date(`${date}T00:00:00`); return (value.getFullYear() - start.getFullYear()) * 12 + value.getMonth() - start.getMonth(); }
-function v5ExecutionDuration(range, start, end) { const clippedStart = start < range.start ? range.start : start; const clippedEnd = end > range.end ? range.end : end; if (clippedEnd < range.start || clippedStart > range.end) return 0; const width = v5ExecutionUnitWidth(); if (v5State.execution.scale === "day") return Math.max(16, (daysBetween(clippedStart, clippedEnd) + 1) * width - 6); if (v5State.execution.scale === "week") return Math.max(22, (daysBetween(clippedStart, clippedEnd) + 1) / 7 * width - 6); const units = v5ExecutionOffset(range, clippedEnd) - v5ExecutionOffset(range, clippedStart) + 1; return Math.max(22, units * width - 6); }
-function v5ExecutionPosition(range, start, end) { const width = v5ExecutionUnitWidth(); const safeStart = start && start > range.start ? start : range.start; return { left: v5ExecutionOffset(range, safeStart) * width + 3, width: v5ExecutionDuration(range, start || range.start, end || range.end) }; }
+// Rendering and dragging use the same calendar-day coordinates, including partial weeks/months.
+function v5ExecutionDateOffset(range, date, scale = v5State.execution.scale) {
+  if (scale === "day") return daysBetween(range.start, date);
+  if (scale === "week") return daysBetween(range.start, date) / 7;
+  const unitStart = v5ExecutionStartOfUnit(date, "month");
+  const next = v5ExecutionNextUnit(unitStart, "month");
+  const base = new Date(`${range.start}T00:00:00`); const value = new Date(`${unitStart}T00:00:00`);
+  return (value.getFullYear() - base.getFullYear()) * 12 + value.getMonth() - base.getMonth() + daysBetween(unitStart, date) / daysBetween(unitStart, next);
+}
+function v5ExecutionDayAtOffset(range, offset, scale = v5State.execution.scale) {
+  if (scale === "day") return offset;
+  if (scale === "week") return offset * 7;
+  const month = Math.floor(offset); const start = new Date(`${range.start}T00:00:00`); start.setMonth(start.getMonth() + month, 1);
+  const unitStart = formatLocalDate(start); const next = v5ExecutionNextUnit(unitStart, "month");
+  return daysBetween(range.start, unitStart) + (offset - month) * daysBetween(unitStart, next);
+}
+function v5ExecutionDuration(range, start, end, scale = v5State.execution.scale, width = v5ExecutionUnitWidth()) {
+  const clippedStart = start < range.start ? range.start : start; const clippedEnd = end > range.end ? range.end : end;
+  if (clippedEnd < clippedStart) return 0;
+  return Math.max(scale === "day" ? 16 : 22, (v5ExecutionDateOffset(range, addDays(clippedEnd, 1), scale) - v5ExecutionDateOffset(range, clippedStart, scale)) * width - 6);
+}
+function v5ExecutionPosition(range, start, end, scale = v5State.execution.scale, width = v5ExecutionUnitWidth()) {
+  const safeStart = start && start > range.start ? start : range.start;
+  return { left: v5ExecutionDateOffset(range, safeStart, scale) * width + 3, width: v5ExecutionDuration(range, start || range.start, end || range.end, scale, width) };
+}
 function v5ExecutionTaskBar(task, range, member = null, lane = 0) {
   const start = v5ExecutionDateValue(member ? (member.start_date || task.start_date) : task.start_date); const end = v5ExecutionDateValue(member ? (member.end_date || task.end_date) : task.end_date); if (!start || !end) return ""; const position = v5ExecutionPosition(range, start, end); if (!position.width) return "";
   const label = member ? `${member.name} · ${task.title}` : task.title; const tone = member ? "member-bar" : "task-bar"; const color = /^#[0-9a-f]{3,8}$/i.test(task.color || "") ? task.color : "#2563eb"; const barLabel = member?.__ganttLabel || (member ? member.name : task.title);
-  return `<button type="button" class="v5-execution-bar ${tone}${task.status === "test-delayed" || task.status === "sample-delayed" ? " is-delayed" : ""}" style="left:${position.left}px;width:${position.width}px;top:${member ? 10 + lane * 28 : 10}px;--task-accent:${escapeHtml(color)}" data-v5-exec-select-task="${task.id}" title="${escapeHtml(label)}：${escapeHtml(start)} 至 ${escapeHtml(end)}">${escapeHtml(barLabel)}</button>`;
+  const editable = state.auth.user?.role === "admin";
+  const handles = editable ? `<span class="v5-execution-resize-handle start" data-v5-exec-resize="start" aria-hidden="true"></span><span class="v5-execution-resize-handle end" data-v5-exec-resize="end" aria-hidden="true"></span>` : "";
+  return `<button type="button" class="v5-execution-bar ${tone}${editable ? " is-draggable" : ""}${task.status === "test-delayed" || task.status === "sample-delayed" ? " is-delayed" : ""}" style="left:${position.left}px;width:${position.width}px;top:${member ? 10 + lane * 28 : 10}px;--task-accent:${escapeHtml(color)}" data-v5-exec-select-task="${task.id}" data-v5-exec-drag-task="${task.id}" data-v5-exec-drag-member="${member?.id ?? ""}" data-v5-exec-range-start="${range.start}" data-v5-exec-range-end="${range.end}" title="${escapeHtml(label)}：${escapeHtml(start)} 至 ${escapeHtml(end)}${editable ? "（拖动平移，两端调整日期）" : ""}">${handles}<span class="v5-execution-bar-label">${escapeHtml(barLabel)}</span></button>`;
+}
+const v5ExecutionDragState = { active: null, saving: false, suppressClick: null };
+function v5ExecutionDragPointerDay(drag, event) {
+  const offset = (event.clientX - drag.timeline.getBoundingClientRect().left) / drag.unitWidth;
+  return v5ExecutionDayAtOffset(drag.range, offset, drag.scale);
+}
+function v5ExecutionDragDates(drag, delta) {
+  let start = drag.originalStart; let end = drag.originalEnd;
+  if (drag.edge === "move" || drag.fixedCycle) { start = addDays(start, delta); end = addDays(end, delta); }
+  else if (drag.edge === "start") { start = addDays(start, delta); if (start > end) start = end; }
+  else { end = addDays(end, delta); if (end < start) end = start; }
+  return { start, end };
+}
+function v5StartExecutionDrag(event) {
+  if (state.auth.user?.role !== "admin" || event.button !== 0 || event.isPrimary === false || v5ExecutionDragState.active || v5ExecutionDragState.saving) return;
+  const bar = event.target.closest("[data-v5-exec-drag-task]"); if (!bar) return;
+  const task = v5State.tasks.find((row) => Number(row.id) === Number(bar.dataset.v5ExecDragTask));
+  const memberId = bar.dataset.v5ExecDragMember ? Number(bar.dataset.v5ExecDragMember) : null;
+  const member = memberId == null ? null : v5ExecutionTaskMembers(task).find((row) => Number(row.id) === memberId);
+  const timeline = bar.closest(".v5-execution-timeline"); if (!task || !timeline || (memberId != null && !member)) return;
+  const drag = { bar, timeline, taskId: task.id, memberId, expectedVersion: task.version, pointerId: event.pointerId, startX: event.clientX, scale: v5State.execution.scale, unitWidth: v5ExecutionUnitWidth(), range: { start: bar.dataset.v5ExecRangeStart, end: bar.dataset.v5ExecRangeEnd }, edge: event.target.closest("[data-v5-exec-resize]")?.dataset.v5ExecResize || "move", fixedCycle: v5IsFixedCycleMode(), originalStart: member?.start_date || task.start_date, originalEnd: member?.end_date || task.end_date, originalLeft: bar.style.left, originalWidth: bar.style.width, originalTitle: bar.title, moved: false };
+  drag.initialPointerDay = v5ExecutionDragPointerDay(drag, event); drag.previewStart = drag.originalStart; drag.previewEnd = drag.originalEnd;
+  v5ExecutionDragState.active = drag; bar.setPointerCapture(event.pointerId);
+}
+function v5PreviewExecutionDrag(event) {
+  const drag = v5ExecutionDragState.active; if (!drag || event.pointerId !== drag.pointerId) return;
+  if (!drag.moved && Math.abs(event.clientX - drag.startX) < 4) return;
+  event.preventDefault(); drag.moved = true; drag.bar.classList.add("is-dragging");
+  const delta = Math.round(v5ExecutionDragPointerDay(drag, event) - drag.initialPointerDay);
+  const { start, end } = v5ExecutionDragDates(drag, delta); drag.previewStart = start; drag.previewEnd = end;
+  const position = v5ExecutionPosition(drag.range, start, end, drag.scale, drag.unitWidth);
+  drag.bar.style.left = `${position.left}px`; drag.bar.style.width = `${position.width}px`; drag.bar.title = `${start} 至 ${end}`;
+  if (!drag.feedback) { drag.feedback = document.createElement("span"); drag.feedback.className = "v5-execution-drag-feedback"; drag.feedback.setAttribute("role", "status"); drag.timeline.appendChild(drag.feedback); }
+  drag.feedback.textContent = `${start} → ${end}`; drag.feedback.style.left = `${position.left}px`; drag.feedback.style.top = `${Number.parseFloat(drag.bar.style.top) + 24}px`;
+}
+function v5ResetExecutionDrag(drag) {
+  v5ExecutionDragState.active = null;
+  drag.bar.classList.remove("is-dragging"); drag.bar.style.left = drag.originalLeft; drag.bar.style.width = drag.originalWidth; drag.bar.title = drag.originalTitle; drag.feedback?.remove();
+  if (drag.bar.hasPointerCapture(drag.pointerId)) drag.bar.releasePointerCapture(drag.pointerId);
+  if (drag.moved) { v5ExecutionDragState.suppressClick = drag.bar; window.setTimeout(() => { if (v5ExecutionDragState.suppressClick === drag.bar) v5ExecutionDragState.suppressClick = null; }, 0); }
+}
+function v5CancelExecutionDrag(event) {
+  const drag = v5ExecutionDragState.active; if (!drag) return;
+  if (event.type === "keydown" ? event.key !== "Escape" : event.pointerId !== drag.pointerId) return;
+  v5ResetExecutionDrag(drag);
+}
+async function v5FinishExecutionDrag(event) {
+  const drag = v5ExecutionDragState.active; if (!drag || event.pointerId !== drag.pointerId) return;
+  if (drag.moved) v5PreviewExecutionDrag(event);
+  v5ResetExecutionDrag(drag);
+  if (!drag.moved || (drag.previewStart === drag.originalStart && drag.previewEnd === drag.originalEnd)) return;
+  v5ExecutionDragState.saving = true;
+  try {
+    const task = v5State.tasks.find((row) => Number(row.id) === Number(drag.taskId));
+    if (!task || task.version !== drag.expectedVersion) throw new Error("任务已更新，请刷新后重新拖动。");
+    const member = drag.memberId == null ? null : v5ExecutionTaskMembers(task).find((row) => Number(row.id) === drag.memberId);
+    if (drag.memberId != null && !member) throw new Error("该成员已不在任务中，请刷新后重新拖动。");
+    const route = member ? "member-schedule" : "schedule";
+    const payload = { start_date: drag.previewStart, end_date: drag.previewEnd, ...(member ? { member_id: member.id } : { sync_members: false }) };
+    const preview = await v5Api(`/api/v5/tasks/${task.id}/${route}-preview`, v5Json("POST", payload));
+    const conflicts = preview.conflicts || [];
+    const impact = conflicts.length ? `\n\n排期检查发现 ${conflicts.length} 项影响：\n${conflicts.map((conflict) => conflict.message || conflict.reason || conflict.type).join("\n")}` : "";
+    if (!window.confirm(`确认修改${member ? `${member.name}的成员排期` : "任务整体排期"}？\n${task.title}\n${drag.originalStart} 至 ${drag.originalEnd}\n改为 ${drag.previewStart} 至 ${drag.previewEnd}${impact}`)) return;
+    await v5Api(`/api/v5/tasks/${task.id}/${route}`, v5Json("POST", { ...payload, preview_token: preview.preview_token, expected_version: drag.expectedVersion, ack: conflicts.length > 0 }));
+    v5State.execution.selectedTaskId = task.id; await v5LoadAll(); showToast(member ? `${member.name}的成员排期已更新` : "任务整体排期已更新");
+  } catch (error) { showToast(v5ErrorText(error), { type: "error" }); }
+  finally { v5ExecutionDragState.saving = false; }
 }
 function v5ExecutionMemberLanes(task, members) {
   const lanes = []; return members.slice().sort((a, b) => String(a.start_date || "").localeCompare(String(b.start_date || ""))).map((member) => { if (v5State.execution.stack === false) return { member, lane: 0 }; let lane = lanes.findIndex((end) => !end || member.start_date > end); if (lane < 0) { lane = lanes.length; lanes.push(member.end_date); } else lanes[lane] = member.end_date; return { member, lane }; });
@@ -5242,10 +5334,13 @@ function v5ExecutionMemberGanttRows(tasks) {
   });
 }
 function v5RenderExecutionGantt(tasks) {
+  if (v5ExecutionDragState.active) v5ResetExecutionDrag(v5ExecutionDragState.active);
   const node = $("#v5ExecutionGantt"); if (!node) return; if (!tasks.length) { node.innerHTML = `<div class="v5-empty-state"><h3>当前筛选没有任务</h3><p>清除筛选或调整日期范围后重试。</p></div>`; return; }
+  const scrollLeft = node.querySelector(".v5-execution-gantt-scroll")?.scrollLeft || 0;
   const range = v5ExecutionBuildRange(tasks); const { width, todayIndex, grid } = v5ExecutionGridBackground(range); const totalWidth = range.units.length * width; const rows = v5ExecutionMemberGanttRows(tasks);
   const header = `<div class="v5-execution-gantt-scroll"><div class="v5-execution-gantt-canvas" style="--v5-exec-track-width:${totalWidth}px"><div class="v5-execution-gantt-header"><div class="v5-execution-label-heading">成员 / 任务</div><div class="v5-execution-timeline-header" style="width:${totalWidth}px">${range.units.map((unit) => `<span style="width:${width}px">${escapeHtml(unit.start.slice(0, 7))}<small>${escapeHtml(unit.start.slice(5))}</small></span>`).join("")}</div></div>${rows.map((row) => { const lanes = v5ExecutionAssignmentLanes(row.items); const laneCount = lanes.length ? Math.max(...lanes.map((item) => item.lane)) + 1 : 0; const statusSummary = v5ExecutionStatusSummary(row.items); const rowHeight = Math.max(60, 48 + statusSummary.rows * 20, 36 + laneCount * 28); const background = `background-image:${grid};`; const bars = lanes.map(({ task, member, lane }) => member ? v5ExecutionTaskBar(task, range, { ...member, __ganttLabel: task.title }, lane) : v5ExecutionTaskBar(task, range)).join(""); const labelTask = row.items[0]?.task; const meta = row.member ? `${row.items.length} 个任务 · ${row.member.role || "测控成员"}${v5MemberStatusLabel(row.member) === "启用" ? "" : ` · ${v5MemberStatusLabel(row.member)}`}` : `${row.items.length} 个未分配任务`; return `<div class="v5-execution-gantt-row${row.items.some((item) => Number(item.task.id) === Number(v5State.execution.selectedTaskId)) ? " is-selected" : ""}" style="min-height:${rowHeight}px"><div class="v5-execution-row-label"><button type="button" data-v5-exec-select-task="${labelTask?.id || ""}"><strong>${escapeHtml(row.member?.name || "未分配成员")}${row.member ? v5MemberStatusBadge(row.member) : ""}</strong><small>${escapeHtml(meta)}</small>${statusSummary.html}</button></div><div class="v5-execution-timeline" style="width:${totalWidth}px;min-height:${rowHeight}px;${background}">${todayIndex === null ? "" : `<i class="v5-execution-today-line" style="left:${todayIndex * width}px"></i>`}${bars || `<span class="v5-execution-unscheduled">暂无任务</span>`}</div></div>`; }).join("")}</div></div>`;
-  node.innerHTML = header; const label = $("#v5ExecutionRangeLabel"); if (label) label.textContent = `${range.start} 至 ${range.end} · ${range.units.length} 个${v5State.execution.scale === "day" ? "日" : v5State.execution.scale === "week" ? "周" : "月"}`;
+  node.innerHTML = header; node.querySelector(".v5-execution-gantt-scroll").scrollLeft = scrollLeft;
+  const label = $("#v5ExecutionRangeLabel"); if (label) label.textContent = `${range.start} 至 ${range.end} · ${range.units.length} 个${v5State.execution.scale === "day" ? "日" : v5State.execution.scale === "week" ? "周" : "月"}`;
 }
 function v5ExecutionLoadRows(tasks) {
   const rows = new Map(); const add = (member, task) => { if (!member) return; const id = Number(member.id); if (!rows.has(id)) rows.set(id, { member, tasks: [], days: 0, overlaps: 0 }); const row = rows.get(id); row.tasks.push({ task, member }); if (member.start_date && member.end_date) row.days += Math.max(1, daysBetween(member.start_date, member.end_date) + 1); };
@@ -5524,6 +5619,17 @@ function bindV5Events() {
 bindV5Events();
 function bindV5ExecutionEvents() {
   if (window.__v5ExecutionBound) return; window.__v5ExecutionBound = true;
+  document.body.addEventListener("pointerdown", v5StartExecutionDrag);
+  document.body.addEventListener("pointermove", v5PreviewExecutionDrag);
+  document.body.addEventListener("pointerup", v5FinishExecutionDrag);
+  document.body.addEventListener("pointercancel", v5CancelExecutionDrag);
+  document.body.addEventListener("lostpointercapture", v5CancelExecutionDrag);
+  document.body.addEventListener("keydown", v5CancelExecutionDrag);
+  document.body.addEventListener("click", (event) => {
+    const bar = event.target.closest("[data-v5-exec-drag-task]");
+    if (!bar || v5ExecutionDragState.suppressClick !== bar) return;
+    v5ExecutionDragState.suppressClick = null; event.preventDefault(); event.stopImmediatePropagation();
+  }, true);
   const update = (key, value) => { v5State.execution[key] = value; v5RenderExecution(); };
   $("#v5OpenExecutionFilters")?.addEventListener("click", () => v5OpenFilterDialog("execution"));
   v5FilterQuickConfig("execution").forEach(({ field, selector, negate }) => { const node = $(selector); const schema = v5FilterSchema("execution", field); node?.addEventListener(schema?.kind === "text" ? "input" : "change", () => v5UpdateQuickFilter("execution", field)); if (negate) $(negate)?.addEventListener("change", () => v5UpdateQuickFilter("execution", field)); });

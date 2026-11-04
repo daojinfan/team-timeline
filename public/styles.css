@@ -3824,6 +3824,16 @@ button.v3-task-card:disabled small {
 .v5-execution-today-line { position: absolute; top: 0; bottom: 0; z-index: 2; width: 2px; background: #ef4444; opacity: .78; pointer-events: none; }
 .v5-execution-bar { position: absolute; z-index: 3; min-width: 18px; height: 22px; overflow: hidden; padding: 0 7px; border: 0; border-left: 3px solid var(--task-accent, #2563eb); border-radius: 4px; background: var(--task-accent, #2563eb); color: #fff; font-size: 10px; line-height: 22px; text-align: left; text-overflow: ellipsis; white-space: nowrap; box-shadow: 0 2px 5px rgba(15,23,42,.12); cursor: pointer; }
 .v5-execution-bar:hover, .v5-execution-bar:focus-visible { z-index: 5; filter: brightness(.96); outline: 2px solid #93c5fd; outline-offset: 1px; }
+.v5-execution-bar.is-draggable { cursor: grab; touch-action: none; user-select: none; }
+.v5-execution-bar.is-draggable.is-dragging { z-index: 8; cursor: grabbing; opacity: .8; }
+.v5-execution-bar-label { pointer-events: none; }
+.v5-execution-resize-handle { position: absolute; top: 0; bottom: 0; width: 6px; cursor: ew-resize; }
+.v5-execution-resize-handle.start { left: 0; }
+.v5-execution-resize-handle.end { right: 0; }
+.v5-execution-bar:hover .v5-execution-resize-handle, .v5-execution-bar.is-dragging .v5-execution-resize-handle { background: rgba(255,255,255,.35); }
+.v5-execution-drag-feedback { position: absolute; z-index: 9; padding: 3px 6px; border-radius: 4px; background: #0f172a; color: #fff; font-size: 11px; white-space: nowrap; pointer-events: none; }
+.viewer-mode .v5-execution-bar.is-draggable { cursor: pointer; touch-action: auto; }
+.viewer-mode .v5-execution-resize-handle { display: none; }
 .v5-execution-bar.member-bar { z-index: 4; height: 18px; border-left: 3px solid #64748b; background: #cbd5e1; color: #334155; line-height: 18px; box-shadow: none; }.v5-execution-bar.is-delayed { border-left-color: #f59e0b; }.v5-execution-unscheduled { position: absolute; top: 13px; left: 8px; color: #94a3b8; font-size: 11px; }
 .v5-execution-side { display: grid; gap: 14px; min-width: 0; }
 .v5-execution-load { min-height: 0; overflow: auto; overflow-anchor: none; container-type: inline-size; padding: 0 10px 10px; overscroll-behavior: contain; scrollbar-gutter: stable; }
