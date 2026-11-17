@@ -4,6 +4,7 @@ import { readFileSync } from "node:fs";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
+import { textColor } from "../public/task-colors.js";
 import vm from "node:vm";
 import { createAppServer, initDatabase } from "../src/server.js";
 
@@ -22,6 +23,7 @@ function harness({ task, memberId = 1, role = "admin", scale = "day", fixedCycle
   const requests = []; const confirmations = []; const toasts = []; const handlers = new Map(); const timers = [];
   let loads = 0; let renders = 0;
   const context = vm.createContext({
+    textColor,
     state: { auth: { user: { role } } },
     v5State: { tasks: [task], preferences: { fixedCycleMode: fixedCycle }, execution: { scale, granularity: 3 } },
     v5ExecutionDragState: { active: null, saving: false, suppressClick: null },
@@ -50,6 +52,24 @@ function harness({ task, memberId = 1, role = "admin", scale = "day", fixedCycle
   const fire = async (type, data) => { data.type = type; for (const { callback } of handlers.get(type) || []) { await callback(data); if (data.stopped) break; } };
   return { context, task, bar, timeline, markup, requests, confirmations, toasts, classes, timers, event, fire, get loads() { return loads; }, get renders() { return renders; } };
 }
+
+test("today line uses the exact calendar day on the visible Gantt scale", () => {
+  for (const [scale, start, visibleEnd, today, expected] of [
+    ["day", "2026-11-09", "2026-11-15", "2026-11-13", 4],
+    ["week", "2026-11-09", "2026-11-22", "2026-11-13", 4 / 7],
+    ["week", "2026-11-09", "2026-11-22", "2026-11-22", 13 / 7],
+    ["month", "2024-01-01", "2024-02-29", "2024-02-29", 1 + 28 / 29],
+    ["month", "2026-11-01", "2026-11-30", "2026-11-01", 0],
+    ["day", "2026-11-09", "2026-11-15", "2026-11-08", null],
+    ["day", "2026-11-09", "2026-11-15", "2026-11-16", null]
+  ]) {
+    const { context } = harness({ scale });
+    context.todayLocalDate = () => today;
+    vm.runInContext(functionSource("v5ExecutionGridBackground"), context);
+    const range = { start, end: "2027-01-01", units: [{ end: visibleEnd }] };
+    assert.equal(context.v5ExecutionGridBackground(range).todayIndex, expected, `${scale}: ${today}`);
+  }
+});
 
 test("current V5 bars drag through member schedule preview/save with captured version", async () => {
   const h = harness();

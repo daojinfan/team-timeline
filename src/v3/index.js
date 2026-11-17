@@ -1,3 +1,4 @@
+import { topicColor, recommendColor, topicColorPlan } from "../../public/task-colors.js";
 import { createHash, randomUUID } from "node:crypto";
 import { requestContextStorage } from "../request-context.js";
 
@@ -560,6 +561,12 @@ export function validateV5Schema(database) {
   return version;
 }
 
+function ensureTopicColorColumn(database) {
+  if (!database.prepare("PRAGMA table_info(v5_topics)").all().some(col => col.name === "base_color")) {
+    database.exec("ALTER TABLE v5_topics ADD COLUMN base_color TEXT");
+  }
+}
+
 export function migrateV5Schema(database) {
   const names = new Set(tables(database, "table"));
   if (!names.has("v5_schema_versions")) {
@@ -571,12 +578,14 @@ export function migrateV5Schema(database) {
       v5EnsureUnassignedTopic(database);
       v5SyncLegacyData(database);
     });
+    ensureTopicColorColumn(database);
     ensureRequirementImportTables(database);
     return { migrated: true, version: validateV5Schema(database) };
   }
   const current = database.prepare("SELECT * FROM v5_schema_versions WHERE version=1").get();
   if (!current || current.checksum !== V5_SCHEMA_CHECKSUM || current.name !== "v5-three-modules") throw new Error("V5 schema checksum mismatch");
   transaction(database, () => { v5EnsureUnassignedTopic(database); v5SyncLegacyData(database); });
+    ensureTopicColorColumn(database);
     ensureRequirementImportTables(database);
     return { migrated: false, version: validateV5Schema(database) };
   }
@@ -833,6 +842,31 @@ function v5DateRange(start, end) {
   if ((s && !e) || (!s && e) || (s && e && s > e)) fail(400, "VALIDATION_ERROR", { field: "end_date", reason: "valid date range required" });
   return { start_date: s, end_date: e };
 }
+function baseColor(value) {
+  if (typeof value !== "string" || !/^#[0-9a-f]{6}$/i.test(value)) fail(400, "VALIDATION_ERROR", { field: "base_color" });
+  return value.toLowerCase();
+}
+
+function topicTasksForColors(database, topicId) {
+  return database.prepare("SELECT id,version,color,start_date,end_date,legacy_task_id FROM v5_tasks WHERE topic_id=? ORDER BY id").all(topicId);
+}
+
+function applyTopicPalette(database, topic, color, requested, user) {
+  const plan = topicColorPlan(color, topicTasksForColors(database, topic.id));
+  if (!Array.isArray(requested) || requested.length !== plan.length || plan.some((task, i) =>
+    requested[i]?.id !== task.id || requested[i]?.version !== task.version || requested[i]?.color !== task.color
+  )) fail(409, "VERSION_CONFLICT", { reason: "task palette preview changed" });
+  const update = database.prepare("UPDATE v5_tasks SET color=?,version=version+1,updated_at=? WHERE id=? AND color<>?");
+  const legacy = database.prepare("UPDATE tasks SET color=?,updated_at=? WHERE id=? AND deleted_at IS NULL");
+  for (const task of plan) {
+    const stamp = now();
+    if (update.run(task.color, stamp, task.id, task.color).changes) {
+      if (task.legacy_task_id) legacy.run(task.color, stamp, task.legacy_task_id);
+      v5WriteEvent(database, topic.id, task.id, "task_color_change", { actor: user, after: { color: task.color } });
+    }
+  }
+}
+
 function v5Color(value, fallback = "") {
   const color = String(value ?? fallback).trim();
   if (color && !/^#[0-9a-f]{3,8}$/i.test(color)) fail(400, "VALIDATION_ERROR", { field: "color", reason: "hex color required" });
@@ -956,7 +990,7 @@ function v5NormalizeTask(database, payload, existing = null) {
   for (const memberId of memberIds) if (!memberDates.some((item) => item.member_id === memberId)) memberDates.push({ member_id: memberId, start_date: ranges.start_date, end_date: ranges.end_date });
   const sampleUpdates = v5NormalizeSampleUpdates(database, payload.sample_updates, sampleIds);
   const sampleCreates = v5NormalizeSampleCreates(payload.sample_creates);
-  return { topic_id: topicId, source_group_id: sourceGroupId, cryostat_id: cryostatId, title, purpose, notes, color: v5Color(payload.color, existing?.color ?? ""), manual_phase: manualPhase, start_date: ranges.start_date, end_date: ranges.end_date, sample_ids: sampleIds, sample_updates: sampleUpdates, sample_creates: sampleCreates, participant_member_ids: memberIds, member_dates: memberDates, test_items: v5NormalizeItems(payload.test_items, existing?.id, database) };
+  return { topic_id: topicId, source_group_id: sourceGroupId, cryostat_id: cryostatId, title, purpose, notes, color: payload.color == null && !existing ? recommendColor(topicColor(v5EnsureTopic(database, topicId)), topicTasksForColors(database, topicId), ranges.start_date, ranges.end_date) : v5Color(payload.color, existing?.color ?? ""), manual_phase: manualPhase, start_date: ranges.start_date, end_date: ranges.end_date, sample_ids: sampleIds, sample_updates: sampleUpdates, sample_creates: sampleCreates, participant_member_ids: memberIds, member_dates: memberDates, test_items: v5NormalizeItems(payload.test_items, existing?.id, database) };
 }
 function v5Conflicts(database, normalized, existing = null) {
   const conflicts = [];
@@ -1077,8 +1111,9 @@ function requirementTaskPreview(database, normalized) {
   const topic = normalized.topic_name === '无专题' ? null : database.prepare("SELECT id FROM v5_topics WHERE name=? AND status='active'").get(normalized.topic_name); if (normalized.topic_name !== '无专题' && !topic) fail(400, 'VALIDATION_ERROR', { field: 'topic_name', reason: 'topic not found; use 无专题 or an existing topic name' });
   const names = requirementMemberNames(normalized); const members = names.map((name) => database.prepare("SELECT id,name FROM members WHERE name=? AND status='active' AND deleted_at IS NULL").get(name)); const absent = names.filter((_, index) => !members[index]); if (absent.length) fail(400, 'VALIDATION_ERROR', { field: 'participants', reason: `members not found: ${absent.join('、')}` });
   const start = normalized.eta_date; const end = addIsoDays(start, Number(normalized.integration.duration_days) - 1); const notes = [['项目', normalized.project_name], ['背景', normalized.background], ['测试对象', normalized.object_description], ['预期结论', normalized.expected_conclusion], ['读取/通道', normalized.channel_info], ['接线装样', normalized.wiring_info], ['制冷机说明', normalized.cryostat_notes], ['其他信息', normalized.other_info], ['接线表', normalized.integration.wiring_method], ['测试大纲', normalized.integration.test_outline], ['测试限制', normalized.integration.constraints], ['预期交付物', normalized.integration.deliverables], ['集成组说明', normalized.integration.notes]].filter(([, value]) => value).map(([label, value]) => `${label}：${value}`).join('\n');
-  const input = { topic_id: topic?.id ?? v5EnsureUnassignedTopic(database).id, source_group_id: source.id, cryostat_id: cryostat?.id ?? null, title: normalized.title, purpose: normalized.purpose, notes, color: '#2563eb', manual_phase: 'waiting', start_date: start, end_date: end, sample_ids: [], sample_creates: normalized.samples.map((sample) => ({ model: sample.model, sample_no: sample.sample_no === '待定' ? null : sample.sample_no || null, eta_date: start, eta_pending: false, notes: [sample.type, sample.quantity, sample.notes].filter(Boolean).join('；') })), participant_member_ids: members.map((member) => member.id), member_dates: members.map((member) => ({ member_id: member.id, start_date: start, end_date: end })), test_items: normalized.test_items.map((item, position) => ({ name: item.name, acceptance_criteria: normalized.criteria[position]?.acceptance_criteria || '待补充', note: [item.note, normalized.criteria[position]?.output].filter(Boolean).join('\n'), position })) };
-  return { ...v5Preview(database, input), start_date: start, end_date: end, resolved_members: members.filter(Boolean), task_input: input };
+  const input = { topic_id: topic?.id ?? v5EnsureUnassignedTopic(database).id, source_group_id: source.id, cryostat_id: cryostat?.id ?? null, title: normalized.title, purpose: normalized.purpose, notes, manual_phase: 'waiting', start_date: start, end_date: end, sample_ids: [], sample_creates: normalized.samples.map((sample) => ({ model: sample.model, sample_no: sample.sample_no === '待定' ? null : sample.sample_no || null, eta_date: start, eta_pending: false, notes: [sample.type, sample.quantity, sample.notes].filter(Boolean).join('；') })), participant_member_ids: members.map((member) => member.id), member_dates: members.map((member) => ({ member_id: member.id, start_date: start, end_date: end })), test_items: normalized.test_items.map((item, position) => ({ name: item.name, acceptance_criteria: normalized.criteria[position]?.acceptance_criteria || '待补充', note: [item.note, normalized.criteria[position]?.output].filter(Boolean).join('\n'), position })) };
+  const preview = v5Preview(database, input);
+  return { ...preview, start_date: start, end_date: end, resolved_members: members.filter(Boolean), task_input: { ...input, color: preview.normalized_input.color } };
 }
 function requirementDraftData(database, row) { const doc = database.prepare('SELECT id,file_name,mime_type,file_size,sha256,template_key,uploaded_by,uploaded_at FROM requirement_documents WHERE id=?').get(row.document_id); return { ...row, document: doc, parsed: JSON.parse(row.parsed_json), normalized: JSON.parse(row.normalized_json), validation: JSON.parse(row.validation_json) }; }
 
@@ -1169,9 +1204,11 @@ export async function routeV5Api(req, res, database, url) {
       const includeArchived = url.searchParams.get("include_archived") === "1"; const rows = database.prepare(`SELECT t.*, (SELECT COUNT(*) FROM v5_tasks x WHERE x.topic_id=t.id) task_count FROM v5_topics t WHERE ${includeArchived ? "1=1" : "t.status='active'"} ORDER BY t.system_key='unassigned' DESC,t.name COLLATE NOCASE`).all();
       return response(res, 200, { items: rows, total: rows.length });
     }
-    if (method === "POST" && path === "/api/v5/topics") { const p = await body(req); const name = trim(p.name, "name", 1, 200); const purpose = trim(p.purpose ?? "", "purpose", 0, 4000); const notes = trim(p.notes ?? "", "notes", 0, 4000); const stamp = now(); const result = transaction(database, () => { const created = database.prepare("INSERT INTO v5_topics(name,purpose,status,notes,created_at,updated_at) VALUES(?,?,?,?,?,?)").run(name, purpose, "active", notes, stamp, stamp); const topicId=Number(created.lastInsertRowid); v5WriteEvent(database,topicId,null,"topic_create",{actor:actor(p),after:{name,purpose,notes}}); return topicId; }); return response(res, 201, database.prepare("SELECT * FROM v5_topics WHERE id=?").get(result)); }
+    if (method === "POST" && path === "/api/v5/topics") { const p = await body(req); const name = trim(p.name, "name", 1, 200); const purpose = trim(p.purpose ?? "", "purpose", 0, 4000); const notes = trim(p.notes ?? "", "notes", 0, 4000); const stamp = now(); const result = transaction(database, () => { const created = database.prepare("INSERT INTO v5_topics(name,purpose,status,notes,created_at,updated_at,base_color) VALUES(?,?,?,?,?,?,?)").run(name, purpose, "active", notes, stamp, stamp, p.base_color === undefined ? null : baseColor(p.base_color)); const topicId=Number(created.lastInsertRowid); v5WriteEvent(database,topicId,null,"topic_create",{actor:actor(p),after:{name,purpose,notes}}); return topicId; }); return response(res, 201, database.prepare("SELECT * FROM v5_topics WHERE id=?").get(result)); }
     match = path.match(/^\/api\/v5\/topics\/(\d+)$/);
-    if (match && method === "PUT") { const topic = v5EnsureTopic(database, id(match[1]), true); const p = await body(req); v5Expected(topic, p); const name = trim(p.name ?? topic.name, "name", 1, 200); const purpose = trim(p.purpose ?? topic.purpose, "purpose", 0, 4000); const notes = trim(p.notes ?? topic.notes, "notes", 0, 4000); const status = p.status ?? topic.status; if (!["active", "archived"].includes(status)) fail(400, "VALIDATION_ERROR", { field: "status" }); const row = transaction(database, () => { database.prepare("UPDATE v5_topics SET name=?,purpose=?,status=?,notes=?,archived_at=?,version=version+1,updated_at=? WHERE id=?").run(name, purpose, status, notes, status === "archived" ? now() : null, now(), topic.id); const updated=database.prepare("SELECT * FROM v5_topics WHERE id=?").get(topic.id); v5WriteEvent(database,topic.id,null,"topic_update",{actor:actor(p),before:topic,after:updated}); return updated; }); return response(res, 200, row); }
+    if (match && method === "PUT") { const p = await body(req); const topic = v5EnsureTopic(database, id(match[1]), true); v5Expected(topic, p); const name = trim(p.name ?? topic.name, "name", 1, 200); const purpose = trim(p.purpose ?? topic.purpose, "purpose", 0, 4000); const notes = trim(p.notes ?? topic.notes, "notes", 0, 4000); const status = p.status ?? topic.status; if (!["active", "archived"].includes(status)) fail(400, "VALIDATION_ERROR", { field: "status" }); const row = transaction(database, () => { const color = p.base_color === undefined ? topic.base_color : baseColor(p.base_color);
+      if (p.task_palette !== undefined) applyTopicPalette(database, topic, color || topicColor(topic), p.task_palette, actor(p));
+      database.prepare("UPDATE v5_topics SET name=?,purpose=?,status=?,notes=?,base_color=?,archived_at=?,version=version+1,updated_at=? WHERE id=?").run(name, purpose, status, notes, color, status === "archived" ? now() : null, now(), topic.id); const updated=database.prepare("SELECT * FROM v5_topics WHERE id=?").get(topic.id); v5WriteEvent(database,topic.id,null,"topic_update",{actor:actor(p),before:topic,after:updated}); return updated; }); return response(res, 200, row); }
     if (match && method === "DELETE") { const topic = v5EnsureTopic(database, id(match[1]), true); const p = await body(req); const target = id(p.target_topic_id, "target_topic_id"); if (topic.system_key === "unassigned" || target === topic.id) fail(409, "VALIDATION_ERROR", { reason: "unassigned topic cannot be deleted and target must differ" }); const destination = v5EnsureTopic(database, target); v5Expected(topic, p); const row = transaction(database, () => { const moved=database.prepare("SELECT id FROM v5_tasks WHERE topic_id=?").all(topic.id).map((x)=>x.id); database.prepare("UPDATE v5_tasks SET topic_id=?,version=version+1,updated_at=? WHERE topic_id=?").run(destination.id, now(), topic.id); database.prepare("UPDATE v5_topics SET status='archived',archived_at=?,version=version+1,updated_at=? WHERE id=?").run(now(), now(), topic.id); v5WriteEvent(database,topic.id,null,"topic_delete_and_move",{actor:actor(p),before:{topic_id:topic.id,task_ids:moved},after:{target_topic_id:destination.id,task_ids:moved}}); return database.prepare("SELECT * FROM v5_topics WHERE id=?").get(topic.id); }); return response(res, 200, row); }
     match = path.match(/^\/api\/v5\/topics\/(\d+)\/move-tasks$/); if (match && method === "POST") { const source = v5EnsureTopic(database, id(match[1])); const p = await body(req); const destination = v5EnsureTopic(database, id(p.target_topic_id)); const taskIds = v5ListIds(p.task_ids, "task_ids", false); const row = transaction(database, () => { const marks = taskIds.map(() => "?").join(","); const result = database.prepare(`UPDATE v5_tasks SET topic_id=?,version=version+1,updated_at=? WHERE topic_id=? AND id IN (${marks})`).run(destination.id, now(), source.id, ...taskIds); v5WriteEvent(database,source.id,null,"task_topic_move",{actor:actor(p),before:{topic_id:source.id,task_ids:taskIds},after:{topic_id:destination.id,task_ids:taskIds}}); return { moved: result.changes, task_ids: taskIds }; }); return response(res, 200, row); }
     if (method === "GET" && path === "/api/v5/samples") { const search = url.searchParams.get("search"); const rows = search ? database.prepare("SELECT * FROM v5_samples WHERE planning_label LIKE ? OR model LIKE ? OR sample_no LIKE ? ORDER BY eta_date IS NULL,eta_date,id").all(`%${search}%`,`%${search}%`,`%${search}%`) : database.prepare("SELECT * FROM v5_samples ORDER BY eta_date IS NULL,eta_date,id").all(); return response(res, 200, { items: rows }); }

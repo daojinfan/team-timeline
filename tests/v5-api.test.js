@@ -4,6 +4,7 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { createAppServer, initDatabase } from "../src/server.js";
+import { shades, recommendColor, topicColorPlan } from "../public/task-colors.js";
 import { V5_ENDPOINTS, V5_INDEXES, V5_SCHEMA_CHECKSUM, V5_TABLES, validateV5Schema } from "../src/v3/index.js";
 
 async function fixture() {
@@ -40,6 +41,34 @@ test("V5 schema is additive, exposes the frozen endpoint surface, and reopens id
     assert.notEqual(renamed.updated_at, group.updated_at);
     const stale = await app.request(`/api/v5/resources/source-groups/${group.id}`, { method: "PUT", body: { name: "过期改名", expected_updated_at: group.updated_at }, expected: [409] });
     assert.equal(stale.error.code, "VERSION_CONFLICT");
+  } finally { await app.close(); }
+});
+
+test("topic palette distinguishes concurrent tasks, reuses free shades and stays atomic", async () => {
+  const app = await fixture();
+  try {
+    const original = (await app.request("/api/v5/tasks")).data.items;
+    const topicId = original[0].topic_id;
+    const members = original.filter(t => t.topic_id === topicId);
+    const url = `/api/v5/topics/${topicId}`;
+    const base = "#7c3aed";
+    const topic = (await app.request(url, { method: "PUT", body: { base_color: base } })).data;
+    const read = async () => (await app.request("/api/v5/tasks")).data.items.filter(t => t.topic_id === topicId);
+    assert.deepEqual((await read()).map(t => t.color), members.map(t => t.color));
+    const colors = shades(base);
+    assert.equal(new Set(colors).size, 8);
+    const used = [{ color: colors[1], start_date: "2026-02-01", end_date: "2026-02-05" }];
+    assert.equal(recommendColor(base, used, "2026-02-05", "2026-02-10"), colors[4]);
+    assert.equal(recommendColor(base, used, "2026-02-06", "2026-02-10"), colors[1]);
+    const plan = topicColorPlan(base, members).map(({ id, version, color }) => ({ id, version, color }));
+    const stale = plan.map((item, index) => index === 0 ? { ...item, version: item.version + 1 } : item);
+    await app.request(url, { method: "PUT", body: { expected_version: topic.version, base_color: "#ffffff", task_palette: stale }, expected: [409] });
+    assert.deepEqual((await read()).map(t => t.color), members.map(t => t.color));
+    await app.request(url, { method: "PUT", body: { expected_version: topic.version, task_palette: plan } });
+    for (const task of await read()) {
+      assert.equal(task.color, plan.find(item => item.id === task.id).color);
+      if (task.legacy_task_id) assert.equal(app.database.prepare("SELECT color FROM tasks WHERE id=?").get(task.legacy_task_id).color, task.color);
+    }
   } finally { await app.close(); }
 });
 
